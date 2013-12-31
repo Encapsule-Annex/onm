@@ -38,32 +38,30 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-namespaceEncapsule = Encapsule? and Encapsule or @Encapsule = {}
-Encapsule.code = Encapsule.code? and Encapsule.code or @Encapsule.code = {}
-Encapsule.code.lib = Encapsule.code.lib? and Encapsule.code.lib or @Encapsule.code.lib = {}
-Encapsule.code.lib.onm = Encapsule.code.lib.onm? and Encapsule.code.lib.onm or @Encapsule.code.lib.onm = {}
+Store = require('./ONMjs-core-store')
+Model = require('./ONMjs-core-model')
+Namespace = require('./ONMjs-core-namespace')
 
-ONMjs = Encapsule.code.lib.onm
 
-class ONMjs.AddressStore extends ONMjs.Store
+module.exports = class AddressStore extends Store
     constructor: (referenceStore_, address_) ->
         try
             if not (referenceStore_? and referenceStore_) then throw "Missing object store input parameter. Unable to determine external selector type."
             @referenceStore = referenceStore_
 
             # Create an ObjectModel instance from the selector object model declaration.
-            selectorModel = new ONMjs.Model(
+            selectorModel = new Model(
                 {
                     jsonTag: "addressStore"
                     label: "#{referenceStore_.model.jsonTag} Address Cache"
                     description: "#{referenceStore_.model.label} observable address cache."
                 })
 
-            # Initialize the base ONMjs.Store class.
+            # Initialize the base Store class.
             super(selectorModel)
 
             selectorAddress = selectorModel.createRootAddress()
-            @selectorNamespace = new ONMjs.Namespace(@, selectorAddress)
+            @selectorNamespace = new Namespace(@, selectorAddress)
             @selectorNamespaceData = @selectorNamespace.data()
             @selectorNamespaceData.selectedNamespace = undefined
 
@@ -76,7 +74,7 @@ class ONMjs.AddressStore extends ONMjs.Store
                         if cachedAddress? and cachedAddress and cachedAddress.isEqual(address_)
                             @setAddress(address_)
                     catch exception
-                        throw "ONMjs.AddressStore.objectStoreCallbacks.onNamespaceUpdated failure: #{exception}"
+                        throw "onNamespaceUpdated failure: #{exception}"
 
                 onNamespaceRemoved: (objectStore_, observerId_, address_) =>
                     try
@@ -86,12 +84,12 @@ class ONMjs.AddressStore extends ONMjs.Store
                             @setAddress(parentAddress)
                         return
                     catch exception
-                        throw "ONMjs.AddressStore.objectStoreCallbacks.onNamespaceRemoved failure: #{exception}"
+                        throw "onNamespaceRemoved failure: #{exception}"
             } # objectStoreCallbacks
 
 
         catch exception
-            throw "ONMjs.AddressStore failure: #{exception}"
+            throw "AddressStore failure: #{exception}"
 
 
     #
@@ -103,7 +101,7 @@ class ONMjs.AddressStore extends ONMjs.Store
             return namespace.getResolvedAddress()
 
         catch exception
-            throw "ONMjs.AddressStore.getSelector failure: #{exception}"
+            throw "getSelector failure: #{exception}"
 
 
     #
@@ -113,12 +111,12 @@ class ONMjs.AddressStore extends ONMjs.Store
             if not (address_ and address_) 
                 @selectorNamespaceData.selectedNamespace = undefined
             else
-                @selectorNamespaceData.selectedNamespace = new ONMjs.Namespace(@referenceStore, address_)
+                @selectorNamespaceData.selectedNamespace = new Namespace(@referenceStore, address_)
 
             @selectorNamespace.update()
 
         catch exception
-            throw "ONMjs.AddressStore.setAddress failure: #{exception}"
+            throw "setAddress failure: #{exception}"
 
 
 

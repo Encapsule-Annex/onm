@@ -1,7 +1,7 @@
 {
   "name": "onm",
-  "version": "0.1.1",
-  "description": "object namespace manager",
+  "version": "0.1.2",
+  "description": "Object Namespace Manager (onm) data model and store package.",
   "keywords": [
     "data",
     "model",

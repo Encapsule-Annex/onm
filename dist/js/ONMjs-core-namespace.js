@@ -125,7 +125,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Namespace failure: " + exception;
+        throw "Namespace failure: " + exception;
       }
     }
 
@@ -139,7 +139,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.resolvedAddress;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Namespace.address failure: " + exception;
+        throw "getResolvedAddress failure: " + exception;
       }
     };
 
@@ -158,7 +158,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return resolvedLabel;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Namespace.getResolvedLabel failure: " + exception;
+        throw "getResolvedLabel failure: " + exception;
       }
     };
 
@@ -180,7 +180,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return resultJSON;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Namespace.toJSON failure: " + exception;
+        throw "toJSON failure: " + exception;
       }
     };
 
@@ -223,7 +223,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return _results;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Namespace.update failure: " + exception;
+        throw "update failure: " + exception;
       }
     };
 
@@ -253,7 +253,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Namepsace.visitExtensionPointSubcomponents failure: " + exception;
+        throw "visitExtensionPointSubcomponents failure: " + exception;
       }
     };
 

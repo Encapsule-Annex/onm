@@ -95,7 +95,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.AddressDetails.createSubpathIdAddress failure: " + exception;
+            throw "createSubpathIdAddress failure: " + exception;
           }
         };
         this.pushToken = function(token_) {
@@ -120,7 +120,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.address;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.AddressDetails.pushToken failure: " + exception;
+            throw "pushToken failure: " + exception;
           }
         };
         this.validateTokenPair = function(parentToken_, childToken_) {
@@ -141,7 +141,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return true;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.AddressDetails.validateTokenPair the specified parent and child tokens are incompatible and cannot be used to form an address: " + exception;
+            throw "validateTokenPair the specified parent and child tokens are incompatible and cannot be used to form an address: " + exception;
           }
         };
         this.getLastToken = function() {
@@ -153,7 +153,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.tokenVector[_this.tokenVector.length - 1];
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.AddressDetails.getLastToken failure: " + exception;
+            throw "getLastToken failure: " + exception;
           }
         };
         this.getDescriptor = function() {
@@ -162,7 +162,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.getLastToken().namespaceDescriptor;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.AddressDetails.getDescriptor failure: " + exception;
+            throw "getDescriptor failure: " + exception;
           }
         };
         this.tokenVector = [];
@@ -185,7 +185,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         this.hashString = void 0;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.implementation.AddressDetails failure: " + exception;
+        throw "AddressDetails failure: " + exception;
       }
     }
 
@@ -233,7 +233,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         };
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address error: " + exception;
+        throw "Address error: " + exception;
       }
     }
 
@@ -267,7 +267,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return humanReadableString;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.getHumanReadableString failure: " + exception;
+        throw "getHumanReadableString failure: " + exception;
       }
     };
 
@@ -301,7 +301,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.hashString;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.getHashString failure: " + exception;
+        throw "getHashString failure: " + exception;
       }
     };
 
@@ -338,7 +338,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return result;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.isEqual failure: " + exception;
+        throw "isEqual failure: " + exception;
       }
     };
 
@@ -348,7 +348,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return new Address(this.model, this.implementation.tokenVector);
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.clone failure: " + exception;
+        throw "clone failure: " + exception;
       }
     };
 
@@ -384,7 +384,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return newAddress;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.createParentAddress failure: " + exception;
+        throw "createParentAddress failure: " + exception;
       }
     };
 
@@ -425,7 +425,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return newAddress;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.createSubpathAddress failure: " + exception;
+        throw "createSubpathAddress failure: " + exception;
       }
     };
 
@@ -440,7 +440,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return newAddress;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.createComponentAddress failure: " + exception;
+        throw "createComponentAddress failure: " + exception;
       }
     };
 
@@ -455,7 +455,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.clone().implementation.pushToken(newToken);
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.createSubcomponentAddress failure: " + exception;
+        throw "createSubcomponentAddress failure: " + exception;
       }
     };
 
@@ -465,7 +465,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.getDescriptor().namespaceModelDeclaration;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.getModel failure: " + exception;
+        throw "getModel failure: " + exception;
       }
     };
 
@@ -475,7 +475,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.getDescriptor().namespaceModelPropertiesDeclaration;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.getPropertiesModel failure: " + exception;
+        throw "getPropertiesModel failure: " + exception;
       }
     };
 
@@ -510,7 +510,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.visitParentAddressesAscending failure: " + exception;
+        throw "visitParentAddressesAscending failure: " + exception;
       }
     };
 
@@ -544,7 +544,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.visitParentAddressesDescending failure: " + exception;
+        throw "visitParentAddressesDescending failure: " + exception;
       }
     };
 
@@ -577,7 +577,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.visitSubaddressesAscending failure: " + exception;
+        throw "visitSubaddressesAscending failure: " + exception;
       }
     };
 
@@ -608,7 +608,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.visitSubaddressesAscending failure: " + exception;
+        throw "visitSubaddressesAscending failure: " + exception;
       }
     };
 
@@ -633,7 +633,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.visitChildAddresses failure: " + exception;
+        throw "visitChildAddresses failure: " + exception;
       }
     };
 
@@ -661,7 +661,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.visitExtensionPointAddresses failure: " + exception;
+        throw "visitExtensionPointAddresses failure: " + exception;
       }
     };
 

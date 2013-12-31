@@ -37,16 +37,11 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-namespaceEncapsule = Encapsule? and Encapsule or @Encapsule = {}
-Encapsule.code = Encapsule.code? and Encapsule.code or @Encapsule.code = {}
-Encapsule.code.lib = Encapsule.code.lib? and Encapsule.code.lib or @Encapsule.code.lib = {}
-Encapsule.code.lib.base = Encapsule.code.lib.base? and Encapsule.code.lib.base or @Encapsule.code.lib.base = {}
-
 
 #
 #
 # ****************************************************************************
-class Encapsule.code.lib.base.BackChannel
+module.exports = class BackChannel
     constructor: (logHandler_, errorHandler_) ->
         try
             @logHandler = logHandler_

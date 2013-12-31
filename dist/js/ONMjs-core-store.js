@@ -37,7 +37,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 (function() {
-  var AddressToken, AddressTokenBinder, Namespace, Store, StoreDetails, StoreReifier, jslib;
+  var AddressToken, AddressTokenBinder, Namespace, Store, StoreDetails, StoreReifier, jslib, uuid;
 
   jslib = require('./encapsule-lib-javascript');
 
@@ -48,6 +48,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
   AddressTokenBinder = require('./ONMjs-core-address-binder');
 
   Namespace = require('./ONMjs-core-namespace');
+
+  uuid = require('node-uuid');
 
   StoreDetails = (function() {
     function StoreDetails(store_, model_, initialStateJSON_) {
@@ -62,7 +64,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         this.observersState = {};
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.implementation.StoreDetails failure: " + exception;
+        throw "StoreDetails failure: " + exception;
       }
     }
 
@@ -104,7 +106,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.model.isEqual(address_.model);
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.verifyAddress failure: " + exception;
+            throw "validateAddressModel failure: " + exception;
           }
         };
         this.createComponent = function(address_) {
@@ -130,7 +132,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return componentNamespace;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.createComponent failure: " + exception;
+            throw "createComponent failure: " + exception;
           }
         };
         this.removeComponent = function(address_) {
@@ -164,7 +166,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return componentNamespace;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.removeComponent failure: " + exception;
+            throw "removeComponent failure: " + exception;
           }
         };
         this.openNamespace = function(address_) {
@@ -180,7 +182,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return namespace;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.openNamespace failure: " + exception;
+            throw "openNamespace failure: " + exception;
           }
         };
         this.toJSON = function(replacer_, space_) {
@@ -191,7 +193,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return resultJSON;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.toJSON fail on object store " + _this.jsonTag + " : " + exception;
+            throw "toJSON fail on object store " + _this.jsonTag + " : " + exception;
           }
         };
         this.registerObserver = function(observerCallbackInterface_, observingEntityReference_) {
@@ -211,7 +213,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return observerIdCode;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.registerObserver failure: " + exception;
+            throw "registerObserver failure: " + exception;
           }
         };
         this.unregisterObserver = function(observerIdCode_) {
@@ -233,7 +235,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return delete _this.implementation.observers[observerIdCode_];
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.unregisterObserver failure: " + exception;
+            throw "unregisterObserver failure: " + exception;
           }
         };
         this.openObserverState = function(observerId_) {
@@ -246,7 +248,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return observerState;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.openObserverStateObject failure: " + exception;
+            throw "openObserverStateObject failure: " + exception;
           }
         };
         this.removeObserverState = function(observerId_) {
@@ -275,7 +277,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.openObserverNamespaceState(observerId_, componentAddress);
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.openObserverComponentState failure: " + exception;
+            throw "openObserverComponentState failure: " + exception;
           }
         };
         this.openObserverNamespaceState = function(observerId_, address_) {
@@ -296,7 +298,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return namespaceState;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.openObserverNamespaceState failure: " + exception;
+            throw "openObserverNamespaceState failure: " + exception;
           }
         };
         this.removeObserverNamespaceState = function(observerId_, address_) {
@@ -318,7 +320,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         };
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Store failure: " + exception;
+        throw "Store failure: " + exception;
       }
     }
 

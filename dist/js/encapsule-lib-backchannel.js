@@ -35,17 +35,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 (function() {
-  var namespaceEncapsule;
+  var BackChannel;
 
-  namespaceEncapsule = (typeof Encapsule !== "undefined" && Encapsule !== null) && Encapsule || (this.Encapsule = {});
-
-  Encapsule.code = (Encapsule.code != null) && Encapsule.code || (this.Encapsule.code = {});
-
-  Encapsule.code.lib = (Encapsule.code.lib != null) && Encapsule.code.lib || (this.Encapsule.code.lib = {});
-
-  Encapsule.code.lib.base = (Encapsule.code.lib.base != null) && Encapsule.code.lib.base || (this.Encapsule.code.lib.base = {});
-
-  Encapsule.code.lib.base.BackChannel = (function() {
+  module.exports = BackChannel = (function() {
     function BackChannel(logHandler_, errorHandler_) {
       var exception,
         _this = this;

@@ -85,7 +85,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.implementation.AddressToken failure: " + exception;
+        throw "AddressToken failure: " + exception;
       }
     }
 
@@ -103,7 +103,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return result;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.AddressToken.isEqual failure: " + exception;
+        throw "isEqual failure: " + exception;
       }
     };
 

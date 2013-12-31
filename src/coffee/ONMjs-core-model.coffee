@@ -40,7 +40,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 jslib = require('./encapsule-lib-javascript')
 Address = require('./ONMjs-core-address')
 AddressToken = require('./ONMjs-core-address-token')
+uuid = require('node-uuid')
 
+LUID = 0
 
 
 #
@@ -195,7 +197,7 @@ class ModelDetails
                     return true
 
                 catch exception
-                    throw "ONMjs.implementation.ModelDetails.buildOMDescriptorFromLayout fail: #{exception}"
+                    throw "buildOMDescriptorFromLayout fail: #{exception}"
 
             # / END: buildOMDesriptorFromLayout
 
@@ -210,7 +212,7 @@ class ModelDetails
                         throw "Internal error getting namespace descriptor for path ID=#{pathId_}!"
                     return objectModelDescriptor
                 catch exception
-                    throw "ONMjs.implementation.ModelDetails.getNamespaceDescriptorFromPathId failure: #{exception}"
+                    throw "getNamespaceDescriptorFromPathId failure: #{exception}"
             #
             # / END: @getNamespaceDescriptorFromPathId
 
@@ -219,7 +221,7 @@ class ModelDetails
                 try
                     return @getNamespaceDescriptorFromPathId(@getPathIdFromPath(path_))
                 catch exception
-                    throw "ONMjs.implementation.ModelDetails.getNamespaceDescriptorFromPath failure: #{exception}"
+                    throw "getNamespaceDescriptorFromPath failure: #{exception}"
             #
             # / END: @getNamespaceDescriptorFromPath
                 
@@ -235,7 +237,7 @@ class ModelDetails
                         throw "Internal error: Invalid object model descriptor doesn't support id property for path '#{objectModelPath_}."
                     return objectModelPathId
                 catch exception
-                    throw "ONMjs.implementation.ModelDetails.getPathIdFromPath fail: #{exception}"
+                    throw "getPathIdFromPath fail: #{exception}"
             #
             # / END: @getPathIdFromPath
 
@@ -250,7 +252,7 @@ class ModelDetails
                         throw "Internal error: Invalid object model descriptor doesn't support path property for path '#{objectModelPath_}."
                     return path
                 catch exception
-                    throw "ONMjs.implementation.ModelDetails.getPathFromPathId fail: #{exception}"
+                    throw "getPathFromPathId fail: #{exception}"
             #
             # / END: @getPathFromPathId
 
@@ -271,13 +273,13 @@ class ModelDetails
                     newAddress.implementation.pushToken(token)
                     return newAddress
                 catch exception
-                    throw "ONMjs.implementation.ModelDetails.getAddressFromPathId failure: #{exception}"
+                    throw "getAddressFromPathId failure: #{exception}"
             #
             # / END: @createAddressFromPathId
         
 
             # --------------------------------------------------------------------------
-            # ONMjs.core.ModelDetails CONSTRUCTOR
+            # ModelDetails CONSTRUCTOR
 
             if not (objectModelDeclaration_? and objectModelDeclaration_)
                 throw "Missing object model delcaration input parameter!"
@@ -359,8 +361,8 @@ class ModelDetails
                 when "internalLuid"
                     @semanticBindings.getUniqueKey = (data_) -> data_.key
                     @semanticBindings.setUniqueKey = (data_) ->
-                        data_.key = ONMjs.implementation.LUID? and ONMjs.implementation.LUID or ONMjs.implementation.LUID = 1
-                        ONMjs.implementation.LUID++
+                        data_.key = LUID? and LUID or LUID = 1
+                        LUID++
                         data_.key
                     break
                 when "internalUuid"
@@ -397,7 +399,7 @@ class ModelDetails
 
 
         catch exception
-            throw "ONMjs.implementation.ModelDetails failure: #{exception}"
+            throw "ModelDetails failure: #{exception}"
 
 
 
@@ -414,7 +416,7 @@ module.exports = class Model
                 try
                     return new Address(@, [ new AddressToken(@, undefined, undefined, 0) ])
                 catch exception
-                    throw "ONMjs.Model.getRootAddress failure: #{exception}"
+                    throw "createRootAddress failure: #{exception}"
             
 
             # --------------------------------------------------------------------------
@@ -424,7 +426,7 @@ module.exports = class Model
                     newAddress = @implementation.createAddressFromPathId(pathId)
                     return newAddress
                 catch exception
-                    throw "ONMjs.Model.getAddressFromPath failure: #{exception}"
+                    throw "createPathAddress failure: #{exception}"
 
             # --------------------------------------------------------------------------
             @getSemanticBindings = =>
@@ -432,15 +434,15 @@ module.exports = class Model
                     return @implementation.semanticBindings
 
                 catch exception
-                    throw "ONMjs.Model.getSemanticBindings failure: #{exception}"
+                    throw "getSemanticBindings failure: #{exception}"
 
             # --------------------------------------------------------------------------
             @isEqual = (model_) =>
                 try
                     @jsonTag == model_.jsonTag
                 catch exception
-                    throw "ONMjs.Model.isEqual failure: #{exception}"
+                    throw "isEqual failure: #{exception}"
 
         catch exception
-            throw "ONMjs.Model construction fail: #{exception}"
+            throw "Model construction fail: #{exception}"
 

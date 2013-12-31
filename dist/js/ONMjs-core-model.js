@@ -35,13 +35,17 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 (function() {
-  var Address, AddressToken, Model, ModelDetails, jslib;
+  var Address, AddressToken, LUID, Model, ModelDetails, jslib, uuid;
 
   jslib = require('./encapsule-lib-javascript');
 
   Address = require('./ONMjs-core-address');
 
   AddressToken = require('./ONMjs-core-address-token');
+
+  uuid = require('node-uuid');
+
+  LUID = 0;
 
   ModelDetails = (function() {
     function ModelDetails(model_, objectModelDeclaration_) {
@@ -182,7 +186,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return true;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.ModelDetails.buildOMDescriptorFromLayout fail: " + exception;
+            throw "buildOMDescriptorFromLayout fail: " + exception;
           }
         };
         this.getNamespaceDescriptorFromPathId = function(pathId_) {
@@ -201,7 +205,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return objectModelDescriptor;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.ModelDetails.getNamespaceDescriptorFromPathId failure: " + exception;
+            throw "getNamespaceDescriptorFromPathId failure: " + exception;
           }
         };
         this.getNamespaceDescriptorFromPath = function(path_) {
@@ -210,7 +214,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.getNamespaceDescriptorFromPathId(_this.getPathIdFromPath(path_));
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.ModelDetails.getNamespaceDescriptorFromPath failure: " + exception;
+            throw "getNamespaceDescriptorFromPath failure: " + exception;
           }
         };
         this.getPathIdFromPath = function(path_) {
@@ -230,7 +234,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return objectModelPathId;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.ModelDetails.getPathIdFromPath fail: " + exception;
+            throw "getPathIdFromPath fail: " + exception;
           }
         };
         this.getPathFromPathId = function(pathId_) {
@@ -247,7 +251,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return path;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.ModelDetails.getPathFromPathId fail: " + exception;
+            throw "getPathFromPathId fail: " + exception;
           }
         };
         this.createAddressFromPathId = function(pathId_) {
@@ -273,7 +277,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.ModelDetails.getAddressFromPathId failure: " + exception;
+            throw "getAddressFromPathId failure: " + exception;
           }
         };
         if (!((objectModelDeclaration_ != null) && objectModelDeclaration_)) {
@@ -325,8 +329,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               return data_.key;
             };
             this.semanticBindings.setUniqueKey = function(data_) {
-              data_.key = (ONMjs.implementation.LUID != null) && ONMjs.implementation.LUID || (ONMjs.implementation.LUID = 1);
-              ONMjs.implementation.LUID++;
+              data_.key = (LUID != null) && LUID || (LUID = 1);
+              LUID++;
               return data_.key;
             };
             break;
@@ -374,7 +378,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.implementation.ModelDetails failure: " + exception;
+        throw "ModelDetails failure: " + exception;
       }
     }
 
@@ -394,7 +398,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return new Address(_this, [new AddressToken(_this, void 0, void 0, 0)]);
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Model.getRootAddress failure: " + exception;
+            throw "createRootAddress failure: " + exception;
           }
         };
         this.createPathAddress = function(path_) {
@@ -405,7 +409,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Model.getAddressFromPath failure: " + exception;
+            throw "createPathAddress failure: " + exception;
           }
         };
         this.getSemanticBindings = function() {
@@ -414,7 +418,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.implementation.semanticBindings;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Model.getSemanticBindings failure: " + exception;
+            throw "getSemanticBindings failure: " + exception;
           }
         };
         this.isEqual = function(model_) {
@@ -423,12 +427,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.jsonTag === model_.jsonTag;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Model.isEqual failure: " + exception;
+            throw "isEqual failure: " + exception;
           }
         };
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Model construction fail: " + exception;
+        throw "Model construction fail: " + exception;
       }
     }
 

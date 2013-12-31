@@ -37,7 +37,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 (function() {
-  var StoreReifier;
+  var Namespace, StoreReifier;
+
+  Namespace = require('./ONMjs-core-namespace');
 
   module.exports = StoreReifier = (function() {
     function StoreReifier(objectStore_) {
@@ -83,7 +85,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             }
           } catch (_error) {
             exception = _error;
-            exceptionMessage = "ONMjs.implementation.StoreRefier.dispatchCallback failure while processing " + ("address='" + (address_.getHumanReadableString()) + "', callback='" + callbackName_ + "', observer='" + ((observerId_ != null) && observerId_ || "[broadcast all]") + "': " + exception);
+            exceptionMessage = "dispatchCallback failure while processing " + ("address='" + (address_.getHumanReadableString()) + "', callback='" + callbackName_ + "', observer='" + ((observerId_ != null) && observerId_ || "[broadcast all]") + "': " + exception);
             throw exceptionMessage;
           }
         };
@@ -104,7 +106,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return true;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.StoreReifier failure: " + exception;
+            throw "reifyStoreComponent failure: " + exception;
           }
         };
         this.unreifyStoreComponent = function(address_, observerId_) {
@@ -124,7 +126,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return true;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.StoreReifier failure: " + exception;
+            throw "unreifyStoreComponent failure: " + exception;
           }
         };
         this.reifyStoreExtensions = function(address_, observerId_, undoFlag_) {
@@ -139,7 +141,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             dispatchCallback = _this.dispatchCallback;
             return address_.visitExtensionPointAddresses(function(addressExtensionPoint_) {
               var extensionPointNamespace;
-              extensionPointNamespace = new ONMjs.Namespace(_this.store, addressExtensionPoint_);
+              extensionPointNamespace = new Namespace(_this.store, addressExtensionPoint_);
               extensionPointNamespace.visitExtensionPointSubcomponents(function(addressSubcomponent_) {
                 if (!undoFlag_) {
                   _this.reifyStoreComponent(addressSubcomponent_, observerId_);
@@ -154,12 +156,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             });
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.StoreReifier failure: " + exception;
+            throw "reifyStoreExtensions failure: " + exception;
           }
         };
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.implementation.StoreReifier constructor failed: " + exception;
+        throw "StoreReifier constructor failed: " + exception;
       }
     }
 

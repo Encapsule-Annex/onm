@@ -326,22 +326,18 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 (function() {
-  var ONMjs, namespaceEncapsule,
+  var AddressStore, Model, Namespace, Store,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  namespaceEncapsule = (typeof Encapsule !== "undefined" && Encapsule !== null) && Encapsule || (this.Encapsule = {});
+  Store = require('./ONMjs-core-store');
 
-  Encapsule.code = (Encapsule.code != null) && Encapsule.code || (this.Encapsule.code = {});
+  Model = require('./ONMjs-core-model');
 
-  Encapsule.code.lib = (Encapsule.code.lib != null) && Encapsule.code.lib || (this.Encapsule.code.lib = {});
+  Namespace = require('./ONMjs-core-namespace');
 
-  Encapsule.code.lib.onm = (Encapsule.code.lib.onm != null) && Encapsule.code.lib.onm || (this.Encapsule.code.lib.onm = {});
-
-  ONMjs = Encapsule.code.lib.onm;
-
-  ONMjs.AddressStore = (function(_super) {
+  module.exports = AddressStore = (function(_super) {
     __extends(AddressStore, _super);
 
     function AddressStore(referenceStore_, address_) {
@@ -354,14 +350,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           throw "Missing object store input parameter. Unable to determine external selector type.";
         }
         this.referenceStore = referenceStore_;
-        selectorModel = new ONMjs.Model({
+        selectorModel = new Model({
           jsonTag: "addressStore",
           label: "" + referenceStore_.model.jsonTag + " Address Cache",
           description: "" + referenceStore_.model.label + " observable address cache."
         });
         AddressStore.__super__.constructor.call(this, selectorModel);
         selectorAddress = selectorModel.createRootAddress();
-        this.selectorNamespace = new ONMjs.Namespace(this, selectorAddress);
+        this.selectorNamespace = new Namespace(this, selectorAddress);
         this.selectorNamespaceData = this.selectorNamespace.data();
         this.selectorNamespaceData.selectedNamespace = void 0;
         this.setAddress(address_);
@@ -375,7 +371,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               }
             } catch (_error) {
               exception = _error;
-              throw "ONMjs.AddressStore.objectStoreCallbacks.onNamespaceUpdated failure: " + exception;
+              throw "onNamespaceUpdated failure: " + exception;
             }
           },
           onNamespaceRemoved: function(objectStore_, observerId_, address_) {
@@ -388,13 +384,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               }
             } catch (_error) {
               exception = _error;
-              throw "ONMjs.AddressStore.objectStoreCallbacks.onNamespaceRemoved failure: " + exception;
+              throw "onNamespaceRemoved failure: " + exception;
             }
           }
         };
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.AddressStore failure: " + exception;
+        throw "AddressStore failure: " + exception;
       }
     }
 
@@ -408,7 +404,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return namespace.getResolvedAddress();
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.AddressStore.getSelector failure: " + exception;
+        throw "getSelector failure: " + exception;
       }
     };
 
@@ -418,18 +414,18 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         if (!(address_ && address_)) {
           this.selectorNamespaceData.selectedNamespace = void 0;
         } else {
-          this.selectorNamespaceData.selectedNamespace = new ONMjs.Namespace(this.referenceStore, address_);
+          this.selectorNamespaceData.selectedNamespace = new Namespace(this.referenceStore, address_);
         }
         return this.selectorNamespace.update();
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.AddressStore.setAddress failure: " + exception;
+        throw "setAddress failure: " + exception;
       }
     };
 
     return AddressStore;
 
-  })(ONMjs.Store);
+  })(Store);
 
 }).call(this);
 
@@ -520,7 +516,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.implementation.AddressToken failure: " + exception;
+        throw "AddressToken failure: " + exception;
       }
     }
 
@@ -538,7 +534,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return result;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.AddressToken.isEqual failure: " + exception;
+        throw "isEqual failure: " + exception;
       }
     };
 
@@ -653,7 +649,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.AddressDetails.createSubpathIdAddress failure: " + exception;
+            throw "createSubpathIdAddress failure: " + exception;
           }
         };
         this.pushToken = function(token_) {
@@ -678,7 +674,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.address;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.AddressDetails.pushToken failure: " + exception;
+            throw "pushToken failure: " + exception;
           }
         };
         this.validateTokenPair = function(parentToken_, childToken_) {
@@ -699,7 +695,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return true;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.AddressDetails.validateTokenPair the specified parent and child tokens are incompatible and cannot be used to form an address: " + exception;
+            throw "validateTokenPair the specified parent and child tokens are incompatible and cannot be used to form an address: " + exception;
           }
         };
         this.getLastToken = function() {
@@ -711,7 +707,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.tokenVector[_this.tokenVector.length - 1];
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.AddressDetails.getLastToken failure: " + exception;
+            throw "getLastToken failure: " + exception;
           }
         };
         this.getDescriptor = function() {
@@ -720,7 +716,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.getLastToken().namespaceDescriptor;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.AddressDetails.getDescriptor failure: " + exception;
+            throw "getDescriptor failure: " + exception;
           }
         };
         this.tokenVector = [];
@@ -743,7 +739,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         this.hashString = void 0;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.implementation.AddressDetails failure: " + exception;
+        throw "AddressDetails failure: " + exception;
       }
     }
 
@@ -791,7 +787,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         };
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address error: " + exception;
+        throw "Address error: " + exception;
       }
     }
 
@@ -825,7 +821,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return humanReadableString;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.getHumanReadableString failure: " + exception;
+        throw "getHumanReadableString failure: " + exception;
       }
     };
 
@@ -859,7 +855,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.hashString;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.getHashString failure: " + exception;
+        throw "getHashString failure: " + exception;
       }
     };
 
@@ -896,7 +892,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return result;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.isEqual failure: " + exception;
+        throw "isEqual failure: " + exception;
       }
     };
 
@@ -906,7 +902,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return new Address(this.model, this.implementation.tokenVector);
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.clone failure: " + exception;
+        throw "clone failure: " + exception;
       }
     };
 
@@ -942,7 +938,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return newAddress;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.createParentAddress failure: " + exception;
+        throw "createParentAddress failure: " + exception;
       }
     };
 
@@ -983,7 +979,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return newAddress;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.createSubpathAddress failure: " + exception;
+        throw "createSubpathAddress failure: " + exception;
       }
     };
 
@@ -998,7 +994,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return newAddress;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.createComponentAddress failure: " + exception;
+        throw "createComponentAddress failure: " + exception;
       }
     };
 
@@ -1013,7 +1009,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.clone().implementation.pushToken(newToken);
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.createSubcomponentAddress failure: " + exception;
+        throw "createSubcomponentAddress failure: " + exception;
       }
     };
 
@@ -1023,7 +1019,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.getDescriptor().namespaceModelDeclaration;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.getModel failure: " + exception;
+        throw "getModel failure: " + exception;
       }
     };
 
@@ -1033,7 +1029,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.getDescriptor().namespaceModelPropertiesDeclaration;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.getPropertiesModel failure: " + exception;
+        throw "getPropertiesModel failure: " + exception;
       }
     };
 
@@ -1068,7 +1064,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.visitParentAddressesAscending failure: " + exception;
+        throw "visitParentAddressesAscending failure: " + exception;
       }
     };
 
@@ -1102,7 +1098,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.visitParentAddressesDescending failure: " + exception;
+        throw "visitParentAddressesDescending failure: " + exception;
       }
     };
 
@@ -1135,7 +1131,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.visitSubaddressesAscending failure: " + exception;
+        throw "visitSubaddressesAscending failure: " + exception;
       }
     };
 
@@ -1166,7 +1162,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.visitSubaddressesAscending failure: " + exception;
+        throw "visitSubaddressesAscending failure: " + exception;
       }
     };
 
@@ -1191,7 +1187,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.visitChildAddresses failure: " + exception;
+        throw "visitChildAddresses failure: " + exception;
       }
     };
 
@@ -1219,7 +1215,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Address.visitExtensionPointAddresses failure: " + exception;
+        throw "visitExtensionPointAddresses failure: " + exception;
       }
     };
 
@@ -1266,13 +1262,17 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 (function() {
-  var Address, AddressToken, Model, ModelDetails, jslib;
+  var Address, AddressToken, LUID, Model, ModelDetails, jslib, uuid;
 
   jslib = require('./encapsule-lib-javascript');
 
   Address = require('./ONMjs-core-address');
 
   AddressToken = require('./ONMjs-core-address-token');
+
+  uuid = require('node-uuid');
+
+  LUID = 0;
 
   ModelDetails = (function() {
     function ModelDetails(model_, objectModelDeclaration_) {
@@ -1413,7 +1413,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return true;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.ModelDetails.buildOMDescriptorFromLayout fail: " + exception;
+            throw "buildOMDescriptorFromLayout fail: " + exception;
           }
         };
         this.getNamespaceDescriptorFromPathId = function(pathId_) {
@@ -1432,7 +1432,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return objectModelDescriptor;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.ModelDetails.getNamespaceDescriptorFromPathId failure: " + exception;
+            throw "getNamespaceDescriptorFromPathId failure: " + exception;
           }
         };
         this.getNamespaceDescriptorFromPath = function(path_) {
@@ -1441,7 +1441,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.getNamespaceDescriptorFromPathId(_this.getPathIdFromPath(path_));
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.ModelDetails.getNamespaceDescriptorFromPath failure: " + exception;
+            throw "getNamespaceDescriptorFromPath failure: " + exception;
           }
         };
         this.getPathIdFromPath = function(path_) {
@@ -1461,7 +1461,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return objectModelPathId;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.ModelDetails.getPathIdFromPath fail: " + exception;
+            throw "getPathIdFromPath fail: " + exception;
           }
         };
         this.getPathFromPathId = function(pathId_) {
@@ -1478,7 +1478,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return path;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.ModelDetails.getPathFromPathId fail: " + exception;
+            throw "getPathFromPathId fail: " + exception;
           }
         };
         this.createAddressFromPathId = function(pathId_) {
@@ -1504,7 +1504,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.ModelDetails.getAddressFromPathId failure: " + exception;
+            throw "getAddressFromPathId failure: " + exception;
           }
         };
         if (!((objectModelDeclaration_ != null) && objectModelDeclaration_)) {
@@ -1556,8 +1556,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               return data_.key;
             };
             this.semanticBindings.setUniqueKey = function(data_) {
-              data_.key = (ONMjs.implementation.LUID != null) && ONMjs.implementation.LUID || (ONMjs.implementation.LUID = 1);
-              ONMjs.implementation.LUID++;
+              data_.key = (LUID != null) && LUID || (LUID = 1);
+              LUID++;
               return data_.key;
             };
             break;
@@ -1605,7 +1605,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.implementation.ModelDetails failure: " + exception;
+        throw "ModelDetails failure: " + exception;
       }
     }
 
@@ -1625,7 +1625,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return new Address(_this, [new AddressToken(_this, void 0, void 0, 0)]);
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Model.getRootAddress failure: " + exception;
+            throw "createRootAddress failure: " + exception;
           }
         };
         this.createPathAddress = function(path_) {
@@ -1636,7 +1636,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Model.getAddressFromPath failure: " + exception;
+            throw "createPathAddress failure: " + exception;
           }
         };
         this.getSemanticBindings = function() {
@@ -1645,7 +1645,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.implementation.semanticBindings;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Model.getSemanticBindings failure: " + exception;
+            throw "getSemanticBindings failure: " + exception;
           }
         };
         this.isEqual = function(model_) {
@@ -1654,12 +1654,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.jsonTag === model_.jsonTag;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Model.isEqual failure: " + exception;
+            throw "isEqual failure: " + exception;
           }
         };
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Model construction fail: " + exception;
+        throw "Model construction fail: " + exception;
       }
     }
 
@@ -1796,7 +1796,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Namespace failure: " + exception;
+        throw "Namespace failure: " + exception;
       }
     }
 
@@ -1810,7 +1810,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.resolvedAddress;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Namespace.address failure: " + exception;
+        throw "getResolvedAddress failure: " + exception;
       }
     };
 
@@ -1829,7 +1829,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return resolvedLabel;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Namespace.getResolvedLabel failure: " + exception;
+        throw "getResolvedLabel failure: " + exception;
       }
     };
 
@@ -1851,7 +1851,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return resultJSON;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Namespace.toJSON failure: " + exception;
+        throw "toJSON failure: " + exception;
       }
     };
 
@@ -1894,7 +1894,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return _results;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Namespace.update failure: " + exception;
+        throw "update failure: " + exception;
       }
     };
 
@@ -1924,7 +1924,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Namepsace.visitExtensionPointSubcomponents failure: " + exception;
+        throw "visitExtensionPointSubcomponents failure: " + exception;
       }
     };
 
@@ -1973,7 +1973,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 (function() {
-  var StoreReifier;
+  var Namespace, StoreReifier;
+
+  Namespace = require('./ONMjs-core-namespace');
 
   module.exports = StoreReifier = (function() {
     function StoreReifier(objectStore_) {
@@ -2019,7 +2021,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             }
           } catch (_error) {
             exception = _error;
-            exceptionMessage = "ONMjs.implementation.StoreRefier.dispatchCallback failure while processing " + ("address='" + (address_.getHumanReadableString()) + "', callback='" + callbackName_ + "', observer='" + ((observerId_ != null) && observerId_ || "[broadcast all]") + "': " + exception);
+            exceptionMessage = "dispatchCallback failure while processing " + ("address='" + (address_.getHumanReadableString()) + "', callback='" + callbackName_ + "', observer='" + ((observerId_ != null) && observerId_ || "[broadcast all]") + "': " + exception);
             throw exceptionMessage;
           }
         };
@@ -2040,7 +2042,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return true;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.StoreReifier failure: " + exception;
+            throw "reifyStoreComponent failure: " + exception;
           }
         };
         this.unreifyStoreComponent = function(address_, observerId_) {
@@ -2060,7 +2062,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return true;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.StoreReifier failure: " + exception;
+            throw "unreifyStoreComponent failure: " + exception;
           }
         };
         this.reifyStoreExtensions = function(address_, observerId_, undoFlag_) {
@@ -2075,7 +2077,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             dispatchCallback = _this.dispatchCallback;
             return address_.visitExtensionPointAddresses(function(addressExtensionPoint_) {
               var extensionPointNamespace;
-              extensionPointNamespace = new ONMjs.Namespace(_this.store, addressExtensionPoint_);
+              extensionPointNamespace = new Namespace(_this.store, addressExtensionPoint_);
               extensionPointNamespace.visitExtensionPointSubcomponents(function(addressSubcomponent_) {
                 if (!undoFlag_) {
                   _this.reifyStoreComponent(addressSubcomponent_, observerId_);
@@ -2090,12 +2092,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             });
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.implementation.StoreReifier failure: " + exception;
+            throw "reifyStoreExtensions failure: " + exception;
           }
         };
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.implementation.StoreReifier constructor failed: " + exception;
+        throw "StoreReifier constructor failed: " + exception;
       }
     }
 
@@ -2144,7 +2146,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 (function() {
-  var AddressToken, AddressTokenBinder, Namespace, Store, StoreDetails, StoreReifier, jslib;
+  var AddressToken, AddressTokenBinder, Namespace, Store, StoreDetails, StoreReifier, jslib, uuid;
 
   jslib = require('./encapsule-lib-javascript');
 
@@ -2155,6 +2157,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
   AddressTokenBinder = require('./ONMjs-core-address-binder');
 
   Namespace = require('./ONMjs-core-namespace');
+
+  uuid = require('node-uuid');
 
   StoreDetails = (function() {
     function StoreDetails(store_, model_, initialStateJSON_) {
@@ -2169,7 +2173,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         this.observersState = {};
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.implementation.StoreDetails failure: " + exception;
+        throw "StoreDetails failure: " + exception;
       }
     }
 
@@ -2211,7 +2215,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.model.isEqual(address_.model);
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.verifyAddress failure: " + exception;
+            throw "validateAddressModel failure: " + exception;
           }
         };
         this.createComponent = function(address_) {
@@ -2237,7 +2241,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return componentNamespace;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.createComponent failure: " + exception;
+            throw "createComponent failure: " + exception;
           }
         };
         this.removeComponent = function(address_) {
@@ -2271,7 +2275,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return componentNamespace;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.removeComponent failure: " + exception;
+            throw "removeComponent failure: " + exception;
           }
         };
         this.openNamespace = function(address_) {
@@ -2287,7 +2291,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return namespace;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.openNamespace failure: " + exception;
+            throw "openNamespace failure: " + exception;
           }
         };
         this.toJSON = function(replacer_, space_) {
@@ -2298,7 +2302,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return resultJSON;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.toJSON fail on object store " + _this.jsonTag + " : " + exception;
+            throw "toJSON fail on object store " + _this.jsonTag + " : " + exception;
           }
         };
         this.registerObserver = function(observerCallbackInterface_, observingEntityReference_) {
@@ -2318,7 +2322,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return observerIdCode;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.registerObserver failure: " + exception;
+            throw "registerObserver failure: " + exception;
           }
         };
         this.unregisterObserver = function(observerIdCode_) {
@@ -2340,7 +2344,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return delete _this.implementation.observers[observerIdCode_];
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.unregisterObserver failure: " + exception;
+            throw "unregisterObserver failure: " + exception;
           }
         };
         this.openObserverState = function(observerId_) {
@@ -2353,7 +2357,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return observerState;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.openObserverStateObject failure: " + exception;
+            throw "openObserverStateObject failure: " + exception;
           }
         };
         this.removeObserverState = function(observerId_) {
@@ -2382,7 +2386,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.openObserverNamespaceState(observerId_, componentAddress);
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.openObserverComponentState failure: " + exception;
+            throw "openObserverComponentState failure: " + exception;
           }
         };
         this.openObserverNamespaceState = function(observerId_, address_) {
@@ -2403,7 +2407,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return namespaceState;
           } catch (_error) {
             exception = _error;
-            throw "ONMjs.Store.openObserverNamespaceState failure: " + exception;
+            throw "openObserverNamespaceState failure: " + exception;
           }
         };
         this.removeObserverNamespaceState = function(observerId_, address_) {
@@ -2425,7 +2429,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         };
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.Store failure: " + exception;
+        throw "Store failure: " + exception;
       }
     }
 
@@ -2472,17 +2476,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 (function() {
-  var namespaceEncapsule;
+  var BackChannel;
 
-  namespaceEncapsule = (typeof Encapsule !== "undefined" && Encapsule !== null) && Encapsule || (this.Encapsule = {});
-
-  Encapsule.code = (Encapsule.code != null) && Encapsule.code || (this.Encapsule.code = {});
-
-  Encapsule.code.lib = (Encapsule.code.lib != null) && Encapsule.code.lib || (this.Encapsule.code.lib = {});
-
-  Encapsule.code.lib.base = (Encapsule.code.lib.base != null) && Encapsule.code.lib.base || (this.Encapsule.code.lib.base = {});
-
-  Encapsule.code.lib.base.BackChannel = (function() {
+  module.exports = BackChannel = (function() {
     function BackChannel(logHandler_, errorHandler_) {
       var exception,
         _this = this;

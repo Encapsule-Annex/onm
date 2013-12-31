@@ -36,22 +36,18 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 (function() {
-  var ONMjs, namespaceEncapsule,
+  var AddressStore, Model, Namespace, Store,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  namespaceEncapsule = (typeof Encapsule !== "undefined" && Encapsule !== null) && Encapsule || (this.Encapsule = {});
+  Store = require('./ONMjs-core-store');
 
-  Encapsule.code = (Encapsule.code != null) && Encapsule.code || (this.Encapsule.code = {});
+  Model = require('./ONMjs-core-model');
 
-  Encapsule.code.lib = (Encapsule.code.lib != null) && Encapsule.code.lib || (this.Encapsule.code.lib = {});
+  Namespace = require('./ONMjs-core-namespace');
 
-  Encapsule.code.lib.onm = (Encapsule.code.lib.onm != null) && Encapsule.code.lib.onm || (this.Encapsule.code.lib.onm = {});
-
-  ONMjs = Encapsule.code.lib.onm;
-
-  ONMjs.AddressStore = (function(_super) {
+  module.exports = AddressStore = (function(_super) {
     __extends(AddressStore, _super);
 
     function AddressStore(referenceStore_, address_) {
@@ -64,14 +60,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           throw "Missing object store input parameter. Unable to determine external selector type.";
         }
         this.referenceStore = referenceStore_;
-        selectorModel = new ONMjs.Model({
+        selectorModel = new Model({
           jsonTag: "addressStore",
           label: "" + referenceStore_.model.jsonTag + " Address Cache",
           description: "" + referenceStore_.model.label + " observable address cache."
         });
         AddressStore.__super__.constructor.call(this, selectorModel);
         selectorAddress = selectorModel.createRootAddress();
-        this.selectorNamespace = new ONMjs.Namespace(this, selectorAddress);
+        this.selectorNamespace = new Namespace(this, selectorAddress);
         this.selectorNamespaceData = this.selectorNamespace.data();
         this.selectorNamespaceData.selectedNamespace = void 0;
         this.setAddress(address_);
@@ -85,7 +81,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               }
             } catch (_error) {
               exception = _error;
-              throw "ONMjs.AddressStore.objectStoreCallbacks.onNamespaceUpdated failure: " + exception;
+              throw "onNamespaceUpdated failure: " + exception;
             }
           },
           onNamespaceRemoved: function(objectStore_, observerId_, address_) {
@@ -98,13 +94,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               }
             } catch (_error) {
               exception = _error;
-              throw "ONMjs.AddressStore.objectStoreCallbacks.onNamespaceRemoved failure: " + exception;
+              throw "onNamespaceRemoved failure: " + exception;
             }
           }
         };
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.AddressStore failure: " + exception;
+        throw "AddressStore failure: " + exception;
       }
     }
 
@@ -118,7 +114,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return namespace.getResolvedAddress();
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.AddressStore.getSelector failure: " + exception;
+        throw "getSelector failure: " + exception;
       }
     };
 
@@ -128,17 +124,17 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         if (!(address_ && address_)) {
           this.selectorNamespaceData.selectedNamespace = void 0;
         } else {
-          this.selectorNamespaceData.selectedNamespace = new ONMjs.Namespace(this.referenceStore, address_);
+          this.selectorNamespaceData.selectedNamespace = new Namespace(this.referenceStore, address_);
         }
         return this.selectorNamespace.update();
       } catch (_error) {
         exception = _error;
-        throw "ONMjs.AddressStore.setAddress failure: " + exception;
+        throw "setAddress failure: " + exception;
       }
     };
 
     return AddressStore;
 
-  })(ONMjs.Store);
+  })(Store);
 
 }).call(this);

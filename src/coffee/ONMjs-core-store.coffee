@@ -44,6 +44,7 @@ StoreReifier = require('./ONMjs-core-store-reifier')
 AddressToken = require('./ONMjs-core-address-token')
 AddressTokenBinder = require('./ONMjs-core-address-binder')
 Namespace = require('./ONMjs-core-namespace')
+uuid = require('node-uuid')
 
 class StoreDetails
     constructor: (store_, model_, initialStateJSON_) ->
@@ -52,8 +53,8 @@ class StoreDetails
             @model = model_
 
             # Reifer "makes real" the contents of the store in the eye of the beholder (i.e. registered observers).
-            # In other words, reifier traverses the contents of the stores and calls specific methods on registered
-            # observer interfaces in response to various ONMjs.Store observable state change events. 
+            # Reifier does this by traversing the contents of the store and calling change signal callback handlers
+            # registered by a store's observer(s).
             @reifier = new StoreReifier(@store)
 
             @dataReference = {} # the new store actual
@@ -69,7 +70,7 @@ class StoreDetails
 
 
         catch exception
-            throw "ONMjs.implementation.StoreDetails failure: #{exception}"
+            throw "StoreDetails failure: #{exception}"
 
 
 module.exports = class Store
@@ -106,15 +107,13 @@ module.exports = class Store
 
             #
             # ============================================================================
-            # Returns true iff the specified ONMjs.Address and this ONMjs.Store
-            # are both bound to the same ONMjs.Model.
-
+            # Returns true iff the specified Address and Store objects are both bound to the same Model.
             @validateAddressModel = (address_) =>
                 try
                     if not (address_? and address_) then throw "Missing address input parameter."
                     return @model.isEqual(address_.model)
                 catch exception
-                    throw "ONMjs.Store.verifyAddress failure: #{exception}"
+                    throw "validateAddressModel failure: #{exception}"
 
 
             #
@@ -134,7 +133,7 @@ module.exports = class Store
 
                 catch exception
 
-                    throw "ONMjs.Store.createComponent failure: #{exception}"
+                    throw "createComponent failure: #{exception}"
 
             #
             # ============================================================================
@@ -161,7 +160,7 @@ module.exports = class Store
                     return componentNamespace
 
                 catch exception
-                    throw "ONMjs.Store.removeComponent failure: #{exception}"
+                    throw "removeComponent failure: #{exception}"
 
 
             #
@@ -177,7 +176,7 @@ module.exports = class Store
                     return namespace
 
                 catch exception
-                    throw "ONMjs.Store.openNamespace failure: #{exception}"
+                    throw "openNamespace failure: #{exception}"
                 
 
             #
@@ -189,7 +188,7 @@ module.exports = class Store
                     return resultJSON
 
                 catch exception
-                    throw "ONMjs.Store.toJSON fail on object store #{@jsonTag} : #{exception}"
+                    throw "toJSON fail on object store #{@jsonTag} : #{exception}"
 
             # 
             # ============================================================================
@@ -239,7 +238,7 @@ module.exports = class Store
                     return observerIdCode
 
                 catch exception
-                    throw "ONMjs.Store.registerObserver failure: #{exception}"
+                    throw "registerObserver failure: #{exception}"
 
             #
             # ============================================================================
@@ -268,7 +267,7 @@ module.exports = class Store
                     delete @implementation.observers[observerIdCode_]
 
                 catch exception
-                    throw "ONMjs.Store.unregisterObserver failure: #{exception}"
+                    throw "unregisterObserver failure: #{exception}"
 
             #
             # ============================================================================
@@ -279,7 +278,7 @@ module.exports = class Store
                     return observerState                    
 
                 catch exception
-                    throw "ONMjs.Store.openObserverStateObject failure: #{exception}"
+                    throw "openObserverStateObject failure: #{exception}"
 
             #
             # ============================================================================
@@ -301,7 +300,7 @@ module.exports = class Store
                     componentAddress = address_.createComponentAddress()
                     return @openObserverNamespaceState(observerId_, componentAddress)
                 catch exception
-                    throw "ONMjs.Store.openObserverComponentState failure: #{exception}"
+                    throw "openObserverComponentState failure: #{exception}"
 
             #
             # ============================================================================
@@ -318,7 +317,7 @@ module.exports = class Store
                     return namespaceState
 
                 catch exception
-                    throw "ONMjs.Store.openObserverNamespaceState failure: #{exception}"
+                    throw "openObserverNamespaceState failure: #{exception}"
 
             #
             # ============================================================================
@@ -338,7 +337,7 @@ module.exports = class Store
 
 
         catch exception
-            throw "ONMjs.Store failure: #{exception}"
+            throw "Store failure: #{exception}"
 
 
         

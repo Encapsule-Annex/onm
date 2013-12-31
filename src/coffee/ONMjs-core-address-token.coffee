@@ -70,7 +70,7 @@ module.exports = class AddressToken
 
             # If the AddressToken refers to the root component namespace, or any of its subnamespaces
             # it does not require a key to resolve because by definition it is unambiguously owned by
-            # ONMjs.Store. 
+            # Store object.
             if @componentDescriptor.id == 0 then return
 
             # In all other cases the AddressToken refers to a namespace in an application component.
@@ -108,7 +108,7 @@ module.exports = class AddressToken
             return
 
         catch exception
-            throw "ONMjs.implementation.AddressToken failure: #{exception}"
+            throw "AddressToken failure: #{exception}"
 
     #
     # ============================================================================
@@ -130,7 +130,7 @@ module.exports = class AddressToken
             return result
 
         catch exception
-            throw "ONMjs.AddressToken.isEqual failure: #{exception}"
+            throw "isEqual failure: #{exception}"
 
     #
     # ============================================================================

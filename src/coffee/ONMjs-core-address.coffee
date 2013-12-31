@@ -82,7 +82,7 @@ class AddressDetails
                     newAddress = new Address(@model, newTokenVector)
                     return newAddress
                 catch exception
-                    throw "ONMjs.implementation.AddressDetails.createSubpathIdAddress failure: #{exception}"
+                    throw "createSubpathIdAddress failure: #{exception}"
 
             # --------------------------------------------------------------------------
             @pushToken = (token_) =>
@@ -108,7 +108,7 @@ class AddressDetails
                     @address
 
                 catch exception
-                    throw "ONMjs.implementation.AddressDetails.pushToken failure: #{exception}"
+                    throw "pushToken failure: #{exception}"
 
             # --------------------------------------------------------------------------
             @validateTokenPair = (parentToken_, childToken_) ->
@@ -127,7 +127,7 @@ class AddressDetails
                     true
 
                 catch exception
-                    throw "ONMjs.implementation.AddressDetails.validateTokenPair the specified parent and child tokens are incompatible and cannot be used to form an address: #{exception}"
+                    throw "validateTokenPair the specified parent and child tokens are incompatible and cannot be used to form an address: #{exception}"
 
             # --------------------------------------------------------------------------
             @getLastToken = =>
@@ -136,14 +136,14 @@ class AddressDetails
                         throw "Illegal call to getLastToken on uninitialized address class instance."
                     @tokenVector[@tokenVector.length - 1]
                 catch exception
-                    throw "ONMjs.implementation.AddressDetails.getLastToken failure: #{exception}"
+                    throw "getLastToken failure: #{exception}"
 
             # --------------------------------------------------------------------------
             @getDescriptor = =>
                 try
                     return @getLastToken().namespaceDescriptor
                 catch exception
-                    throw "ONMjs.implementation.AddressDetails.getDescriptor failure: #{exception}"
+                    throw "getDescriptor failure: #{exception}"
 
 
             # --------------------------------------------------------------------------
@@ -182,7 +182,7 @@ class AddressDetails
             @hashString = undefined
 
         catch exception
-            throw "ONMjs.implementation.AddressDetails failure: #{exception}"
+            throw "AddressDetails failure: #{exception}"
 
 
 
@@ -220,7 +220,7 @@ module.exports = class Address
             @isCreatable = => @isComplete() and @implementation.keysRequired and not @implementation.keysSpecified
 
         catch exception
-            throw "ONMjs.Address error: #{exception}"
+            throw "Address error: #{exception}"
 
     #
     # ============================================================================
@@ -249,7 +249,7 @@ module.exports = class Address
             return humanReadableString
 
         catch exception
-            throw "ONMjs.Address.getHumanReadableString failure: #{exception}"
+            throw "getHumanReadableString failure: #{exception}"
 
 
 
@@ -275,7 +275,7 @@ module.exports = class Address
                     hashSource += ".#{token.idNamespace}"
                 index++
 
-            # Given that an ONMjs object model is a singly-rooted tree structure, the raw
+            # Given that an ONM object model is a singly-rooted tree structure, the raw
             # hash strings of different addresses created for the same object model all share
             # a common string prefix. All the information in the hash string is required to
             # reconstruct the address if the hash is used as a URN. However, for local in-app
@@ -294,7 +294,7 @@ module.exports = class Address
             return @implementation.hashString
             
         catch exception
-            throw "ONMjs.Address.getHashString failure: #{exception}"
+            throw "getHashString failure: #{exception}"
 
     #
     # ============================================================================
@@ -322,7 +322,7 @@ module.exports = class Address
                 index++
             return result
         catch exception
-            throw "ONMjs.Address.isEqual failure: #{exception}"
+            throw "isEqual failure: #{exception}"
 
     #
     # ============================================================================
@@ -330,7 +330,7 @@ module.exports = class Address
         try
             new Address(@model, @implementation.tokenVector)
         catch exception
-            throw "ONMjs.Address.clone failure: #{exception}"
+            throw "clone failure: #{exception}"
  
 
 
@@ -380,7 +380,7 @@ module.exports = class Address
             return newAddress
 
         catch exception
-            throw "ONMjs.Address.createParentAddress failure: #{exception}"
+            throw "createParentAddress failure: #{exception}"
 
 
     #
@@ -421,7 +421,7 @@ module.exports = class Address
             return newAddress
 
         catch exception
-            throw "ONMjs.Address.createSubpathAddress failure: #{exception}"
+            throw "createSubpathAddress failure: #{exception}"
 
 
     #
@@ -434,7 +434,7 @@ module.exports = class Address
             newAddress = @implementation.createSubpathIdAddress(descriptor.idComponent)
             return newAddress
         catch exception
-            throw "ONMjs.Address.createComponentAddress failure: #{exception}"
+            throw "createComponentAddress failure: #{exception}"
 
     #
     # ============================================================================
@@ -446,7 +446,7 @@ module.exports = class Address
             newToken = new AddressToken(@model, descriptor.id, undefined, descriptor.archetypePathId)
             @clone().implementation.pushToken(newToken)
         catch exception
-            throw "ONMjs.Address.createSubcomponentAddress failure: #{exception}"
+            throw "createSubcomponentAddress failure: #{exception}"
 
     #
     # ============================================================================
@@ -455,7 +455,7 @@ module.exports = class Address
             return @implementation.getDescriptor().namespaceModelDeclaration
 
         catch exception
-            throw "ONMjs.Address.getModel failure: #{exception}"
+            throw "getModel failure: #{exception}"
 
 
     #
@@ -465,7 +465,7 @@ module.exports = class Address
             return @implementation.getDescriptor().namespaceModelPropertiesDeclaration
 
         catch exception
-            throw "ONMjs.Address.getPropertiesModel failure: #{exception}"
+            throw "getPropertiesModel failure: #{exception}"
 
     #
     # ============================================================================
@@ -484,7 +484,7 @@ module.exports = class Address
                     throw "Failure occurred inside your registered callback function implementation: #{exception}"
             true
         catch exception
-            throw "ONMjs.Address.visitParentAddressesAscending failure: #{exception}"
+            throw "visitParentAddressesAscending failure: #{exception}"
         
     #
     # ============================================================================
@@ -505,7 +505,7 @@ module.exports = class Address
                     throw "Failure occurred inside your registered callback function implementation: #{exception}"
             true
         catch exception
-            throw "ONMjs.Address.visitParentAddressesDescending failure: #{exception}"
+            throw "visitParentAddressesDescending failure: #{exception}"
 
     #
     # ============================================================================
@@ -525,7 +525,7 @@ module.exports = class Address
                     throw "Failure occurred inside your registered callback function implementation: #{exception}"
             true
         catch exception
-            throw "ONMjs.Address.visitSubaddressesAscending failure: #{exception}"
+            throw "visitSubaddressesAscending failure: #{exception}"
 
     #
     # ============================================================================
@@ -543,7 +543,7 @@ module.exports = class Address
                     throw "Failure occurred inside your registered callback function implementation: #{exception}"
             true
         catch exception
-            throw "ONMjs.Address.visitSubaddressesAscending failure: #{exception}"
+            throw "visitSubaddressesAscending failure: #{exception}"
 
 
 
@@ -561,7 +561,7 @@ module.exports = class Address
                     throw "Failure occurred inside your registered callback function implementation: #{exception}"
             true
         catch exception
-            throw "ONMjs.Address.visitChildAddresses failure: #{exception}"
+            throw "visitChildAddresses failure: #{exception}"
 
     #
     # ============================================================================
@@ -578,5 +578,5 @@ module.exports = class Address
                 callback_(address)
             true # that
         catch exception
-            throw "ONMjs.Address.visitExtensionPointAddresses failure: #{exception}"
+            throw "visitExtensionPointAddresses failure: #{exception}"
 

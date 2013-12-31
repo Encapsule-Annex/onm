@@ -112,7 +112,7 @@ module.exports = class Namespace
                 true
 
         catch exception
-            throw "ONMjs.Namespace failure: #{exception}"
+            throw "Namespace failure: #{exception}"
 
     #
     # ============================================================================
@@ -123,7 +123,7 @@ module.exports = class Namespace
             @implementation.resolvedAddress = new Address(@store.model, @implementation.resolvedTokenArray)
             return @implementation.resolvedAddress
         catch exception
-            throw "ONMjs.Namespace.address failure: #{exception}"
+            throw "getResolvedAddress failure: #{exception}"
 
 
     #
@@ -142,7 +142,7 @@ module.exports = class Namespace
             return resolvedLabel
             
         catch exception
-            throw "ONMjs.Namespace.getResolvedLabel failure: #{exception}"
+            throw "getResolvedLabel failure: #{exception}"
 
     #
     # ============================================================================
@@ -163,7 +163,7 @@ module.exports = class Namespace
             return resultJSON
 
         catch exception
-            throw "ONMjs.Namespace.toJSON failure: #{exception}"
+            throw "toJSON failure: #{exception}"
 
 
 
@@ -208,7 +208,7 @@ module.exports = class Namespace
                 count++
             
         catch exception
-            throw "ONMjs.Namespace.update failure: #{exception}"
+            throw "update failure: #{exception}"
 
 
 
@@ -235,7 +235,7 @@ module.exports = class Namespace
             true
 
         catch exception
-            throw "ONMjs.Namepsace.visitExtensionPointSubcomponents failure: #{exception}"
+            throw "visitExtensionPointSubcomponents failure: #{exception}"
     # ============================================================================
 
 

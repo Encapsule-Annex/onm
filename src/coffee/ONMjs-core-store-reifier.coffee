@@ -39,6 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+Namespace = require('./ONMjs-core-namespace')
 
 #
 # ****************************************************************************
@@ -75,7 +76,7 @@ module.exports = class StoreReifier
                                     throw "An error occurred in the '#{callbackName_}' method of your observer interface: #{exception}"
 
                 catch exception
-                    exceptionMessage = "ONMjs.implementation.StoreRefier.dispatchCallback failure while processing " +
+                    exceptionMessage = "dispatchCallback failure while processing " +
                         "address='#{address_.getHumanReadableString()}', callback='#{callbackName_}', observer='#{observerId_? and observerId_ or "[broadcast all]"}': #{exception}"
                     throw exceptionMessage
 
@@ -96,7 +97,7 @@ module.exports = class StoreReifier
                     true # that
 
                 catch exception
-                    throw "ONMjs.implementation.StoreReifier failure: #{exception}"
+                    throw "reifyStoreComponent failure: #{exception}"
 
 
             # 
@@ -116,7 +117,7 @@ module.exports = class StoreReifier
                     true # that
 
                 catch exception
-                    throw "ONMjs.implementation.StoreReifier failure: #{exception}"
+                    throw "unreifyStoreComponent failure: #{exception}"
 
             # 
             # ============================================================================
@@ -130,7 +131,7 @@ module.exports = class StoreReifier
                     dispatchCallback = @dispatchCallback
 
                     address_.visitExtensionPointAddresses( (addressExtensionPoint_) =>
-                        extensionPointNamespace = new ONMjs.Namespace(@store, addressExtensionPoint_)
+                        extensionPointNamespace = new Namespace(@store, addressExtensionPoint_)
                         extensionPointNamespace.visitExtensionPointSubcomponents( (addressSubcomponent_) =>
                             if not undoFlag_
                                 @reifyStoreComponent(addressSubcomponent_, observerId_)
@@ -144,8 +145,8 @@ module.exports = class StoreReifier
                     )
 
                 catch exception
-                    throw "ONMjs.implementation.StoreReifier failure: #{exception}"
+                    throw "reifyStoreExtensions failure: #{exception}"
 
         catch exception
-            throw "ONMjs.implementation.StoreReifier constructor failed: #{exception}"
+            throw "StoreReifier constructor failed: #{exception}"
 
