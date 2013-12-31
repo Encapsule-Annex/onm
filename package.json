@@ -1,0 +1,19 @@
+{
+  "name": "onm",
+  "version": "0.1.0",
+  "description": "object namespace manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "ChrisRus",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-nodeunit": "~0.2.2",
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-contrib-coffee": "~0.8.0",
+    "grunt-contrib-clean": "~0.5.0"
+  }
+}
