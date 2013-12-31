@@ -2,12 +2,12 @@
   "name": "onm",
   "version": "0.1.0",
   "description": "object namespace manager",
+  "keywords": [ "data", "model", "store" ],
   "main": "index.js",
-  "scripts": {
-    "test": "test"
-  },
-  "author": "ChrisRus",
-  "license": "MIT",
+  "author": { "name": "Chris Russell", "email": "chrisrus@encapsule.org", "url": "https://github.com/ChrisRus" },
+  "repository": { "type": "git", "url": "https://github.com/Encapsule/onm" },
+  "licenses": { "type": "MIT" },
+  "homepage": "https://github.com/Encapsule/onm",
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-jshint": "~0.8.0",
