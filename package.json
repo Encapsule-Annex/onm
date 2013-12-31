@@ -1,12 +1,25 @@
 {
   "name": "onm",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "object namespace manager",
-  "keywords": [ "data", "model", "store" ],
+  "keywords": [
+    "data",
+    "model",
+    "store"
+  ],
   "main": "index.js",
-  "author": { "name": "Chris Russell", "email": "chrisrus@encapsule.org", "url": "https://github.com/ChrisRus" },
-  "repository": { "type": "git", "url": "https://github.com/Encapsule/onm" },
-  "licenses": { "type": "MIT" },
+  "author": {
+    "name": "Chris Russell",
+    "email": "chrisrus@encapsule.org",
+    "url": "https://github.com/ChrisRus"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Encapsule/onm"
+  },
+  "licenses": {
+    "type": "MIT"
+  },
   "homepage": "https://github.com/Encapsule/onm",
   "devDependencies": {
     "grunt": "~0.4.2",
@@ -15,5 +28,8 @@
     "grunt-contrib-uglify": "~0.2.7",
     "grunt-contrib-coffee": "~0.8.0",
     "grunt-contrib-clean": "~0.5.0"
+  },
+  "dependencies": {
+    "node-uuid": "~1.4.1"
   }
 }
