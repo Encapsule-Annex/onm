@@ -37,7 +37,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 (function() {
-  var Namespace, StoreReifier;
+  var Namespace, StoreReifier, jslib;
+
+  jslib = require('./encapsule-lib-javascript');
 
   Namespace = require('./ONMjs-core-namespace');
 
@@ -95,7 +97,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (!((address_ != null) && address_)) {
               throw "Internal error: Missing address input parameter.";
             }
-            if (!Encapsule.code.lib.js.dictionaryLength(_this.store.implementation.observers)) {
+            if (!jslib.dictionaryLength(_this.store.implementation.observers)) {
               return;
             }
             dispatchCallback = _this.dispatchCallback;
@@ -115,7 +117,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (!((address_ != null) && address_)) {
               throw "Internal error: Missing address input parameter.";
             }
-            if (!Encapsule.code.lib.js.dictionaryLength(_this.store.implementation.observers)) {
+            if (!jslib.dictionaryLength(_this.store.implementation.observers)) {
               return;
             }
             dispatchCallback = _this.dispatchCallback;
@@ -135,7 +137,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (!((address_ != null) && address_)) {
               throw "Internal error: Missing address input parameter.";
             }
-            if (!Encapsule.code.lib.js.dictionaryLength(_this.store.implementation.observers)) {
+            if (!jslib.dictionaryLength(_this.store.implementation.observers)) {
               return;
             }
             dispatchCallback = _this.dispatchCallback;

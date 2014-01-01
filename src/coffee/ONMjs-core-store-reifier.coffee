@@ -39,6 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+jslib = require('./encapsule-lib-javascript')
 Namespace = require('./ONMjs-core-namespace')
 
 #
@@ -88,7 +89,7 @@ module.exports = class StoreReifier
                     if not (address_? and address_) then throw "Internal error: Missing address input parameter."
 
                     # Return immediately if there are no observers registered.
-                    if not Encapsule.code.lib.js.dictionaryLength(@store.implementation.observers) then return
+                    if not jslib.dictionaryLength(@store.implementation.observers) then return
 
                     dispatchCallback = @dispatchCallback
                     dispatchCallback(address_, "onComponentCreated", observerId_)
@@ -108,7 +109,7 @@ module.exports = class StoreReifier
                     if not (address_? and address_) then throw "Internal error: Missing address input parameter."
 
                     # Return immediately if there are no observers registered.
-                    if not Encapsule.code.lib.js.dictionaryLength(@store.implementation.observers) then return
+                    if not jslib.dictionaryLength(@store.implementation.observers) then return
 
                     dispatchCallback = @dispatchCallback
                     address_.visitSubaddressesDescending( (addressSubnamespace_) -> dispatchCallback(addressSubnamespace_, "onNamespaceRemoved", observerId_) )
@@ -126,7 +127,7 @@ module.exports = class StoreReifier
                     if not (address_? and address_) then throw "Internal error: Missing address input parameter."
 
                     # Return immediately if there are no observers registered.
-                    if not Encapsule.code.lib.js.dictionaryLength(@store.implementation.observers) then return
+                    if not jslib.dictionaryLength(@store.implementation.observers) then return
 
                     dispatchCallback = @dispatchCallback
 

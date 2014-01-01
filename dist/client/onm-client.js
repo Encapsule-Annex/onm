@@ -1601,7 +1601,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                 data_.uuidRevision = uuid.v4();
               }
               if (data_.revisionTime != null) {
-                return data_.revisionTime = Encapsule.code.lib.util.getEpochTime();
+                return data_.revisionTime = jslib.getEpochTime();
               }
             };
             break;
@@ -1980,7 +1980,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 (function() {
-  var Namespace, StoreReifier;
+  var Namespace, StoreReifier, jslib;
+
+  jslib = require('./encapsule-lib-javascript');
 
   Namespace = require('./ONMjs-core-namespace');
 
@@ -2038,7 +2040,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (!((address_ != null) && address_)) {
               throw "Internal error: Missing address input parameter.";
             }
-            if (!Encapsule.code.lib.js.dictionaryLength(_this.store.implementation.observers)) {
+            if (!jslib.dictionaryLength(_this.store.implementation.observers)) {
               return;
             }
             dispatchCallback = _this.dispatchCallback;
@@ -2058,7 +2060,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (!((address_ != null) && address_)) {
               throw "Internal error: Missing address input parameter.";
             }
-            if (!Encapsule.code.lib.js.dictionaryLength(_this.store.implementation.observers)) {
+            if (!jslib.dictionaryLength(_this.store.implementation.observers)) {
               return;
             }
             dispatchCallback = _this.dispatchCallback;
@@ -2078,7 +2080,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (!((address_ != null) && address_)) {
               throw "Internal error: Missing address input parameter.";
             }
-            if (!Encapsule.code.lib.js.dictionaryLength(_this.store.implementation.observers)) {
+            if (!jslib.dictionaryLength(_this.store.implementation.observers)) {
               return;
             }
             dispatchCallback = _this.dispatchCallback;
@@ -2114,7 +2116,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 }).call(this);
 
-},{"./ONMjs-core-namespace":6}],8:[function(require,module,exports){
+},{"./ONMjs-core-namespace":6,"./encapsule-lib-javascript":10}],8:[function(require,module,exports){
 /*
 ------------------------------------------------------------------------------
 
@@ -2430,7 +2432,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           }
           namespaceHash = namespaceSelector_.getHashString();
           delete pathRecord[namespaceHash];
-          if (Encapsule.code.lib.js.dictionaryLength(pathRecord) === 0) {
+          if (jslib.dictionaryLength(pathRecord) === 0) {
             delete observerState[namespaceSelector_.pathId];
           }
           return _this;
@@ -2509,7 +2511,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return false;
           } catch (_error) {
             exception = _error;
-            throw "Encapsule.code.lib.base.BackChannel.log failure: " + exception;
+            throw "BackChannel.log failure: " + exception;
           }
         };
         this.error = function(error_) {
@@ -2527,12 +2529,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             throw error_;
           } catch (_error) {
             exception = _error;
-            throw "Encapsule.code.lib.base.BackChannel.error failure: " + exception;
+            throw "BackChannel.error failure: " + exception;
           }
         };
       } catch (_error) {
         exception = _error;
-        throw "Encapsule.code.lib.base.BackChannel failure: " + exception;
+        throw "BackChannel failure: " + exception;
       }
     }
 
@@ -2614,7 +2616,7 @@ Low-level library routines inspired by (and often copied) from http://coffeescri
       return newInstance;
     } catch (_error) {
       exception = _error;
-      throw "Encapsule.code.lib.js.clone: " + exception;
+      throw "clone: " + exception;
     }
   };
 
@@ -2626,7 +2628,7 @@ Low-level library routines inspired by (and often copied) from http://coffeescri
       return Object.keys(dictionary_).length;
     } catch (_error) {
       exception = _error;
-      throw "Encapsule.code.lib.js.dictionaryLength: " + exception;
+      throw "dictionaryLength: " + exception;
     }
   };
 

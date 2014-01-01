@@ -313,7 +313,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           }
           namespaceHash = namespaceSelector_.getHashString();
           delete pathRecord[namespaceHash];
-          if (Encapsule.code.lib.js.dictionaryLength(pathRecord) === 0) {
+          if (jslib.dictionaryLength(pathRecord) === 0) {
             delete observerState[namespaceSelector_.pathId];
           }
           return _this;

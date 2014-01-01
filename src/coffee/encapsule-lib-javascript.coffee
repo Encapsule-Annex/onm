@@ -68,7 +68,7 @@ clone = (object_) ->
         # / END: try
 
     catch exception
-        throw "Encapsule.code.lib.js.clone: #{exception}"
+        throw "clone: #{exception}"
 
     # / END: clone function
 
@@ -81,7 +81,7 @@ module.exports.dictionaryLength = (dictionary_) ->
     try
         Object.keys(dictionary_).length
     catch exception
-        throw "Encapsule.code.lib.js.dictionaryLength: #{exception}"
+        throw "dictionaryLength: #{exception}"
 
 module.exports.uuidNull = "00000000-0000-0000-0000-000000000000"
 

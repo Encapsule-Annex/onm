@@ -59,7 +59,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return false;
           } catch (_error) {
             exception = _error;
-            throw "Encapsule.code.lib.base.BackChannel.log failure: " + exception;
+            throw "BackChannel.log failure: " + exception;
           }
         };
         this.error = function(error_) {
@@ -77,12 +77,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             throw error_;
           } catch (_error) {
             exception = _error;
-            throw "Encapsule.code.lib.base.BackChannel.error failure: " + exception;
+            throw "BackChannel.error failure: " + exception;
           }
         };
       } catch (_error) {
         exception = _error;
-        throw "Encapsule.code.lib.base.BackChannel failure: " + exception;
+        throw "BackChannel failure: " + exception;
       }
     }
 

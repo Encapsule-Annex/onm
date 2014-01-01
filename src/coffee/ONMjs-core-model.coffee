@@ -392,7 +392,7 @@ class ModelDetails
                         if data_.uuidRevision?
                             data_.uuidRevision = uuid.v4()
                         if data_.revisionTime?
-                            data_.revisionTime = Encapsule.code.lib.util.getEpochTime()
+                            data_.revisionTime = jslib.getEpochTime()
                     break
                 else
                     throw "Unrecognized namespaceVersionion=`#{@namespaceUpdateRevision}'"

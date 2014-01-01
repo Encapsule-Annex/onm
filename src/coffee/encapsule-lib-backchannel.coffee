@@ -57,7 +57,7 @@ module.exports = class BackChannel
                         return true
                     false
                 catch exception
-                    throw "Encapsule.code.lib.base.BackChannel.log failure: #{exception}"
+                    throw "BackChannel.log failure: #{exception}"
 
             @error = (error_) =>
                 try
@@ -71,9 +71,9 @@ module.exports = class BackChannel
                     throw error_
 
                 catch exception
-                    throw "Encapsule.code.lib.base.BackChannel.error failure: #{exception}"
+                    throw "BackChannel.error failure: #{exception}"
 
 
         catch exception
-            throw "Encapsule.code.lib.base.BackChannel failure: #{exception}"
+            throw "BackChannel failure: #{exception}"
 

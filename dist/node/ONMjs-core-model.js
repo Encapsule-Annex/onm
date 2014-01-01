@@ -369,7 +369,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                 data_.uuidRevision = uuid.v4();
               }
               if (data_.revisionTime != null) {
-                return data_.revisionTime = Encapsule.code.lib.util.getEpochTime();
+                return data_.revisionTime = jslib.getEpochTime();
               }
             };
             break;
