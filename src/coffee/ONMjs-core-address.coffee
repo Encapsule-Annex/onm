@@ -61,9 +61,36 @@ class AddressDetails
 
             # --------------------------------------------------------------------------
             @getModelDescriptorFromSubpath = (subpath_) =>
+
                 try
-                    path = "#{@getModelPath()}.#{subpath_}"
-                    return @model.implementation.getNamespaceDescriptorFromPath(path)
+
+                    currentModelPath = @getModelPath()
+
+                    currentDescriptor = @getLastToken().namespaceDescriptor
+
+                    subpathTokens = subpath_.split('.')
+
+                    for token in subpathTokens
+                        if currentDescriptor.namespaceType != "extensionPoint" or currentDescriptor.children.length
+                            # Should be able to resolve normally.
+                            currentModelPath += ".#{token}"
+                            currentDescriptor = @model.implementation.getNamespaceDescriptorFromPath(currentModelPath)
+                        else
+                            # We cannot resolve normally because there are no subnamespaces declared in the model.
+                            archetypePathId = currentDescriptor.archetypePathId? and currentDescriptor.archetypePathId or throw 'WAT'
+                            archetypeDescriptor = @model.implementation.getNamespaceDescriptorFromPathId(archetypePathId)
+                            if token != archetypeDescriptor.jsonTag
+                                throw "Expected component name of '#{token}' but instead found '#{archetypeDescriptor.jsonTag}'."
+                            currentModelPath = archetypeDescriptor.path
+                            currentDescriptor = archetypeDescriptor
+
+
+                        # end of loop
+
+                    console.log currentModelPath
+                    return currentDescriptor
+
+
                 catch exception
                     throw "getModelDescriptorFromSubpath failure: #{exception}"
 
@@ -388,36 +415,58 @@ module.exports = class Address
     createSubpathAddress: (subpath_) =>
         try
             if not (subpath_? and subpath_) then throw "Missing subpath input parameter."
-            subpathDescriptor = @implementation.getModelDescriptorFromSubpath(subpath_)
-            baseDescriptor = @implementation.getDescriptor()
 
-            if ((baseDescriptor.namespaceType == "extensionPoint") and (subpathDescriptor.namespaceType != "component"))
-                throw "Invalid subpath string must begin with the name of the component contained by the base address' extension point."
+            # We are attempting to construct a new onm.Address object using this address
+            # object as its base.
 
-            baseDescriptorHeight = baseDescriptor.parentPathIdVector.length
-            subpathDescriptorHeight = subpathDescriptor.parentPathIdVector.length
+            newTokenVector = @implementation.tokenVector.slice(0, @implementation.tokenVector.length - 1) or []
 
-            if ((subpathDescriptorHeight - baseDescriptorHeight) < 1)
-                throw "Internal error due to failed consistency check."
+            currentToken = @implementation.getLastToken()
 
-            subpathParentIdVector = subpathDescriptor.parentPathIdVector.slice(baseDescriptorHeight + 1, subpathDescriptorHeight)
-            subpathParentIdVector.push subpathDescriptor.id
-            baseTokenVector = @implementation.tokenVector.slice(0, @implementation.tokenVector.length - 1) or []
-            newAddress = new Address(@model, baseTokenVector)
-            token = @implementation.getLastToken().clone()
-        
-            for pathId in subpathParentIdVector
-                descriptor = @model.implementation.getNamespaceDescriptorFromPathId(pathId)
+            subpathTokens = subpath_.split('.')
 
-                switch descriptor.namespaceType
-                    when "component"
-                        newAddress.implementation.pushToken(token)
-                        token = new AddressToken(token.model, token.namespaceDescriptor.id, undefined, pathId)
-                        break
-                    else
-                        token = new AddressToken(token.model, token.idExtensionPoint, token.key, pathId)
+            for subpathToken in subpathTokens
 
-            newAddress.implementation.pushToken(token)
+                # begin loop
+
+                nd = currentToken.namespaceDescriptor
+
+                ndNew = undefined
+
+                if nd.namespaceType != 'extensionPoint'
+
+                    for child in nd.children
+                        if subpathToken == child.jsonTag
+                            ndNew = child
+                            break
+                    if not (ndNew? and ndNew)
+                        throw "Invalid address token '#{subpathToken}'."
+
+                    if ndNew.namespaceType == 'component'
+                        throw "Internal error: components must be created within extension point namespaces. How did this happen?"
+
+                    currentToken = new AddressToken(currentToken.model, currentToken.idExtensionPoint, currentToken.key, ndNew.id)
+
+                else
+
+                    archetypePathId = nd.archetypePathId
+
+                    archetypeDescriptor = @model.implementation.getNamespaceDescriptorFromPathId(archetypePathId)
+
+                    if subpathToken != archetypeDescriptor.jsonTag
+                        throw "Expected component name '#{archetypeDescriptor.jsonTag}' but was given '#{subpathToken}'."
+
+                    newTokenVector.push currentToken
+
+                    currentToken = new AddressToken(currentToken.model, currentToken.idNamespace, undefined, archetypePathId);
+
+
+                # end loop
+
+            #
+            newTokenVector.push currentToken
+            newAddress = new Address(@model, newTokenVector)
+
             return newAddress
 
         catch exception
