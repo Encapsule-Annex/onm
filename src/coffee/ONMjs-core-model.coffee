@@ -197,7 +197,7 @@ class ModelDetails
                     return true
 
                 catch exception
-                    throw "buildOMDescriptorFromLayout fail: #{exception}"
+                    throw "buildOMDescriptorFromLayout failure on path '#{path_}'. Details: #{exception}"
 
             # / END: buildOMDesriptorFromLayout
 

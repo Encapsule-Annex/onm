@@ -186,7 +186,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return true;
           } catch (_error) {
             exception = _error;
-            throw "buildOMDescriptorFromLayout fail: " + exception;
+            throw "buildOMDescriptorFromLayout failure on path '" + path_ + "'. Details: " + exception;
           }
         };
         this.getNamespaceDescriptorFromPathId = function(pathId_) {

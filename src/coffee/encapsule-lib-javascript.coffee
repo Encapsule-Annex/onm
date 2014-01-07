@@ -74,9 +74,6 @@ clone = (object_) ->
 
 module.exports.clone = clone
 
-
-
-
 module.exports.dictionaryLength = (dictionary_) ->
     try
         Object.keys(dictionary_).length
