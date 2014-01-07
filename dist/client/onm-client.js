@@ -2668,13 +2668,17 @@ Low-level library routines inspired by (and often copied) from http://coffeescri
 }).call(this);
 
 },{}],11:[function(require,module,exports){
+// onm node package index.js
+
 module.exports.Model = require('./dist/node/ONMjs-core-model');
 module.exports.Store = require('./dist/node/ONMjs-core-store');
 module.exports.AddressStore = require('./dist/node/ONMjs-core-address-store');
 module.exports.BackChannel = require('./dist/node/encapsule-lib-backchannel');
+module.exports.util = require('./dist/node/encapsule-lib-javascript');
 
 
-},{"./dist/node/ONMjs-core-address-store":2,"./dist/node/ONMjs-core-model":5,"./dist/node/ONMjs-core-store":8,"./dist/node/encapsule-lib-backchannel":9}],12:[function(require,module,exports){
+
+},{"./dist/node/ONMjs-core-address-store":2,"./dist/node/ONMjs-core-model":5,"./dist/node/ONMjs-core-store":8,"./dist/node/encapsule-lib-backchannel":9,"./dist/node/encapsule-lib-javascript":10}],12:[function(require,module,exports){
 var Buffer = require('buffer').Buffer;
 var intSize = 4;
 var zeroBuffer = new Buffer(intSize); zeroBuffer.fill(0);

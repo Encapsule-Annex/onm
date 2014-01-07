@@ -1,11 +1,12 @@
 {
   "name": "onm",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Object Namespace Manager (onm) data factory and store.",
   "keywords": [
-    "data",
-    "model",
-    "store"
+    "object factory",
+    "data model",
+    "JSON",
+    "design patterns"
   ],
   "main": "index.js",
   "author": {
