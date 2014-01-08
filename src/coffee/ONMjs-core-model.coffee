@@ -349,7 +349,8 @@ class ModelDetails
             # *                     | external                | Enables dispatch of Namespace.update signal-scope callbacks to semanticBindings.update callback.
 
             @componentKeyGenerator = @semanticBindings.componentKeyGenerator? and @semanticBindings.componentKeyGenerator or "external"
-            @namespaceVersioning = @semanticBindings.namespaceVersioning? and @semanticBindings.namespaceVersioning or "disabled"
+            @namespaceVersioning = (@semanticBindings.update? and @semanticBindings.update and "external") or
+                (@semanticBindings.namespaceVersioning? and @semanticBindings.namespaceVersioning or "disabled")
 
             switch @componentKeyGenerator
                 when "disabled"
@@ -393,6 +394,8 @@ class ModelDetails
                             data_.uuidRevision = uuid.v4()
                         if data_.revisionTime?
                             data_.revisionTime = jslib.getEpochTime()
+                    break
+                when "external"
                     break
                 else
                     throw "Unrecognized namespaceVersionion=`#{@namespaceUpdateRevision}'"

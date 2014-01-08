@@ -314,7 +314,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         Object.freeze(this.objectModelDescriptorById);
         this.semanticBindings = (this.objectModelDeclaration.semanticBindings != null) && this.objectModelDeclaration.semanticBindings || {};
         this.componentKeyGenerator = (this.semanticBindings.componentKeyGenerator != null) && this.semanticBindings.componentKeyGenerator || "external";
-        this.namespaceVersioning = (this.semanticBindings.namespaceVersioning != null) && this.semanticBindings.namespaceVersioning || "disabled";
+        this.namespaceVersioning = ((this.semanticBindings.update != null) && this.semanticBindings.update && "external") || ((this.semanticBindings.namespaceVersioning != null) && this.semanticBindings.namespaceVersioning || "disabled");
         switch (this.componentKeyGenerator) {
           case "disabled":
             if ((this.semanticBindings.getUniqueKey != null) && this.semanticBindings.getUniqueKey) {
@@ -372,6 +372,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                 return data_.revisionTime = jslib.getEpochTime();
               }
             };
+            break;
+          case "external":
             break;
           default:
             throw "Unrecognized namespaceVersionion=`" + this.namespaceUpdateRevision + "'";
