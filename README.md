@@ -1,4 +1,4 @@
 onm
 ===
 
-Object namespace manager (onm) module sources.
+Object namespace manager (onm) package sources.
