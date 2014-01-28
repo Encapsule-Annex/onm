@@ -3,6 +3,8 @@ onm
 
 Object namespace manager (onm) node.js and HTML 5 client package sources.
 
+[onm library API documentation](https://github.com/Encapsule/ONMjs/wiki)
+
 # End user
 
 ## node.js support
