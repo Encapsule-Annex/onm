@@ -5,7 +5,7 @@ Object namespace manager (onm) node.js and HTML 5 client package sources.
 
 [onm library API documentation](https://github.com/Encapsule/ONMjs/wiki)
 
-# End user
+# User
 
 ## node.js support
 
@@ -26,9 +26,14 @@ Subsequently, in your node.js JavaScript:
 
 under development. experiemental client script via browserify available in `./dist/client/onm-client.js` (untested).
 
-## build
+# Developer
 
+To build and/or modify the onm package sources, clone the git repository, install the package's developer dependency via npm, and then leverage Grunt to invoke the default package build. Use `grunt --help` for detailed build options.
+
+        cd ~/vitalshit/
         git clone git@github.com:Encapsule/onm.git
         cd onm
         npm install
-        grunt --help
+        grunt
+        # grunt --help for detailed build options
+
