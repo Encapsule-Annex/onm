@@ -1,22 +1,29 @@
 onm
 ===
 
-Object namespace manager (onm) package sources.
-## use
+Object namespace manager (onm) node.js and HTML 5 client package sources.
 
-### node
+# End user
 
-        npm install onm
+## node.js support
 
-or
+Install the onm package via npm:
 
-        npm install onm --save
+       npm install onm
 
+Alternately, you may use `npm install onm --save` to install onm, and register a package dependency in your package.json file.
 
-### browser
+Subsequently, in your node.js JavaScript:
 
-        onm/dist/client/
-        
+        var onm = require('onm');
+        var model = new onm.Model({ "jsonTag": "hello" });
+        var store = new onm.Store(model);
+        // ...
+
+## html 5 client support
+
+under development. experiemental client script via browserify available in `./dist/client/onm-client.js` (untested).
+
 ## build
 
         git clone git@github.com:Encapsule/onm.git
