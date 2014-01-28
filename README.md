@@ -5,9 +5,11 @@ Object namespace manager (onm) node.js and HTML 5 client package sources.
 
 [onm library API documentation](https://github.com/Encapsule/ONMjs/wiki)
 
-# User
+# package user
 
-## node.js support
+i.e. you want to use the onm package in a node or client environment.
+
+## onm package in node.js
 
 Install the onm package via npm:
 
@@ -22,11 +24,11 @@ Subsequently, in your node.js JavaScript:
         var store = new onm.Store(model);
         // ...
 
-## html 5 client support
+## onm package in html 5 client
 
 under development. experiemental client script via browserify available in `./dist/client/onm-client.js` (untested).
 
-# Developer
+# package developer
 
 To build and/or modify the onm package sources, clone the git repository, install the package's developer dependency via npm, and then leverage Grunt to invoke the default package build. Use `grunt --help` for detailed build options.
 
