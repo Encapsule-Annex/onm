@@ -277,6 +277,51 @@ class ModelDetails
             #
             # / END: @createAddressFromPathId
         
+            # --------------------------------------------------------------------------
+            @createAddressFromAddressHashString = (addressHashString_) ->
+                try
+                    tokenVector = []
+
+                    addressToken = undefined
+                    key = undefined
+                    processNewComponent = false
+
+                    hashTokens = addressHashString_.split(".")
+                    hashTokenCount = 0
+
+                    for hashToken in hashTokens
+                        if not hashTokenCount
+                            if hashToken != @model.jsonTag
+                                throw "Invalid data model name '" + hashToken + "' in hash string."
+                            addressToken = new AddressToken(@model, undefined, undefined, 0)
+                        else
+                            if addressToken.namespaceDescriptor.namespaceType != "extensionPoint"
+                                addressToken = new AddressToken(@model, addressToken.idExtenstionPoint, addressToken.key, hashToken);
+
+                            else
+                                # ...
+                                if not processNewComponent
+                                    tokenVector.push(addressToken)
+                                    addressToken = addressToken.clone()
+                                    if hashToken != "-"
+                                        key = hashToken;
+                                   
+                                    processNewComponent = true;
+                                else
+                                    addressToken = new AddressToken(@model, addressToken.namespaceDescriptor.id, key, hashToken)
+                                    key = undefined
+                                    processNewComponent = false;
+
+                        hashTokenCount++
+                        # END: / for loop
+
+                    tokenVector.push(addressToken)
+                    newAddress = new Address(@model, tokenVector); 
+                    return newAddress
+
+                catch exception
+                    throw "createAddressFromPathId failure: #{exception}"
+
 
             # --------------------------------------------------------------------------
             # ModelDetails CONSTRUCTOR
@@ -431,6 +476,18 @@ module.exports = class Model
                 catch exception
                     throw "createPathAddress failure: #{exception}"
 
+
+            # --------------------------------------------------------------------------
+            @createAddressFromHashString = (hash_) =>
+                try
+                    if not (hash_? and hash_)
+                        throw "Missing hash string input parameter."
+                    newAddress = @implementation.createAddressFromAddressHashString(hash_)
+                    return newAddress
+                catch exception
+                    throw "createAddressFromHashString failure: #{exception}"
+
+
             # --------------------------------------------------------------------------
             @getSemanticBindings = =>
                 try
@@ -445,6 +502,8 @@ module.exports = class Model
                     @jsonTag == model_.jsonTag
                 catch exception
                     throw "isEqual failure: #{exception}"
+
+
 
         catch exception
             throw "Model construction fail: #{exception}"

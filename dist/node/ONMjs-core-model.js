@@ -280,6 +280,50 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             throw "getAddressFromPathId failure: " + exception;
           }
         };
+        this.createAddressFromAddressHashString = function(addressHashString_) {
+          var addressToken, exception, hashToken, hashTokenCount, hashTokens, key, newAddress, processNewComponent, tokenVector, _i, _len;
+          try {
+            tokenVector = [];
+            addressToken = void 0;
+            key = void 0;
+            processNewComponent = false;
+            hashTokens = addressHashString_.split(".");
+            hashTokenCount = 0;
+            for (_i = 0, _len = hashTokens.length; _i < _len; _i++) {
+              hashToken = hashTokens[_i];
+              if (!hashTokenCount) {
+                if (hashToken !== this.model.jsonTag) {
+                  throw "Invalid data model name '" + hashToken + "' in hash string.";
+                }
+                addressToken = new AddressToken(this.model, void 0, void 0, 0);
+              } else {
+                if (addressToken.namespaceDescriptor.namespaceType !== "extensionPoint") {
+                  addressToken = new AddressToken(this.model, addressToken.idExtenstionPoint, addressToken.key, hashToken);
+                } else {
+                  if (!processNewComponent) {
+                    tokenVector.push(addressToken);
+                    addressToken = addressToken.clone();
+                    if (hashToken !== "-") {
+                      key = hashToken;
+                    }
+                    processNewComponent = true;
+                  } else {
+                    addressToken = new AddressToken(this.model, addressToken.namespaceDescriptor.id, key, hashToken);
+                    key = void 0;
+                    processNewComponent = false;
+                  }
+                }
+              }
+              hashTokenCount++;
+            }
+            tokenVector.push(addressToken);
+            newAddress = new Address(this.model, tokenVector);
+            return newAddress;
+          } catch (_error) {
+            exception = _error;
+            throw "createAddressFromPathId failure: " + exception;
+          }
+        };
         if (!((objectModelDeclaration_ != null) && objectModelDeclaration_)) {
           throw "Missing object model delcaration input parameter!";
         }
@@ -412,6 +456,19 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           } catch (_error) {
             exception = _error;
             throw "createPathAddress failure: " + exception;
+          }
+        };
+        this.createAddressFromHashString = function(hash_) {
+          var exception, newAddress;
+          try {
+            if (!((hash_ != null) && hash_)) {
+              throw "Missing hash string input parameter.";
+            }
+            newAddress = _this.implementation.createAddressFromAddressHashString(hash_);
+            return newAddress;
+          } catch (_error) {
+            exception = _error;
+            throw "createAddressFromHashString failure: " + exception;
           }
         };
         this.getSemanticBindings = function() {
