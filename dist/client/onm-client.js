@@ -1836,6 +1836,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     function Namespace(store_, address_, mode_) {
       this.visitExtensionPointSubcomponents = __bind(this.visitExtensionPointSubcomponents, this);
       this.update = __bind(this.update, this);
+      this.fromJSON = __bind(this.fromJSON, this);
+      this.fromData = __bind(this.fromData, this);
       this.toJSON = __bind(this.toJSON, this);
       this.data = __bind(this.data, this);
       this.getResolvedLabel = __bind(this.getResolvedLabel, this);
@@ -1944,6 +1946,58 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       } catch (_error) {
         exception = _error;
         throw "toJSON failure: " + exception;
+      }
+    };
+
+    Namespace.prototype.fromData = function(data_) {
+      var address, exception, extensionPointNamespace, model, namespaceComponentKey, newComponentData, newComponentKey;
+      try {
+        address = this.getResolvedAddress();
+        model = address.getModel();
+        if (!((model.namespaceType === "root") || (model.namespaceType === "component"))) {
+          throw "Data import only supported on its root and component namespaces. This namespace '" + model.namespaceType + "'-type namespace.";
+        }
+        newComponentData = data_[model.jsonTag];
+        if (!((newComponentData != null) && newComponentData)) {
+          throw "Unexpected input data missing expected root object '" + model.jsonTag + "'.";
+        }
+        newComponentKey = this.store.model.getSemanticBindings().getUniqueKey(newComponentData);
+        namespaceComponentKey = address.implementation.getLastToken().key;
+        if (newComponentKey !== namespaceComponentKey) {
+          throw "Unexpected input data missing or unexpected component key value.";
+        }
+        extensionPointNamespace = this.store.openNamespace(address.createParentAddress());
+        this.store.removeComponent(address);
+        extensionPointNamespace.data()[address.implementation.getLastToken().key] = newComponentData;
+        this.store.implementation.reifier.reifyStoreComponent(address);
+        return address;
+      } catch (_error) {
+        exception = _error;
+        throw "fromData failure: " + exception;
+      }
+    };
+
+    Namespace.prototype.fromJSON = function(json_) {
+      var data, exception, resolvedAddress;
+      try {
+        data = void 0;
+        try {
+          data = JSON.parse(json_);
+        } catch (_error) {
+          exception = _error;
+          throw "JSON.parse failed: " + exception;
+        }
+        resolvedAddress = void 0;
+        try {
+          resolvedAddress = this.fromData(data);
+        } catch (_error) {
+          exception = _error;
+          throw "After successful JSON parse, failure in data handler: " + exception;
+        }
+        return resolvedAddress;
+      } catch (_error) {
+        exception = _error;
+        throw "fromJSON failure: " + exception;
       }
     };
 

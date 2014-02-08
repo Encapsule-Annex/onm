@@ -49,10 +49,6 @@ Address = require('./ONMjs-core-address')
 class NamespaceDetails
     constructor: (namespace_, store_, address_, mode_) ->
         try
-            #@namespace = namespace_
-            #@store = store_
-            #@address = address_
-            #@mode = mode_
             @dataReference = store_.implementation.dataReference? and store_.implementation.dataReference or throw "Cannot resolve object store's root data reference."
             @resolvedTokenArray = []
             @getResolvedToken = => @resolvedTokenArray.length and @resolvedTokenArray[@resolvedTokenArray.length - 1] or undefined
@@ -166,9 +162,69 @@ module.exports = class Namespace
             throw "toJSON failure: #{exception}"
 
 
+    #
+    # ============================================================================
+    fromData: (data_) =>
+        try
+            address = @getResolvedAddress()
+            model = address.getModel()
+
+            # Validate request.
+            if not ((model.namespaceType == "root") or (model.namespaceType == "component"))
+                throw "Data import only supported on its root and component namespaces. This namespace '#{model.namespaceType}'-type namespace."
+
+            newComponentData = data_[model.jsonTag]
+            if not (newComponentData? and newComponentData)
+                throw "Unexpected input data missing expected root object '#{model.jsonTag}'."
+
+            newComponentKey = @store.model.getSemanticBindings().getUniqueKey(newComponentData)
+            namespaceComponentKey = address.implementation.getLastToken().key
+            if (newComponentKey != namespaceComponentKey)
+                throw "Unexpected input data missing or unexpected component key value."
+
+            extensionPointNamespace = @store.openNamespace(address.createParentAddress())
+
+            # Remove the target component from the parent onm.Store instance.
+            @store.removeComponent(address);
+
+            extensionPointNamespace.data()[address.implementation.getLastToken().key] = newComponentData
+
+            @store.implementation.reifier.reifyStoreComponent(address)
+
+            return address
+
+        catch exception
+            throw "fromData failure: #{exception}"
+
+
 
     #
     # ============================================================================
+    fromJSON: (json_) =>
+        try
+            data = undefined
+            try
+                data = JSON.parse(json_)
+            catch exception
+                throw "JSON.parse failed: #{exception}"
+
+            resolvedAddress = undefined
+            try
+                resolvedAddress = @fromData(data)
+            catch exception
+                throw "After successful JSON parse, failure in data handler: #{exception}"            
+
+            return resolvedAddress
+            
+        catch exception
+            throw "fromJSON failure: #{exception}"
+
+
+    #
+    # ============================================================================
+    # Trigger data change callback notifications to observer routines registered
+    # with this onm.Namespace's parent onm.Store instance.
+    #
     update: =>
         try
             # First update the store namespace data and all its parents.

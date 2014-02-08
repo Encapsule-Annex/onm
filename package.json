@@ -1,7 +1,7 @@
 {
   "name": "onm",
-  "version": "0.1.9",
-  "description": "Object Namespace Manager (onm) data factory and store.",
+  "version": "0.1.10",
+  "description": "Object Namespace Manager (onm) data factory and in-memory store.",
   "keywords": [
     "object factory",
     "data model",
