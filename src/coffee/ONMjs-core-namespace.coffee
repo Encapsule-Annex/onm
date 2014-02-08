@@ -177,10 +177,11 @@ module.exports = class Namespace
             if not (newComponentData? and newComponentData)
                 throw "Unexpected input data missing expected root object '#{model.jsonTag}'."
 
-            newComponentKey = @store.model.getSemanticBindings().getUniqueKey(newComponentData)
-            namespaceComponentKey = address.implementation.getLastToken().key
-            if (newComponentKey != namespaceComponentKey)
-                throw "Unexpected input data missing or unexpected component key value."
+            if (model.namespaceType == "component")
+                newComponentKey = @store.model.getSemanticBindings().getUniqueKey(newComponentData)
+                namespaceComponentKey = address.implementation.getLastToken().key
+                if (newComponentKey != namespaceComponentKey)
+                    throw "Unexpected input data missing or unexpected component key value."
 
             extensionPointNamespace = @store.openNamespace(address.createParentAddress())
 

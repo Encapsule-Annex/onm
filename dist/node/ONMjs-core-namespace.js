@@ -198,10 +198,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         if (!((newComponentData != null) && newComponentData)) {
           throw "Unexpected input data missing expected root object '" + model.jsonTag + "'.";
         }
-        newComponentKey = this.store.model.getSemanticBindings().getUniqueKey(newComponentData);
-        namespaceComponentKey = address.implementation.getLastToken().key;
-        if (newComponentKey !== namespaceComponentKey) {
-          throw "Unexpected input data missing or unexpected component key value.";
+        if (model.namespaceType === "component") {
+          newComponentKey = this.store.model.getSemanticBindings().getUniqueKey(newComponentData);
+          namespaceComponentKey = address.implementation.getLastToken().key;
+          if (newComponentKey !== namespaceComponentKey) {
+            throw "Unexpected input data missing or unexpected component key value.";
+          }
         }
         extensionPointNamespace = this.store.openNamespace(address.createParentAddress());
         this.store.removeComponent(address);
