@@ -174,7 +174,7 @@ module.exports = class Namespace
                 throw "Data import only supported on its root and component namespaces. This namespace '#{model.namespaceType}'-type namespace."
 
             if (model.namespaceType == "component")
-                newComponentKey = @store.model.getSemanticBindings().getUniqueKey(newComponentData)
+                newComponentKey = @store.model.getSemanticBindings().getUniqueKey(data_)
                 namespaceComponentKey = address.implementation.getLastToken().key
                 if (newComponentKey != namespaceComponentKey)
                     throw "Unexpected input data missing or unexpected component key value."
@@ -190,8 +190,8 @@ module.exports = class Namespace
 
             # Replace the contents of the new data object.
             for property, value of data_
-                if not (value? and value and (typeof value is 'object'))
-                    throw "Property '#{property}' value, '#{value}', is not an object and is invalid."
+                #if not (value? and value and (typeof value is 'object'))
+                #    throw "Property '#{property}' value, '#{value}', is not an object and is invalid."
                 namespaceData[property] = value
 
             # Notify registered observers that we're replaced the contents of the specified data component.

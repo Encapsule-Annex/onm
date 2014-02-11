@@ -1958,7 +1958,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           throw "Data import only supported on its root and component namespaces. This namespace '" + model.namespaceType + "'-type namespace.";
         }
         if (model.namespaceType === "component") {
-          newComponentKey = this.store.model.getSemanticBindings().getUniqueKey(newComponentData);
+          newComponentKey = this.store.model.getSemanticBindings().getUniqueKey(data_);
           namespaceComponentKey = address.implementation.getLastToken().key;
           if (newComponentKey !== namespaceComponentKey) {
             throw "Unexpected input data missing or unexpected component key value.";
@@ -1973,9 +1973,6 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
         for (property in data_) {
           value = data_[property];
-          if (!((value != null) && value && (typeof value === 'object'))) {
-            throw "Property '" + property + "' value, '" + value + "', is not an object and is invalid.";
-          }
           namespaceData[property] = value;
         }
         this.store.implementation.reifier.reifyStoreComponent(address);
