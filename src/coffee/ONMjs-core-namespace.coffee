@@ -173,23 +173,28 @@ module.exports = class Namespace
             if not ((model.namespaceType == "root") or (model.namespaceType == "component"))
                 throw "Data import only supported on its root and component namespaces. This namespace '#{model.namespaceType}'-type namespace."
 
-            newComponentData = data_[model.jsonTag]
-            if not (newComponentData? and newComponentData)
-                throw "Unexpected input data missing expected root object '#{model.jsonTag}'."
-
             if (model.namespaceType == "component")
                 newComponentKey = @store.model.getSemanticBindings().getUniqueKey(newComponentData)
                 namespaceComponentKey = address.implementation.getLastToken().key
                 if (newComponentKey != namespaceComponentKey)
                     throw "Unexpected input data missing or unexpected component key value."
 
-            extensionPointNamespace = @store.openNamespace(address.createParentAddress())
+            namespaceData = @implementation.dataReference
 
-            # Remove the target component from the parent onm.Store instance.
-            @store.removeComponent(address);
+            # Notify registered observers that we're about to remove the specified data component.
+            @store.implementation.reifier.unreifyStoreComponent(address);
 
-            extensionPointNamespace.data()[address.implementation.getLastToken().key] = newComponentData
+            # Remove the contents of the addressed component.
+            for property, value of @implementation.dataReference
+                delete namespaceData[property]
 
+            # Replace the contents of the new data object.
+            for property, value of data_
+                if not (value? and value and (typeof value is 'object'))
+                    throw "Property '#{property}' value, '#{value}', is not an object and is invalid."
+                namespaceData[property] = value
+
+            # Notify registered observers that we're replaced the contents of the specified data component.
             @store.implementation.reifier.reifyStoreComponent(address)
 
             return address
@@ -203,17 +208,25 @@ module.exports = class Namespace
     # ============================================================================
     fromJSON: (json_) =>
         try
+            # Attempt to deserialize the specified JSON.
             data = undefined
             try
-                data = JSON.parse(json_)
+                parsedData = JSON.parse(json_)
             catch exception
-                throw "JSON.parse failed: #{exception}"
+                throw "Unable to deserialize the specified JSON data: #{exception}"
 
-            resolvedAddress = undefined
+            # Unwrap and verify the request before delegating to the fromData method.
+            resolvedAddress = @getResolvedAddress()
+            model = resolvedAddress.getModel()
+            dataPayload = parsedData[model.jsonTag]
+            if not (dataPayload? and dataPayload)
+                throw "JSON data is missing expeced top-level object '#{model.jsonTag}'."
+
+            # Delegate to the fromData method:
             try
-                resolvedAddress = @fromData(data)
+                resolvedAddress = @fromData(dataPayload)
             catch exception
-                throw "After successful JSON parse, failure in data handler: #{exception}"            
+                throw "After successful JSON parse, namespace data update failed: #{exception}"            
 
             return resolvedAddress
             

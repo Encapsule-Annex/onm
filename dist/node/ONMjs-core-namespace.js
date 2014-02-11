@@ -187,16 +187,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     };
 
     Namespace.prototype.fromData = function(data_) {
-      var address, exception, extensionPointNamespace, model, namespaceComponentKey, newComponentData, newComponentKey;
+      var address, exception, model, namespaceComponentKey, namespaceData, newComponentKey, property, value, _ref;
       try {
         address = this.getResolvedAddress();
         model = address.getModel();
         if (!((model.namespaceType === "root") || (model.namespaceType === "component"))) {
           throw "Data import only supported on its root and component namespaces. This namespace '" + model.namespaceType + "'-type namespace.";
-        }
-        newComponentData = data_[model.jsonTag];
-        if (!((newComponentData != null) && newComponentData)) {
-          throw "Unexpected input data missing expected root object '" + model.jsonTag + "'.";
         }
         if (model.namespaceType === "component") {
           newComponentKey = this.store.model.getSemanticBindings().getUniqueKey(newComponentData);
@@ -205,9 +201,20 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             throw "Unexpected input data missing or unexpected component key value.";
           }
         }
-        extensionPointNamespace = this.store.openNamespace(address.createParentAddress());
-        this.store.removeComponent(address);
-        extensionPointNamespace.data()[address.implementation.getLastToken().key] = newComponentData;
+        namespaceData = this.implementation.dataReference;
+        this.store.implementation.reifier.unreifyStoreComponent(address);
+        _ref = this.implementation.dataReference;
+        for (property in _ref) {
+          value = _ref[property];
+          delete namespaceData[property];
+        }
+        for (property in data_) {
+          value = data_[property];
+          if (!((value != null) && value && (typeof value === 'object'))) {
+            throw "Property '" + property + "' value, '" + value + "', is not an object and is invalid.";
+          }
+          namespaceData[property] = value;
+        }
         this.store.implementation.reifier.reifyStoreComponent(address);
         return address;
       } catch (_error) {
@@ -217,21 +224,26 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     };
 
     Namespace.prototype.fromJSON = function(json_) {
-      var data, exception, resolvedAddress;
+      var data, dataPayload, exception, model, parsedData, resolvedAddress;
       try {
         data = void 0;
         try {
-          data = JSON.parse(json_);
+          parsedData = JSON.parse(json_);
         } catch (_error) {
           exception = _error;
-          throw "JSON.parse failed: " + exception;
+          throw "Unable to deserialize the specified JSON data: " + exception;
         }
-        resolvedAddress = void 0;
+        resolvedAddress = this.getResolvedAddress();
+        model = resolvedAddress.getModel();
+        dataPayload = parsedData[model.jsonTag];
+        if (!((dataPayload != null) && dataPayload)) {
+          throw "JSON data is missing expeced top-level object '" + model.jsonTag + "'.";
+        }
         try {
-          resolvedAddress = this.fromData(data);
+          resolvedAddress = this.fromData(dataPayload);
         } catch (_error) {
           exception = _error;
-          throw "After successful JSON parse, failure in data handler: " + exception;
+          throw "After successful JSON parse, namespace data update failed: " + exception;
         }
         return resolvedAddress;
       } catch (_error) {
