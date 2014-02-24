@@ -359,7 +359,7 @@ module.exports = class Address
             if not (address_? and address_) then throw "Missing address input parameter."
             thisToken = @implementation.getLastToken();
             testToken = address_.implementation.getLastToken()
-            result = testToken.namespaceId == testToken.namespaceId
+            result = testToken.idNamespace == testToken.idNamespace
             return result
         catch exception
             throw "isSameType failure: #{exception}"

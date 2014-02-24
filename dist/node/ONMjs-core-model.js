@@ -321,7 +321,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw "createAddressFromPathId failure: " + exception;
+            throw "createAddressFromHashString failure: " + exception;
           }
         };
         if (!((objectModelDeclaration_ != null) && objectModelDeclaration_)) {

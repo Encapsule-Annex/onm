@@ -371,7 +371,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
         thisToken = this.implementation.getLastToken();
         testToken = address_.implementation.getLastToken();
-        result = testToken.namespaceId === testToken.namespaceId;
+        result = testToken.idNamespace === testToken.idNamespace;
         return result;
       } catch (_error) {
         exception = _error;

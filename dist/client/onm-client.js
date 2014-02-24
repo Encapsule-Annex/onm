@@ -929,7 +929,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
         thisToken = this.implementation.getLastToken();
         testToken = address_.implementation.getLastToken();
-        result = testToken.namespaceId === testToken.namespaceId;
+        result = testToken.idNamespace === testToken.idNamespace;
         return result;
       } catch (_error) {
         exception = _error;
@@ -1597,7 +1597,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw "createAddressFromPathId failure: " + exception;
+            throw "createAddressFromHashString failure: " + exception;
           }
         };
         if (!((objectModelDeclaration_ != null) && objectModelDeclaration_)) {
