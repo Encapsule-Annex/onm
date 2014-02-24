@@ -483,6 +483,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         this.isEqual = function(model_) {
           var exception;
           try {
+            if (!((model_.jsonTag != null) && model_.jsonTag)) {
+              throw "Invalid model object passed as input parameter. Missing expectected property 'jsonTag'.";
+            }
             return _this.jsonTag === model_.jsonTag;
           } catch (_error) {
             exception = _error;

@@ -320,7 +320,7 @@ class ModelDetails
                     return newAddress
 
                 catch exception
-                    throw "createAddressFromPathId failure: #{exception}"
+                    throw "createAddressFromHashString failure: #{exception}"
 
 
             # --------------------------------------------------------------------------
@@ -499,6 +499,8 @@ module.exports = class Model
             # --------------------------------------------------------------------------
             @isEqual = (model_) =>
                 try
+                    if not (model_.jsonTag? and model_.jsonTag)
+                        throw "Invalid model object passed as input parameter. Missing expectected property 'jsonTag'."
                     @jsonTag == model_.jsonTag
                 catch exception
                     throw "isEqual failure: #{exception}"

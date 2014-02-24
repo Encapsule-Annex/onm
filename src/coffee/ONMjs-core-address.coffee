@@ -351,6 +351,20 @@ module.exports = class Address
         catch exception
             throw "isEqual failure: #{exception}"
 
+
+    #
+    # ============================================================================
+    isSameType: (address_) =>
+        try
+            if not (address_? and address_) then throw "Missing address input parameter."
+            thisToken = @implementation.getLastToken();
+            testToken = address_.implementation.getLastToken()
+            result = testToken.namespaceId == testToken.namespaceId
+            return result
+        catch exception
+            throw "isSameType failure: #{exception}"
+
+
     #
     # ============================================================================
     clone: => 

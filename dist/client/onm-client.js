@@ -786,6 +786,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       this.createSubpathAddress = __bind(this.createSubpathAddress, this);
       this.createParentAddress = __bind(this.createParentAddress, this);
       this.clone = __bind(this.clone, this);
+      this.isSameType = __bind(this.isSameType, this);
       this.isEqual = __bind(this.isEqual, this);
       this.isRoot = __bind(this.isRoot, this);
       this.getHashString = __bind(this.getHashString, this);
@@ -917,6 +918,22 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       } catch (_error) {
         exception = _error;
         throw "isEqual failure: " + exception;
+      }
+    };
+
+    Address.prototype.isSameType = function(address_) {
+      var exception, result, testToken, thisToken;
+      try {
+        if (!((address_ != null) && address_)) {
+          throw "Missing address input parameter.";
+        }
+        thisToken = this.implementation.getLastToken();
+        testToken = address_.implementation.getLastToken();
+        result = testToken.namespaceId === testToken.namespaceId;
+        return result;
+      } catch (_error) {
+        exception = _error;
+        throw "isSameType failure: " + exception;
       }
     };
 
@@ -1742,6 +1759,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         this.isEqual = function(model_) {
           var exception;
           try {
+            if (!((model_.jsonTag != null) && model_.jsonTag)) {
+              throw "Invalid model object passed as input parameter. Missing expectected property 'jsonTag'.";
+            }
             return _this.jsonTag === model_.jsonTag;
           } catch (_error) {
             exception = _error;
@@ -2372,6 +2392,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           try {
             if (!((address_ != null) && address_)) {
               throw "Missing address input parameter.";
+            }
+            if (!((address_.model != null) && address_.model)) {
+              throw "Invalid address object passed as input parameter.";
             }
             return _this.model.isEqual(address_.model);
           } catch (_error) {

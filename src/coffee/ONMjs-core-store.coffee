@@ -111,6 +111,7 @@ module.exports = class Store
             @validateAddressModel = (address_) =>
                 try
                     if not (address_? and address_) then throw "Missing address input parameter."
+                    if not (address_.model? and address_.model) then throw "Invalid address object passed as input parameter."
                     return @model.isEqual(address_.model)
                 catch exception
                     throw "validateAddressModel failure: #{exception}"

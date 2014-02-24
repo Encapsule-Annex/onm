@@ -103,6 +103,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (!((address_ != null) && address_)) {
               throw "Missing address input parameter.";
             }
+            if (!((address_.model != null) && address_.model)) {
+              throw "Invalid address object passed as input parameter.";
+            }
             return _this.model.isEqual(address_.model);
           } catch (_error) {
             exception = _error;
