@@ -323,6 +323,7 @@ module.exports = class Address
         catch exception
             throw "getHashString failure: #{exception}"
 
+
     #
     # ============================================================================
     isRoot: =>
@@ -359,7 +360,7 @@ module.exports = class Address
             if not (address_? and address_) then throw "Missing address input parameter."
             thisToken = @implementation.getLastToken();
             testToken = address_.implementation.getLastToken()
-            result = testToken.idNamespace == testToken.idNamespace
+            result = thisToken.idNamespace == testToken.idNamespace
             return result
         catch exception
             throw "isSameType failure: #{exception}"
@@ -530,6 +531,17 @@ module.exports = class Address
         catch exception
             throw "getPropertiesModel failure: #{exception}"
 
+    #
+    # ============================================================================
+    getComponentKey: =>
+        try
+            if (!@isResolvable())
+                throw "You cannot obtain the component key of an unresolvable address."
+            return @createComponentAddress().implementation.getLastToken().key;
+        catch exception
+            throw "getComponentKey failure: #{exception}"
+
+            
     #
     # ============================================================================
     visitParentAddressesAscending: (callback_) =>

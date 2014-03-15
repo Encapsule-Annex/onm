@@ -1,6 +1,6 @@
 {
   "name": "onm",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Object Namespace Manager (onm) data factory and observable in-memory store infrastructure library.",
   "keywords": [
     "object factory",
@@ -25,13 +25,10 @@
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-jshint": "~0.8.0",
-    "grunt-contrib-nodeunit": "~0.2.2",
-    "grunt-contrib-uglify": "~0.2.7",
     "grunt-contrib-coffee": "~0.8.0",
-    "grunt-contrib-clean": "~0.5.0",
-    "grunt-browserify": "~1.3.0"
+    "grunt-contrib-clean": "~0.5.0"
   },
   "dependencies": {
-    "node-uuid": "~1.4.1"
+    "node-uuid": "*"
   }
 }

@@ -1,5 +1,3 @@
-# Yea, baby.
-#
 
 module.exports = (grunt) ->
 
@@ -7,7 +5,7 @@ module.exports = (grunt) ->
         pkg: grunt.file.readJSON("package.json")
 
         coffee:
-            debug:
+            compile:
                 files:
                     'dist/node/encapsule-lib-backchannel.js': 'src/coffee/encapsule-lib-backchannel.coffee'
                     'dist/node/encapsule-lib-javascript.js': 'src/coffee/encapsule-lib-javascript.coffee'
@@ -19,14 +17,8 @@ module.exports = (grunt) ->
                     'dist/node/ONMjs-core-namespace.js': 'src/coffee/ONMjs-core-namespace.coffee'
                     'dist/node/ONMjs-core-store.js': 'src/coffee/ONMjs-core-store.coffee'
                     'dist/node/ONMjs-core-store-reifier.js': 'src/coffee/ONMjs-core-store-reifier.coffee'
-            release:
-                files:
-                    'dist/node/onm-node.js': 'src/coffee/*.coffee'
 
         clean: [ 'dist' ]
-
-        browserify:
-            'dist/client/onm-client.js': [ './index.js' ]
 
 
 
@@ -34,10 +26,6 @@ module.exports = (grunt) ->
 
     grunt.loadNpmTasks "grunt-contrib-coffee"
     grunt.loadNpmTasks "grunt-contrib-clean"
-    grunt.loadNpmTasks "grunt-browserify"
-
     #grunt.loadNpmTasks "grunt-contrib-jshint"
-    grunt.loadNpmTasks "grunt-contrib-uglify"
-    #grunt.loadNpmTasks "grunt-contrib-nodeunit"
 
-    grunt.registerTask "default", [ "clean", "coffee:debug", "browserify" ]
+    grunt.registerTask "default", [ "clean", "coffee:compile" ]

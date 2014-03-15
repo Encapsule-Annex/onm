@@ -221,6 +221,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       this.visitSubaddressesAscending = __bind(this.visitSubaddressesAscending, this);
       this.visitParentAddressesDescending = __bind(this.visitParentAddressesDescending, this);
       this.visitParentAddressesAscending = __bind(this.visitParentAddressesAscending, this);
+      this.getComponentKey = __bind(this.getComponentKey, this);
       this.getPropertiesModel = __bind(this.getPropertiesModel, this);
       this.getModel = __bind(this.getModel, this);
       this.createSubcomponentAddress = __bind(this.createSubcomponentAddress, this);
@@ -371,7 +372,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
         thisToken = this.implementation.getLastToken();
         testToken = address_.implementation.getLastToken();
-        result = testToken.idNamespace === testToken.idNamespace;
+        result = thisToken.idNamespace === testToken.idNamespace;
         return result;
       } catch (_error) {
         exception = _error;
@@ -520,6 +521,19 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       } catch (_error) {
         exception = _error;
         throw "getPropertiesModel failure: " + exception;
+      }
+    };
+
+    Address.prototype.getComponentKey = function() {
+      var exception;
+      try {
+        if (!this.isResolvable()) {
+          throw "You cannot obtain the component key of an unresolvable address.";
+        }
+        return this.createComponentAddress().implementation.getLastToken().key;
+      } catch (_error) {
+        exception = _error;
+        throw "getComponentKey failure: " + exception;
       }
     };
 
