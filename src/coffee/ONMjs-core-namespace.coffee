@@ -124,6 +124,16 @@ module.exports = class Namespace
 
     #
     # ============================================================================
+    getComponentKey: =>
+        try
+            return @implementation.getResolvedToken().key
+
+        catch exception
+            throw "getComponentKey failure: #{exception}"
+
+
+    #
+    # ============================================================================
     getResolvedLabel: =>
         try
             resolvedDescriptor = @implementation.getResolvedToken().namespaceDescriptor

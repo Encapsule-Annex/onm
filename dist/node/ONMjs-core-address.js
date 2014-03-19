@@ -530,7 +530,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         if (!this.isResolvable()) {
           throw "You cannot obtain the component key of an unresolvable address.";
         }
-        return this.createComponentAddress().implementation.getLastToken().key;
+        return this.implementation.getLastToken().key;
       } catch (_error) {
         exception = _error;
         throw "getComponentKey failure: " + exception;

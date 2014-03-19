@@ -537,7 +537,7 @@ module.exports = class Address
         try
             if (!@isResolvable())
                 throw "You cannot obtain the component key of an unresolvable address."
-            return @createComponentAddress().implementation.getLastToken().key;
+            return @implementation.getLastToken().key;
         catch exception
             throw "getComponentKey failure: #{exception}"
 

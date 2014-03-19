@@ -78,6 +78,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       this.toJSON = __bind(this.toJSON, this);
       this.data = __bind(this.data, this);
       this.getResolvedLabel = __bind(this.getResolvedLabel, this);
+      this.getComponentKey = __bind(this.getComponentKey, this);
       this.getResolvedAddress = __bind(this.getResolvedAddress, this);
       var address, addressToken, componentAddress, exception, extensionPointAddress, extensionPointNamespace, mode, objectModel, objectModelNameKeys, objectModelNameStore, resolvedAddress, tokenBinder, _i, _len, _ref;
       try {
@@ -142,6 +143,16 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       } catch (_error) {
         exception = _error;
         throw "getResolvedAddress failure: " + exception;
+      }
+    };
+
+    Namespace.prototype.getComponentKey = function() {
+      var exception;
+      try {
+        return this.implementation.getResolvedToken().key;
+      } catch (_error) {
+        exception = _error;
+        throw "getComponentKey failure: " + exception;
       }
     };
 
