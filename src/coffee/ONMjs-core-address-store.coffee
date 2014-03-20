@@ -46,7 +46,7 @@ Namespace = require('./ONMjs-core-namespace')
 module.exports = class AddressStore extends Store
     constructor: (referenceStore_, address_) ->
         try
-            if not (referenceStore_? and referenceStore_) then throw "Missing object store input parameter. Unable to determine external selector type."
+            if not (referenceStore_? and referenceStore_) then throw new Error("Missing object store input parameter. Unable to determine external selector type.");
             @referenceStore = referenceStore_
 
             # Create an ObjectModel instance from the selector object model declaration.
@@ -74,7 +74,7 @@ module.exports = class AddressStore extends Store
                         if cachedAddress? and cachedAddress and cachedAddress.isEqual(address_)
                             @setAddress(address_)
                     catch exception
-                        throw "onNamespaceUpdated failure: #{exception}"
+                        throw new Error("onNamespaceUpdated failure: #{exception}");
 
                 onNamespaceRemoved: (objectStore_, observerId_, address_) =>
                     try
@@ -84,12 +84,12 @@ module.exports = class AddressStore extends Store
                             @setAddress(parentAddress)
                         return
                     catch exception
-                        throw "onNamespaceRemoved failure: #{exception}"
+                        throw new Error("onNamespaceRemoved failure: #{exception}");
             } # objectStoreCallbacks
 
 
         catch exception
-            throw "AddressStore failure: #{exception}"
+            throw new Error("AddressStore failure: #{exception}");
 
 
     #
@@ -101,7 +101,7 @@ module.exports = class AddressStore extends Store
             return namespace.getResolvedAddress()
 
         catch exception
-            throw "getSelector failure: #{exception}"
+            throw new Error("getSelector failure: #{exception}");
 
 
     #
@@ -116,7 +116,7 @@ module.exports = class AddressStore extends Store
             @selectorNamespace.update()
 
         catch exception
-            throw "setAddress failure: #{exception}"
+            throw new Error("setAddress failure: #{exception}");
 
 
 

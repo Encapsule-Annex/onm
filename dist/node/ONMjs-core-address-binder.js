@@ -40,10 +40,10 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     var exception, functions, memberName, _ref, _ref1;
     try {
       if (!((data_ != null) && data_)) {
-        throw "Missing data reference input parameter.";
+        throw new Error("Missing data reference input parameter.");
       }
       if (!((descriptor_ != null) && descriptor_)) {
-        throw "Missing descriptor input parameter.";
+        throw new Error("Missing descriptor input parameter.");
       }
       if ((descriptor_.userImmutable != null) && descriptor_.userImmutable) {
         _ref = descriptor_.userImmutable;
@@ -70,7 +70,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       return true;
     } catch (_error) {
       exception = _error;
-      throw "InitializeNamespaceProperties failure " + exception + ".";
+      throw new Error("InitializeNamespaceProperties failure " + exception + ".");
     }
   };
 
@@ -78,10 +78,10 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     var exception, functions, memberName, memberReference, _ref, _ref1;
     try {
       if (!((data_ != null) && data_)) {
-        throw "Missing data reference input parameter.";
+        throw new Error("Missing data reference input parameter.");
       }
       if (!((descriptor_ != null) && descriptor_)) {
-        throw "Missing descriptor input parameter.";
+        throw new Error("Missing descriptor input parameter.");
       }
       if ((descriptor_.userImmutable != null) && descriptor_.userImmutable) {
         _ref = descriptor_.userImmutable;
@@ -89,7 +89,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           functions = _ref[memberName];
           memberReference = data_[memberName];
           if (memberReference == null) {
-            throw "Expected immutable member '" + memberName + "' not found.";
+            throw new Error("Expected immutable member '" + memberName + "' not found.");
           }
         }
       }
@@ -99,14 +99,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           functions = _ref1[memberName];
           memberReference = data_[memberName];
           if (memberReference == null) {
-            throw "Expected mutable member '" + memberName + "' not found.";
+            throw new Error("Expected mutable member '" + memberName + "' not found.");
           }
         }
       }
       return true;
     } catch (_error) {
       exception = _error;
-      throw "VerifyNamespaceMembers failure " + exception + ".";
+      throw new Error("VerifyNamespaceMembers failure " + exception + ".");
     }
   };
 
@@ -114,13 +114,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     var childDescriptor, exception, resolveResults, _i, _len, _ref;
     try {
       if (!((data_ != null) && data_)) {
-        throw "Missing data reference input parameter.";
+        throw new Error("Missing data reference input parameter.");
       }
       if (!((descriptor_ != null) && descriptor_)) {
-        throw "Missing descriptor input parameter.";
+        throw new Error("Missing descriptor input parameter.");
       }
       if (!((extensionPointId_ != null) && extensionPointId_)) {
-        throw "Missing extension point ID input parameter.";
+        throw new Error("Missing extension point ID input parameter.");
       }
       _ref = descriptor_.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -133,7 +133,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       return true;
     } catch (_error) {
       exception = _error;
-      throw "InitializeComponentNamespaces failure: " + exception + ".";
+      throw new Error("InitializeComponentNamespaces failure: " + exception + ".");
     }
   };
 
@@ -141,15 +141,15 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     var exception;
     try {
       if (!((data_ != null) && data_)) {
-        throw "Missing data reference input parameter.";
+        throw new Error("Missing data reference input parameter.");
       }
       if (!((descriptor_ != null) && descriptor_)) {
-        throw "Missing descriptor input parameter.";
+        throw new Error("Missing descriptor input parameter.");
       }
       return true;
     } catch (_error) {
       exception = _error;
-      throw "VerifyComponentNamespaces failure: " + exception + ".";
+      throw new Error("VerifyComponentNamespaces failure: " + exception + ".");
     }
   };
 
@@ -157,16 +157,16 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     var exception, jsonTag, newData, resolveResults;
     try {
       if (!((resolveActions_ != null) && resolveActions_)) {
-        throw "Internal error: missing resolve actions structure input parameter.";
+        throw new Error("Internal error: missing resolve actions structure input parameter.");
       }
       if (!((data_ != null) && data_)) {
-        throw "Internal error: missing parent data reference input parameter.";
+        throw new Error("Internal error: missing parent data reference input parameter.");
       }
       if (!((descriptor_ != null) && descriptor_)) {
-        throw "Internal error: missing object model descriptor input parameter.";
+        throw new Error("Internal error: missing object model descriptor input parameter.");
       }
       if (!((mode_ != null) && mode_)) {
-        throw "Internal error: missing mode input parameter.";
+        throw new Error("Internal error: missing mode input parameter.");
       }
       jsonTag = ((descriptor_.namespaceType !== "component") && descriptor_.jsonTag) || key_ || void 0;
       resolveResults = {
@@ -182,7 +182,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       switch (mode_) {
         case "bypass":
           if (!((resolveResults.dataReference != null) && resolveResults.dataReference)) {
-            throw "Internal error: Unable to resolve " + descriptor_.namespaceType + " namespace descriptor in bypass mode.";
+            throw new Error("Internal error: Unable to resolve " + descriptor_.namespaceType + " namespace descriptor in bypass mode.");
           }
           break;
         case "new":
@@ -193,15 +193,15 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           InitializeNamespaceProperties(newData, descriptor_.namespaceModelPropertiesDeclaration);
           if (descriptor_.namespaceType === "component") {
             if (!((resolveActions_.setUniqueKey != null) && resolveActions_.setUniqueKey)) {
-              throw "You must define semanticBindings.setUniqueKey function in your data model declaration.";
+              throw new Error("You must define semanticBindings.setUniqueKey function in your data model declaration.");
             }
             resolveActions_.setUniqueKey(newData);
             if (!((resolveActions_.getUniqueKey != null) && resolveActions_.getUniqueKey)) {
-              throw "You must define semanticBindings.getUniqueKey function in your data model declaration.";
+              throw new Error("You must define semanticBindings.getUniqueKey function in your data model declaration.");
             }
             resolveResults.key = resolveResults.jsonTag = resolveActions_.getUniqueKey(newData);
             if (!((resolveResults.key != null) && resolveResults.key)) {
-              throw "Your data model's semanticBindings.getUniqueKey function returned an invalid key. Key cannot be zero or zero-length.";
+              throw new Error("Your data model's semanticBindings.getUniqueKey function returned an invalid key. Key cannot be zero or zero-length.");
             }
           }
           resolveResults.dataReference = resolveResults.dataParentReference[resolveResults.jsonTag] = newData;
@@ -209,17 +209,17 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           break;
         case "strict":
           if (!((resolveResult.dataReference != null) && resolveResult.dataReference)) {
-            throw "Internal error: Unable to resolve  " + descriptor_.namespaceType + " namespace descriptor in strict mode.";
+            throw new Error("Internal error: Unable to resolve  " + descriptor_.namespaceType + " namespace descriptor in strict mode.");
           }
           VerifyNamespaceProperties(result.dataReference, descriptor_.namespaceModelPropertiesDeclaration);
           break;
         default:
-          throw "Unrecognized mode parameter value.";
+          throw new Error("Unrecognized mode parameter value.");
       }
       return resolveResults;
     } catch (_error) {
       exception = _error;
-      throw "ResolveNamespaceDescriptor failure: " + exception;
+      throw new Error("ResolveNamespaceDescriptor failure: " + exception);
     }
   };
 
@@ -228,17 +228,17 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       var descriptor, exception, extensionPointId, generations, getUniqueKeyFunction, model, parentPathIds, pathId, resolveActions, resolveResults, semanticBindings, setUniqueKeyFunction, targetComponentDescriptor, targetNamespaceDescriptor, _i, _len;
       try {
         this.store = (store_ != null) && store_ || (function() {
-          throw "Missing object store input parameter.";
+          throw new Error("Missing object store input parameter.");
         })();
         model = store_.model;
         this.parentDataReference = (parentDataReference_ != null) && parentDataReference_ || (function() {
-          throw "Missing parent data reference input parameter.";
+          throw new Error("Missing parent data reference input parameter.");
         })();
         if (!((token_ != null) && token_)) {
-          throw "Missing object model address token object input parameter.";
+          throw new Error("Missing object model address token object input parameter.");
         }
         if (!((mode_ != null) && mode_)) {
-          throw "Missing mode input parameter.";
+          throw new Error("Missing mode input parameter.");
         }
         this.dataReference = void 0;
         this.resolvedToken = token_.clone();
@@ -278,7 +278,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return;
       } catch (_error) {
         exception = _error;
-        throw "AddressTokenBinder failure: " + exception;
+        throw new Error("AddressTokenBinder failure: " + exception);
       }
     }
 

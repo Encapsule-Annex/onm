@@ -60,13 +60,13 @@ module.exports = class StoreReifier
                         # store and then dispatch the specified callback on that interface only.
                         callbackInterface = @store.implementation.observers[observerId_]
                         if not (callbackInterface? and callbackInterface)
-                            throw "Internal error: unable to resolve observer ID to obtain callback interface."
+                            throw new Error("Internal error: unable to resolve observer ID to obtain callback interface.");
                         callbackFunction = callbackInterface[callbackName_]
                         if callbackFunction? and callbackFunction
                             try
                                 callbackFunction(@store, observerId_, address_)
                             catch exception
-                                throw "An error occurred in the '#{callbackName_}' method of your observer interface: #{exception}"
+                                throw new Error("An error occurred in the '#{callbackName_}' method of your observer interface: #{exception}");
                     else
                         for observerId, callbackInterface of @store.implementation.observers
                             callbackFunction = callbackInterface[callbackName_]
@@ -74,19 +74,19 @@ module.exports = class StoreReifier
                                 try
                                     callbackFunction(@store, observerId, address_)
                                 catch exception
-                                    throw "An error occurred in the '#{callbackName_}' method of your observer interface: #{exception}"
+                                    throw new Error("An error occurred in the '#{callbackName_}' method of your observer interface: #{exception}");
 
                 catch exception
                     exceptionMessage = "dispatchCallback failure while processing " +
                         "address='#{address_.getHumanReadableString()}', callback='#{callbackName_}', observer='#{observerId_? and observerId_ or "[broadcast all]"}': #{exception}"
-                    throw exceptionMessage
+                    throw new Error(exceptionMessage);
 
 
             # 
             # ============================================================================
             @reifyStoreComponent = (address_, observerId_) =>
                 try
-                    if not (address_? and address_) then throw "Internal error: Missing address input parameter."
+                    if not (address_? and address_) then throw new Error("Internal error: Missing address input parameter.");
 
                     # Return immediately if there are no observers registered.
                     if not jslib.dictionaryLength(@store.implementation.observers) then return
@@ -98,7 +98,7 @@ module.exports = class StoreReifier
                     true # that
 
                 catch exception
-                    throw "reifyStoreComponent failure: #{exception}"
+                    throw new Error("reifyStoreComponent failure: #{exception}");
 
 
             # 
@@ -106,7 +106,7 @@ module.exports = class StoreReifier
             @unreifyStoreComponent = (address_, observerId_) =>
                 try
 
-                    if not (address_? and address_) then throw "Internal error: Missing address input parameter."
+                    if not (address_? and address_) then throw new Error("Internal error: Missing address input parameter.");
 
                     # Return immediately if there are no observers registered.
                     if not jslib.dictionaryLength(@store.implementation.observers) then return
@@ -118,13 +118,13 @@ module.exports = class StoreReifier
                     true # that
 
                 catch exception
-                    throw "unreifyStoreComponent failure: #{exception}"
+                    throw new Error("unreifyStoreComponent failure: #{exception}");
 
             # 
             # ============================================================================
             @reifyStoreExtensions = (address_, observerId_, undoFlag_) =>
                 try
-                    if not (address_? and address_) then throw "Internal error: Missing address input parameter."
+                    if not (address_? and address_) then throw new Error("Internal error: Missing address input parameter.");
 
                     # Return immediately if there are no observers registered.
                     if not jslib.dictionaryLength(@store.implementation.observers) then return
@@ -146,8 +146,8 @@ module.exports = class StoreReifier
                     )
 
                 catch exception
-                    throw "reifyStoreExtensions failure: #{exception}"
+                    throw new Error("reifyStoreExtensions failure: #{exception}");
 
         catch exception
-            throw "StoreReifier constructor failed: #{exception}"
+            throw new Error("StoreReifier constructor failed: #{exception}");
 

@@ -68,7 +68,7 @@ clone = (object_) ->
         # / END: try
 
     catch exception
-        throw "clone: #{exception}"
+        throw new Error("clone: #{exception}");
 
     # / END: clone function
 
@@ -78,7 +78,7 @@ module.exports.dictionaryLength = (dictionary_) ->
     try
         Object.keys(dictionary_).length
     catch exception
-        throw "dictionaryLength: #{exception}"
+        throw new Error("dictionaryLength: #{exception}");
 
 module.exports.uuidNull = "00000000-0000-0000-0000-000000000000"
 

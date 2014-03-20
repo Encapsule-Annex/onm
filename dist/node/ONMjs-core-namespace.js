@@ -52,7 +52,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         _this = this;
       try {
         this.dataReference = (store_.implementation.dataReference != null) && store_.implementation.dataReference || (function() {
-          throw "Cannot resolve object store's root data reference.";
+          throw new Error("Cannot resolve object store's root data reference.");
         })();
         this.resolvedTokenArray = [];
         this.getResolvedToken = function() {
@@ -61,7 +61,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         this.resolvedAddress = void 0;
       } catch (_error) {
         exception = _error;
-        throw "NamespaceDetails failure: " + exception;
+        throw new Error("NamespaceDetails failure: " + exception);
       }
     }
 
@@ -83,7 +83,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       var address, addressToken, componentAddress, exception, extensionPointAddress, extensionPointNamespace, mode, objectModel, objectModelNameKeys, objectModelNameStore, resolvedAddress, tokenBinder, _i, _len, _ref;
       try {
         if (!((store_ != null) && store_)) {
-          throw "Missing object store input parameter.";
+          throw new Error("Missing object store input parameter.");
         }
         this.store = store_;
         this.implementation = new NamespaceDetails(this, store_, address_, mode_);
@@ -97,14 +97,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         objectModelNameStore = store_.model.jsonTag;
         objectModelNameKeys = address.model.jsonTag;
         if (objectModelNameStore !== objectModelNameKeys) {
-          throw "You cannot access a '" + objectModelNameStore + "' store namespace with a '" + objectModelNameKeys + "' object model address!";
+          throw new Error("You cannot access a '" + objectModelNameStore + "' store namespace with a '" + objectModelNameKeys + "' object model address!");
         }
         if (!address.isComplete()) {
-          throw "Specified address is invalid because the first address token does not specify the object store's root component.";
+          throw new Error("Specified address is invalid because the first address token does not specify the object store's root component.");
         }
         mode = (mode_ != null) && mode_ || "bypass";
         if ((mode !== "new") && !address.isResolvable()) {
-          throw "'" + mode + "' mode error: Unresolvable address '" + (address.getHumanReadableString()) + "' invalid for this operation.";
+          throw new Error("'" + mode + "' mode error: Unresolvable address '" + (address.getHumanReadableString()) + "' invalid for this operation.");
         }
         _ref = address.implementation.tokenVector;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -128,7 +128,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
       } catch (_error) {
         exception = _error;
-        throw "Namespace failure: " + exception;
+        throw new Error("Namespace failure: " + exception);
       }
     }
 
@@ -142,7 +142,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.resolvedAddress;
       } catch (_error) {
         exception = _error;
-        throw "getResolvedAddress failure: " + exception;
+        throw new Error("getResolvedAddress failure: " + exception);
       }
     };
 
@@ -152,7 +152,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.getResolvedToken().key;
       } catch (_error) {
         exception = _error;
-        throw "getComponentKey failure: " + exception;
+        throw new Error("getComponentKey failure: " + exception);
       }
     };
 
@@ -171,7 +171,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return resolvedLabel;
       } catch (_error) {
         exception = _error;
-        throw "getResolvedLabel failure: " + exception;
+        throw new Error("getResolvedLabel failure: " + exception);
       }
     };
 
@@ -188,12 +188,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         space = (space_ != null) && space_ || 0;
         resultJSON = JSON.stringify(resultObject, replacer_, space);
         if (!((resultJSON != null) && resultJSON)) {
-          throw "Cannot serialize Javascript object to JSON!";
+          throw new Error("Cannot serialize Javascript object to JSON!");
         }
         return resultJSON;
       } catch (_error) {
         exception = _error;
-        throw "toJSON failure: " + exception;
+        throw new Error("toJSON failure: " + exception);
       }
     };
 
@@ -203,13 +203,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         address = this.getResolvedAddress();
         model = address.getModel();
         if (!((model.namespaceType === "root") || (model.namespaceType === "component"))) {
-          throw "Data import only supported on its root and component namespaces. This namespace '" + model.namespaceType + "'-type namespace.";
+          throw new Error("Data import only supported on its root and component namespaces. This namespace '" + model.namespaceType + "'-type namespace.");
         }
         if (model.namespaceType === "component") {
           newComponentKey = this.store.model.getSemanticBindings().getUniqueKey(data_);
           namespaceComponentKey = address.implementation.getLastToken().key;
           if (newComponentKey !== namespaceComponentKey) {
-            throw "Unexpected input data missing or unexpected component key value.";
+            throw new Error("Unexpected input data missing or unexpected component key value.");
           }
         }
         namespaceData = this.implementation.dataReference;
@@ -227,7 +227,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return address;
       } catch (_error) {
         exception = _error;
-        throw "fromData failure: " + exception;
+        throw new Error("fromData failure: " + exception);
       }
     };
 
@@ -239,24 +239,24 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           parsedData = JSON.parse(json_);
         } catch (_error) {
           exception = _error;
-          throw "Unable to deserialize the specified JSON data: " + exception;
+          throw new Error("Unable to deserialize the specified JSON data: " + exception);
         }
         resolvedAddress = this.getResolvedAddress();
         model = resolvedAddress.getModel();
         dataPayload = parsedData[model.jsonTag];
         if (!((dataPayload != null) && dataPayload)) {
-          throw "JSON data is missing expeced top-level object '" + model.jsonTag + "'.";
+          throw new Error("JSON data is missing expeced top-level object '" + model.jsonTag + "'.");
         }
         try {
           resolvedAddress = this.fromData(dataPayload);
         } catch (_error) {
           exception = _error;
-          throw "After successful JSON parse, namespace data update failed: " + exception;
+          throw new Error("After successful JSON parse, namespace data update failed: " + exception);
         }
         return resolvedAddress;
       } catch (_error) {
         exception = _error;
-        throw "fromJSON failure: " + exception;
+        throw new Error("fromJSON failure: " + exception);
       }
     };
 
@@ -299,7 +299,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return _results;
       } catch (_error) {
         exception = _error;
-        throw "update failure: " + exception;
+        throw new Error("update failure: " + exception);
       }
     };
 
@@ -308,10 +308,10 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       try {
         resolvedToken = this.implementation.getResolvedToken();
         if (!((resolvedToken != null) && resolvedToken)) {
-          throw "Internal error: unable to resolve token.";
+          throw new Error("Internal error: unable to resolve token.");
         }
         if (resolvedToken.namespaceDescriptor.namespaceType !== "extensionPoint") {
-          throw "You may only visit the subcomponents of an extension point namespace.";
+          throw new Error("You may only visit the subcomponents of an extension point namespace.");
         }
         _ref = this.data();
         for (key in _ref) {
@@ -323,13 +323,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             callback_(address);
           } catch (_error) {
             exception = _error;
-            throw "Failure occurred inside your callback function implementation: " + exception;
+            throw new Error("Failure occurred inside your callback function implementation: " + exception);
           }
         }
         return true;
       } catch (_error) {
         exception = _error;
-        throw "visitExtensionPointSubcomponents failure: " + exception;
+        throw new Error("visitExtensionPointSubcomponents failure: " + exception);
       }
     };
 

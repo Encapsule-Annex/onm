@@ -53,11 +53,11 @@ module.exports = class BackChannel
                         try
                             @logHandler(html_)
                         catch exception
-                            throw "Error executing log handler function callback: #{exception}"
+                            throw new Error("Error executing log handler function callback: #{exception}");
                         return true
                     false
                 catch exception
-                    throw "BackChannel.log failure: #{exception}"
+                    throw new Error("BackChannel.log failure: #{exception}");
 
             @error = (error_) =>
                 try
@@ -65,15 +65,15 @@ module.exports = class BackChannel
                         try
                             @errorHandler(error_)
                         catch exception
-                            throw "Error executing error handler function callback: #{exception}"
+                            throw new Error("Error executing error handler function callback: #{exception}");
                         return true
 
-                    throw error_
+                    throw new Error(error_);
 
                 catch exception
-                    throw "BackChannel.error failure: #{exception}"
+                    throw new Error("BackChannel.error failure: #{exception}");
 
 
         catch exception
-            throw "BackChannel failure: #{exception}"
+            throw new Error("BackChannel failure: #{exception}");
 

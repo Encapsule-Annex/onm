@@ -57,7 +57,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         _this = this;
       try {
         if (!((referenceStore_ != null) && referenceStore_)) {
-          throw "Missing object store input parameter. Unable to determine external selector type.";
+          throw new Error("Missing object store input parameter. Unable to determine external selector type.");
         }
         this.referenceStore = referenceStore_;
         selectorModel = new Model({
@@ -81,7 +81,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               }
             } catch (_error) {
               exception = _error;
-              throw "onNamespaceUpdated failure: " + exception;
+              throw new Error("onNamespaceUpdated failure: " + exception);
             }
           },
           onNamespaceRemoved: function(objectStore_, observerId_, address_) {
@@ -94,13 +94,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               }
             } catch (_error) {
               exception = _error;
-              throw "onNamespaceRemoved failure: " + exception;
+              throw new Error("onNamespaceRemoved failure: " + exception);
             }
           }
         };
       } catch (_error) {
         exception = _error;
-        throw "AddressStore failure: " + exception;
+        throw new Error("AddressStore failure: " + exception);
       }
     }
 
@@ -114,7 +114,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return namespace.getResolvedAddress();
       } catch (_error) {
         exception = _error;
-        throw "getSelector failure: " + exception;
+        throw new Error("getSelector failure: " + exception);
       }
     };
 
@@ -129,7 +129,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.selectorNamespace.update();
       } catch (_error) {
         exception = _error;
-        throw "setAddress failure: " + exception;
+        throw new Error("setAddress failure: " + exception);
       }
     };
 

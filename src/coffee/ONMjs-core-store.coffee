@@ -70,7 +70,7 @@ class StoreDetails
 
 
         catch exception
-            throw "StoreDetails failure: #{exception}"
+            throw new Error("StoreDetails failure: #{exception}");
 
 
 module.exports = class Store
@@ -82,7 +82,7 @@ module.exports = class Store
             # ============================================================================
 
             # Validate parameters.
-            if not (model_? and model_) then throw "Missing object model parameter!"
+            if not (model_? and model_) then throw new Error("Missing object model parameter!");
 
             # Keep a reference to this object store's associated object model.
             @model = model_
@@ -94,7 +94,7 @@ module.exports = class Store
             if initialStateJSON_? and initialStateJSON_
                 @implementation.dataReference = JSON.parse(initialStateJSON_)
                 if not (@implementation.dataReference? and @implementation.dataReference)
-                    throw "Cannot deserialize specified JSON string!"
+                    throw new Error("Cannot deserialize specified JSON string!");
                 @implementation.objectStoreSource = "json"
                 
             else
@@ -110,23 +110,23 @@ module.exports = class Store
             # Returns true iff the specified Address and Store objects are both bound to the same Model.
             @validateAddressModel = (address_) =>
                 try
-                    if not (address_? and address_) then throw "Missing address input parameter."
-                    if not (address_.model? and address_.model) then throw "Invalid address object passed as input parameter."
+                    if not (address_? and address_) then throw new Error("Missing address input parameter.");
+                    if not (address_.model? and address_.model) then throw new Error("Invalid address object passed as input parameter.");
                     return @model.isEqual(address_.model)
                 catch exception
-                    throw "validateAddressModel failure: #{exception}"
+                    throw new Error("validateAddressModel failure: #{exception}");
 
 
             #
             # ============================================================================
             @createComponent = (address_) =>
                 try
-                    if not (address_? and address_) then throw "Missing object model namespace selector input parameter."
-                    if not @validateAddressModel(address_) then throw "The specified address cannot be used to reference this store because it's not bound to the same model as this store."
-                    if address_.isQualified() then throw "The specified address is qualified and may only be used to specify existing objects in the store."
+                    if not (address_? and address_) then throw new Error("Missing object model namespace selector input parameter.");
+                    if not @validateAddressModel(address_) then throw new Error("The specified address cannot be used to reference this store because it's not bound to the same model as this store.");
+                    if address_.isQualified() then throw new Error("The specified address is qualified and may only be used to specify existing objects in the store.");
                     descriptor = address_.implementation.getDescriptor()
-                    if not descriptor.isComponent then throw "The specified address does not specify the root of a component."
-                    if descriptor.namespaceType == "root" then throw "The specified address refers to the root namespace of the store which is created automatically."
+                    if not descriptor.isComponent then throw new Error("The specified address does not specify the root of a component.");
+                    if descriptor.namespaceType == "root" then throw new Error("The specified address refers to the root namespace of the store which is created automatically.");
 
                     # Creating the root namespace of a component automatically creates all its sub-namespaces as well.
                     componentNamespace = new Namespace(@, address_, "new")
@@ -134,18 +134,18 @@ module.exports = class Store
 
                 catch exception
 
-                    throw "createComponent failure: #{exception}"
+                    throw new Error("createComponent failure: #{exception}");
 
             #
             # ============================================================================
             @removeComponent = (address_) =>
                 try
-                    if not (address_? and address_) then throw "Missing address input parameter!"
-                    if not @validateAddressModel(address_) then throw "The specified address cannot be used to reference this store because it's not bound to the same model as this store."
-                    if not address_.isQualified() then throw "You cannot use an unqualified address to remove a component."
+                    if not (address_? and address_) then throw new Error("Missing address input parameter!");
+                    if not @validateAddressModel(address_) then throw new Error("The specified address cannot be used to reference this store because it's not bound to the same model as this store.");
+                    if not address_.isQualified() then throw new Error("You cannot use an unqualified address to remove a component.");
                     descriptor = address_.implementation.getDescriptor()
-                    if not descriptor.isComponent then throw "The specified address does not specify the root of a component."
-                    if descriptor.namespace == "root" then throw "The specified address refers to the root namespace of the store which cannot be removed."
+                    if not descriptor.isComponent then throw new Error("The specified address does not specify the root of a component.");
+                    if descriptor.namespace == "root" then throw new Error("The specified address refers to the root namespace of the store which cannot be removed.");
                     # Unrefify the component before actually making any modifications to the store.
                     # modelViewObserver_ == undefined -> broadcast to all registered observers
                     # undoFlag_ == true -> invert namespace traversal order and invoke remove callbacks
@@ -161,23 +161,23 @@ module.exports = class Store
                     return componentNamespace
 
                 catch exception
-                    throw "removeComponent failure: #{exception}"
+                    throw new Error("removeComponent failure: #{exception}");
 
 
             #
             # ============================================================================
             # Assumes the existence of the namespace indicated by the specified selector.
-            # Throws if the selector cannot be resolved against the contents of the store.
+            # Throwsnew Error( if the selector cannot be resolved against the contents of the store.);
             #
             @openNamespace = (address_) =>
                 try
-                    if not (address_ and address_) then throw "Missing address input parameter."
-                    if not @validateAddressModel(address_) then throw "The specified address cannot be used to reference this store because it's not bound to the same model as this store."
+                    if not (address_ and address_) then throw new Error("Missing address input parameter.");
+                    if not @validateAddressModel(address_) then throw new Error("The specified address cannot be used to reference this store because it's not bound to the same model as this store.");
                     namespace = new Namespace(@, address_, "bypass")
                     return namespace
 
                 catch exception
-                    throw "openNamespace failure: #{exception}"
+                    throw new Error("openNamespace failure: #{exception}");
                 
 
             #
@@ -189,7 +189,7 @@ module.exports = class Store
                     return resultJSON
 
                 catch exception
-                    throw "toJSON fail on object store #{@jsonTag} : #{exception}"
+                    throw new Error("toJSON fail on object store #{@jsonTag} : #{exception}");
 
             # 
             # ============================================================================
@@ -206,7 +206,7 @@ module.exports = class Store
             #
             @registerObserver = (observerCallbackInterface_, observingEntityReference_) =>
                 try
-                    if not (observerCallbackInterface_? and observerCallbackInterface_) then throw "Missing callback interface namespace input parameter.."
+                    if not (observerCallbackInterface_? and observerCallbackInterface_) then throw new Error("Missing callback interface namespace input parameter..");
                     observerCallbackInterface_.observingEntity = observingEntityReference_
 
                     # Create a new observer ID code (UUID because multiple registrations allowed).
@@ -239,18 +239,18 @@ module.exports = class Store
                     return observerIdCode
 
                 catch exception
-                    throw "registerObserver failure: #{exception}"
+                    throw new Error("registerObserver failure: #{exception}");
 
             #
             # ============================================================================
             @unregisterObserver = (observerIdCode_) =>
                 try
-                    if not (observerIdCode_? and observerIdCode_) then throw "Missing observer ID code input parameter!"
+                    if not (observerIdCode_? and observerIdCode_) then throw new Error("Missing observer ID code input parameter!");
 
                     registeredObserver = @implementation.observers[observerIdCode_]
 
                     if not (registeredObserver? and registeredObserver)
-                        throw "Unknown observer ID code provided. No registration to remove."
+                        throw new Error("Unknown observer ID code provided. No registration to remove.");
 
                     @implementation.reifier.dispatchCallback(undefined, "onObserverDetachBegin", observerIdCode_)
 
@@ -268,23 +268,23 @@ module.exports = class Store
                     delete @implementation.observers[observerIdCode_]
 
                 catch exception
-                    throw "unregisterObserver failure: #{exception}"
+                    throw new Error("unregisterObserver failure: #{exception}");
 
             #
             # ============================================================================
             @openObserverState = (observerId_) =>
                 try
-                    if not (observerId_? and observerId_) then throw "Missing observer ID parameter!"
+                    if not (observerId_? and observerId_) then throw new Error("Missing observer ID parameter!");
                     observerState = @implementation.observersState[observerId_]? and @implementation.observersState[observerId_] or @implementation.observersState[observerId_] = []
                     return observerState                    
 
                 catch exception
-                    throw "openObserverStateObject failure: #{exception}"
+                    throw new Error("openObserverStateObject failure: #{exception}");
 
             #
             # ============================================================================
             @removeObserverState = (observerId_) =>
-                if not (observerId_? and observerId_) then throw "Missing observer ID parameter!"
+                if not (observerId_? and observerId_) then throw new Error("Missing observer ID parameter!");
                 if observerState? and observerState
                     if @implementation.observerState[observerId_]? and @implementation.observerState[observerId_]
                         delete @implementation.observerState[observerId_]
@@ -294,21 +294,21 @@ module.exports = class Store
             # ============================================================================
             @openObserverComponentState = (observerId_, address_) =>
                 try
-                    if not (observerId_? and observerId_) then throw "Missing observer ID parameter."
-                    if not (address_? and address_) then throw "Missing address input parameter."
+                    if not (observerId_? and observerId_) then throw new Error("Missing observer ID parameter.");
+                    if not (address_? and address_) then throw new Error("Missing address input parameter.");
                     token = address_.implementation.getLastToken()
                     componentNamespaceId = token.componentDescriptor.id
                     componentAddress = address_.createComponentAddress()
                     return @openObserverNamespaceState(observerId_, componentAddress)
                 catch exception
-                    throw "openObserverComponentState failure: #{exception}"
+                    throw new Error("openObserverComponentState failure: #{exception}");
 
             #
             # ============================================================================
             @openObserverNamespaceState = (observerId_, address_) =>
                 try
-                    if not (observerId_? and observerId_) then throw "Missing observer ID parameter."
-                    if not (address_? and address_) then throw "Missing address input parameter."
+                    if not (observerId_? and observerId_) then throw new Error("Missing observer ID parameter.");
+                    if not (address_? and address_) then throw new Error("Missing address input parameter.");
                     observerState = @openObserverState(observerId_)
                     token = address_.implementation.getLastToken()
                     namespacePathId = token.namespaceDescriptor.id
@@ -318,7 +318,7 @@ module.exports = class Store
                     return namespaceState
 
                 catch exception
-                    throw "openObserverNamespaceState failure: #{exception}"
+                    throw new Error("openObserverNamespaceState failure: #{exception}");
 
             #
             # ============================================================================
@@ -338,7 +338,7 @@ module.exports = class Store
 
 
         catch exception
-            throw "Store failure: #{exception}"
+            throw new Error("Store failure: #{exception}");
 
 
         

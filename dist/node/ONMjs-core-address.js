@@ -48,22 +48,22 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         _this = this;
       try {
         this.address = ((address_ != null) && address_) || (function() {
-          throw "Internal error missing address input parameter.";
+          throw new Error("Internal error missing address input parameter.");
         })();
         this.model = ((model_ != null) && model_) || (function() {
-          throw "Internal error missing model input paramter.";
+          throw new Error("Internal error missing model input paramter.");
         })();
         this.getModelPath = function() {
           var exception, lastToken;
           try {
             if (!_this.tokenVector.length) {
-              throw "Invalid address contains no address tokens.";
+              throw new Error("Invalid address contains no address tokens.");
             }
             lastToken = _this.getLastToken();
             return lastToken.namespaceDescriptor.path;
           } catch (_error) {
             exception = _error;
-            throw "getModelPath failure: " + exception;
+            throw new Error("getModelPath failure: " + exception);
           }
         };
         this.getModelDescriptorFromSubpath = function(subpath_) {
@@ -79,11 +79,11 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                 currentDescriptor = _this.model.implementation.getNamespaceDescriptorFromPath(currentModelPath);
               } else {
                 archetypePathId = (currentDescriptor.archetypePathId != null) && currentDescriptor.archetypePathId || (function() {
-                  throw 'WAT';
+                  throw new Error('WAT');
                 })();
                 archetypeDescriptor = _this.model.implementation.getNamespaceDescriptorFromPathId(archetypePathId);
                 if (token !== archetypeDescriptor.jsonTag) {
-                  throw "Expected component name of '" + token + "' but instead found '" + archetypeDescriptor.jsonTag + "'.";
+                  throw new Error("Expected component name of '" + token + "' but instead found '" + archetypeDescriptor.jsonTag + "'.");
                 }
                 currentModelPath = archetypeDescriptor.path;
                 currentDescriptor = archetypeDescriptor;
@@ -93,20 +93,20 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return currentDescriptor;
           } catch (_error) {
             exception = _error;
-            throw "getModelDescriptorFromSubpath failure: " + exception;
+            throw new Error("getModelDescriptorFromSubpath failure: " + exception);
           }
         };
         this.createSubpathIdAddress = function(pathId_) {
           var addressedComponentDescriptor, addressedComponentToken, exception, newAddress, newToken, newTokenVector, targetNamespaceDescriptor;
           try {
             if (!((pathId_ != null) && pathId_ > -1)) {
-              throw "Missing namespace path ID input parameter.";
+              throw new Error("Missing namespace path ID input parameter.");
             }
             addressedComponentToken = _this.getLastToken();
             addressedComponentDescriptor = addressedComponentToken.componentDescriptor;
             targetNamespaceDescriptor = _this.model.implementation.getNamespaceDescriptorFromPathId(pathId_);
             if (targetNamespaceDescriptor.idComponent !== addressedComponentDescriptor.id) {
-              throw "Invalid path ID specified does not resolve to a namespace in the same component as the source address.";
+              throw new Error("Invalid path ID specified does not resolve to a namespace in the same component as the source address.");
             }
             newToken = new AddressToken(_this.model, addressedComponentToken.idExtensionPoint, addressedComponentToken.key, pathId_);
             newTokenVector = _this.tokenVector.length > 0 && _this.tokenVector.slice(0, _this.tokenVector.length - 1) || [];
@@ -115,7 +115,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw "createSubpathIdAddress failure: " + exception;
+            throw new Error("createSubpathIdAddress failure: " + exception);
           }
         };
         this.pushToken = function(token_) {
@@ -140,40 +140,40 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.address;
           } catch (_error) {
             exception = _error;
-            throw "pushToken failure: " + exception;
+            throw new Error("pushToken failure: " + exception);
           }
         };
         this.validateTokenPair = function(parentToken_, childToken_) {
           var exception;
           try {
             if (!((parentToken_ != null) && parentToken_ && (childToken_ != null) && childToken_)) {
-              throw "Internal error: input parameters are not correct.";
+              throw new Error("Internal error: input parameters are not correct.");
             }
             if (!childToken_.keyRequired) {
-              throw "Child token is invalid because it specifies a namespace in the root component.";
+              throw new Error("Child token is invalid because it specifies a namespace in the root component.");
             }
             if (parentToken_.namespaceDescriptor.id !== childToken_.extensionPointDescriptor.id) {
-              throw "Child token is invalid because the parent token does not select the required extension point namespace.";
+              throw new Error("Child token is invalid because the parent token does not select the required extension point namespace.");
             }
             if (!parentToken_.isQualified() && childToken_.isQualified()) {
-              throw "Child token is invalid because the parent token is unqualified and the child is qualified.";
+              throw new Error("Child token is invalid because the parent token is unqualified and the child is qualified.");
             }
             return true;
           } catch (_error) {
             exception = _error;
-            throw "validateTokenPair the specified parent and child tokens are incompatible and cannot be used to form an address: " + exception;
+            throw new Error("validateTokenPair the specified parent and child tokens are incompatible and cannot be used to form an address: " + exception);
           }
         };
         this.getLastToken = function() {
           var exception;
           try {
             if (!_this.tokenVector.length) {
-              throw "Illegal call to getLastToken on uninitialized address class instance.";
+              throw new Error("Illegal call to getLastToken on uninitialized address class instance.");
             }
             return _this.tokenVector[_this.tokenVector.length - 1];
           } catch (_error) {
             exception = _error;
-            throw "getLastToken failure: " + exception;
+            throw new Error("getLastToken failure: " + exception);
           }
         };
         this.getDescriptor = function() {
@@ -182,7 +182,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.getLastToken().namespaceDescriptor;
           } catch (_error) {
             exception = _error;
-            throw "getDescriptor failure: " + exception;
+            throw new Error("getDescriptor failure: " + exception);
           }
         };
         this.tokenVector = [];
@@ -205,7 +205,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         this.hashString = void 0;
       } catch (_error) {
         exception = _error;
-        throw "AddressDetails failure: " + exception;
+        throw new Error("AddressDetails failure: " + exception);
       }
     }
 
@@ -238,7 +238,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         _this = this;
       try {
         this.model = (model_ != null) && model_ || (function() {
-          throw "Missing required object model input parameter.";
+          throw new Error("Missing required object model input parameter.");
         })();
         this.implementation = new AddressDetails(this, model_, tokenVector_);
         this.isComplete = function() {
@@ -255,7 +255,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         };
       } catch (_error) {
         exception = _error;
-        throw "Address error: " + exception;
+        throw new Error("Address error: " + exception);
       }
     }
 
@@ -289,7 +289,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return humanReadableString;
       } catch (_error) {
         exception = _error;
-        throw "getHumanReadableString failure: " + exception;
+        throw new Error("getHumanReadableString failure: " + exception);
       }
     };
 
@@ -323,7 +323,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.hashString;
       } catch (_error) {
         exception = _error;
-        throw "getHashString failure: " + exception;
+        throw new Error("getHashString failure: " + exception);
       }
     };
 
@@ -333,7 +333,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.getLastToken().idNamespace === 0;
       } catch (_error) {
         exception = _error;
-        throw "CNMjs.Address.isRoot failure: " + exception;
+        throw new Error("CNMjs.Address.isRoot failure: " + exception);
       }
     };
 
@@ -341,7 +341,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       var exception, index, result, tokenA, tokenB;
       try {
         if (!((address_ != null) && address_)) {
-          throw "Missing address input parameter.";
+          throw new Error("Missing address input parameter.");
         }
         if (this.implementation.tokenVector.length !== address_.implementation.tokenVector.length) {
           return false;
@@ -360,7 +360,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return result;
       } catch (_error) {
         exception = _error;
-        throw "isEqual failure: " + exception;
+        throw new Error("isEqual failure: " + exception);
       }
     };
 
@@ -368,7 +368,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       var exception, result, testToken, thisToken;
       try {
         if (!((address_ != null) && address_)) {
-          throw "Missing address input parameter.";
+          throw new Error("Missing address input parameter.");
         }
         thisToken = this.implementation.getLastToken();
         testToken = address_.implementation.getLastToken();
@@ -376,7 +376,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return result;
       } catch (_error) {
         exception = _error;
-        throw "isSameType failure: " + exception;
+        throw new Error("isSameType failure: " + exception);
       }
     };
 
@@ -386,7 +386,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return new Address(this.model, this.implementation.tokenVector);
       } catch (_error) {
         exception = _error;
-        throw "clone failure: " + exception;
+        throw new Error("clone failure: " + exception);
       }
     };
 
@@ -394,7 +394,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       var descriptor, exception, generations, newAddress, newTokenVector, token, tokenSourceIndex;
       try {
         if (!this.implementation.tokenVector.length) {
-          throw "Invalid address contains no address tokens.";
+          throw new Error("Invalid address contains no address tokens.");
         }
         generations = (generations_ != null) && generations_ || 1;
         tokenSourceIndex = this.implementation.tokenVector.length - 1;
@@ -411,7 +411,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             token = new AddressToken(token.model, token.idExtensionPoint, token.key, descriptor.parent.id);
           } else {
             token = (tokenSourceIndex !== -1) && this.implementation.tokenVector[tokenSourceIndex--] || (function() {
-              throw "Internal error: exhausted token stack.";
+              throw new Error("Internal error: exhausted token stack.");
             })();
           }
           generations--;
@@ -422,7 +422,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return newAddress;
       } catch (_error) {
         exception = _error;
-        throw "createParentAddress failure: " + exception;
+        throw new Error("createParentAddress failure: " + exception);
       }
     };
 
@@ -430,7 +430,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       var archetypeDescriptor, archetypePathId, child, currentToken, exception, nd, ndNew, newAddress, newTokenVector, subpathToken, subpathTokens, _i, _j, _len, _len1, _ref;
       try {
         if (!((subpath_ != null) && subpath_)) {
-          throw "Missing subpath input parameter.";
+          throw new Error("Missing subpath input parameter.");
         }
         newTokenVector = this.implementation.tokenVector.slice(0, this.implementation.tokenVector.length - 1) || [];
         currentToken = this.implementation.getLastToken();
@@ -449,17 +449,17 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               }
             }
             if (!((ndNew != null) && ndNew)) {
-              throw "Invalid address token '" + subpathToken + "'.";
+              throw new Error("Invalid address token '" + subpathToken + "'.");
             }
             if (ndNew.namespaceType === 'component') {
-              throw "Internal error: components must be created within extension point namespaces. How did this happen?";
+              throw new Error("Internal error: components must be created within extension point namespaces. How did this happen?");
             }
             currentToken = new AddressToken(currentToken.model, currentToken.idExtensionPoint, currentToken.key, ndNew.id);
           } else {
             archetypePathId = nd.archetypePathId;
             archetypeDescriptor = this.model.implementation.getNamespaceDescriptorFromPathId(archetypePathId);
             if (subpathToken !== archetypeDescriptor.jsonTag) {
-              throw "Expected component name '" + archetypeDescriptor.jsonTag + "' but was given '" + subpathToken + "'.";
+              throw new Error("Expected component name '" + archetypeDescriptor.jsonTag + "' but was given '" + subpathToken + "'.");
             }
             newTokenVector.push(currentToken);
             currentToken = new AddressToken(currentToken.model, currentToken.idNamespace, void 0, archetypePathId);
@@ -470,7 +470,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return newAddress;
       } catch (_error) {
         exception = _error;
-        throw "createSubpathAddress failure: " + exception;
+        throw new Error("createSubpathAddress failure: " + exception);
       }
     };
 
@@ -485,7 +485,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return newAddress;
       } catch (_error) {
         exception = _error;
-        throw "createComponentAddress failure: " + exception;
+        throw new Error("createComponentAddress failure: " + exception);
       }
     };
 
@@ -494,13 +494,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       try {
         descriptor = this.implementation.getDescriptor();
         if (descriptor.namespaceType !== "extensionPoint") {
-          throw "Unable to determine subcomponent to create because this address does not specifiy an extension point namespace.";
+          throw new Error("Unable to determine subcomponent to create because this address does not specifiy an extension point namespace.");
         }
         newToken = new AddressToken(this.model, descriptor.id, void 0, descriptor.archetypePathId);
         return this.clone().implementation.pushToken(newToken);
       } catch (_error) {
         exception = _error;
-        throw "createSubcomponentAddress failure: " + exception;
+        throw new Error("createSubcomponentAddress failure: " + exception);
       }
     };
 
@@ -510,7 +510,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.getDescriptor().namespaceModelDeclaration;
       } catch (_error) {
         exception = _error;
-        throw "getModel failure: " + exception;
+        throw new Error("getModel failure: " + exception);
       }
     };
 
@@ -520,7 +520,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.getDescriptor().namespaceModelPropertiesDeclaration;
       } catch (_error) {
         exception = _error;
-        throw "getPropertiesModel failure: " + exception;
+        throw new Error("getPropertiesModel failure: " + exception);
       }
     };
 
@@ -528,12 +528,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       var exception;
       try {
         if (!this.isResolvable()) {
-          throw "You cannot obtain the component key of an unresolvable address.";
+          throw new Error("You cannot obtain the component key of an unresolvable address.");
         }
         return this.implementation.getLastToken().key;
       } catch (_error) {
         exception = _error;
-        throw "getComponentKey failure: " + exception;
+        throw new Error("getComponentKey failure: " + exception);
       }
     };
 
@@ -562,13 +562,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             callback_(address);
           } catch (_error) {
             exception = _error;
-            throw "Failure occurred inside your registered callback function implementation: " + exception;
+            throw new Error("Failure occurred inside your registered callback function implementation: " + exception);
           }
         }
         return true;
       } catch (_error) {
         exception = _error;
-        throw "visitParentAddressesAscending failure: " + exception;
+        throw new Error("visitParentAddressesAscending failure: " + exception);
       }
     };
 
@@ -596,13 +596,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             callback_(address);
           } catch (_error) {
             exception = _error;
-            throw "Failure occurred inside your registered callback function implementation: " + exception;
+            throw new Error("Failure occurred inside your registered callback function implementation: " + exception);
           }
         }
         return true;
       } catch (_error) {
         exception = _error;
-        throw "visitParentAddressesDescending failure: " + exception;
+        throw new Error("visitParentAddressesDescending failure: " + exception);
       }
     };
 
@@ -629,13 +629,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             callback_(address);
           } catch (_error) {
             exception = _error;
-            throw "Failure occurred inside your registered callback function implementation: " + exception;
+            throw new Error("Failure occurred inside your registered callback function implementation: " + exception);
           }
         }
         return true;
       } catch (_error) {
         exception = _error;
-        throw "visitSubaddressesAscending failure: " + exception;
+        throw new Error("visitSubaddressesAscending failure: " + exception);
       }
     };
 
@@ -660,13 +660,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             callback_(address);
           } catch (_error) {
             exception = _error;
-            throw "Failure occurred inside your registered callback function implementation: " + exception;
+            throw new Error("Failure occurred inside your registered callback function implementation: " + exception);
           }
         }
         return true;
       } catch (_error) {
         exception = _error;
-        throw "visitSubaddressesAscending failure: " + exception;
+        throw new Error("visitSubaddressesAscending failure: " + exception);
       }
     };
 
@@ -685,13 +685,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             callback_(childAddress);
           } catch (_error) {
             exception = _error;
-            throw "Failure occurred inside your registered callback function implementation: " + exception;
+            throw new Error("Failure occurred inside your registered callback function implementation: " + exception);
           }
         }
         return true;
       } catch (_error) {
         exception = _error;
-        throw "visitChildAddresses failure: " + exception;
+        throw new Error("visitChildAddresses failure: " + exception);
       }
     };
 
@@ -719,7 +719,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return true;
       } catch (_error) {
         exception = _error;
-        throw "visitExtensionPointAddresses failure: " + exception;
+        throw new Error("visitExtensionPointAddresses failure: " + exception);
       }
     };
 

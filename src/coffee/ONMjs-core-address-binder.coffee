@@ -43,8 +43,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 # ****************************************************************************
 InitializeNamespaceProperties = (data_, descriptor_) ->
     try
-        if not (data_? and data_) then throw "Missing data reference input parameter."
-        if not (descriptor_? and descriptor_) then throw "Missing descriptor input parameter."
+        if not (data_? and data_) then throw new Error("Missing data reference input parameter.");
+        if not (descriptor_? and descriptor_) then throw new Error("Missing descriptor input parameter.");
 
         if descriptor_.userImmutable? and descriptor_.userImmutable
             for memberName, functions of descriptor_.userImmutable
@@ -61,40 +61,40 @@ InitializeNamespaceProperties = (data_, descriptor_) ->
         return true
 
     catch exception
-        throw "InitializeNamespaceProperties failure #{exception}."
+        throw new Error("InitializeNamespaceProperties failure #{exception}.");
 
 
 #
 # ****************************************************************************
 VerifyNamespaceProperties = (data_, descriptor_) ->
     try
-        if not (data_? and data_) then throw "Missing data reference input parameter."
-        if not (descriptor_? and descriptor_) then throw "Missing descriptor input parameter."
+        if not (data_? and data_) then throw new Error("Missing data reference input parameter.");
+        if not (descriptor_? and descriptor_) then throw new Error("Missing descriptor input parameter.");
 
         if descriptor_.userImmutable? and descriptor_.userImmutable
             for memberName, functions of descriptor_.userImmutable
                 memberReference = data_[memberName]
                 if not memberReference?
-                    throw "Expected immutable member '#{memberName}' not found."
+                    throw new Error("Expected immutable member '#{memberName}' not found.");
 
         if descriptor_.userMutable? and descriptor_.userMutable
             for memberName, functions of descriptor_.userMutable
                 memberReference = data_[memberName]
                 if not memberReference?
-                    throw "Expected mutable member '#{memberName}' not found."
+                    throw new Error("Expected mutable member '#{memberName}' not found.");
         return true
 
     catch exception
-        throw "VerifyNamespaceMembers failure #{exception}."
+        throw new Error("VerifyNamespaceMembers failure #{exception}.");
 
 
 #
 # ****************************************************************************
 InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, key_) ->
     try
-        if not (data_? and data_) then throw "Missing data reference input parameter."
-        if not (descriptor_? and descriptor_) then throw "Missing descriptor input parameter."
-        if not (extensionPointId_? and extensionPointId_) then throw "Missing extension point ID input parameter."
+        if not (data_? and data_) then throw new Error("Missing data reference input parameter.");
+        if not (descriptor_? and descriptor_) then throw new Error("Missing descriptor input parameter.");
+        if not (extensionPointId_? and extensionPointId_) then throw new Error("Missing extension point ID input parameter.");
 
         for childDescriptor in descriptor_.children
             if childDescriptor.namespaceType != "component"
@@ -104,20 +104,20 @@ InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, 
         return true
 
     catch exception
-        throw "InitializeComponentNamespaces failure: #{exception}."
+        throw new Error("InitializeComponentNamespaces failure: #{exception}.");
 
 
 #
 # ****************************************************************************
 VerifyComponentNamespaces = (store_, data_, descriptor_, extensionPointId_) ->
     try
-        if not (data_? and data_) then throw "Missing data reference input parameter."
-        if not (descriptor_? and descriptor_) then throw "Missing descriptor input parameter."
+        if not (data_? and data_) then throw new Error("Missing data reference input parameter.");
+        if not (descriptor_? and descriptor_) then throw new Error("Missing descriptor input parameter.");
 
         return true
 
     catch exception
-        throw "VerifyComponentNamespaces failure: #{exception}."
+        throw new Error("VerifyComponentNamespaces failure: #{exception}.");
 
 
 
@@ -126,10 +126,10 @@ VerifyComponentNamespaces = (store_, data_, descriptor_, extensionPointId_) ->
 ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_, mode_) ->
     try
 
-        if not (resolveActions_? and resolveActions_) then throw "Internal error: missing resolve actions structure input parameter."
-        if not (data_? and data_) then throw "Internal error: missing parent data reference input parameter."
-        if not (descriptor_? and descriptor_) then throw "Internal error: missing object model descriptor input parameter."
-        if not (mode_? and mode_) then throw "Internal error: missing mode input parameter."
+        if not (resolveActions_? and resolveActions_) then throw new Error("Internal error: missing resolve actions structure input parameter.");
+        if not (data_? and data_) then throw new Error("Internal error: missing parent data reference input parameter.");
+        if not (descriptor_? and descriptor_) then throw new Error("Internal error: missing object model descriptor input parameter.");
+        if not (mode_? and mode_) then throw new Error("Internal error: missing mode input parameter.");
 
         jsonTag =  ((descriptor_.namespaceType != "component") and descriptor_.jsonTag) or key_ or undefined
 
@@ -146,7 +146,7 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
         switch mode_
             when "bypass"
                 if not (resolveResults.dataReference? and resolveResults.dataReference)
-                    throw "Internal error: Unable to resolve #{descriptor_.namespaceType} namespace descriptor in bypass mode."
+                    throw new Error("Internal error: Unable to resolve #{descriptor_.namespaceType} namespace descriptor in bypass mode.");
                 break
             when "new"
                 if (resolveResults.dataReference? and resolveResults.dataReference)
@@ -157,13 +157,13 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
 
                 if descriptor_.namespaceType == "component"
                     if not (resolveActions_.setUniqueKey? and resolveActions_.setUniqueKey)
-                        throw "You must define semanticBindings.setUniqueKey function in your data model declaration."
+                        throw new Error("You must define semanticBindings.setUniqueKey function in your data model declaration.");
                     resolveActions_.setUniqueKey(newData)
                     if not (resolveActions_.getUniqueKey? and resolveActions_.getUniqueKey)
-                        throw "You must define semanticBindings.getUniqueKey function in your data model declaration."
+                        throw new Error("You must define semanticBindings.getUniqueKey function in your data model declaration.");
                     resolveResults.key = resolveResults.jsonTag = resolveActions_.getUniqueKey(newData)
                     if not (resolveResults.key? and resolveResults.key)
-                        throw "Your data model's semanticBindings.getUniqueKey function returned an invalid key. Key cannot be zero or zero-length."
+                        throw new Error("Your data model's semanticBindings.getUniqueKey function returned an invalid key. Key cannot be zero or zero-length.");
 
                 resolveResults.dataReference = resolveResults.dataParentReference[resolveResults.jsonTag] = newData
                 resolveResults.created = true
@@ -172,16 +172,16 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
 
             when "strict"
                 if not (resolveResult.dataReference? and resolveResult.dataReference)
-                    throw "Internal error: Unable to resolve  #{descriptor_.namespaceType} namespace descriptor in strict mode."
+                    throw new Error("Internal error: Unable to resolve  #{descriptor_.namespaceType} namespace descriptor in strict mode.");
                 VerifyNamespaceProperties(result.dataReference, descriptor_.namespaceModelPropertiesDeclaration)
                 break
             else
-                throw "Unrecognized mode parameter value."
+                throw new Error("Unrecognized mode parameter value.");
 
         return resolveResults
 
     catch exception
-        throw "ResolveNamespaceDescriptor failure: #{exception}"
+        throw new Error("ResolveNamespaceDescriptor failure: #{exception}");
 
 
 
@@ -191,11 +191,11 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
 module.exports = class AddressTokenBinder
     constructor: (store_, parentDataReference_, token_, mode_) ->
         try
-            @store = store_? and store_ or throw "Missing object store input parameter."
+            @store = store_? and store_ or throw new Error("Missing object store input parameter.");
             model = store_.model
-            @parentDataReference = parentDataReference_? and parentDataReference_ or throw "Missing parent data reference input parameter."
-            if not (token_? and token_) then throw "Missing object model address token object input parameter."
-            if not (mode_? and mode_) then throw "Missing mode input parameter."
+            @parentDataReference = parentDataReference_? and parentDataReference_ or throw new Error("Missing parent data reference input parameter.");
+            if not (token_? and token_) then throw new Error("Missing object model address token object input parameter.");
+            if not (mode_? and mode_) then throw new Error("Missing mode input parameter.");
 
             @dataReference = undefined
             @resolvedToken = token_.clone()
@@ -256,6 +256,6 @@ module.exports = class AddressTokenBinder
             # ----------------------------------------------------------------------------
 
         catch exception
-            throw "AddressTokenBinder failure: #{exception}"
+            throw new Error("AddressTokenBinder failure: #{exception}");
 
 

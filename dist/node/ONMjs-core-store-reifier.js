@@ -55,7 +55,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if ((observerId_ != null) && observerId_) {
               callbackInterface = _this.store.implementation.observers[observerId_];
               if (!((callbackInterface != null) && callbackInterface)) {
-                throw "Internal error: unable to resolve observer ID to obtain callback interface.";
+                throw new Error("Internal error: unable to resolve observer ID to obtain callback interface.");
               }
               callbackFunction = callbackInterface[callbackName_];
               if ((callbackFunction != null) && callbackFunction) {
@@ -63,7 +63,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                   return callbackFunction(_this.store, observerId_, address_);
                 } catch (_error) {
                   exception = _error;
-                  throw "An error occurred in the '" + callbackName_ + "' method of your observer interface: " + exception;
+                  throw new Error("An error occurred in the '" + callbackName_ + "' method of your observer interface: " + exception);
                 }
               }
             } else {
@@ -77,7 +77,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                     _results.push(callbackFunction(_this.store, observerId, address_));
                   } catch (_error) {
                     exception = _error;
-                    throw "An error occurred in the '" + callbackName_ + "' method of your observer interface: " + exception;
+                    throw new Error("An error occurred in the '" + callbackName_ + "' method of your observer interface: " + exception);
                   }
                 } else {
                   _results.push(void 0);
@@ -88,14 +88,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           } catch (_error) {
             exception = _error;
             exceptionMessage = "dispatchCallback failure while processing " + ("address='" + (address_.getHumanReadableString()) + "', callback='" + callbackName_ + "', observer='" + ((observerId_ != null) && observerId_ || "[broadcast all]") + "': " + exception);
-            throw exceptionMessage;
+            throw new Error(exceptionMessage);
           }
         };
         this.reifyStoreComponent = function(address_, observerId_) {
           var dispatchCallback, exception;
           try {
             if (!((address_ != null) && address_)) {
-              throw "Internal error: Missing address input parameter.";
+              throw new Error("Internal error: Missing address input parameter.");
             }
             if (!jslib.dictionaryLength(_this.store.implementation.observers)) {
               return;
@@ -108,14 +108,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return true;
           } catch (_error) {
             exception = _error;
-            throw "reifyStoreComponent failure: " + exception;
+            throw new Error("reifyStoreComponent failure: " + exception);
           }
         };
         this.unreifyStoreComponent = function(address_, observerId_) {
           var dispatchCallback, exception;
           try {
             if (!((address_ != null) && address_)) {
-              throw "Internal error: Missing address input parameter.";
+              throw new Error("Internal error: Missing address input parameter.");
             }
             if (!jslib.dictionaryLength(_this.store.implementation.observers)) {
               return;
@@ -128,14 +128,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return true;
           } catch (_error) {
             exception = _error;
-            throw "unreifyStoreComponent failure: " + exception;
+            throw new Error("unreifyStoreComponent failure: " + exception);
           }
         };
         this.reifyStoreExtensions = function(address_, observerId_, undoFlag_) {
           var dispatchCallback, exception;
           try {
             if (!((address_ != null) && address_)) {
-              throw "Internal error: Missing address input parameter.";
+              throw new Error("Internal error: Missing address input parameter.");
             }
             if (!jslib.dictionaryLength(_this.store.implementation.observers)) {
               return;
@@ -158,12 +158,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             });
           } catch (_error) {
             exception = _error;
-            throw "reifyStoreExtensions failure: " + exception;
+            throw new Error("reifyStoreExtensions failure: " + exception);
           }
         };
       } catch (_error) {
         exception = _error;
-        throw "StoreReifier constructor failed: " + exception;
+        throw new Error("StoreReifier constructor failed: " + exception);
       }
     }
 

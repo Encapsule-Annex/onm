@@ -47,17 +47,17 @@ AddressToken = require('./ONMjs-core-address-token')
 class AddressDetails
     constructor: (address_, model_, tokenVector_) ->
         try
-            @address = (address_? and address_) or throw "Internal error missing address input parameter."
-            @model = (model_? and model_) or throw "Internal error missing model input paramter."
+            @address = (address_? and address_) or throw new Error("Internal error missing address input parameter.");
+            @model = (model_? and model_) or throw new Error("Internal error missing model input paramter.");
 
             # --------------------------------------------------------------------------
             @getModelPath = =>
                 try
-                    if not @tokenVector.length then throw "Invalid address contains no address tokens."
+                    if not @tokenVector.length then throw new Error("Invalid address contains no address tokens.");
                     lastToken = @getLastToken()
                     return lastToken.namespaceDescriptor.path
                 catch exception
-                    throw "getModelPath failure: #{exception}"
+                    throw new Error("getModelPath failure: #{exception}");
 
             # --------------------------------------------------------------------------
             @getModelDescriptorFromSubpath = (subpath_) =>
@@ -77,10 +77,10 @@ class AddressDetails
                             currentDescriptor = @model.implementation.getNamespaceDescriptorFromPath(currentModelPath)
                         else
                             # We cannot resolve normally because there are no subnamespaces declared in the model.
-                            archetypePathId = currentDescriptor.archetypePathId? and currentDescriptor.archetypePathId or throw 'WAT'
+                            archetypePathId = currentDescriptor.archetypePathId? and currentDescriptor.archetypePathId or throw new Error('WAT');
                             archetypeDescriptor = @model.implementation.getNamespaceDescriptorFromPathId(archetypePathId)
                             if token != archetypeDescriptor.jsonTag
-                                throw "Expected component name of '#{token}' but instead found '#{archetypeDescriptor.jsonTag}'."
+                                throw new Error("Expected component name of '#{token}' but instead found '#{archetypeDescriptor.jsonTag}'.");
                             currentModelPath = archetypeDescriptor.path
                             currentDescriptor = archetypeDescriptor
 
@@ -92,24 +92,24 @@ class AddressDetails
 
 
                 catch exception
-                    throw "getModelDescriptorFromSubpath failure: #{exception}"
+                    throw new Error("getModelDescriptorFromSubpath failure: #{exception}");
 
             # --------------------------------------------------------------------------
             @createSubpathIdAddress = (pathId_) =>
                 try
-                    if not (pathId_?  and pathId_ > -1) then throw "Missing namespace path ID input parameter."
+                    if not (pathId_?  and pathId_ > -1) then throw new Error("Missing namespace path ID input parameter.");
                     addressedComponentToken = @getLastToken()
                     addressedComponentDescriptor = addressedComponentToken.componentDescriptor
                     targetNamespaceDescriptor = @model.implementation.getNamespaceDescriptorFromPathId(pathId_)
                     if targetNamespaceDescriptor.idComponent != addressedComponentDescriptor.id
-                        throw "Invalid path ID specified does not resolve to a namespace in the same component as the source address."
+                        throw new Error("Invalid path ID specified does not resolve to a namespace in the same component as the source address.");
                     newToken = new AddressToken(@model, addressedComponentToken.idExtensionPoint, addressedComponentToken.key, pathId_)
                     newTokenVector = @tokenVector.length > 0 and @tokenVector.slice(0, @tokenVector.length - 1) or []
                     newTokenVector.push newToken
                     newAddress = new Address(@model, newTokenVector)
                     return newAddress
                 catch exception
-                    throw "createSubpathIdAddress failure: #{exception}"
+                    throw new Error("createSubpathIdAddress failure: #{exception}");
 
             # --------------------------------------------------------------------------
             @pushToken = (token_) =>
@@ -135,42 +135,42 @@ class AddressDetails
                     @address
 
                 catch exception
-                    throw "pushToken failure: #{exception}"
+                    throw new Error("pushToken failure: #{exception}");
 
             # --------------------------------------------------------------------------
             @validateTokenPair = (parentToken_, childToken_) ->
                 try
                     if not (parentToken_? and parentToken_ and childToken_? and childToken_)
-                        throw "Internal error: input parameters are not correct."
+                        throw new Error("Internal error: input parameters are not correct.");
 
                     if not childToken_.keyRequired
-                        throw "Child token is invalid because it specifies a namespace in the root component."
+                        throw new Error("Child token is invalid because it specifies a namespace in the root component.");
 
                     if parentToken_.namespaceDescriptor.id != childToken_.extensionPointDescriptor.id
-                        throw "Child token is invalid because the parent token does not select the required extension point namespace."
+                        throw new Error("Child token is invalid because the parent token does not select the required extension point namespace.");
 
                     if not parentToken_.isQualified() and childToken_.isQualified()
-                        throw "Child token is invalid because the parent token is unqualified and the child is qualified."
+                        throw new Error("Child token is invalid because the parent token is unqualified and the child is qualified.");
                     true
 
                 catch exception
-                    throw "validateTokenPair the specified parent and child tokens are incompatible and cannot be used to form an address: #{exception}"
+                    throw new Error("validateTokenPair the specified parent and child tokens are incompatible and cannot be used to form an address: #{exception}");
 
             # --------------------------------------------------------------------------
             @getLastToken = =>
                 try
                     if not @tokenVector.length
-                        throw "Illegal call to getLastToken on uninitialized address class instance."
+                        throw new Error("Illegal call to getLastToken on uninitialized address class instance.");
                     @tokenVector[@tokenVector.length - 1]
                 catch exception
-                    throw "getLastToken failure: #{exception}"
+                    throw new Error("getLastToken failure: #{exception}");
 
             # --------------------------------------------------------------------------
             @getDescriptor = =>
                 try
                     return @getLastToken().namespaceDescriptor
                 catch exception
-                    throw "getDescriptor failure: #{exception}"
+                    throw new Error("getDescriptor failure: #{exception}");
 
 
             # --------------------------------------------------------------------------
@@ -209,7 +209,7 @@ class AddressDetails
             @hashString = undefined
 
         catch exception
-            throw "AddressDetails failure: #{exception}"
+            throw new Error("AddressDetails failure: #{exception}");
 
 
 
@@ -220,7 +220,7 @@ module.exports = class Address
 
     constructor: (model_, tokenVector_) ->
         try
-            @model = model_? and model_ or throw "Missing required object model input parameter."
+            @model = model_? and model_ or throw new Error("Missing required object model input parameter.");
             @implementation = new AddressDetails(@, model_, tokenVector_)
 
             # Addresses are said to be either complete or partial.
@@ -247,7 +247,7 @@ module.exports = class Address
             @isCreatable = => @isComplete() and @implementation.keysRequired and not @implementation.keysSpecified
 
         catch exception
-            throw "Address error: #{exception}"
+            throw new Error("Address error: #{exception}");
 
     #
     # ============================================================================
@@ -276,7 +276,7 @@ module.exports = class Address
             return humanReadableString
 
         catch exception
-            throw "getHumanReadableString failure: #{exception}"
+            throw new Error("getHumanReadableString failure: #{exception}");
 
 
 
@@ -321,7 +321,7 @@ module.exports = class Address
             return @implementation.hashString
             
         catch exception
-            throw "getHashString failure: #{exception}"
+            throw new Error("getHashString failure: #{exception}");
 
 
     #
@@ -331,13 +331,13 @@ module.exports = class Address
             @implementation.getLastToken().idNamespace == 0
 
         catch exception
-            throw "CNMjs.Address.isRoot failure: #{exception}"
+            throw new Error("CNMjs.Address.isRoot failure: #{exception}");
 
     #
     # ============================================================================
     isEqual: (address_) =>
         try
-            if not (address_? and address_) then throw "Missing address input parameter."
+            if not (address_? and address_) then throw new Error("Missing address input parameter.");
             if @implementation.tokenVector.length != address_.implementation.tokenVector.length then return false
             result = true
             index = 0
@@ -350,20 +350,20 @@ module.exports = class Address
                 index++
             return result
         catch exception
-            throw "isEqual failure: #{exception}"
+            throw new Error("isEqual failure: #{exception}");
 
 
     #
     # ============================================================================
     isSameType: (address_) =>
         try
-            if not (address_? and address_) then throw "Missing address input parameter."
+            if not (address_? and address_) then throw new Error("Missing address input parameter.");
             thisToken = @implementation.getLastToken();
             testToken = address_.implementation.getLastToken()
             result = thisToken.idNamespace == testToken.idNamespace
             return result
         catch exception
-            throw "isSameType failure: #{exception}"
+            throw new Error("isSameType failure: #{exception}");
 
 
     #
@@ -372,15 +372,14 @@ module.exports = class Address
         try
             new Address(@model, @implementation.tokenVector)
         catch exception
-            throw "clone failure: #{exception}"
+            throw new Error("clone failure: #{exception}");
  
-
 
     #
     # ============================================================================
     createParentAddress: (generations_) =>
         try
-            if not @implementation.tokenVector.length then throw "Invalid address contains no address tokens."
+            if not @implementation.tokenVector.length then throw new Error("Invalid address contains no address tokens.");
 
             generations = generations_? and generations_ or 1
             tokenSourceIndex = @implementation.tokenVector.length - 1
@@ -412,7 +411,7 @@ module.exports = class Address
                 if descriptor.namespaceType != "component"
                     token = new AddressToken(token.model, token.idExtensionPoint, token.key, descriptor.parent.id)
                 else
-                    token = (tokenSourceIndex != -1) and @implementation.tokenVector[tokenSourceIndex--] or throw "Internal error: exhausted token stack."
+                    token = (tokenSourceIndex != -1) and @implementation.tokenVector[tokenSourceIndex--] or throw new Error("Internal error: exhausted token stack.");
 
                 generations--
                 
@@ -422,14 +421,14 @@ module.exports = class Address
             return newAddress
 
         catch exception
-            throw "createParentAddress failure: #{exception}"
+            throw new Error("createParentAddress failure: #{exception}");
 
 
     #
     # ============================================================================
     createSubpathAddress: (subpath_) =>
         try
-            if not (subpath_? and subpath_) then throw "Missing subpath input parameter."
+            if not (subpath_? and subpath_) then throw new Error("Missing subpath input parameter.");
 
             # We are attempting to construct a new onm.Address object using this address
             # object as its base.
@@ -455,10 +454,10 @@ module.exports = class Address
                             ndNew = child
                             break
                     if not (ndNew? and ndNew)
-                        throw "Invalid address token '#{subpathToken}'."
+                        throw new Error("Invalid address token '#{subpathToken}'.");
 
                     if ndNew.namespaceType == 'component'
-                        throw "Internal error: components must be created within extension point namespaces. How did this happen?"
+                        throw new Error("Internal error: components must be created within extension point namespaces. How did this happen?");
 
                     currentToken = new AddressToken(currentToken.model, currentToken.idExtensionPoint, currentToken.key, ndNew.id)
 
@@ -469,7 +468,7 @@ module.exports = class Address
                     archetypeDescriptor = @model.implementation.getNamespaceDescriptorFromPathId(archetypePathId)
 
                     if subpathToken != archetypeDescriptor.jsonTag
-                        throw "Expected component name '#{archetypeDescriptor.jsonTag}' but was given '#{subpathToken}'."
+                        throw new Error("Expected component name '#{archetypeDescriptor.jsonTag}' but was given '#{subpathToken}'.");
 
                     newTokenVector.push currentToken
 
@@ -485,7 +484,7 @@ module.exports = class Address
             return newAddress
 
         catch exception
-            throw "createSubpathAddress failure: #{exception}"
+            throw new Error("createSubpathAddress failure: #{exception}");
 
 
     #
@@ -498,7 +497,7 @@ module.exports = class Address
             newAddress = @implementation.createSubpathIdAddress(descriptor.idComponent)
             return newAddress
         catch exception
-            throw "createComponentAddress failure: #{exception}"
+            throw new Error("createComponentAddress failure: #{exception}");
 
     #
     # ============================================================================
@@ -506,11 +505,11 @@ module.exports = class Address
         try
             descriptor = @implementation.getDescriptor()
             if descriptor.namespaceType != "extensionPoint"
-                throw "Unable to determine subcomponent to create because this address does not specifiy an extension point namespace."
+                throw new Error("Unable to determine subcomponent to create because this address does not specifiy an extension point namespace.");
             newToken = new AddressToken(@model, descriptor.id, undefined, descriptor.archetypePathId)
             @clone().implementation.pushToken(newToken)
         catch exception
-            throw "createSubcomponentAddress failure: #{exception}"
+            throw new Error("createSubcomponentAddress failure: #{exception}");
 
     #
     # ============================================================================
@@ -519,7 +518,7 @@ module.exports = class Address
             return @implementation.getDescriptor().namespaceModelDeclaration
 
         catch exception
-            throw "getModel failure: #{exception}"
+            throw new Error("getModel failure: #{exception}");
 
 
     #
@@ -529,17 +528,17 @@ module.exports = class Address
             return @implementation.getDescriptor().namespaceModelPropertiesDeclaration
 
         catch exception
-            throw "getPropertiesModel failure: #{exception}"
+            throw new Error("getPropertiesModel failure: #{exception}");
 
     #
     # ============================================================================
     getComponentKey: =>
         try
             if (!@isResolvable())
-                throw "You cannot obtain the component key of an unresolvable address."
+                throw new Error("You cannot obtain the component key of an unresolvable address.");
             return @implementation.getLastToken().key;
         catch exception
-            throw "getComponentKey failure: #{exception}"
+            throw new Error("getComponentKey failure: #{exception}");
 
             
     #
@@ -556,10 +555,10 @@ module.exports = class Address
                 try
                     callback_(address)
                 catch exception
-                    throw "Failure occurred inside your registered callback function implementation: #{exception}"
+                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception}");
             true
         catch exception
-            throw "visitParentAddressesAscending failure: #{exception}"
+            throw new Error("visitParentAddressesAscending failure: #{exception}");
         
     #
     # ============================================================================
@@ -577,10 +576,10 @@ module.exports = class Address
                 try
                     callback_(address)
                 catch exception
-                    throw "Failure occurred inside your registered callback function implementation: #{exception}"
+                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception}");
             true
         catch exception
-            throw "visitParentAddressesDescending failure: #{exception}"
+            throw new Error("visitParentAddressesDescending failure: #{exception}");
 
     #
     # ============================================================================
@@ -597,10 +596,10 @@ module.exports = class Address
                 try
                     callback_(address)
                 catch exception
-                    throw "Failure occurred inside your registered callback function implementation: #{exception}"
+                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception}");
             true
         catch exception
-            throw "visitSubaddressesAscending failure: #{exception}"
+            throw new Error("visitSubaddressesAscending failure: #{exception}");
 
     #
     # ============================================================================
@@ -615,10 +614,10 @@ module.exports = class Address
                 try
                     callback_(address)
                 catch exception
-                    throw "Failure occurred inside your registered callback function implementation: #{exception}"
+                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception}");
             true
         catch exception
-            throw "visitSubaddressesAscending failure: #{exception}"
+            throw new Error("visitSubaddressesAscending failure: #{exception}");
 
 
 
@@ -633,10 +632,10 @@ module.exports = class Address
                 try
                     callback_(childAddress)
                 catch exception
-                    throw "Failure occurred inside your registered callback function implementation: #{exception}"
+                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception}");
             true
         catch exception
-            throw "visitChildAddresses failure: #{exception}"
+            throw new Error("visitChildAddresses failure: #{exception}");
 
     #
     # ============================================================================
@@ -653,5 +652,5 @@ module.exports = class Address
                 callback_(address)
             true # that
         catch exception
-            throw "visitExtensionPointAddresses failure: #{exception}"
+            throw new Error("visitExtensionPointAddresses failure: #{exception}");
 
