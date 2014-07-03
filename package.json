@@ -1,14 +1,21 @@
 {
   "name": "onm",
-  "version": "0.1.18",
-  "description": "Object Namespace Manager (onm) data factory and observable in-memory store infrastructure library.",
+  "version": "0.1.19",
+  "aka": "Oh Never Mind",
+  "description": "Object Namespace Manager (onm) model-schema-driven JSON factory and in-memory subsystem communication bus for complex data-driven Node.js/HTML 5 client apps.",
   "keywords": [
     "object factory",
     "data model",
     "JSON",
-    "design patterns"
+    "patterns",
+    "encapsule",
+    "protocols",
+    "addressing"
   ],
-  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R spec ./test/test-onm.js"
+  },  
+  "main": "onm.js",
   "author": {
     "name": "Chris Russell",
     "email": "chrisrus@encapsule.org",
@@ -26,7 +33,9 @@
     "grunt": "~0.4.2",
     "grunt-contrib-jshint": "~0.8.0",
     "grunt-contrib-coffee": "~0.8.0",
-    "grunt-contrib-clean": "~0.5.0"
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-mocha-test": "^0.11.0",
+    "chai": "^1.9.1"
   },
   "dependencies": {
     "node-uuid": "*"

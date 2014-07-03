@@ -18,6 +18,11 @@ module.exports = (grunt) ->
                     'dist/node/ONMjs-core-store.js': 'src/coffee/ONMjs-core-store.coffee'
                     'dist/node/ONMjs-core-store-reifier.js': 'src/coffee/ONMjs-core-store-reifier.coffee'
 
+        mochaTest:
+            options:
+                reporter: 'spec'
+            src: [ 'test/test-onm.js' ]
+
         clean: [ 'dist' ]
 
 
@@ -26,6 +31,9 @@ module.exports = (grunt) ->
 
     grunt.loadNpmTasks "grunt-contrib-coffee"
     grunt.loadNpmTasks "grunt-contrib-clean"
+    grunt.loadNpmTasks "grunt-mocha-test"
     #grunt.loadNpmTasks "grunt-contrib-jshint"
 
-    grunt.registerTask "default", [ "clean", "coffee:compile" ]
+
+    grunt.registerTask "test", [ "mochaTest" ]
+    grunt.registerTask "default", [ "clean", "coffee:compile", "test" ]

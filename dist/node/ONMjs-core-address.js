@@ -677,6 +677,10 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           return false;
         }
         namespaceDescriptor = this.implementation.getDescriptor();
+        if (namespaceDescriptor.namespaceType === 'extensionPoint') {
+          console.warn("onm.Address.visitChildAddresses on extension point namespace '" + (this.getHumanReadableString()) + "' doesn't make sense. Use onm.Namespace.visitExtensionPointSubcomponents API instead.");
+          return false;
+        }
         _ref = namespaceDescriptor.children;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           childDescriptor = _ref[_i];
