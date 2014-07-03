@@ -12,5 +12,6 @@ var testData = require('./fixture/test-data');
 module.exports = describe("onm.Address.visit* method tests", function() {
 
     require('./test-onm.Address.visitChildAddresses');
+    require('./test-onm.Address.visitSubaddressesAscending');
 
 });

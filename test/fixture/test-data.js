@@ -23,7 +23,23 @@ var modelDeclaration = module.exports.modelDeclaration = {
                     description: {
                         defaultValue: ""
                     }
-                }
+                },
+                subNamespaces: [
+                    {
+                        namespaceType: "child",
+                        jsonTag: "subproperties",
+                        subNamespaces: [
+                            {
+                                namespaceType: "extenstionPoint",
+                                jsonTag: "collection",
+                                componentArchetype: {
+                                    namespaceType: "component",
+                                    jsonTag: "someObject"
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         }, // properties
         {

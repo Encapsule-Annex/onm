@@ -11,58 +11,58 @@ var onm = require('../onm');
 var testData = require('./fixture/test-data');
 
 module.exports = describe("onm.Address.visitChildAddresses tests", function() {
-        describe("enumerate children of the root namespace", function() {
-            var store, address;
-            var childAddresses = [];
-            var actualResult;
-            var expectedResult = '["addressBook.properties","addressBook.contacts"]';
-            before( function() {
-                store = testData.createStore();
-                address = store.model.createRootAddress();
-                address.visitChildAddresses( function(childAddress_) {
-                    childAddresses.push(childAddress_.getHumanReadableString());
-                });
-                actualResult = JSON.stringify(childAddresses);
-                console.log(actualResult);
+    describe("enumerate children of 'addressBook'", function() {
+        var store, address;
+        var childAddresses = [];
+        var actualResult;
+        var expectedResult = '["addressBook.properties","addressBook.contacts"]';
+        before( function() {
+            store = testData.createStore();
+            address = store.model.createRootAddress();
+            address.visitChildAddresses( function(childAddress_) {
+                childAddresses.push(childAddress_.getHumanReadableString());
             });
-            it("expecting two result addresses hashs strings", function() {
-                assert.equal(actualResult, expectedResult);
-            });
+            actualResult = JSON.stringify(childAddresses);
+            console.log(actualResult);
         });
-        describe("enumerate children of address.properties", function() {
-            var store, address;
-            var childAddresses = [];
-            var actualResult;
-            var expectedResult = '[]';
-            before( function() {
-                store = testData.createStore();
-                address = store.model.createPathAddress("addressBook.properties");
-                address.visitChildAddresses( function(childAddress_) {
-                    childAddresses.push(childAddress_.getHumanReadableString());
-                });
-                actualResult = JSON.stringify(childAddresses);
-                console.log(actualResult);
-            });
-            it("expecting no result addresses hashs strings", function() {
-                assert.equal(actualResult, expectedResult);
-            });
-        });
-        describe("enumerate children of address.contacts", function() {
-            var store, address;
-            var childAddresses = [];
-            var actualResult;
-            var expectedResult = '[]';
-            before( function() {
-                store = testData.createStore();
-                address = store.model.createPathAddress("addressBook.contacts");
-                address.visitChildAddresses( function(childAddress_) {
-                    childAddresses.push(childAddress_.getHumanReadableString());
-                });
-                actualResult = JSON.stringify(childAddresses);
-                console.log(actualResult);
-            });
-            it("expecting no result addresses hashs strings", function() {
-                assert.equal(actualResult, expectedResult);
-            });
+        it("expecting two result addresses hashs strings", function() {
+            assert.equal(actualResult, expectedResult);
         });
     });
+    describe("enumerate children of 'addressBook.properties'", function() {
+        var store, address;
+        var childAddresses = [];
+        var actualResult;
+        var expectedResult = '[]';
+        before( function() {
+            store = testData.createStore();
+            address = store.model.createPathAddress("addressBook.properties");
+            address.visitChildAddresses( function(childAddress_) {
+                childAddresses.push(childAddress_.getHumanReadableString());
+            });
+            actualResult = JSON.stringify(childAddresses);
+            console.log(actualResult);
+        });
+        it("expecting no result addresses hashs strings", function() {
+            assert.equal(actualResult, expectedResult);
+        });
+    });
+    describe("enumerate children of 'addressBook.contacts'", function() {
+        var store, address;
+        var childAddresses = [];
+        var actualResult;
+        var expectedResult = '[]';
+        before( function() {
+            store = testData.createStore();
+            address = store.model.createPathAddress("addressBook.contacts");
+            address.visitChildAddresses( function(childAddress_) {
+                childAddresses.push(childAddress_.getHumanReadableString());
+            });
+            actualResult = JSON.stringify(childAddresses);
+            console.log(actualResult);
+        });
+        it("expecting no result addresses hashs strings", function() {
+            assert.equal(actualResult, expectedResult);
+        });
+    });
+});
