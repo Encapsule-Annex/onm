@@ -607,24 +607,31 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     };
 
     Address.prototype.visitSubaddressesAscending = function(callback_) {
-      var address, exception, namespaceDescriptor, subnamespaceAddress, subnamespacePathId, _i, _j, _len, _len1, _ref, _ref1;
+      var address, childAddressesToVisit, exception, traverse, _i, _len, _ref,
+        _this = this;
       try {
         if (!((callback_ != null) && callback_)) {
           return false;
         }
         if (!((this.subnamespaceAddressesAscending != null) && this.subnamespaceAddressesAscending)) {
           this.subnamespaceAddressesAscending = [];
-          namespaceDescriptor = this.implementation.getDescriptor();
-          _ref = namespaceDescriptor.componentNamespaceIds;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            subnamespacePathId = _ref[_i];
-            subnamespaceAddress = this.implementation.createSubpathIdAddress(subnamespacePathId);
-            this.subnamespaceAddressesAscending.push(subnamespaceAddress);
+          childAddressesToVisit = [];
+          childAddressesToVisit.push(this);
+          traverse = function(startAddress_) {
+            if (startAddress_.getModel().namespaceType !== "extensionPoint") {
+              return startAddress_.visitChildAddresses(function(childAddress_) {
+                _this.subnamespaceAddressesAscending.push(childAddress_);
+                return childAddressesToVisit.push(childAddress_);
+              });
+            }
+          };
+          while (childAddressesToVisit.length) {
+            traverse(childAddressesToVisit.pop());
           }
         }
-        _ref1 = this.subnamespaceAddressesAscending;
-        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          address = _ref1[_j];
+        _ref = this.subnamespaceAddressesAscending;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          address = _ref[_i];
           try {
             callback_(address);
           } catch (_error) {

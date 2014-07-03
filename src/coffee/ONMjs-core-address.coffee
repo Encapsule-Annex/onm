@@ -586,12 +586,19 @@ module.exports = class Address
     visitSubaddressesAscending: (callback_) =>
         try
             if not (callback_? and callback_) then return false
+
             if not (@subnamespaceAddressesAscending? and @subnamespaceAddressesAscending)
                 @subnamespaceAddressesAscending = []
-                namespaceDescriptor = @implementation.getDescriptor()
-                for subnamespacePathId in namespaceDescriptor.componentNamespaceIds
-                    subnamespaceAddress = @implementation.createSubpathIdAddress(subnamespacePathId)
-                    @subnamespaceAddressesAscending.push subnamespaceAddress
+                childAddressesToVisit = []
+                childAddressesToVisit.push @
+                traverse = (startAddress_) =>
+                    if startAddress_.getModel().namespaceType != "extensionPoint"
+                        startAddress_.visitChildAddresses (childAddress_) =>
+                            @subnamespaceAddressesAscending.push childAddress_
+                            childAddressesToVisit.push childAddress_
+                while childAddressesToVisit.length
+                    traverse(childAddressesToVisit.pop());
+
             for address in @subnamespaceAddressesAscending
                 try
                     callback_(address)

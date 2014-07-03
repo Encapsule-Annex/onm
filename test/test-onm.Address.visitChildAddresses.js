@@ -33,7 +33,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
         var store, address;
         var childAddresses = [];
         var actualResult;
-        var expectedResult = '[]';
+        var expectedResult = '["addressBook.subproperties"]';
         before( function() {
             store = testData.createStore();
             address = store.model.createPathAddress("addressBook.properties");
@@ -43,7 +43,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
             actualResult = JSON.stringify(childAddresses);
             console.log(actualResult);
         });
-        it("expecting no result addresses hashs strings", function() {
+        it("expecting one result addresses hash string", function() {
             assert.equal(actualResult, expectedResult);
         });
     });
