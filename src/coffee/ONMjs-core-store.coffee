@@ -70,7 +70,7 @@ class StoreDetails
 
 
         catch exception
-            throw new Error("StoreDetails failure: #{exception}");
+            throw new Error("StoreDetails failure: #{exception.message}");
 
 
 module.exports = class Store
@@ -114,7 +114,7 @@ module.exports = class Store
                     if not (address_.model? and address_.model) then throw new Error("Invalid address object passed as input parameter.");
                     return @model.isEqual(address_.model)
                 catch exception
-                    throw new Error("validateAddressModel failure: #{exception}");
+                    throw new Error("validateAddressModel failure: #{exception.message}");
 
 
             #
@@ -134,7 +134,7 @@ module.exports = class Store
 
                 catch exception
 
-                    throw new Error("createComponent failure: #{exception}");
+                    throw new Error("createComponent failure: #{exception.message}");
 
             #
             # ============================================================================
@@ -161,7 +161,7 @@ module.exports = class Store
                     return componentNamespace
 
                 catch exception
-                    throw new Error("removeComponent failure: #{exception}");
+                    throw new Error("removeComponent failure: #{exception.message}");
 
 
             #
@@ -177,7 +177,7 @@ module.exports = class Store
                     return namespace
 
                 catch exception
-                    throw new Error("openNamespace failure: #{exception}");
+                    throw new Error("openNamespace failure: #{exception.message}");
                 
 
             #
@@ -189,7 +189,7 @@ module.exports = class Store
                     return resultJSON
 
                 catch exception
-                    throw new Error("toJSON fail on object store #{@jsonTag} : #{exception}");
+                    throw new Error("toJSON fail on object store #{@jsonTag} : #{exception.message}");
 
             # 
             # ============================================================================
@@ -239,7 +239,7 @@ module.exports = class Store
                     return observerIdCode
 
                 catch exception
-                    throw new Error("registerObserver failure: #{exception}");
+                    throw new Error("registerObserver failure: #{exception.message}");
 
             #
             # ============================================================================
@@ -268,7 +268,7 @@ module.exports = class Store
                     delete @implementation.observers[observerIdCode_]
 
                 catch exception
-                    throw new Error("unregisterObserver failure: #{exception}");
+                    throw new Error("unregisterObserver failure: #{exception.message}");
 
             #
             # ============================================================================
@@ -279,7 +279,7 @@ module.exports = class Store
                     return observerState                    
 
                 catch exception
-                    throw new Error("openObserverStateObject failure: #{exception}");
+                    throw new Error("openObserverStateObject failure: #{exception.message}");
 
             #
             # ============================================================================
@@ -301,7 +301,7 @@ module.exports = class Store
                     componentAddress = address_.createComponentAddress()
                     return @openObserverNamespaceState(observerId_, componentAddress)
                 catch exception
-                    throw new Error("openObserverComponentState failure: #{exception}");
+                    throw new Error("openObserverComponentState failure: #{exception.message}");
 
             #
             # ============================================================================
@@ -318,7 +318,7 @@ module.exports = class Store
                     return namespaceState
 
                 catch exception
-                    throw new Error("openObserverNamespaceState failure: #{exception}");
+                    throw new Error("openObserverNamespaceState failure: #{exception.message}");
 
             #
             # ============================================================================
@@ -338,7 +338,7 @@ module.exports = class Store
 
 
         catch exception
-            throw new Error("Store failure: #{exception}");
+            throw new Error("Store failure: #{exception.message}");
 
 
         

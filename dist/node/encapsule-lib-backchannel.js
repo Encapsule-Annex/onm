@@ -52,14 +52,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                 _this.logHandler(html_);
               } catch (_error) {
                 exception = _error;
-                throw new Error("Error executing log handler function callback: " + exception);
+                throw new Error("Error executing log handler function callback: " + exception.message);
               }
               return true;
             }
             return false;
           } catch (_error) {
             exception = _error;
-            throw new Error("BackChannel.log failure: " + exception);
+            throw new Error("BackChannel.log failure: " + exception.message);
           }
         };
         this.error = function(error_) {
@@ -70,19 +70,19 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                 _this.errorHandler(error_);
               } catch (_error) {
                 exception = _error;
-                throw new Error("Error executing error handler function callback: " + exception);
+                throw new Error("Error executing error handler function callback: " + exception.message);
               }
               return true;
             }
             throw new Error(error_);
           } catch (_error) {
             exception = _error;
-            throw new Error("BackChannel.error failure: " + exception);
+            throw new Error("BackChannel.error failure: " + exception.message);
           }
         };
       } catch (_error) {
         exception = _error;
-        throw new Error("BackChannel failure: " + exception);
+        throw new Error("BackChannel failure: " + exception.message);
       }
     }
 

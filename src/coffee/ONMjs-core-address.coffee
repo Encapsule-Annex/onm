@@ -57,7 +57,7 @@ class AddressDetails
                     lastToken = @getLastToken()
                     return lastToken.namespaceDescriptor.path
                 catch exception
-                    throw new Error("getModelPath failure: #{exception}");
+                    throw new Error("getModelPath failure: #{exception.message}");
 
             # --------------------------------------------------------------------------
             @getModelDescriptorFromSubpath = (subpath_) =>
@@ -92,7 +92,7 @@ class AddressDetails
 
 
                 catch exception
-                    throw new Error("getModelDescriptorFromSubpath failure: #{exception}");
+                    throw new Error("getModelDescriptorFromSubpath failure: #{exception.message}");
 
             # --------------------------------------------------------------------------
             @createSubpathIdAddress = (pathId_) =>
@@ -109,7 +109,7 @@ class AddressDetails
                     newAddress = new Address(@model, newTokenVector)
                     return newAddress
                 catch exception
-                    throw new Error("createSubpathIdAddress failure: #{exception}");
+                    throw new Error("createSubpathIdAddress failure: #{exception.message}");
 
             # --------------------------------------------------------------------------
             @pushToken = (token_) =>
@@ -135,7 +135,7 @@ class AddressDetails
                     @address
 
                 catch exception
-                    throw new Error("pushToken failure: #{exception}");
+                    throw new Error("pushToken failure: #{exception.message}");
 
             # --------------------------------------------------------------------------
             @validateTokenPair = (parentToken_, childToken_) ->
@@ -154,7 +154,7 @@ class AddressDetails
                     true
 
                 catch exception
-                    throw new Error("validateTokenPair the specified parent and child tokens are incompatible and cannot be used to form an address: #{exception}");
+                    throw new Error("validateTokenPair the specified parent and child tokens are incompatible and cannot be used to form an address: #{exception.message}");
 
             # --------------------------------------------------------------------------
             @getLastToken = =>
@@ -163,14 +163,14 @@ class AddressDetails
                         throw new Error("Illegal call to getLastToken on uninitialized address class instance.");
                     @tokenVector[@tokenVector.length - 1]
                 catch exception
-                    throw new Error("getLastToken failure: #{exception}");
+                    throw new Error("getLastToken failure: #{exception.message}");
 
             # --------------------------------------------------------------------------
             @getDescriptor = =>
                 try
                     return @getLastToken().namespaceDescriptor
                 catch exception
-                    throw new Error("getDescriptor failure: #{exception}");
+                    throw new Error("getDescriptor failure: #{exception.message}");
 
 
             # --------------------------------------------------------------------------
@@ -209,7 +209,7 @@ class AddressDetails
             @hashString = undefined
 
         catch exception
-            throw new Error("AddressDetails failure: #{exception}");
+            throw new Error("AddressDetails failure: #{exception.message}");
 
 
 
@@ -247,7 +247,7 @@ module.exports = class Address
             @isCreatable = => @isComplete() and @implementation.keysRequired and not @implementation.keysSpecified
 
         catch exception
-            throw new Error("Address error: #{exception}");
+            throw new Error("Address error: #{exception.message}");
 
     #
     # ============================================================================
@@ -276,7 +276,7 @@ module.exports = class Address
             return humanReadableString
 
         catch exception
-            throw new Error("getHumanReadableString failure: #{exception}");
+            throw new Error("getHumanReadableString failure: #{exception.message}");
 
 
 
@@ -321,7 +321,7 @@ module.exports = class Address
             return @implementation.hashString
             
         catch exception
-            throw new Error("getHashString failure: #{exception}");
+            throw new Error("getHashString failure: #{exception.message}");
 
 
     #
@@ -331,7 +331,7 @@ module.exports = class Address
             @implementation.getLastToken().idNamespace == 0
 
         catch exception
-            throw new Error("CNMjs.Address.isRoot failure: #{exception}");
+            throw new Error("CNMjs.Address.isRoot failure: #{exception.message}");
 
     #
     # ============================================================================
@@ -350,7 +350,7 @@ module.exports = class Address
                 index++
             return result
         catch exception
-            throw new Error("isEqual failure: #{exception}");
+            throw new Error("isEqual failure: #{exception.message}");
 
 
     #
@@ -363,7 +363,7 @@ module.exports = class Address
             result = thisToken.idNamespace == testToken.idNamespace
             return result
         catch exception
-            throw new Error("isSameType failure: #{exception}");
+            throw new Error("isSameType failure: #{exception.message}");
 
 
     #
@@ -372,7 +372,7 @@ module.exports = class Address
         try
             new Address(@model, @implementation.tokenVector)
         catch exception
-            throw new Error("clone failure: #{exception}");
+            throw new Error("clone failure: #{exception.message}");
  
 
     #
@@ -421,7 +421,7 @@ module.exports = class Address
             return newAddress
 
         catch exception
-            throw new Error("createParentAddress failure: #{exception}");
+            throw new Error("createParentAddress failure: #{exception.message}");
 
 
     #
@@ -484,7 +484,7 @@ module.exports = class Address
             return newAddress
 
         catch exception
-            throw new Error("createSubpathAddress failure: #{exception}");
+            throw new Error("createSubpathAddress failure: #{exception.message}");
 
 
     #
@@ -497,7 +497,7 @@ module.exports = class Address
             newAddress = @implementation.createSubpathIdAddress(descriptor.idComponent)
             return newAddress
         catch exception
-            throw new Error("createComponentAddress failure: #{exception}");
+            throw new Error("createComponentAddress failure: #{exception.message}");
 
     #
     # ============================================================================
@@ -509,7 +509,7 @@ module.exports = class Address
             newToken = new AddressToken(@model, descriptor.id, undefined, descriptor.archetypePathId)
             @clone().implementation.pushToken(newToken)
         catch exception
-            throw new Error("createSubcomponentAddress failure: #{exception}");
+            throw new Error("createSubcomponentAddress failure: #{exception.message}");
 
     #
     # ============================================================================
@@ -518,7 +518,7 @@ module.exports = class Address
             return @implementation.getDescriptor().namespaceModelDeclaration
 
         catch exception
-            throw new Error("getModel failure: #{exception}");
+            throw new Error("getModel failure: #{exception.message}");
 
 
     #
@@ -528,7 +528,7 @@ module.exports = class Address
             return @implementation.getDescriptor().namespaceModelPropertiesDeclaration
 
         catch exception
-            throw new Error("getPropertiesModel failure: #{exception}");
+            throw new Error("getPropertiesModel failure: #{exception.message}");
 
     #
     # ============================================================================
@@ -538,7 +538,7 @@ module.exports = class Address
                 throw new Error("You cannot obtain the component key of an unresolvable address.");
             return @implementation.getLastToken().key;
         catch exception
-            throw new Error("getComponentKey failure: #{exception}");
+            throw new Error("getComponentKey failure: #{exception.message}");
 
             
     #
@@ -555,10 +555,10 @@ module.exports = class Address
                 try
                     callback_(address)
                 catch exception
-                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception}");
+                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception.message}");
             true
         catch exception
-            throw new Error("visitParentAddressesAscending failure: #{exception}");
+            throw new Error("visitParentAddressesAscending failure: #{exception.message}");
         
     #
     # ============================================================================
@@ -576,10 +576,10 @@ module.exports = class Address
                 try
                     callback_(address)
                 catch exception
-                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception}");
+                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception.message}");
             true
         catch exception
-            throw new Error("visitParentAddressesDescending failure: #{exception}");
+            throw new Error("visitParentAddressesDescending failure: #{exception.message}");
 
     #
     # ============================================================================
@@ -603,10 +603,10 @@ module.exports = class Address
                 try
                     callback_(address)
                 catch exception
-                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception}");
+                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception.message}");
             true
         catch exception
-            throw new Error("visitSubaddressesAscending failure: #{exception}");
+            throw new Error("visitSubaddressesAscending failure: #{exception.message}");
 
     #
     # ============================================================================
@@ -621,10 +621,10 @@ module.exports = class Address
                 try
                     callback_(address)
                 catch exception
-                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception}");
+                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception.message}");
             true
         catch exception
-            throw new Error("visitSubaddressesAscending failure: #{exception}");
+            throw new Error("visitSubaddressesAscending failure: #{exception.message}");
 
 
 
@@ -642,10 +642,10 @@ module.exports = class Address
                 try
                     callback_(childAddress)
                 catch exception
-                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception}");
+                    throw new Error("Failure occurred inside your registered callback function implementation: #{exception.message}");
             true
         catch exception
-            throw new Error("visitChildAddresses failure: #{exception}");
+            throw new Error("visitChildAddresses failure: #{exception.message}");
 
     #
     # ============================================================================
@@ -662,5 +662,5 @@ module.exports = class Address
                 callback_(address)
             true # that
         catch exception
-            throw new Error("visitExtensionPointAddresses failure: #{exception}");
+            throw new Error("visitExtensionPointAddresses failure: #{exception.message}");
 

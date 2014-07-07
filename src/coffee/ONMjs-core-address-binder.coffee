@@ -61,7 +61,7 @@ InitializeNamespaceProperties = (data_, descriptor_) ->
         return true
 
     catch exception
-        throw new Error("InitializeNamespaceProperties failure #{exception}.");
+        throw new Error("InitializeNamespaceProperties failure #{exception.message}.");
 
 
 #
@@ -85,7 +85,7 @@ VerifyNamespaceProperties = (data_, descriptor_) ->
         return true
 
     catch exception
-        throw new Error("VerifyNamespaceMembers failure #{exception}.");
+        throw new Error("VerifyNamespaceMembers failure #{exception.message}.");
 
 
 #
@@ -104,7 +104,7 @@ InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, 
         return true
 
     catch exception
-        throw new Error("InitializeComponentNamespaces failure: #{exception}.");
+        throw new Error("InitializeComponentNamespaces failure: #{exception.message}.");
 
 
 #
@@ -117,7 +117,7 @@ VerifyComponentNamespaces = (store_, data_, descriptor_, extensionPointId_) ->
         return true
 
     catch exception
-        throw new Error("VerifyComponentNamespaces failure: #{exception}.");
+        throw new Error("VerifyComponentNamespaces failure: #{exception.message}.");
 
 
 
@@ -181,7 +181,7 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
         return resolveResults
 
     catch exception
-        throw new Error("ResolveNamespaceDescriptor failure: #{exception}");
+        throw new Error("ResolveNamespaceDescriptor failure: #{exception.message}");
 
 
 
@@ -256,6 +256,6 @@ module.exports = class AddressTokenBinder
             # ----------------------------------------------------------------------------
 
         catch exception
-            throw new Error("AddressTokenBinder failure: #{exception}");
+            throw new Error("AddressTokenBinder failure: #{exception.message}");
 
 

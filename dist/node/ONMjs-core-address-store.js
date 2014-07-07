@@ -81,7 +81,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               }
             } catch (_error) {
               exception = _error;
-              throw new Error("onNamespaceUpdated failure: " + exception);
+              throw new Error("onNamespaceUpdated failure: " + exception.message);
             }
           },
           onNamespaceRemoved: function(objectStore_, observerId_, address_) {
@@ -94,13 +94,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               }
             } catch (_error) {
               exception = _error;
-              throw new Error("onNamespaceRemoved failure: " + exception);
+              throw new Error("onNamespaceRemoved failure: " + exception.message);
             }
           }
         };
       } catch (_error) {
         exception = _error;
-        throw new Error("AddressStore failure: " + exception);
+        throw new Error("AddressStore failure: " + exception.message);
       }
     }
 
@@ -114,7 +114,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return namespace.getResolvedAddress();
       } catch (_error) {
         exception = _error;
-        throw new Error("getSelector failure: " + exception);
+        throw new Error("getSelector failure: " + exception.message);
       }
     };
 
@@ -129,7 +129,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.selectorNamespace.update();
       } catch (_error) {
         exception = _error;
-        throw new Error("setAddress failure: " + exception);
+        throw new Error("setAddress failure: " + exception.message);
       }
     };
 

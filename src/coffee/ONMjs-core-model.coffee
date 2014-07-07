@@ -197,7 +197,7 @@ class ModelDetails
                     return true
 
                 catch exception
-                    throw new Error("buildOMDescriptorFromLayout failure on path '#{path_}'. Details: #{exception}");
+                    throw new Error("buildOMDescriptorFromLayout failure on path '#{path_}'. Details: #{exception.message}");
 
             # / END: buildOMDesriptorFromLayout
 
@@ -212,7 +212,7 @@ class ModelDetails
                         throw new Error("Internal error getting namespace descriptor for path ID=#{pathId_}!");
                     return objectModelDescriptor
                 catch exception
-                    throw new Error("getNamespaceDescriptorFromPathId failure: #{exception}");
+                    throw new Error("getNamespaceDescriptorFromPathId failure: #{exception.message}");
             #
             # / END: @getNamespaceDescriptorFromPathId
 
@@ -221,7 +221,7 @@ class ModelDetails
                 try
                     return @getNamespaceDescriptorFromPathId(@getPathIdFromPath(path_))
                 catch exception
-                    throw new Error("getNamespaceDescriptorFromPath failure: #{exception}");
+                    throw new Error("getNamespaceDescriptorFromPath failure: #{exception.message}");
             #
             # / END: @getNamespaceDescriptorFromPath
                 
@@ -237,7 +237,7 @@ class ModelDetails
                         throw new Error("Internal error: Invalid object model descriptor doesn't support id property for path '#{objectModelPath_}.");
                     return objectModelPathId
                 catch exception
-                    throw new Error("getPathIdFromPath fail: #{exception}");
+                    throw new Error("getPathIdFromPath fail: #{exception.message}");
             #
             # / END: @getPathIdFromPath
 
@@ -252,7 +252,7 @@ class ModelDetails
                         throw new Error("Internal error: Invalid object model descriptor doesn't support path property for path '#{objectModelPath_}.");
                     return path
                 catch exception
-                    throw new Error("getPathFromPathId fail: #{exception}");
+                    throw new Error("getPathFromPathId fail: #{exception.message}");
             #
             # / END: @getPathFromPathId
 
@@ -273,7 +273,7 @@ class ModelDetails
                     newAddress.implementation.pushToken(token)
                     return newAddress
                 catch exception
-                    throw new Error("getAddressFromPathId failure: #{exception}");
+                    throw new Error("getAddressFromPathId failure: #{exception.message}");
             #
             # / END: @createAddressFromPathId
         
@@ -320,7 +320,7 @@ class ModelDetails
                     return newAddress
 
                 catch exception
-                    throw new Error("createAddressFromHashString failure: #{exception}");
+                    throw new Error("createAddressFromHashString failure: #{exception.message}");
 
 
             # --------------------------------------------------------------------------
@@ -447,7 +447,7 @@ class ModelDetails
 
 
         catch exception
-            throw new Error("ModelDetails failure: #{exception}");
+            throw new Error("ModelDetails failure: #{exception.message}");
 
 
 
@@ -464,7 +464,7 @@ module.exports = class Model
                 try
                     return new Address(@, [ new AddressToken(@, undefined, undefined, 0) ])
                 catch exception
-                    throw new Error("createRootAddress failure: #{exception}");
+                    throw new Error("createRootAddress failure: #{exception.message}");
             
 
             # --------------------------------------------------------------------------
@@ -474,7 +474,7 @@ module.exports = class Model
                     newAddress = @implementation.createAddressFromPathId(pathId)
                     return newAddress
                 catch exception
-                    throw new Error("createPathAddress failure: #{exception}");
+                    throw new Error("createPathAddress failure: #{exception.message}");
 
 
             # --------------------------------------------------------------------------
@@ -485,7 +485,7 @@ module.exports = class Model
                     newAddress = @implementation.createAddressFromAddressHashString(hash_)
                     return newAddress
                 catch exception
-                    throw new Error("createAddressFromHashString failure: #{exception}");
+                    throw new Error("createAddressFromHashString failure: #{exception.message}");
 
 
             # --------------------------------------------------------------------------
@@ -494,7 +494,7 @@ module.exports = class Model
                     return @implementation.semanticBindings
 
                 catch exception
-                    throw new Error("getSemanticBindings failure: #{exception}");
+                    throw new Error("getSemanticBindings failure: #{exception.message}");
 
             # --------------------------------------------------------------------------
             @isEqual = (model_) =>
@@ -503,10 +503,10 @@ module.exports = class Model
                         throw new Error("Invalid model object passed as input parameter. Missing expectected property 'jsonTag'.");
                     @jsonTag == model_.jsonTag
                 catch exception
-                    throw new Error("isEqual failure: #{exception}");
+                    throw new Error("isEqual failure: #{exception.message}");
 
 
 
         catch exception
-            throw new Error("Model construction fail: #{exception}");
+            throw new Error("Model construction fail: #{exception.message}");
 

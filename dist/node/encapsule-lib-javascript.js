@@ -69,7 +69,7 @@ Low-level library routines inspired by (and often copied) from http://coffeescri
       return newInstance;
     } catch (_error) {
       exception = _error;
-      throw new Error("clone: " + exception);
+      throw new Error("clone: " + exception.message);
     }
   };
 
@@ -81,7 +81,7 @@ Low-level library routines inspired by (and often copied) from http://coffeescri
       return Object.keys(dictionary_).length;
     } catch (_error) {
       exception = _error;
-      throw new Error("dictionaryLength: " + exception);
+      throw new Error("dictionaryLength: " + exception.message);
     }
   };
 

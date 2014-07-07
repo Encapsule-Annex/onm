@@ -63,7 +63,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                   return callbackFunction(_this.store, observerId_, address_);
                 } catch (_error) {
                   exception = _error;
-                  throw new Error("An error occurred in the '" + callbackName_ + "' method of your observer interface: " + exception);
+                  throw new Error("An error occurred in the '" + callbackName_ + "' method of your observer interface: " + exception.message);
                 }
               }
             } else {
@@ -77,7 +77,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                     _results.push(callbackFunction(_this.store, observerId, address_));
                   } catch (_error) {
                     exception = _error;
-                    throw new Error("An error occurred in the '" + callbackName_ + "' method of your observer interface: " + exception);
+                    throw new Error("An error occurred in the '" + callbackName_ + "' method of your observer interface: " + exception.message);
                   }
                 } else {
                   _results.push(void 0);
@@ -87,7 +87,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             }
           } catch (_error) {
             exception = _error;
-            exceptionMessage = "dispatchCallback failure while processing " + ("address='" + (address_.getHumanReadableString()) + "', callback='" + callbackName_ + "', observer='" + ((observerId_ != null) && observerId_ || "[broadcast all]") + "': " + exception);
+            exceptionMessage = "dispatchCallback failure while processing " + ("address='" + (address_.getHumanReadableString()) + "', callback='" + callbackName_ + "', observer='" + ((observerId_ != null) && observerId_ || "[broadcast all]") + "': " + exception.message);
             throw new Error(exceptionMessage);
           }
         };
@@ -108,7 +108,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return true;
           } catch (_error) {
             exception = _error;
-            throw new Error("reifyStoreComponent failure: " + exception);
+            throw new Error("reifyStoreComponent failure: " + exception.message);
           }
         };
         this.unreifyStoreComponent = function(address_, observerId_) {
@@ -128,7 +128,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return true;
           } catch (_error) {
             exception = _error;
-            throw new Error("unreifyStoreComponent failure: " + exception);
+            throw new Error("unreifyStoreComponent failure: " + exception.message);
           }
         };
         this.reifyStoreExtensions = function(address_, observerId_, undoFlag_) {
@@ -158,12 +158,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             });
           } catch (_error) {
             exception = _error;
-            throw new Error("reifyStoreExtensions failure: " + exception);
+            throw new Error("reifyStoreExtensions failure: " + exception.message);
           }
         };
       } catch (_error) {
         exception = _error;
-        throw new Error("StoreReifier constructor failed: " + exception);
+        throw new Error("StoreReifier constructor failed: " + exception.message);
       }
     }
 

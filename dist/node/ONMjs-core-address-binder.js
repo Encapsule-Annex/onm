@@ -70,7 +70,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       return true;
     } catch (_error) {
       exception = _error;
-      throw new Error("InitializeNamespaceProperties failure " + exception + ".");
+      throw new Error("InitializeNamespaceProperties failure " + exception.message + ".");
     }
   };
 
@@ -106,7 +106,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       return true;
     } catch (_error) {
       exception = _error;
-      throw new Error("VerifyNamespaceMembers failure " + exception + ".");
+      throw new Error("VerifyNamespaceMembers failure " + exception.message + ".");
     }
   };
 
@@ -133,7 +133,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       return true;
     } catch (_error) {
       exception = _error;
-      throw new Error("InitializeComponentNamespaces failure: " + exception + ".");
+      throw new Error("InitializeComponentNamespaces failure: " + exception.message + ".");
     }
   };
 
@@ -149,7 +149,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       return true;
     } catch (_error) {
       exception = _error;
-      throw new Error("VerifyComponentNamespaces failure: " + exception + ".");
+      throw new Error("VerifyComponentNamespaces failure: " + exception.message + ".");
     }
   };
 
@@ -219,7 +219,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       return resolveResults;
     } catch (_error) {
       exception = _error;
-      throw new Error("ResolveNamespaceDescriptor failure: " + exception);
+      throw new Error("ResolveNamespaceDescriptor failure: " + exception.message);
     }
   };
 
@@ -278,7 +278,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return;
       } catch (_error) {
         exception = _error;
-        throw new Error("AddressTokenBinder failure: " + exception);
+        throw new Error("AddressTokenBinder failure: " + exception.message);
       }
     }
 

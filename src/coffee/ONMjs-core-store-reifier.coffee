@@ -66,7 +66,7 @@ module.exports = class StoreReifier
                             try
                                 callbackFunction(@store, observerId_, address_)
                             catch exception
-                                throw new Error("An error occurred in the '#{callbackName_}' method of your observer interface: #{exception}");
+                                throw new Error("An error occurred in the '#{callbackName_}' method of your observer interface: #{exception.message}");
                     else
                         for observerId, callbackInterface of @store.implementation.observers
                             callbackFunction = callbackInterface[callbackName_]
@@ -74,11 +74,11 @@ module.exports = class StoreReifier
                                 try
                                     callbackFunction(@store, observerId, address_)
                                 catch exception
-                                    throw new Error("An error occurred in the '#{callbackName_}' method of your observer interface: #{exception}");
+                                    throw new Error("An error occurred in the '#{callbackName_}' method of your observer interface: #{exception.message}");
 
                 catch exception
                     exceptionMessage = "dispatchCallback failure while processing " +
-                        "address='#{address_.getHumanReadableString()}', callback='#{callbackName_}', observer='#{observerId_? and observerId_ or "[broadcast all]"}': #{exception}"
+                        "address='#{address_.getHumanReadableString()}', callback='#{callbackName_}', observer='#{observerId_? and observerId_ or "[broadcast all]"}': #{exception.message}"
                     throw new Error(exceptionMessage);
 
 
@@ -98,7 +98,7 @@ module.exports = class StoreReifier
                     true # that
 
                 catch exception
-                    throw new Error("reifyStoreComponent failure: #{exception}");
+                    throw new Error("reifyStoreComponent failure: #{exception.message}");
 
 
             # 
@@ -118,7 +118,7 @@ module.exports = class StoreReifier
                     true # that
 
                 catch exception
-                    throw new Error("unreifyStoreComponent failure: #{exception}");
+                    throw new Error("unreifyStoreComponent failure: #{exception.message}");
 
             # 
             # ============================================================================
@@ -146,8 +146,8 @@ module.exports = class StoreReifier
                     )
 
                 catch exception
-                    throw new Error("reifyStoreExtensions failure: #{exception}");
+                    throw new Error("reifyStoreExtensions failure: #{exception.message}");
 
         catch exception
-            throw new Error("StoreReifier constructor failed: #{exception}");
+            throw new Error("StoreReifier constructor failed: #{exception.message}");
 

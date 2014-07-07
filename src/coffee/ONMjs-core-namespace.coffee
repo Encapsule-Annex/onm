@@ -55,7 +55,7 @@ class NamespaceDetails
             @resolvedAddress = undefined
 
         catch exception
-            throw new Error("NamespaceDetails failure: #{exception}");
+            throw new Error("NamespaceDetails failure: #{exception.message}");
 
 #
 #
@@ -108,7 +108,7 @@ module.exports = class Namespace
                 true
 
         catch exception
-            throw new Error("Namespace failure: #{exception}");
+            throw new Error("Namespace failure: #{exception.message}");
 
     #
     # ============================================================================
@@ -119,7 +119,7 @@ module.exports = class Namespace
             @implementation.resolvedAddress = new Address(@store.model, @implementation.resolvedTokenArray)
             return @implementation.resolvedAddress
         catch exception
-            throw new Error("getResolvedAddress failure: #{exception}");
+            throw new Error("getResolvedAddress failure: #{exception.message}");
 
 
     #
@@ -129,7 +129,7 @@ module.exports = class Namespace
             return @implementation.getResolvedToken().key
 
         catch exception
-            throw new Error("getComponentKey failure: #{exception}");
+            throw new Error("getComponentKey failure: #{exception.message}");
 
 
     #
@@ -148,7 +148,7 @@ module.exports = class Namespace
             return resolvedLabel
             
         catch exception
-            throw new Error("getResolvedLabel failure: #{exception}");
+            throw new Error("getResolvedLabel failure: #{exception.message}");
 
     #
     # ============================================================================
@@ -169,7 +169,7 @@ module.exports = class Namespace
             return resultJSON
 
         catch exception
-            throw new Error("toJSON failure: #{exception}");
+            throw new Error("toJSON failure: #{exception.message}");
 
 
     #
@@ -208,7 +208,7 @@ module.exports = class Namespace
             return address
 
         catch exception
-            throw new Error("fromData failure: #{exception}");
+            throw new Error("fromData failure: #{exception.message}");
 
 
 
@@ -221,7 +221,7 @@ module.exports = class Namespace
             try
                 parsedData = JSON.parse(json_)
             catch exception
-                throw new Error("Unable to deserialize the specified JSON data: #{exception}");
+                throw new Error("Unable to deserialize the specified JSON data: #{exception.message}");
 
             # Unwrap and verify the request before delegating to the fromData method.
             resolvedAddress = @getResolvedAddress()
@@ -234,12 +234,12 @@ module.exports = class Namespace
             try
                 resolvedAddress = @fromData(dataPayload)
             catch exception
-                throw new Error("After successful JSON parse, namespace data update failed: #{exception}"            );
+                throw new Error("After successful JSON parse, namespace data update failed: #{exception.message}"            );
 
             return resolvedAddress
             
         catch exception
-            throw new Error("fromJSON failure: #{exception}");
+            throw new Error("fromJSON failure: #{exception.message}");
 
 
     #
@@ -286,7 +286,7 @@ module.exports = class Namespace
                 count++
             
         catch exception
-            throw new Error("update failure: #{exception}");
+            throw new Error("update failure: #{exception.message}");
 
 
 
@@ -308,12 +308,12 @@ module.exports = class Namespace
                 try
                     callback_(address)
                 catch exception
-                    throw new Error("Failure occurred inside your callback function implementation: #{exception}");
+                    throw new Error("Failure occurred inside your callback function implementation: #{exception.message}");
 
             true
 
         catch exception
-            throw new Error("visitExtensionPointSubcomponents failure: #{exception}");
+            throw new Error("visitExtensionPointSubcomponents failure: #{exception.message}");
     # ============================================================================
 
 

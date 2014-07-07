@@ -74,7 +74,7 @@ module.exports = class AddressStore extends Store
                         if cachedAddress? and cachedAddress and cachedAddress.isEqual(address_)
                             @setAddress(address_)
                     catch exception
-                        throw new Error("onNamespaceUpdated failure: #{exception}");
+                        throw new Error("onNamespaceUpdated failure: #{exception.message}");
 
                 onNamespaceRemoved: (objectStore_, observerId_, address_) =>
                     try
@@ -84,12 +84,12 @@ module.exports = class AddressStore extends Store
                             @setAddress(parentAddress)
                         return
                     catch exception
-                        throw new Error("onNamespaceRemoved failure: #{exception}");
+                        throw new Error("onNamespaceRemoved failure: #{exception.message}");
             } # objectStoreCallbacks
 
 
         catch exception
-            throw new Error("AddressStore failure: #{exception}");
+            throw new Error("AddressStore failure: #{exception.message}");
 
 
     #
@@ -101,7 +101,7 @@ module.exports = class AddressStore extends Store
             return namespace.getResolvedAddress()
 
         catch exception
-            throw new Error("getSelector failure: #{exception}");
+            throw new Error("getSelector failure: #{exception.message}");
 
 
     #
@@ -116,7 +116,7 @@ module.exports = class AddressStore extends Store
             @selectorNamespace.update()
 
         catch exception
-            throw new Error("setAddress failure: #{exception}");
+            throw new Error("setAddress failure: #{exception.message}");
 
 
 

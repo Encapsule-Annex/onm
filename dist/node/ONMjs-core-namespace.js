@@ -61,7 +61,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         this.resolvedAddress = void 0;
       } catch (_error) {
         exception = _error;
-        throw new Error("NamespaceDetails failure: " + exception);
+        throw new Error("NamespaceDetails failure: " + exception.message);
       }
     }
 
@@ -128,7 +128,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
       } catch (_error) {
         exception = _error;
-        throw new Error("Namespace failure: " + exception);
+        throw new Error("Namespace failure: " + exception.message);
       }
     }
 
@@ -142,7 +142,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.resolvedAddress;
       } catch (_error) {
         exception = _error;
-        throw new Error("getResolvedAddress failure: " + exception);
+        throw new Error("getResolvedAddress failure: " + exception.message);
       }
     };
 
@@ -152,7 +152,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return this.implementation.getResolvedToken().key;
       } catch (_error) {
         exception = _error;
-        throw new Error("getComponentKey failure: " + exception);
+        throw new Error("getComponentKey failure: " + exception.message);
       }
     };
 
@@ -171,7 +171,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return resolvedLabel;
       } catch (_error) {
         exception = _error;
-        throw new Error("getResolvedLabel failure: " + exception);
+        throw new Error("getResolvedLabel failure: " + exception.message);
       }
     };
 
@@ -193,7 +193,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return resultJSON;
       } catch (_error) {
         exception = _error;
-        throw new Error("toJSON failure: " + exception);
+        throw new Error("toJSON failure: " + exception.message);
       }
     };
 
@@ -227,7 +227,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return address;
       } catch (_error) {
         exception = _error;
-        throw new Error("fromData failure: " + exception);
+        throw new Error("fromData failure: " + exception.message);
       }
     };
 
@@ -239,7 +239,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           parsedData = JSON.parse(json_);
         } catch (_error) {
           exception = _error;
-          throw new Error("Unable to deserialize the specified JSON data: " + exception);
+          throw new Error("Unable to deserialize the specified JSON data: " + exception.message);
         }
         resolvedAddress = this.getResolvedAddress();
         model = resolvedAddress.getModel();
@@ -251,12 +251,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           resolvedAddress = this.fromData(dataPayload);
         } catch (_error) {
           exception = _error;
-          throw new Error("After successful JSON parse, namespace data update failed: " + exception);
+          throw new Error("After successful JSON parse, namespace data update failed: " + exception.message);
         }
         return resolvedAddress;
       } catch (_error) {
         exception = _error;
-        throw new Error("fromJSON failure: " + exception);
+        throw new Error("fromJSON failure: " + exception.message);
       }
     };
 
@@ -299,7 +299,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return _results;
       } catch (_error) {
         exception = _error;
-        throw new Error("update failure: " + exception);
+        throw new Error("update failure: " + exception.message);
       }
     };
 
@@ -323,13 +323,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             callback_(address);
           } catch (_error) {
             exception = _error;
-            throw new Error("Failure occurred inside your callback function implementation: " + exception);
+            throw new Error("Failure occurred inside your callback function implementation: " + exception.message);
           }
         }
         return true;
       } catch (_error) {
         exception = _error;
-        throw new Error("visitExtensionPointSubcomponents failure: " + exception);
+        throw new Error("visitExtensionPointSubcomponents failure: " + exception.message);
       }
     };
 

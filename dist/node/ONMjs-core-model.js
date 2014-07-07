@@ -186,7 +186,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return true;
           } catch (_error) {
             exception = _error;
-            throw new Error("buildOMDescriptorFromLayout failure on path '" + path_ + "'. Details: " + exception);
+            throw new Error("buildOMDescriptorFromLayout failure on path '" + path_ + "'. Details: " + exception.message);
           }
         };
         this.getNamespaceDescriptorFromPathId = function(pathId_) {
@@ -205,7 +205,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return objectModelDescriptor;
           } catch (_error) {
             exception = _error;
-            throw new Error("getNamespaceDescriptorFromPathId failure: " + exception);
+            throw new Error("getNamespaceDescriptorFromPathId failure: " + exception.message);
           }
         };
         this.getNamespaceDescriptorFromPath = function(path_) {
@@ -214,7 +214,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.getNamespaceDescriptorFromPathId(_this.getPathIdFromPath(path_));
           } catch (_error) {
             exception = _error;
-            throw new Error("getNamespaceDescriptorFromPath failure: " + exception);
+            throw new Error("getNamespaceDescriptorFromPath failure: " + exception.message);
           }
         };
         this.getPathIdFromPath = function(path_) {
@@ -234,7 +234,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return objectModelPathId;
           } catch (_error) {
             exception = _error;
-            throw new Error("getPathIdFromPath fail: " + exception);
+            throw new Error("getPathIdFromPath fail: " + exception.message);
           }
         };
         this.getPathFromPathId = function(pathId_) {
@@ -251,7 +251,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return path;
           } catch (_error) {
             exception = _error;
-            throw new Error("getPathFromPathId fail: " + exception);
+            throw new Error("getPathFromPathId fail: " + exception.message);
           }
         };
         this.createAddressFromPathId = function(pathId_) {
@@ -277,7 +277,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw new Error("getAddressFromPathId failure: " + exception);
+            throw new Error("getAddressFromPathId failure: " + exception.message);
           }
         };
         this.createAddressFromAddressHashString = function(addressHashString_) {
@@ -321,7 +321,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw new Error("createAddressFromHashString failure: " + exception);
+            throw new Error("createAddressFromHashString failure: " + exception.message);
           }
         };
         if (!((objectModelDeclaration_ != null) && objectModelDeclaration_)) {
@@ -424,7 +424,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
       } catch (_error) {
         exception = _error;
-        throw new Error("ModelDetails failure: " + exception);
+        throw new Error("ModelDetails failure: " + exception.message);
       }
     }
 
@@ -444,7 +444,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return new Address(_this, [new AddressToken(_this, void 0, void 0, 0)]);
           } catch (_error) {
             exception = _error;
-            throw new Error("createRootAddress failure: " + exception);
+            throw new Error("createRootAddress failure: " + exception.message);
           }
         };
         this.createPathAddress = function(path_) {
@@ -455,7 +455,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw new Error("createPathAddress failure: " + exception);
+            throw new Error("createPathAddress failure: " + exception.message);
           }
         };
         this.createAddressFromHashString = function(hash_) {
@@ -468,7 +468,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw new Error("createAddressFromHashString failure: " + exception);
+            throw new Error("createAddressFromHashString failure: " + exception.message);
           }
         };
         this.getSemanticBindings = function() {
@@ -477,7 +477,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.implementation.semanticBindings;
           } catch (_error) {
             exception = _error;
-            throw new Error("getSemanticBindings failure: " + exception);
+            throw new Error("getSemanticBindings failure: " + exception.message);
           }
         };
         this.isEqual = function(model_) {
@@ -489,12 +489,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return _this.jsonTag === model_.jsonTag;
           } catch (_error) {
             exception = _error;
-            throw new Error("isEqual failure: " + exception);
+            throw new Error("isEqual failure: " + exception.message);
           }
         };
       } catch (_error) {
         exception = _error;
-        throw new Error("Model construction fail: " + exception);
+        throw new Error("Model construction fail: " + exception.message);
       }
     }
 
