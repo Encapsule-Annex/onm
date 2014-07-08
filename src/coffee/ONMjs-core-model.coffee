@@ -209,7 +209,7 @@ class ModelDetails
                         throw new Error("Out of range path ID '#{pathId_} cannot be resolved.");
                     objectModelDescriptor = @objectModelDescriptorById[pathId_]
                     if not (objectModelDescriptor? and objectModelDescriptor)
-                        throw new Error("Internal error getting namespace descriptor for path ID=#{pathId_}!");
+                        throw new Error("Cannot resolve path ID `#{pathId_}` in data model '#{@objectModelDescriptorById[0].jsonTag}'.");
                     return objectModelDescriptor
                 catch exception
                     throw new Error("getNamespaceDescriptorFromPathId failure: #{exception.message}");
@@ -234,7 +234,7 @@ class ModelDetails
                         throw new Error("Path '#{path_}' is not in the '#{@model.jsonTag}' model's address space.");
                     objectModelPathId = objectModelDescriptor.id
                     if not objectModelPathId?
-                        throw new Error("Internal error: Invalid object model descriptor doesn't support id property for path '#{objectModelPath_}.");
+                        throw new Error("Internal error: Invalid object model descriptor doesn't support id property for path '#{objectModelPath_}'.");
                     return objectModelPathId
                 catch exception
                     throw new Error("getPathIdFromPath fail: #{exception.message}");
@@ -249,7 +249,7 @@ class ModelDetails
                         throw new Error("Internal error: Can't find object descriptor for valid path ID '#{pathId_}.");
                     path = objectModelDescriptor.path
                     if not (path? and path)
-                        throw new Error("Internal error: Invalid object model descriptor doesn't support path property for path '#{objectModelPath_}.");
+                        throw new Error("Internal error: Invalid object model descriptor doesn't support path property for path '#{objectModelPath_}'.");
                     return path
                 catch exception
                     throw new Error("getPathFromPathId fail: #{exception.message}");
@@ -320,7 +320,7 @@ class ModelDetails
                     return newAddress
 
                 catch exception
-                    throw new Error("createAddressFromHashString failure: #{exception.message}");
+                    throw exception
 
 
             # --------------------------------------------------------------------------
@@ -379,7 +379,6 @@ class ModelDetails
 
             Object.freeze @objectModelPathMap
             Object.freeze @objectModelDescriptorById
-
 
             @semanticBindings = @objectModelDeclaration.semanticBindings? and @objectModelDeclaration.semanticBindings or {}
 

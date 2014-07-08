@@ -200,7 +200,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             }
             objectModelDescriptor = _this.objectModelDescriptorById[pathId_];
             if (!((objectModelDescriptor != null) && objectModelDescriptor)) {
-              throw new Error("Internal error getting namespace descriptor for path ID=" + pathId_ + "!");
+              throw new Error("Cannot resolve path ID `" + pathId_ + "` in data model '" + _this.objectModelDescriptorById[0].jsonTag + "'.");
             }
             return objectModelDescriptor;
           } catch (_error) {
@@ -229,7 +229,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             }
             objectModelPathId = objectModelDescriptor.id;
             if (objectModelPathId == null) {
-              throw new Error("Internal error: Invalid object model descriptor doesn't support id property for path '" + objectModelPath_ + ".");
+              throw new Error("Internal error: Invalid object model descriptor doesn't support id property for path '" + objectModelPath_ + "'.");
             }
             return objectModelPathId;
           } catch (_error) {
@@ -246,7 +246,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             }
             path = objectModelDescriptor.path;
             if (!((path != null) && path)) {
-              throw new Error("Internal error: Invalid object model descriptor doesn't support path property for path '" + objectModelPath_ + ".");
+              throw new Error("Internal error: Invalid object model descriptor doesn't support path property for path '" + objectModelPath_ + "'.");
             }
             return path;
           } catch (_error) {
@@ -321,7 +321,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw new Error("createAddressFromHashString failure: " + exception.message);
+            throw exception;
           }
         };
         if (!((objectModelDeclaration_ != null) && objectModelDeclaration_)) {

@@ -47,12 +47,12 @@ module.exports = class AddressToken
     constructor: (model_, idExtensionPoint_, key_, idNamespace_) ->
         try
             # Save a reference to the specified model.
-            @model = model_? and model_ or throw "Missing object model input parameter."
+            @model = model_? and model_ or throw new Error("Missing object model input parameter.")
 
             # Now we work through the remaining parameters in reverse order.
 
             # Resolve the specified namespace's object model descriptor.
-            if not idNamespace_? then throw "Missing target namespace ID input parameter."
+            if not idNamespace_? then throw new Error("Missing target namespace ID input parameter.")
             @idNamespace = idNamespace_
             @namespaceDescriptor = model_.implementation.getNamespaceDescriptorFromPathId(idNamespace_)
 
@@ -88,27 +88,27 @@ module.exports = class AddressToken
             if not @idExtensionPoint
                 # This component is a valid extension of more than one extension point.
                 # Thus we must have the ID of the parent extension point in order to disambiguate.
-                throw "You must specify the ID of the parent extension point when creating a token addressing a '#{@componentDescriptor.path}' component namespace."
+                throw new Error("You must specify the ID of the parent extension point when creating a token addressing a '#{@componentDescriptor.path}' component namespace.")
 
             # Resolve the extension point's object model descriptor.
             @extensionPointDescriptor = @model.implementation.getNamespaceDescriptorFromPathId(@idExtensionPoint)
 
             # Exists.
             if not (@extensionPointDescriptor? and @extensionPointDescriptor)
-                throw "Internal error: unable to resolve extension point object model descriptor in request."
+                throw new Error("Internal error: unable to resolve extension point object model descriptor in request.")
 
             # Is an extension point.
             if @extensionPointDescriptor.namespaceType != "extensionPoint"
-                throw "Invalid selector key object specifies an invalid parent extension point ID. Not an extension point."
+                throw new Error("Invalid selector key object specifies an invalid parent extension point ID. Not an extension point.")
 
             # Is an extension point that contains the correct application component type.
             if @extensionPointDescriptor.archetypePathId != @componentDescriptor.id
-                throw "Invalid selector key object specifies unsupported extension point / component ID pair."
+                throw new Error("Invalid selector key object specifies unsupported extension point / component ID pair.")
 
             return
 
         catch exception
-            throw "AddressToken failure: #{exception}"
+            throw new Error("AddressToken failure: #{exception}")
 
     #
     # ============================================================================
@@ -125,7 +125,7 @@ module.exports = class AddressToken
     # ============================================================================
     isEqual: (token_) =>
         try
-            if not (token_? and token_) then throw "Missing token input parameter."
+            if not (token_? and token_) then throw new Error("Missing token input parameter.")
             result = (@idNamespace == token_.idNamespace) and (@key == token_.key) and (@idExtensionPoint == token_.idExtensionPoint)
             return result
 

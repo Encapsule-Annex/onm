@@ -49,10 +49,10 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       var exception;
       try {
         this.model = (model_ != null) && model_ || (function() {
-          throw "Missing object model input parameter.";
+          throw new Error("Missing object model input parameter.");
         })();
         if (idNamespace_ == null) {
-          throw "Missing target namespace ID input parameter.";
+          throw new Error("Missing target namespace ID input parameter.");
         }
         this.idNamespace = idNamespace_;
         this.namespaceDescriptor = model_.implementation.getNamespaceDescriptorFromPathId(idNamespace_);
@@ -70,22 +70,22 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           this.idExtensionPoint = this.componentDescriptor.parent.id;
         }
         if (!this.idExtensionPoint) {
-          throw "You must specify the ID of the parent extension point when creating a token addressing a '" + this.componentDescriptor.path + "' component namespace.";
+          throw new Error("You must specify the ID of the parent extension point when creating a token addressing a '" + this.componentDescriptor.path + "' component namespace.");
         }
         this.extensionPointDescriptor = this.model.implementation.getNamespaceDescriptorFromPathId(this.idExtensionPoint);
         if (!((this.extensionPointDescriptor != null) && this.extensionPointDescriptor)) {
-          throw "Internal error: unable to resolve extension point object model descriptor in request.";
+          throw new Error("Internal error: unable to resolve extension point object model descriptor in request.");
         }
         if (this.extensionPointDescriptor.namespaceType !== "extensionPoint") {
-          throw "Invalid selector key object specifies an invalid parent extension point ID. Not an extension point.";
+          throw new Error("Invalid selector key object specifies an invalid parent extension point ID. Not an extension point.");
         }
         if (this.extensionPointDescriptor.archetypePathId !== this.componentDescriptor.id) {
-          throw "Invalid selector key object specifies unsupported extension point / component ID pair.";
+          throw new Error("Invalid selector key object specifies unsupported extension point / component ID pair.");
         }
         return;
       } catch (_error) {
         exception = _error;
-        throw "AddressToken failure: " + exception;
+        throw new Error("AddressToken failure: " + exception);
       }
     }
 
@@ -97,7 +97,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       var exception, result;
       try {
         if (!((token_ != null) && token_)) {
-          throw "Missing token input parameter.";
+          throw new Error("Missing token input parameter.");
         }
         result = (this.idNamespace === token_.idNamespace) && (this.key === token_.key) && (this.idExtensionPoint === token_.idExtensionPoint);
         return result;
