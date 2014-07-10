@@ -1,16 +1,30 @@
 {
   "name": "onm",
-  "version": "0.1.21",
-  "aka": "Oh Never Mind",
+  "version": "0.1.22",
   "description": "Object Namespace Manager (onm) model-schema-driven JSON factory and in-memory subsystem communication bus for complex data-driven Node.js/HTML 5 client apps.",
   "keywords": [
     "object factory",
     "data model",
+    "data",
     "JSON",
-    "patterns",
+    "design pattern",
+    "model",
+    "store",
+    "observe",
+    "observer",
+    "feedback",
+    "signal",
+    "visitor",
+    "factory",
+    "delegate",
+    "proxy",
     "encapsule",
     "protocols",
-    "addressing"
+    "addressing",
+    "router",
+    "routing",
+    "uri",
+    "oh never mind..."
   ],
   "scripts": {
     "test": "mocha -R spec ./test/test-onm.js"
