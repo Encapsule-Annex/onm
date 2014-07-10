@@ -44,7 +44,16 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 module.exports = class BackChannel
     constructor: (logHandler_, errorHandler_) ->
         try
+            ###
+            callback: function(html_) { ... }
+            where html_ is an HTML string
+            ###
             @logHandler = logHandler_
+
+            ###
+            callback: function(error_) { ... }
+            where error_ is an Error object
+            ###
             @errorHandler = errorHandler_
 
             @log = (html_) =>
@@ -68,12 +77,13 @@ module.exports = class BackChannel
                             throw new Error("Error executing error handler function callback: #{exception.message}");
                         return true
 
-                    throw new Error(error_);
+                    console.warn("BackChannel.error: Unhandled exception w/no registered error handler!")
+                    throw error_
 
                 catch exception
+                    console.warn("BackChannel.error rethrowing unhandled exception!");
                     throw new Error("BackChannel.error failure: #{exception.message}");
 
-
         catch exception
-            throw new Error("BackChannel failure: #{exception.message}");
+            throw new Error("BackChannel failure in constructor: #{exception.message}");
 

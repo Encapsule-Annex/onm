@@ -42,7 +42,17 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       var exception,
         _this = this;
       try {
+        /*
+        callback: function(html_) { ... }
+        where html_ is an HTML string
+        */
+
         this.logHandler = logHandler_;
+        /*
+        callback: function(error_) { ... }
+        where error_ is an Error object
+        */
+
         this.errorHandler = errorHandler_;
         this.log = function(html_) {
           var exception;
@@ -74,15 +84,17 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               }
               return true;
             }
-            throw new Error(error_);
+            console.warn("BackChannel.error: Unhandled exception w/no registered error handler!");
+            throw error_;
           } catch (_error) {
             exception = _error;
+            console.warn("BackChannel.error rethrowing unhandled exception!");
             throw new Error("BackChannel.error failure: " + exception.message);
           }
         };
       } catch (_error) {
         exception = _error;
-        throw new Error("BackChannel failure: " + exception.message);
+        throw new Error("BackChannel failure in constructor: " + exception.message);
       }
     }
 
