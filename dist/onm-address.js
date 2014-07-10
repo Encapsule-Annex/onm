@@ -3,7 +3,7 @@
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Encapsule Project
+Copyright (c) 2014 Encapsule Project
   
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
   var Address, AddressDetails, AddressToken,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  AddressToken = require('./ONMjs-core-address-token');
+  AddressToken = require('./implementation/onm-address-token');
 
   AddressDetails = (function() {
     function AddressDetails(address_, model_, tokenVector_) {

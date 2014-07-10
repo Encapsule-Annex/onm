@@ -1,9 +1,9 @@
-/*
+###
 ------------------------------------------------------------------------------
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Encapsule Project
+Copyright (c) 2014 Encapsule Project
   
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,64 +31,55 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 ------------------------------------------------------------------------------
 Low-level library routines inspired by (and often copied) from http://coffeescriptcookbook.com
 ------------------------------------------------------------------------------
-*/
+###
+#
+#
+#
+#
+
+# Copied from http://coffeescriptcookbook.com/chapters/classes_and_objects/cloning
+
+clone = (object_) ->
 
 
-(function() {
-  var clone;
+    # \ BEGIN: clone function
+    try
+        # \ BEGIN: try
+        if not object_? or typeof object_ isnt 'object'
+            return object_
 
-  clone = function(object_) {
-    var exception, flags, key, newInstance;
-    try {
-      if ((object_ == null) || typeof object_ !== 'object') {
-        return object_;
-      }
-      if (object_ instanceof Date) {
-        return new Date(object_.getTime());
-      }
-      if (object_ instanceof RegExp) {
-        flags = '';
-        if (object_.global != null) {
-          flags += 'g';
-        }
-        if (object_.ignoreCase != null) {
-          flags += 'i';
-        }
-        if (object_.multiline != null) {
-          flags += 'm';
-        }
-        if (object_.sticky != null) {
-          flags += 'y';
-        }
-        return new RegExp(object_.source, flags);
-      }
-      newInstance = new object_.constructor();
-      for (key in object_) {
-        newInstance[key] = clone(object_[key]);
-      }
-      return newInstance;
-    } catch (_error) {
-      exception = _error;
-      throw new Error("clone: " + exception.message);
-    }
-  };
+        if object_ instanceof Date
+            return new Date(object_.getTime()) 
 
-  module.exports.clone = clone;
+        if object_ instanceof RegExp
+            flags = ''
+            flags += 'g' if object_.global?
+            flags += 'i' if object_.ignoreCase?
+            flags += 'm' if object_.multiline?
+            flags += 'y' if object_.sticky?
+            return new RegExp(object_.source, flags) 
 
-  module.exports.dictionaryLength = function(dictionary_) {
-    var exception;
-    try {
-      return Object.keys(dictionary_).length;
-    } catch (_error) {
-      exception = _error;
-      throw new Error("dictionaryLength: " + exception.message);
-    }
-  };
+        newInstance = new object_.constructor()
 
-  module.exports.uuidNull = "00000000-0000-0000-0000-000000000000";
+        for key of object_
+            newInstance[key] = clone object_[key]
 
-  module.exports.getEpochTime = function() {
-    return Math.round(new Date().getTime() / 1000.0);
-  };
+        return newInstance
+        # / END: try
 
-}).call(this);
+    catch exception
+        throw new Error("clone: #{exception.message}");
+
+    # / END: clone function
+
+module.exports.clone = clone
+
+module.exports.dictionaryLength = (dictionary_) ->
+    try
+        Object.keys(dictionary_).length
+    catch exception
+        throw new Error("dictionaryLength: #{exception.message}");
+
+module.exports.uuidNull = "00000000-0000-0000-0000-000000000000"
+
+module.exports.getEpochTime = -> Math.round new Date().getTime() / 1000.0

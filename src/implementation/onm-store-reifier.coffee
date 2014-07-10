@@ -3,7 +3,7 @@
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Encapsule Project
+Copyright (c) 2014 Encapsule Project
   
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -39,8 +39,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-jslib = require('./encapsule-lib-javascript')
-Namespace = require('./ONMjs-core-namespace')
+jslib = require('../lib-javascript')
+Namespace = require('../onm-namespace')
 
 #
 # ****************************************************************************

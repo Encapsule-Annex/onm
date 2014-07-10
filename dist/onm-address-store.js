@@ -3,7 +3,7 @@
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Encapsule Project
+Copyright (c) 2014 Encapsule Project
   
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -41,11 +41,11 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Store = require('./ONMjs-core-store');
+  Store = require('./onm-store');
 
-  Model = require('./ONMjs-core-model');
+  Model = require('./onm-model');
 
-  Namespace = require('./ONMjs-core-namespace');
+  Namespace = require('./onm-namespace');
 
   module.exports = AddressStore = (function(_super) {
     __extends(AddressStore, _super);

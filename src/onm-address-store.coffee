@@ -3,7 +3,7 @@
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Encapsule Project
+Copyright (c) 2014 Encapsule Project
   
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -38,9 +38,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-Store = require('./ONMjs-core-store')
-Model = require('./ONMjs-core-model')
-Namespace = require('./ONMjs-core-namespace')
+Store = require('./onm-store')
+Model = require('./onm-model')
+Namespace = require('./onm-namespace')
 
 
 module.exports = class AddressStore extends Store

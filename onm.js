@@ -1,11 +1,11 @@
-// onm node package index.js
+// onm library CommonJS-format package public exports
 
-module.exports.Model = require('./dist/node/ONMjs-core-model');
-module.exports.Store = require('./dist/node/ONMjs-core-store');
-module.exports.Address = require('./dist/node/ONMjs-core-address');
-module.exports.AddressStore = require('./dist/node/ONMjs-core-address-store');
-module.exports.Namespace = require('./dist/node/ONMjs-core-namespace');
-module.exports.BackChannel = require('./dist/node/encapsule-lib-backchannel');
-module.exports.util = require('./dist/node/encapsule-lib-javascript');
+module.exports.Model = require('./dist/onm-model');
+module.exports.Store = require('./dist/onm-store');
+module.exports.Address = require('./dist/onm-address');
+module.exports.AddressStore = require('./dist/onm-address-store');
+module.exports.Namespace = require('./dist/onm-namespace');
+module.exports.BackChannel = require('./dist/lib-backchannel');
+module.exports.util = require('./dist/lib-javascript');
 
 
