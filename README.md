@@ -1,41 +1,21 @@
-onm
-===
+# Encapsule Project onm
 
-Object namespace manager (onm) node.js and HTML 5 client package sources.
 
-[onm library API documentation](https://github.com/Encapsule/ONMjs/wiki)
+Encapsule Project Object Namespace Manager (onm) library is a data-model-driven JavaScript data object/JSON factory and in-memory subsystem communication bus for building complex data-driven Node.js/HTML 5 client applications in JavaScript based on the the Model-Store-Observe-Feedback-Signal design pattern.
 
-# package user
+#### Package
 
-i.e. you want to use the onm package in a node or client environment.
+The latest onm package is available via npm:
 
-## onm package in node.js
+        npm install onm
 
-Install the onm package via npm:
+#### Sources
 
-       npm install onm
+Sources are available under [MIT license](http://opensource.org/licenses/MIT) on GitHub: [Encapsule/onm](https://github.com/Encapsule/onm)
 
-Alternately, you may use `npm install onm --save` to install onm, and register a package dependency in your package.json file.
+#### Documentation
 
-Subsequently, in your node.js JavaScript:
+onm's small API surface belies its power: [Encapsule/onm/wiki](https://github.com/Encapsule/onm/wiki)
 
-        var onm = require('onm');
-        var model = new onm.Model({ "jsonTag": "hello" });
-        var store = new onm.Store(model);
-        // ...
 
-## onm package in html 5 client
-
-under development. experiemental client script via browserify available in `./dist/client/onm-client.js` (untested).
-
-# package developer
-
-To build and/or modify the onm package sources, clone the git repository, install the package's developer dependency via npm, and then leverage Grunt to invoke the default package build. Use `grunt --help` for detailed build options.
-
-        cd ~/vitalshit/
-        git clone git@github.com:Encapsule/onm.git
-        cd onm
-        npm install
-        grunt
-        # grunt --help for detailed build options
 
