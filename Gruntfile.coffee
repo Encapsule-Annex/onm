@@ -19,6 +19,11 @@ module.exports = (grunt) ->
                     'dist/lib-javascript.js': 'src/lib-javascript.coffee'
 
 
+        jshint:
+            options: {}
+            files: [ 'onm.js', './dist/*.js', './dist/**/*.js' ]
+
+
         mochaTest:
             options:
                 reporter: 'spec'
@@ -31,7 +36,7 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks "grunt-contrib-coffee"
     grunt.loadNpmTasks "grunt-contrib-clean"
     grunt.loadNpmTasks "grunt-mocha-test"
-    #grunt.loadNpmTasks "grunt-contrib-jshint"
+    grunt.loadNpmTasks "grunt-contrib-jshint"
 
     grunt.registerTask "test", [ "mochaTest" ]
     grunt.registerTask "default", [ "clean", "coffee:compile", "test" ]
