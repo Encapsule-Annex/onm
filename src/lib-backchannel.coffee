@@ -57,33 +57,28 @@ module.exports = class BackChannel
             @errorHandler = errorHandler_
 
             @log = (html_) =>
-                try
-                    if @logHandler? and @logHandler
-                        try
-                            @logHandler(html_)
-                        catch exception
-                            throw new Error("Error executing log handler function callback: #{exception.message}");
+                if @logHandler? and @logHandler
+                    try
+                        @logHandler(html_)
                         return true
-                    false
-                catch exception
-                    throw new Error("BackChannel.log failure: #{exception.message}");
+                    catch exception_
+                        exception = new Error("BackChannel exception occurred in log handler callback: #{exception_.message}")
+                        @error(exception)
+                        return false
+                false
 
             @error = (error_) =>
-                try
-                    if @errorHandler? and @errorHandler
-                        try
-                            @errorHandler(error_)
-                        catch exception
-                            throw new Error("Error executing error handler function callback: #{exception.message}");
+                if @errorHandler? and @errorHandler
+                    try
+                        @errorHandler(error_)
                         return true
+                    catch exception_
+                        message = "BackChannel exception occurred in error handler callback: #{exception_.message}"
+                        console.error(message);
+                        false
 
-                    console.warn("BackChannel.error: Unhandled exception w/no registered error handler!")
-                    throw error_
+                console.error("BackChannel.error reported w/no registered error handler!: #{error_.message}")
 
-                catch exception
-                    console.warn("BackChannel.error rethrowing unhandled exception!");
-                    throw new Error("BackChannel.error failure: #{exception.message}");
-
-        catch exception
-            throw new Error("BackChannel failure in constructor: #{exception.message}");
+        catch exception_
+            throw new Error("BackChannel failure in constructor: #{exception_.message}");
 
