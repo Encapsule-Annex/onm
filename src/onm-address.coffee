@@ -355,6 +355,38 @@ module.exports = class Address
 
     #
     # ============================================================================
+    isParent: (address_) =>
+        try
+            if not (address_? and address_) then throw new Error("Missing address input parameter.");
+            if @implementation.tokenVector.length > address_.implementation.tokenVector.length then return false
+            if @isEqual(address_) then return false
+            lastToken = @implementation.tokenVector.length - 1
+            index = 0
+            while index < @implementation.tokenVector.length
+                tokenA = @implementation.tokenVector[index]
+                tokenB = address_.implementation.tokenVector[index]
+                if tokenA.isEqual(tokenB)
+                    if index == lastToken
+                        # this address is a parent of the test address
+                        return true
+                    # tokens match and we're not at the end. continue...
+                else
+                    if index != lastToken
+                        return false
+                    # tokens do not match, and we're on the last token so we have do do some work
+                    parentAddress = address_.createParentAddress();
+                    while parentAddress
+                        if @isEqual(parentAddress)
+                            return true
+                        parentAddress = parentAddress.createParentAddress()
+                    return false
+                index++
+            return false
+        catch exception
+            throw new Error("isParent failure: #{exception.message}");
+
+    #
+    # ============================================================================
     isSameType: (address_) =>
         try
             if not (address_? and address_) then throw new Error("Missing address input parameter.");

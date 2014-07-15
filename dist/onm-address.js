@@ -230,6 +230,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       this.createParentAddress = __bind(this.createParentAddress, this);
       this.clone = __bind(this.clone, this);
       this.isSameType = __bind(this.isSameType, this);
+      this.isParent = __bind(this.isParent, this);
       this.isEqual = __bind(this.isEqual, this);
       this.isRoot = __bind(this.isRoot, this);
       this.getHashString = __bind(this.getHashString, this);
@@ -361,6 +362,49 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       } catch (_error) {
         exception = _error;
         throw new Error("isEqual failure: " + exception.message);
+      }
+    };
+
+    Address.prototype.isParent = function(address_) {
+      var exception, index, lastToken, parentAddress, tokenA, tokenB;
+      try {
+        if (!((address_ != null) && address_)) {
+          throw new Error("Missing address input parameter.");
+        }
+        if (this.implementation.tokenVector.length > address_.implementation.tokenVector.length) {
+          return false;
+        }
+        if (this.isEqual(address_)) {
+          return false;
+        }
+        lastToken = this.implementation.tokenVector.length - 1;
+        index = 0;
+        while (index < this.implementation.tokenVector.length) {
+          tokenA = this.implementation.tokenVector[index];
+          tokenB = address_.implementation.tokenVector[index];
+          if (tokenA.isEqual(tokenB)) {
+            if (index === lastToken) {
+              return true;
+            }
+          } else {
+            if (index !== lastToken) {
+              return false;
+            }
+            parentAddress = address_.createParentAddress();
+            while (parentAddress) {
+              if (this.isEqual(parentAddress)) {
+                return true;
+              }
+              parentAddress = parentAddress.createParentAddress();
+            }
+            return false;
+          }
+          index++;
+        }
+        return false;
+      } catch (_error) {
+        exception = _error;
+        throw new Error("isParent failure: " + exception.message);
       }
     };
 
