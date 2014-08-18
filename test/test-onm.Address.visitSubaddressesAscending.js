@@ -25,7 +25,7 @@ module.exports = describe("onm.Address.visitSubaddressesAscending tests", functi
             actualResult = JSON.stringify(subAddresses);
             console.log(actualResult);
         });
-        it("expecting two result addresses hash strings", function() {
+        it("expecting two result address strings", function() {
             assert.equal(actualResult, expectedResult);
         });
     });

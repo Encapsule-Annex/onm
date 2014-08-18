@@ -686,10 +686,12 @@ module.exports = class Address
             if not (callback_? and callback_) then return false
             if not (@extensionPointAddresses? and @extensionPointAddresses)
                 @extensionPointAddresses = []
-                namespaceDescriptor = @implementation.getDescriptor()
+                addressComponent = @createComponentAddress();
+                namespaceDescriptor = addressComponent.implementation.getDescriptor()
                 for path, extensionPointDescriptor of namespaceDescriptor.extensionPoints
                     extensionPointAddress = @implementation.createSubpathIdAddress(extensionPointDescriptor.id)
-                    @extensionPointAddresses.push extensionPointAddress
+                    if @isParent(extensionPointAddress)
+                        @extensionPointAddresses.push extensionPointAddress
             for address in @extensionPointAddresses
                 callback_(address)
             true # that

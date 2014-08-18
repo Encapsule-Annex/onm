@@ -751,19 +751,22 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     };
 
     Address.prototype.visitExtensionPointAddresses = function(callback_) {
-      var address, exception, extensionPointAddress, extensionPointDescriptor, namespaceDescriptor, path, _i, _len, _ref, _ref1;
+      var address, addressComponent, exception, extensionPointAddress, extensionPointDescriptor, namespaceDescriptor, path, _i, _len, _ref, _ref1;
       try {
         if (!((callback_ != null) && callback_)) {
           return false;
         }
         if (!((this.extensionPointAddresses != null) && this.extensionPointAddresses)) {
           this.extensionPointAddresses = [];
-          namespaceDescriptor = this.implementation.getDescriptor();
+          addressComponent = this.createComponentAddress();
+          namespaceDescriptor = addressComponent.implementation.getDescriptor();
           _ref = namespaceDescriptor.extensionPoints;
           for (path in _ref) {
             extensionPointDescriptor = _ref[path];
             extensionPointAddress = this.implementation.createSubpathIdAddress(extensionPointDescriptor.id);
-            this.extensionPointAddresses.push(extensionPointAddress);
+            if (this.isParent(extensionPointAddress)) {
+              this.extensionPointAddresses.push(extensionPointAddress);
+            }
           }
         }
         _ref1 = this.extensionPointAddresses;

@@ -29,7 +29,7 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
             console.log(actualResult);
         });
         it("expecting two result addreses strings", function() {
-            assert.equal(actualResult, expectedResult);
+            assert.equal(expectedResult, actualResult);
         });
     });
 
@@ -47,7 +47,7 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
             console.log(actualResult);
         });
         it("expecting one result address string", function() {
-            assert.equal(actualResult, expectedResult);
+            assert.equal(expectedResult, actualResult);
         });
     });
 
@@ -56,7 +56,7 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
         var address;
         var extensionPointAddresses = [];
         var actualResult = [];
-        var expectedResult = '["addressBook.contacts"]';
+        var expectedResult = '[]';
         before(function() {
             address = store.model.createPathAddress("addressBook.contacts");
             address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
@@ -65,8 +65,8 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
             actualResult = JSON.stringify(extensionPointAddresses);
             console.log(actualResult);
         });
-        it("expecting one result address string", function() {
-            assert.equal(actualResult, expectedResult);
+        it("expecting no result address string", function() {
+            assert.equal(expectedResult, actualResult);
         });
     });
 
@@ -83,8 +83,8 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
             actualResult = JSON.stringify(extensionPointAddresses);
             console.log(actualResult);
         });
-        it("expecting one result address string", function() {
-            assert.equal(actualResult, expectedResult);
+        it("expecting no result address string", function() {
+            assert.equal(expectedResult, actualResult);
         });
     });
 
