@@ -280,48 +280,54 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             throw new Error("getAddressFromPathId failure: " + exception.message);
           }
         };
-        this.createAddressFromAddressHashString = function(addressHashString_) {
-          var addressToken, exception, hashToken, hashTokenCount, hashTokens, key, newAddress, processNewComponent, tokenVector, _i, _len;
+        this.createAddressFromAddressString = function(addressString_, isHumanReadable_) {
+          var addressToken, exception, key, modelPath, newAddress, pathId, processNewComponent, stringToken, stringTokenCount, stringTokens, tokenVector, _i, _len;
           try {
             tokenVector = [];
+            modelPath = '';
             addressToken = void 0;
             key = void 0;
             processNewComponent = false;
-            hashTokens = addressHashString_.split(".");
-            hashTokenCount = 0;
-            for (_i = 0, _len = hashTokens.length; _i < _len; _i++) {
-              hashToken = hashTokens[_i];
-              if (!hashTokenCount) {
-                if (hashToken !== this.model.jsonTag) {
-                  throw new Error("Invalid data model name '" + hashToken + "' in hash string.");
+            stringTokens = addressString_.split(".");
+            stringTokenCount = 0;
+            for (_i = 0, _len = stringTokens.length; _i < _len; _i++) {
+              stringToken = stringTokens[_i];
+              if (!stringTokenCount) {
+                if (stringToken !== this.model.jsonTag) {
+                  throw new Error("Invalid data model name '" + stringToken + "' in hash string.");
                 }
                 addressToken = new AddressToken(this.model, void 0, void 0, 0);
+                modelPath = stringToken;
               } else {
                 if (addressToken.namespaceDescriptor.namespaceType !== "extensionPoint") {
-                  addressToken = new AddressToken(this.model, addressToken.idExtenstionPoint, addressToken.key, hashToken);
+                  modelPath += ".{stringToken}";
+                  pathId = isHumanReadable_ && this.getNamespaceDescriptorFromPath(modelPath) || stringToken;
+                  addressToken = new AddressToken(this.model, addressToken.idExtenstionPoint, addressToken.key, pathId);
                 } else {
                   if (!processNewComponent) {
                     tokenVector.push(addressToken);
                     addressToken = addressToken.clone();
-                    if (hashToken !== "-") {
-                      key = hashToken;
+                    if (stringToken !== "-") {
+                      key = stringToken;
                     }
                     processNewComponent = true;
                   } else {
-                    addressToken = new AddressToken(this.model, addressToken.namespaceDescriptor.id, key, hashToken);
+                    modelPath += ".{stringToken}";
+                    pathId = isHumanReadable_ && (this.getNamespaceDescriptorFromPath(modelPath)) || stringToken;
+                    addressToken = new AddressToken(this.model, addressToken.namespaceDescriptor.id, key, pathId);
                     key = void 0;
                     processNewComponent = false;
                   }
                 }
               }
-              hashTokenCount++;
+              stringTokenCount++;
             }
             tokenVector.push(addressToken);
             newAddress = new Address(this.model, tokenVector);
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw exception;
+            throw new Error("createAddressFromAddressString failure: " + exception.message);
           }
         };
         if (!((objectModelDeclaration_ != null) && objectModelDeclaration_)) {
@@ -458,13 +464,26 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             throw new Error("createPathAddress failure: " + exception.message);
           }
         };
+        this.createAddressFromHumanReadableString = function(humanReadableString_) {
+          var exception, newAddress;
+          try {
+            if (!((humanReadableString_ != null) && humanReadableString_)) {
+              throw new Error("Missing human-readbale string input parameter.");
+            }
+            newAddress = _this.implementation.createAddressFromAddressString(humanReadableString_, true);
+            return newAddress;
+          } catch (_error) {
+            exception = _error;
+            throw new Error("createAddressFromHumanReadableString failure: " + exception.message);
+          }
+        };
         this.createAddressFromHashString = function(hash_) {
           var exception, newAddress;
           try {
             if (!((hash_ != null) && hash_)) {
               throw new Error("Missing hash string input parameter.");
             }
-            newAddress = _this.implementation.createAddressFromAddressHashString(hash_);
+            newAddress = _this.implementation.createAddressFromAddressString(hash_, false);
             return newAddress;
           } catch (_error) {
             exception = _error;

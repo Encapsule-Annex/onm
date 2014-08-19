@@ -278,41 +278,45 @@ class ModelDetails
             # / END: @createAddressFromPathId
         
             # --------------------------------------------------------------------------
-            @createAddressFromAddressHashString = (addressHashString_) ->
+            @createAddressFromAddressString = (addressString_, isHumanReadable_) ->
                 try
                     tokenVector = []
 
+                    modelPath = '';
                     addressToken = undefined
                     key = undefined
                     processNewComponent = false
 
-                    hashTokens = addressHashString_.split(".")
-                    hashTokenCount = 0
+                    stringTokens = addressString_.split(".")
+                    stringTokenCount = 0
 
-                    for hashToken in hashTokens
-                        if not hashTokenCount
-                            if hashToken != @model.jsonTag
-                                throw new Error("Invalid data model name '" + hashToken + "' in hash string.");
+                    for stringToken in stringTokens
+                        if not stringTokenCount
+                            if stringToken != @model.jsonTag
+                                throw new Error("Invalid data model name '" + stringToken + "' in hash string.")
                             addressToken = new AddressToken(@model, undefined, undefined, 0)
+                            modelPath = stringToken
                         else
                             if addressToken.namespaceDescriptor.namespaceType != "extensionPoint"
-                                addressToken = new AddressToken(@model, addressToken.idExtenstionPoint, addressToken.key, hashToken);
-
+                                modelPath += ".{stringToken}"
+                                pathId = isHumanReadable_ and @getNamespaceDescriptorFromPath(modelPath) or stringToken
+                                addressToken = new AddressToken(@model, addressToken.idExtenstionPoint, addressToken.key, pathId);
                             else
                                 # ...
                                 if not processNewComponent
                                     tokenVector.push(addressToken)
                                     addressToken = addressToken.clone()
-                                    if hashToken != "-"
-                                        key = hashToken;
-                                   
+                                    if stringToken != "-"
+                                        key = stringToken;
                                     processNewComponent = true;
                                 else
-                                    addressToken = new AddressToken(@model, addressToken.namespaceDescriptor.id, key, hashToken)
+                                    modelPath += ".{stringToken}"
+                                    pathId = isHumanReadable_ and (@getNamespaceDescriptorFromPath(modelPath)) or stringToken
+                                    addressToken = new AddressToken(@model, addressToken.namespaceDescriptor.id, key, pathId)
                                     key = undefined
                                     processNewComponent = false;
 
-                        hashTokenCount++
+                        stringTokenCount++
                         # END: / for loop
 
                     tokenVector.push(addressToken)
@@ -320,7 +324,7 @@ class ModelDetails
                     return newAddress
 
                 catch exception
-                    throw exception
+                    throw new Error("createAddressFromAddressString failure: #{exception.message}")
 
 
             # --------------------------------------------------------------------------
@@ -477,15 +481,24 @@ module.exports = class Model
 
 
             # --------------------------------------------------------------------------
+            @createAddressFromHumanReadableString = (humanReadableString_) =>
+                try
+                    if not (humanReadableString_? and humanReadableString_)
+                        throw new Error("Missing human-readbale string input parameter.");
+                    newAddress = @implementation.createAddressFromAddressString(humanReadableString_, true)
+                    return newAddress
+                catch exception
+                    throw new Error("createAddressFromHumanReadableString failure: #{exception.message}");
+
+            # --------------------------------------------------------------------------
             @createAddressFromHashString = (hash_) =>
                 try
                     if not (hash_? and hash_)
                         throw new Error("Missing hash string input parameter.");
-                    newAddress = @implementation.createAddressFromAddressHashString(hash_)
+                    newAddress = @implementation.createAddressFromAddressString(hash_, false)
                     return newAddress
                 catch exception
                     throw new Error("createAddressFromHashString failure: #{exception.message}");
-
 
             # --------------------------------------------------------------------------
             @getSemanticBindings = =>
