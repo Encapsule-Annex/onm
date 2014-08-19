@@ -154,7 +154,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
   };
 
   ResolveNamespaceDescriptor = function(resolveActions_, store_, data_, descriptor_, key_, mode_) {
-    var exception, jsonTag, newData, resolveResults;
+    var exception, newData, resolveResults, tokenString;
     try {
       if (!((resolveActions_ != null) && resolveActions_)) {
         throw new Error("Internal error: missing resolve actions structure input parameter.");
@@ -168,10 +168,10 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       if (!((mode_ != null) && mode_)) {
         throw new Error("Internal error: missing mode input parameter.");
       }
-      jsonTag = ((descriptor_.namespaceType !== "component") && descriptor_.jsonTag) || key_ || void 0;
+      tokenString = ((descriptor_.namespaceType !== "component") && descriptor_.jsonTag) || key_ || void 0;
       resolveResults = {
-        jsonTag: jsonTag,
-        dataReference: (jsonTag != null) && jsonTag && data_[jsonTag] || void 0,
+        jsonTag: tokenString,
+        dataReference: (tokenString != null) && tokenString && data_[tokenString] || void 0,
         dataParentReference: data_,
         key: key_,
         mode: mode_,
@@ -182,7 +182,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       switch (mode_) {
         case "bypass":
           if (!((resolveResults.dataReference != null) && resolveResults.dataReference)) {
-            throw new Error("Internal error: Unable to resolve " + descriptor_.namespaceType + " namespace descriptor in bypass mode.");
+            throw new Error("Unable to resolve expected namespace descriptor for namespace type '" + descriptor_.namespaceType + "' for token '" + tokenString + "'.");
           }
           break;
         case "new":
@@ -209,7 +209,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           break;
         case "strict":
           if (!((resolveResult.dataReference != null) && resolveResult.dataReference)) {
-            throw new Error("Internal error: Unable to resolve  " + descriptor_.namespaceType + " namespace descriptor in strict mode.");
+            throw new Error("Internal error: Unable to resolve  " + descriptor_.namespaceType + " namespace descriptor in strict mode for token '" + tokenString + ".");
           }
           VerifyNamespaceProperties(result.dataReference, descriptor_.namespaceModelPropertiesDeclaration);
           break;

@@ -10,7 +10,7 @@ var onm = require('../onm');
 
 var testData = require('./fixture/test-data');
 
-module.exports = describe("onm.Namespace.getExtensionPointSubcomponentCount tests", function() {
+module.exports = describe("onm.Namespace.getExtensionPointSubcomponentCount method tests", function() {
     var store, address, namespaceExtensionPoint;
     before(function() {
         store = testData.createStore();

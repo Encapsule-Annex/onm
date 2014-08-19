@@ -179,10 +179,15 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               throw new Error("Missing address input parameter.");
             }
             if (!_this.validateAddressModel(address_)) {
-              throw new Error("The specified address cannot be used to reference this store because it's not bound to the same model as this store.");
+              throw new Error("The specified address '" + (address.getHumanReadableString()) + "' cannot be used to reference this store because it's not bound to the same model as this store.");
             }
-            namespace = new Namespace(_this, address_, "bypass");
-            return namespace;
+            try {
+              namespace = new Namespace(_this, address_, "bypass");
+              return namespace;
+            } catch (_error) {
+              exception = _error;
+              throw new Error("failed to construct onm.Namespace object for address '" + (address_.getHumanReadableString()) + "': " + exception.message);
+            }
           } catch (_error) {
             exception = _error;
             throw new Error("openNamespace failure: " + exception.message);

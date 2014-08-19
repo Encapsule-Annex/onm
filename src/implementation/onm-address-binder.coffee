@@ -131,11 +131,11 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
         if not (descriptor_? and descriptor_) then throw new Error("Internal error: missing object model descriptor input parameter.");
         if not (mode_? and mode_) then throw new Error("Internal error: missing mode input parameter.");
 
-        jsonTag =  ((descriptor_.namespaceType != "component") and descriptor_.jsonTag) or key_ or undefined
+        tokenString =  ((descriptor_.namespaceType != "component") and descriptor_.jsonTag) or key_ or undefined
 
         resolveResults =
-            jsonTag: jsonTag
-            dataReference: jsonTag? and jsonTag and data_[jsonTag] or undefined
+            jsonTag: tokenString
+            dataReference: tokenString? and tokenString and data_[tokenString] or undefined
             dataParentReference: data_
             key: key_
             mode: mode_
@@ -146,7 +146,7 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
         switch mode_
             when "bypass"
                 if not (resolveResults.dataReference? and resolveResults.dataReference)
-                    throw new Error("Internal error: Unable to resolve #{descriptor_.namespaceType} namespace descriptor in bypass mode.");
+                    throw new Error("Unable to resolve expected namespace descriptor for namespace type '#{descriptor_.namespaceType}' for token '#{tokenString}'.");
                 break
             when "new"
                 if (resolveResults.dataReference? and resolveResults.dataReference)
@@ -172,7 +172,7 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
 
             when "strict"
                 if not (resolveResult.dataReference? and resolveResult.dataReference)
-                    throw new Error("Internal error: Unable to resolve  #{descriptor_.namespaceType} namespace descriptor in strict mode.");
+                    throw new Error("Internal error: Unable to resolve  #{descriptor_.namespaceType} namespace descriptor in strict mode for token '#{tokenString}.");
                 VerifyNamespaceProperties(result.dataReference, descriptor_.namespaceModelPropertiesDeclaration)
                 break
             else

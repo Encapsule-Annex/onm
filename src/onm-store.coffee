@@ -172,10 +172,13 @@ module.exports = class Store
             @openNamespace = (address_) =>
                 try
                     if not (address_ and address_) then throw new Error("Missing address input parameter.");
-                    if not @validateAddressModel(address_) then throw new Error("The specified address cannot be used to reference this store because it's not bound to the same model as this store.");
-                    namespace = new Namespace(@, address_, "bypass")
-                    return namespace
-
+                    if not @validateAddressModel(address_) then throw new Error("The specified address '#{address.getHumanReadableString()}' cannot be used to reference this store because it's not bound to the same model as this store.");
+                    try
+                        namespace = new Namespace(@, address_, "bypass")
+                        return namespace
+                    catch exception
+                        throw new Error("failed to construct onm.Namespace object for address '#{address_.getHumanReadableString()}': #{exception.message}")
+                        
                 catch exception
                     throw new Error("openNamespace failure: #{exception.message}");
                 
