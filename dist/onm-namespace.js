@@ -72,6 +72,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
   module.exports = Namespace = (function() {
     function Namespace(store_, address_, mode_) {
       this.visitExtensionPointSubcomponents = __bind(this.visitExtensionPointSubcomponents, this);
+      this.getExtensionPointSubcomponentCount = __bind(this.getExtensionPointSubcomponentCount, this);
       this.update = __bind(this.update, this);
       this.fromJSON = __bind(this.fromJSON, this);
       this.fromData = __bind(this.fromData, this);
@@ -300,6 +301,26 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       } catch (_error) {
         exception = _error;
         throw new Error("update failure: " + exception.message);
+      }
+    };
+
+    Namespace.prototype.getExtensionPointSubcomponentCount = function() {
+      var componentCount, exception, resolvedToken;
+      try {
+        resolvedToken = this.implementation.getResolvedToken();
+        if (!((resolvedToken != null) && resolvedToken)) {
+          throw new Error("Internal error: unable to resolve token.");
+        }
+        componentCount = 0;
+        if (resolvedToken.namespaceDescriptor.namespaceType === "extensionPoint") {
+          componentCount = Object.keys(this.data()).length;
+        }
+        return componentCount;
+      } catch (_error) {
+        exception = _error;
+        throw new Error("getExtensionPointSubcomponentCount failure: " + {
+          exception: message
+        });
       }
     };
 

@@ -49,13 +49,13 @@ Address = require('./onm-address')
 class NamespaceDetails
     constructor: (namespace_, store_, address_, mode_) ->
         try
-            @dataReference = store_.implementation.dataReference? and store_.implementation.dataReference or throw new Error("Cannot resolve object store's root data reference.");
+            @dataReference = store_.implementation.dataReference? and store_.implementation.dataReference or throw new Error("Cannot resolve object store's root data reference.")
             @resolvedTokenArray = []
             @getResolvedToken = => @resolvedTokenArray.length and @resolvedTokenArray[@resolvedTokenArray.length - 1] or undefined
             @resolvedAddress = undefined
 
         catch exception
-            throw new Error("NamespaceDetails failure: #{exception.message}");
+            throw new Error("NamespaceDetails failure: #{exception.message}")
 
 #
 #
@@ -63,7 +63,7 @@ class NamespaceDetails
 module.exports = class Namespace
     constructor: (store_, address_, mode_) ->
         try
-            if not (store_? and store_) then throw new Error("Missing object store input parameter.");
+            if not (store_? and store_) then throw new Error("Missing object store input parameter.")
             @store = store_
 
             @implementation = new NamespaceDetails(@, store_, address_, mode_)
@@ -80,15 +80,15 @@ module.exports = class Namespace
             objectModelNameStore = store_.model.jsonTag
             objectModelNameKeys = address.model.jsonTag
             if objectModelNameStore != objectModelNameKeys
-                throw new Error("You cannot access a '#{objectModelNameStore}' store namespace with a '#{objectModelNameKeys}' object model address!");
+                throw new Error("You cannot access a '#{objectModelNameStore}' store namespace with a '#{objectModelNameKeys}' object model address!")
 
             # Token in the address specifies a root component namespace?
-            if not address.isComplete() then throw new Error("Specified address is invalid because the first address token does not specify the object store's root component.");
+            if not address.isComplete() then throw new Error("Specified address is invalid because the first address token does not specify the object store's root component.")
 
             mode = mode_? and mode_ or "bypass"
 
             if (mode != "new") and not address.isResolvable()
-                throw new Error("'#{mode}' mode error: Unresolvable address '#{address.getHumanReadableString()}' invalid for this operation.");
+                throw new Error("'#{mode}' mode error: Unresolvable address '#{address.getHumanReadableString()}' invalid for this operation.")
 
             # The actual store data.
 
@@ -104,11 +104,11 @@ module.exports = class Namespace
                             @store.implementation.reifier.reifyStoreComponent(componentAddress)
                             extensionPointAddress = componentAddress.createParentAddress()
                             extensionPointNamespace = @store.openNamespace(extensionPointAddress)
-                            extensionPointNamespace.update();
+                            extensionPointNamespace.update()
                 true
 
         catch exception
-            throw new Error("Namespace failure: #{exception.message}");
+            throw new Error("Namespace failure: #{exception.message}")
 
     #
     # ============================================================================
@@ -119,7 +119,7 @@ module.exports = class Namespace
             @implementation.resolvedAddress = new Address(@store.model, @implementation.resolvedTokenArray)
             return @implementation.resolvedAddress
         catch exception
-            throw new Error("getResolvedAddress failure: #{exception.message}");
+            throw new Error("getResolvedAddress failure: #{exception.message}")
 
 
     #
@@ -129,7 +129,7 @@ module.exports = class Namespace
             return @implementation.getResolvedToken().key
 
         catch exception
-            throw new Error("getComponentKey failure: #{exception.message}");
+            throw new Error("getComponentKey failure: #{exception.message}")
 
 
     #
@@ -148,7 +148,7 @@ module.exports = class Namespace
             return resolvedLabel
             
         catch exception
-            throw new Error("getResolvedLabel failure: #{exception.message}");
+            throw new Error("getResolvedLabel failure: #{exception.message}")
 
     #
     # ============================================================================
@@ -165,11 +165,11 @@ module.exports = class Namespace
             space = space_? and space_ or 0
             resultJSON = JSON.stringify(resultObject, replacer_, space)
             if not (resultJSON? and resultJSON)
-                throw new Error("Cannot serialize Javascript object to JSON!");
+                throw new Error("Cannot serialize Javascript object to JSON!")
             return resultJSON
 
         catch exception
-            throw new Error("toJSON failure: #{exception.message}");
+            throw new Error("toJSON failure: #{exception.message}")
 
 
     #
@@ -181,18 +181,18 @@ module.exports = class Namespace
 
             # Validate request.
             if not ((model.namespaceType == "root") or (model.namespaceType == "component"))
-                throw new Error("Data import only supported on its root and component namespaces. This namespace '#{model.namespaceType}'-type namespace.");
+                throw new Error("Data import only supported on its root and component namespaces. This namespace '#{model.namespaceType}'-type namespace.")
 
             if (model.namespaceType == "component")
                 newComponentKey = @store.model.getSemanticBindings().getUniqueKey(data_)
                 namespaceComponentKey = address.implementation.getLastToken().key
                 if (newComponentKey != namespaceComponentKey)
-                    throw new Error("Unexpected input data missing or unexpected component key value.");
+                    throw new Error("Unexpected input data missing or unexpected component key value.")
 
             namespaceData = @implementation.dataReference
 
             # Notify registered observers that we're about to remove the specified data component.
-            @store.implementation.reifier.unreifyStoreComponent(address);
+            @store.implementation.reifier.unreifyStoreComponent(address)
 
             # Remove the contents of the addressed component.
             for property, value of @implementation.dataReference
@@ -208,7 +208,7 @@ module.exports = class Namespace
             return address
 
         catch exception
-            throw new Error("fromData failure: #{exception.message}");
+            throw new Error("fromData failure: #{exception.message}")
 
 
 
@@ -221,25 +221,24 @@ module.exports = class Namespace
             try
                 parsedData = JSON.parse(json_)
             catch exception
-                throw new Error("Unable to deserialize the specified JSON data: #{exception.message}");
+                throw new Error("Unable to deserialize the specified JSON data: #{exception.message}")
 
             # Unwrap and verify the request before delegating to the fromData method.
             resolvedAddress = @getResolvedAddress()
             model = resolvedAddress.getModel()
             dataPayload = parsedData[model.jsonTag]
             if not (dataPayload? and dataPayload)
-                throw new Error("JSON data is missing expeced top-level object '#{model.jsonTag}'.");
+                throw new Error("JSON data is missing expeced top-level object '#{model.jsonTag}'.")
 
             # Delegate to the fromData method:
             try
                 resolvedAddress = @fromData(dataPayload)
             catch exception
-                throw new Error("After successful JSON parse, namespace data update failed: #{exception.message}"            );
-
+                throw new Error("After successful JSON parse, namespace data update failed: #{exception.message}")
             return resolvedAddress
             
         catch exception
-            throw new Error("fromJSON failure: #{exception.message}");
+            throw new Error("fromJSON failure: #{exception.message}")
 
 
     #
@@ -286,8 +285,23 @@ module.exports = class Namespace
                 count++
             
         catch exception
-            throw new Error("update failure: #{exception.message}");
+            throw new Error("update failure: #{exception.message}")
 
+
+
+    #
+    # ============================================================================
+    getExtensionPointSubcomponentCount: =>
+        try
+            resolvedToken = @implementation.getResolvedToken()
+            if not (resolvedToken? and resolvedToken) then throw new Error("Internal error: unable to resolve token.")
+            componentCount = 0
+            if resolvedToken.namespaceDescriptor.namespaceType == "extensionPoint"
+                componentCount = Object.keys(@data()).length
+            return componentCount
+
+        catch exception
+            throw new Error("getExtensionPointSubcomponentCount failure: #{exception: message}")
 
 
 
@@ -296,10 +310,10 @@ module.exports = class Namespace
     visitExtensionPointSubcomponents: (callback_) =>
         try
             resolvedToken = @implementation.getResolvedToken()
-            if not (resolvedToken? and resolvedToken) then throw new Error("Internal error: unable to resolve token.");
+            if not (resolvedToken? and resolvedToken) then throw new Error("Internal error: unable to resolve token.")
 
             if resolvedToken.namespaceDescriptor.namespaceType != "extensionPoint"
-                throw new Error("You may only visit the subcomponents of an extension point namespace.");
+                throw new Error("You may only visit the subcomponents of an extension point namespace.")
 
             for key, object of @data()
                 address = @getResolvedAddress().clone()
@@ -308,12 +322,11 @@ module.exports = class Namespace
                 try
                     callback_(address)
                 catch exception
-                    throw new Error("Failure occurred inside your callback function implementation: #{exception.message}");
+                    throw new Error("Failure occurred inside your callback function implementation: #{exception.message}")
 
             true
 
         catch exception
-            throw new Error("visitExtensionPointSubcomponents failure: #{exception.message}");
-    # ============================================================================
+            throw new Error("visitExtensionPointSubcomponents failure: #{exception.message}")
 
 
