@@ -300,8 +300,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                 modelPath = stringToken;
               } else {
                 if (addressToken.namespaceDescriptor.namespaceType !== "extensionPoint") {
-                  modelPath += ".{stringToken}";
-                  pathId = isHumanReadable_ && this.getNamespaceDescriptorFromPath(modelPath) || stringToken;
+                  modelPath += "." + stringToken;
+                  pathId = isHumanReadable_ && this.getPathIdFromPath(modelPath) || stringToken;
                   addressToken = new AddressToken(this.model, addressToken.idExtenstionPoint, addressToken.key, pathId);
                 } else {
                   if (!processNewComponent) {
@@ -312,8 +312,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                     }
                     processNewComponent = true;
                   } else {
-                    modelPath += ".{stringToken}";
-                    pathId = isHumanReadable_ && (this.getNamespaceDescriptorFromPath(modelPath)) || stringToken;
+                    modelPath += "." + stringToken;
+                    pathId = isHumanReadable_ && this.getPathIdFromPath(modelPath) || stringToken;
                     addressToken = new AddressToken(this.model, addressToken.namespaceDescriptor.id, key, pathId);
                     key = void 0;
                     processNewComponent = false;

@@ -298,8 +298,8 @@ class ModelDetails
                             modelPath = stringToken
                         else
                             if addressToken.namespaceDescriptor.namespaceType != "extensionPoint"
-                                modelPath += ".{stringToken}"
-                                pathId = isHumanReadable_ and @getNamespaceDescriptorFromPath(modelPath) or stringToken
+                                modelPath += ".#{stringToken}"
+                                pathId = isHumanReadable_ and @getPathIdFromPath(modelPath) or stringToken
                                 addressToken = new AddressToken(@model, addressToken.idExtenstionPoint, addressToken.key, pathId);
                             else
                                 # ...
@@ -310,8 +310,8 @@ class ModelDetails
                                         key = stringToken;
                                     processNewComponent = true;
                                 else
-                                    modelPath += ".{stringToken}"
-                                    pathId = isHumanReadable_ and (@getNamespaceDescriptorFromPath(modelPath)) or stringToken
+                                    modelPath += ".#{stringToken}"
+                                    pathId = isHumanReadable_ and @getPathIdFromPath(modelPath) or stringToken
                                     addressToken = new AddressToken(@model, addressToken.namespaceDescriptor.id, key, pathId)
                                     key = undefined
                                     processNewComponent = false;
