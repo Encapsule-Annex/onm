@@ -278,53 +278,120 @@ class ModelDetails
             # / END: @createAddressFromPathId
         
             # --------------------------------------------------------------------------
-            @createAddressFromAddressString = (addressString_, isHumanReadable_) ->
+            @parseAddressHashString = (addressHashString_) ->
                 try
-                    tokenVector = []
-
-                    modelPath = '';
+                    addressTokenVector = []
                     addressToken = undefined
                     key = undefined
                     processNewComponent = false
-
-                    stringTokens = addressString_.split(".")
+                    stringTokens = addressHashString_.split(".")
                     stringTokenCount = 0
-
                     for stringToken in stringTokens
                         if not stringTokenCount
                             if stringToken != @model.jsonTag
                                 throw new Error("Invalid data model name '" + stringToken + "' in hash string.")
                             addressToken = new AddressToken(@model, undefined, undefined, 0)
-                            modelPath = stringToken
                         else
                             if addressToken.namespaceDescriptor.namespaceType != "extensionPoint"
-                                modelPath += ".#{stringToken}"
-                                pathId = isHumanReadable_ and @getPathIdFromPath(modelPath) or stringToken
-                                addressToken = new AddressToken(@model, addressToken.idExtenstionPoint, addressToken.key, pathId);
+                                addressToken = new AddressToken(@model, addressToken.idExtenstionPoint, addressToken.key, stringToken);
                             else
-                                # ...
                                 if not processNewComponent
-                                    tokenVector.push(addressToken)
+                                    addressTokenVector.push(addressToken)
                                     addressToken = addressToken.clone()
                                     if stringToken != "-"
                                         key = stringToken;
                                     processNewComponent = true;
                                 else
-                                    modelPath += ".#{stringToken}"
-                                    pathId = isHumanReadable_ and @getPathIdFromPath(modelPath) or stringToken
-                                    addressToken = new AddressToken(@model, addressToken.namespaceDescriptor.id, key, pathId)
+                                    addressToken = new AddressToken(@model, addressToken.namespaceDescriptor.id, key, stringToken)
                                     key = undefined
                                     processNewComponent = false;
 
                         stringTokenCount++
                         # END: / for loop
+                    addressTokenVector.push(addressToken)
+                    newAddress = new Address(@model, addressTokenVector); 
+                    return newAddress
+                catch exception
+                    throw new Error("parseAddressHashString failure: #{exception.message}")
 
-                    tokenVector.push(addressToken)
-                    newAddress = new Address(@model, tokenVector); 
+
+            # --------------------------------------------------------------------------
+            @parseAddressHumanReadableString = (addressHumanReadableString_) ->
+                try
+                    addressTokenVector = []
+                    addressToken = undefined
+                    stringTokens = addressHumanReadableString_.split(".")
+
+                    for stringToken in stringTokens
+                    
+                        if not addressToken
+
+                            # First string token
+                            if stringToken != @model.jsonTag
+                                throw new Error("Invalid data model name '" + stringToken + "' in hash string.")
+                            addressToken = new AddressToken(@model, undefined, undefined, 0)
+
+                        else
+                            # 2nd through N string token
+
+                            if addressToken.namespaceDescriptor.namespaceType != "extensionPoint"
+
+                                # The string token corresponds to the jsonTag value of a subnamespace
+                                # declaration of parent namespace referenced by the current addressToken.
+                                # Search the data model declaration and update the addressToken.
+
+                                descriptorFound = false
+                                for childDescriptor in addressToken.namespaceDescriptor.children
+                                    if childDescriptor.jsonTag == stringToken
+                                        descriptorFound = true
+                                        addressToken = new AddressToken(@model, addressToken.idExtensionPoint, addressToken.key, childDescriptor.id)
+                                        break
+
+                                if not descriptorFound
+                                    throw new Error("Cannot resolve '#{stringToken}' token of human-readable onm.Address string '#{addressHumanReadableString_}'.")
+
+                            else
+
+                                # The current addressToken is references an extension point namespace declaration
+                                if not processNewComponent
+
+                                    # Push the current token, and setup a new address token for the next
+                                    # iteration of the tokenString loop.
+                                    addressTokenVector.push(addressToken)
+
+                                    # Setup for next string token.
+                                    addressToken = addressToken.clone()
+                                    if stringToken != "-"
+                                        key = stringToken
+
+                                    processNewComponent = true
+
+                                else
+                                    descriptorFound = false
+                                    for childDescriptor in addressToken.namespaceDescriptor.children
+                                        if childDescriptor.jsonTag == stringToken
+                                            descriptorFound = true
+                                            break
+
+                                    if not descriptorFound
+                                        throw new Error("Cannot resolve '#{stringToken}' token of human-readable onm.Address string '#{addressHumanReadableString_}'.")
+
+                                    addressToken = new AddressToken(@model, addressToken.idNamespace, key, childDescriptor.id)
+                                    key = undefined
+                                    processNewComponent = false
+
+                        # END: / for loop
+
+                    if processNewComponent
+                        throw new Error("Cannot deserialize incomplete human-readable onm.Address string '#{addressHumanReadableString_}'.")
+
+                    addressTokenVector.push(addressToken);
+                    newAddress = new Address(@model, addressTokenVector); 
                     return newAddress
 
                 catch exception
-                    throw new Error("createAddressFromAddressString failure: #{exception.message}")
+                    throw new Error("parseAddressHumanReadableString failure: #{exception.message}")
+
 
 
             # --------------------------------------------------------------------------
@@ -485,20 +552,20 @@ module.exports = class Model
                 try
                     if not (humanReadableString_? and humanReadableString_)
                         throw new Error("Missing human-readbale string input parameter.");
-                    newAddress = @implementation.createAddressFromAddressString(humanReadableString_, true)
+                    newAddress = @implementation.parseAddressHumanReadableString(humanReadableString_)
                     return newAddress
                 catch exception
-                    throw new Error("createAddressFromHumanReadableString failure: #{exception.message}");
+                    throw new Error("createAddressFromHumanReadableString address space failure: #{exception.message}");
 
             # --------------------------------------------------------------------------
             @createAddressFromHashString = (hash_) =>
                 try
                     if not (hash_? and hash_)
                         throw new Error("Missing hash string input parameter.");
-                    newAddress = @implementation.createAddressFromAddressString(hash_, false)
+                    newAddress = @implementation.parseAddressHashString(hash_)
                     return newAddress
                 catch exception
-                    throw new Error("createAddressFromHashString failure: #{exception.message}");
+                    throw new Error("createAddressFromHashString address space failure: #{exception.message}");
 
             # --------------------------------------------------------------------------
             @getSemanticBindings = =>

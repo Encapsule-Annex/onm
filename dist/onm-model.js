@@ -280,15 +280,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             throw new Error("getAddressFromPathId failure: " + exception.message);
           }
         };
-        this.createAddressFromAddressString = function(addressString_, isHumanReadable_) {
-          var addressToken, exception, key, modelPath, newAddress, pathId, processNewComponent, stringToken, stringTokenCount, stringTokens, tokenVector, _i, _len;
+        this.parseAddressHashString = function(addressHashString_) {
+          var addressToken, addressTokenVector, exception, key, newAddress, processNewComponent, stringToken, stringTokenCount, stringTokens, _i, _len;
           try {
-            tokenVector = [];
-            modelPath = '';
+            addressTokenVector = [];
             addressToken = void 0;
             key = void 0;
             processNewComponent = false;
-            stringTokens = addressString_.split(".");
+            stringTokens = addressHashString_.split(".");
             stringTokenCount = 0;
             for (_i = 0, _len = stringTokens.length; _i < _len; _i++) {
               stringToken = stringTokens[_i];
@@ -297,24 +296,19 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                   throw new Error("Invalid data model name '" + stringToken + "' in hash string.");
                 }
                 addressToken = new AddressToken(this.model, void 0, void 0, 0);
-                modelPath = stringToken;
               } else {
                 if (addressToken.namespaceDescriptor.namespaceType !== "extensionPoint") {
-                  modelPath += "." + stringToken;
-                  pathId = isHumanReadable_ && this.getPathIdFromPath(modelPath) || stringToken;
-                  addressToken = new AddressToken(this.model, addressToken.idExtenstionPoint, addressToken.key, pathId);
+                  addressToken = new AddressToken(this.model, addressToken.idExtenstionPoint, addressToken.key, stringToken);
                 } else {
                   if (!processNewComponent) {
-                    tokenVector.push(addressToken);
+                    addressTokenVector.push(addressToken);
                     addressToken = addressToken.clone();
                     if (stringToken !== "-") {
                       key = stringToken;
                     }
                     processNewComponent = true;
                   } else {
-                    modelPath += "." + stringToken;
-                    pathId = isHumanReadable_ && this.getPathIdFromPath(modelPath) || stringToken;
-                    addressToken = new AddressToken(this.model, addressToken.namespaceDescriptor.id, key, pathId);
+                    addressToken = new AddressToken(this.model, addressToken.namespaceDescriptor.id, key, stringToken);
                     key = void 0;
                     processNewComponent = false;
                   }
@@ -322,12 +316,79 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               }
               stringTokenCount++;
             }
-            tokenVector.push(addressToken);
-            newAddress = new Address(this.model, tokenVector);
+            addressTokenVector.push(addressToken);
+            newAddress = new Address(this.model, addressTokenVector);
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw new Error("createAddressFromAddressString failure: " + exception.message);
+            throw new Error("parseAddressHashString failure: " + exception.message);
+          }
+        };
+        this.parseAddressHumanReadableString = function(addressHumanReadableString_) {
+          var addressToken, addressTokenVector, childDescriptor, descriptorFound, exception, key, newAddress, processNewComponent, stringToken, stringTokens, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
+          try {
+            addressTokenVector = [];
+            addressToken = void 0;
+            stringTokens = addressHumanReadableString_.split(".");
+            for (_i = 0, _len = stringTokens.length; _i < _len; _i++) {
+              stringToken = stringTokens[_i];
+              if (!addressToken) {
+                if (stringToken !== this.model.jsonTag) {
+                  throw new Error("Invalid data model name '" + stringToken + "' in hash string.");
+                }
+                addressToken = new AddressToken(this.model, void 0, void 0, 0);
+              } else {
+                if (addressToken.namespaceDescriptor.namespaceType !== "extensionPoint") {
+                  descriptorFound = false;
+                  _ref = addressToken.namespaceDescriptor.children;
+                  for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+                    childDescriptor = _ref[_j];
+                    if (childDescriptor.jsonTag === stringToken) {
+                      descriptorFound = true;
+                      addressToken = new AddressToken(this.model, addressToken.idExtensionPoint, addressToken.key, childDescriptor.id);
+                      break;
+                    }
+                  }
+                  if (!descriptorFound) {
+                    throw new Error("Cannot resolve '" + stringToken + "' token of human-readable onm.Address string '" + addressHumanReadableString_ + "'.");
+                  }
+                } else {
+                  if (!processNewComponent) {
+                    addressTokenVector.push(addressToken);
+                    addressToken = addressToken.clone();
+                    if (stringToken !== "-") {
+                      key = stringToken;
+                    }
+                    processNewComponent = true;
+                  } else {
+                    descriptorFound = false;
+                    _ref1 = addressToken.namespaceDescriptor.children;
+                    for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
+                      childDescriptor = _ref1[_k];
+                      if (childDescriptor.jsonTag === stringToken) {
+                        descriptorFound = true;
+                        break;
+                      }
+                    }
+                    if (!descriptorFound) {
+                      throw new Error("Cannot resolve '" + stringToken + "' token of human-readable onm.Address string '" + addressHumanReadableString_ + "'.");
+                    }
+                    addressToken = new AddressToken(this.model, addressToken.idNamespace, key, childDescriptor.id);
+                    key = void 0;
+                    processNewComponent = false;
+                  }
+                }
+              }
+            }
+            if (processNewComponent) {
+              throw new Error("Cannot deserialize incomplete human-readable onm.Address string '" + addressHumanReadableString_ + "'.");
+            }
+            addressTokenVector.push(addressToken);
+            newAddress = new Address(this.model, addressTokenVector);
+            return newAddress;
+          } catch (_error) {
+            exception = _error;
+            throw new Error("parseAddressHumanReadableString failure: " + exception.message);
           }
         };
         if (!((objectModelDeclaration_ != null) && objectModelDeclaration_)) {
@@ -470,11 +531,11 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (!((humanReadableString_ != null) && humanReadableString_)) {
               throw new Error("Missing human-readbale string input parameter.");
             }
-            newAddress = _this.implementation.createAddressFromAddressString(humanReadableString_, true);
+            newAddress = _this.implementation.parseAddressHumanReadableString(humanReadableString_);
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw new Error("createAddressFromHumanReadableString failure: " + exception.message);
+            throw new Error("createAddressFromHumanReadableString address space failure: " + exception.message);
           }
         };
         this.createAddressFromHashString = function(hash_) {
@@ -483,11 +544,11 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (!((hash_ != null) && hash_)) {
               throw new Error("Missing hash string input parameter.");
             }
-            newAddress = _this.implementation.createAddressFromAddressString(hash_, false);
+            newAddress = _this.implementation.parseAddressHashString(hash_);
             return newAddress;
           } catch (_error) {
             exception = _error;
-            throw new Error("createAddressFromHashString failure: " + exception.message);
+            throw new Error("createAddressFromHashString address space failure: " + exception.message);
           }
         };
         this.getSemanticBindings = function() {

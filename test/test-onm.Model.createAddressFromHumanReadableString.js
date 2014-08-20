@@ -17,60 +17,64 @@ module.exports = describe("onm.Model.createAddressFromHumanReadableString tests"
         model = testData.createModel();
     });
 
-    describe("convert the root address string back to an onm.Address", function() {
+    describe("Serialize/deserialize onm.Address 'addressBook' (root namespace)", function() {
         var addressString, address;
         before(function() {
             addressString = model.createRootAddress().getHumanReadableString();
             address = model.createAddressFromHumanReadableString(addressString);
         });
-        it("the reconstituted onm.Address should be the root address", function() {
+        it("the deserialized result should be an onm.Address object", function() {
+            assert.isNotNull(address);
+            assert.instanceOf(address, onm.Address);
+        });
+        it("the deserialized onm.Address should be the root address", function() {
             assert.isTrue(address.isRoot());
         });
     });
 
-    describe("serialize/deserialize child namespace address to/from onm.Address", function() {
+    describe("serialize/deserialize onm.Address 'addressBook.properties' (child namespace)", function() {
         var addressA, addressB, addressString;
         before(function() {
             addressA = model.createPathAddress("addressBook.properties");
             addressString = addressA.getHumanReadableString();
             addressB = model.createAddressFromHumanReadableString(addressString);
         });
-        it("the reconsituted onm.Address should be equal to the original child namespace address", function() {
+        it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);
             assert.instanceOf(addressB, onm.Address);
             assert.isTrue(addressA.isEqual(addressB));
         });
     });
 
-    describe("serialize/deserialize extension point address to/from onm.Address", function() {
+    describe("serialize/deserialize onm.Address 'addressBook.contacts' (extension extension namespace", function() {
         var addressA, addressB, addressString;
         before(function() {
             addressA = model.createPathAddress("addressBook.contacts");
             addressString = addressA.getHumanReadableString();
             addressB = model.createAddressFromHumanReadableString(addressString);
         });
-        it("the reconstituted onm.Address should be equal to the origin child namespace address", function() {
+        it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);
             assert.instanceOf(addressB, onm.Address);
             assert.isTrue(addressA.isEqual(addressB));
         });
     });
 
-    describe("serialize/deserialize an unresolved component namespace onm.Address", function() {
+    describe("serialize/deserialize unresolved onm.Address 'addressBook.contacts.contact'", function() {
         var addressA, addressB, addressString;
         before(function() {
             addressA = model.createPathAddress("addressBook.contacts.contact");
             addressString = addressA.getHumanReadableString();
             addressB = model.createAddressFromHumanReadableString(addressString);
         });
-        it("the reconstituted onm.Address should be equal to the origin child namespace address", function() {
+        it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);
             assert.instanceOf(addressB, onm.Address);
             assert.isTrue(addressA.isEqual(addressB));
         });
     });
 
-    describe("serialize/deserialize a resolved component namespace onm.Address", function() {
+    describe("serialize/deserialize resolved onm.Address 'addressBook.contacts.UUID.contact'", function() {
         var store;
         var addressA, addressB, addressString;
 
@@ -80,7 +84,38 @@ module.exports = describe("onm.Model.createAddressFromHumanReadableString tests"
             addressString = addressA.getHumanReadableString();
             addressB = model.createAddressFromHumanReadableString(addressString);
         });
-        it("the reconstituted onm.Address should be equal to the origin child namespace address", function() {
+        it("the deserialized onm.Address should be the same as the source address", function() {
+            assert.isNotNull(addressString);
+            assert.instanceOf(addressB, onm.Address);
+            assert.isTrue(addressA.isEqual(addressB));
+        });
+    });
+
+    describe("serialize/deserialize unresolved onm.Address 'addressBook.properties.subproperties.collection.someObject'", function() {
+        var addressA, addressB, addressString;
+        before(function() {
+            addressA = model.createPathAddress("addressBook.properties.subproperties.collection.someObject");
+            addressString = addressA.getHumanReadableString();
+            addressB = model.createAddressFromHumanReadableString(addressString);
+        });
+        it("the deserialized onm.Address should be the same as the source address", function() {
+            assert.isNotNull(addressString);
+            assert.instanceOf(addressB, onm.Address);
+            assert.isTrue(addressA.isEqual(addressB));
+        });
+    });
+
+    describe("serialize/deserialize resolved onm.Address 'addressBook.properties.subproperties.collection.UUID.somObject'", function() {
+        var store;
+        var addressA, addressB, addressString;
+
+        before(function() {
+            store = testData.createStore();
+            addressA = store.createComponent(model.createPathAddress("addressBook.properties.subproperties.collection.someObject")).getResolvedAddress();
+            addressString = addressA.getHumanReadableString();
+            addressB = model.createAddressFromHumanReadableString(addressString);
+        });
+        it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);
             assert.instanceOf(addressB, onm.Address);
             assert.isTrue(addressA.isEqual(addressB));

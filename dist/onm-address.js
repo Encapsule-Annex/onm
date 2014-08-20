@@ -261,31 +261,27 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     }
 
     Address.prototype.getHumanReadableString = function() {
-      var exception, humanReadableString, index, token, _i, _len, _ref;
+      var addStringToken, exception, humanReadableString, index,
+        _this = this;
       try {
         if ((this.implementation.humanReadableString != null) && this.implementation.humanReadableString) {
           return this.implementation.humanReadableString;
         }
         index = 0;
         humanReadableString = "";
-        _ref = this.implementation.tokenVector;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          token = _ref[_i];
-          if (!index) {
-            humanReadableString += token.model.jsonTag;
+        addStringToken = function(address_) {
+          var key, model;
+          model = address_.getModel();
+          if (model.namespaceType === 'component') {
+            key = _this.implementation.getLastToken().key || "-";
+            humanReadableString += "." + key;
           }
-          if ((token.key != null) && token.key) {
-            humanReadableString += "." + token.key;
-          } else {
-            if (token.idExtensionPoint > 0) {
-              humanReadableString += ".-";
-            }
-          }
-          if (token.idNamespace) {
-            humanReadableString += "." + token.namespaceDescriptor.jsonTag;
-          }
-          index++;
-        }
+          return humanReadableString += humanReadableString && ("." + model.jsonTag) || ("" + model.jsonTag);
+        };
+        this.visitParentAddressesAscending(function(addressParent_) {
+          return addStringToken(addressParent_);
+        });
+        addStringToken(this);
         this.implementation.humanReadableString = humanReadableString;
         return humanReadableString;
       } catch (_error) {

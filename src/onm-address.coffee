@@ -259,18 +259,18 @@ module.exports = class Address
             index = 0
             humanReadableString = ""
 
-            for token in @implementation.tokenVector
-                if not index
-                    humanReadableString += token.model.jsonTag
-                if token.key? and token.key
-                    humanReadableString += ".#{token.key}"
-                else
-                    if token.idExtensionPoint > 0
-                        humanReadableString += ".-"
-                if token.idNamespace
-                    humanReadableString += ".#{token.namespaceDescriptor.jsonTag}"
-                index++
+            addStringToken = (address_) =>
+                model = address_.getModel();
+                if model.namespaceType == 'component'
+                    key = @implementation.getLastToken().key or "-"
+                    humanReadableString += ".#{key}"
+                humanReadableString += humanReadableString and ".#{model.jsonTag}" or "#{model.jsonTag}"
 
+            @visitParentAddressesAscending( (addressParent_) =>
+                addStringToken(addressParent_)
+            )
+
+            addStringToken(@)
 
             @implementation.humanReadableString = humanReadableString
             return humanReadableString
