@@ -19,7 +19,7 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
     describe("enumerate extension point addresses of address 'addressBook'", function() {
         var extensionPointAddresses = [];
         var actualResult = [];
-        var expectedResult = '["addressBook.collection","addressBook.contacts"]';
+        var expectedResult = '["addressBook.properties.subproperties.collection","addressBook.contacts"]';
         before(function() {
             address = store.model.createRootAddress();
             address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
@@ -37,7 +37,7 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
         var address;
         var extensionPointAddresses = [];
         var actualResult = [];
-        var expectedResult = '["addressBook.collection"]';
+        var expectedResult = '["addressBook.properties.subproperties.collection"]';
         before(function() {
             address = store.model.createPathAddress("addressBook.properties");
             address.visitExtensionPointAddresses(function(addressExtensionPoint_) {

@@ -15,7 +15,7 @@ module.exports = describe("onm.Address.visitSubaddressesAscending tests", functi
         var store, address;
         var subAddresses = [];
         var actualResult = null;
-        var expectedResult = '["addressBook.properties","addressBook.contacts","addressBook.subproperties","addressBook.collection"]';
+        var expectedResult = '["addressBook.properties","addressBook.contacts","addressBook.properties.subproperties","addressBook.properties.subproperties.collection"]';
         before(function() {
             store = testData.createStore();
             address = store.model.createRootAddress();
@@ -35,7 +35,7 @@ module.exports = describe("onm.Address.visitSubaddressesAscending tests", functi
         var store, address;
         var subAddresses = [];
         var actualResult = null;
-        var expectedResult = '["addressBook.subproperties","addressBook.collection"]';
+        var expectedResult = '["addressBook.properties.subproperties","addressBook.properties.subproperties.collection"]';
         before(function() {
             store = testData.createStore();
             address = store.model.createPathAddress("addressBook.properties");

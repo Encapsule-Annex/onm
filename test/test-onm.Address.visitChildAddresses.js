@@ -33,7 +33,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
         var store, address;
         var childAddresses = [];
         var actualResult;
-        var expectedResult = '["addressBook.subproperties"]';
+        var expectedResult = '["addressBook.properties.subproperties"]';
         before( function() {
             store = testData.createStore();
             address = store.model.createPathAddress("addressBook.properties");
