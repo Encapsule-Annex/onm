@@ -27,6 +27,8 @@ module.exports = (grunt) ->
         mochaTest:
             options:
                 reporter: 'spec'
+                checkLeaks: true
+ 
             src: [ 'test/test-onm.js' ]
 
         clean: [ 'dist' ]

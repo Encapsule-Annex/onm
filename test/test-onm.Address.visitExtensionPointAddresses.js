@@ -11,7 +11,7 @@ var onm = require('../onm');
 var testData = require('./fixture/test-data');
 
 module.exports = describe("onm.Address.visitExtensionPointAddresses tests", function() {
-    var store;
+    var store, address;
     before(function() {
         store = testData.createStore();
     });
