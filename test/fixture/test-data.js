@@ -3,6 +3,10 @@
 // shared test fixture routines leveraged by onm mocha tests
 //
 
+var assert = require('chai').assert;
+var expect = require('chai').expect;
+var should = require('chai').should;
+
 var onm = require('../../onm.js');
 
 var modelDeclaration = module.exports.modelDeclaration = {
@@ -57,18 +61,56 @@ var modelDeclaration = module.exports.modelDeclaration = {
                             defaultValue: ""
                         }
                     }
-                }
+                },
+                subNamespaces: [
+                    {
+                        namespaceType: "extensionPoint",
+                        jsonTag: "emails",
+                        componentArchetype: {
+                            namespaceType: "component",
+                            jsonTag: "email",
+                        }
+                    },
+                    {
+                        namespaceType: "extensionPoint",
+                        jsonTag: "addresses",
+                        componentArchetype: {
+                            namespaceType: "component",
+                            jsonTag: "address",
+                            subNamespaces: [
+                                {
+                                    namespaceType: "extensionPoint",
+                                    jsonTag: "notes",
+                                    componentArchetype: {
+                                        namespaceType: "component",
+                                        jsonTag: "note"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
             } // contact
         } // contacts
     ]
 };
 
 var createModel = module.exports.createModel = function() {
-    return new onm.Model(modelDeclaration);
+    try {
+        var model = new onm.Model(modelDeclaration);
+        return model;
+    } catch (exception_) {
+        throw new Error("onm test data fixture failure in 'createModel': " + exception_.message);
+    }
 };
 
 var createStore = module.exports.createStore = function() {
-    return new onm.Store(createModel());
+    try {
+        var store = new onm.Store(createModel());
+        return store;
+    } catch (exception_) {
+        throw new Error("onm test data fixture failure in 'createStore': " + exception_.message);
+    }
 };
 
 
