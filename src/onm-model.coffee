@@ -42,7 +42,7 @@ Address = require('./onm-address')
 AddressToken = require('./implementation/onm-address-token')
 uuid = require('node-uuid')
 
-LUID = 0
+LUID = 1
 
 
 #
@@ -477,8 +477,7 @@ class ModelDetails
                 when "internalLuid"
                     @semanticBindings.getUniqueKey = (data_) -> data_.key
                     @semanticBindings.setUniqueKey = (data_) ->
-                        data_.key = LUID? and LUID or LUID = 1
-                        LUID++
+                        data_.key = "#{LUID++}"
                         data_.key
                     break
                 when "internalUuid"

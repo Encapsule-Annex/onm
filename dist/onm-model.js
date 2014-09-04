@@ -45,7 +45,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
   uuid = require('node-uuid');
 
-  LUID = 0;
+  LUID = 1;
 
   ModelDetails = (function() {
     function ModelDetails(model_, objectModelDeclaration_) {
@@ -440,8 +440,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               return data_.key;
             };
             this.semanticBindings.setUniqueKey = function(data_) {
-              data_.key = (LUID != null) && LUID || (LUID = 1);
-              LUID++;
+              data_.key = "" + (LUID++);
               return data_.key;
             };
             break;
