@@ -11,7 +11,7 @@ var onm = require('../../onm.js');
 
 var modelDeclaration = module.exports.modelDeclaration = {
     semanticBindings: {
-        componentKeyGenerator: "internalUuid",
+        componentKeyGenerator: "internalLuid",
         namespaceVersioning: "disabled"
     },
     jsonTag: "addressBook",
