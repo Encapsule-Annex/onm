@@ -273,7 +273,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           var key, model;
           model = address_.getModel();
           if (model.namespaceType === 'component') {
-            key = _this.implementation.getLastToken().key || "-";
+            key = address_.implementation.getLastToken().key || "-";
             humanReadableString += "." + key;
           }
           return humanReadableString += humanReadableString && ("." + model.jsonTag) || ("" + model.jsonTag);
@@ -472,7 +472,10 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         if (!((subpath_ != null) && subpath_)) {
           throw new Error("Missing subpath input parameter.");
         }
-        newTokenVector = this.implementation.tokenVector.slice(0, this.implementation.tokenVector.length - 1) || [];
+        newTokenVector = [];
+        if (this.implementation.tokenVector.length > 1) {
+          newTokenVector = this.implementation.tokenVector.slice(0, this.implementation.tokenVector.length - 1);
+        }
         currentToken = this.implementation.getLastToken();
         subpathTokens = subpath_.split('.');
         for (_i = 0, _len = subpathTokens.length; _i < _len; _i++) {

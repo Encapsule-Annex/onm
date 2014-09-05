@@ -9,10 +9,16 @@ var should = require('chai').should;
 
 var onm = require('../../onm.js');
 
+var LUID = 1;
+
 var modelDeclaration = module.exports.modelDeclaration = {
     semanticBindings: {
-        componentKeyGenerator: "internalLuid",
-        namespaceVersioning: "disabled"
+        setUniqueKey: function(data_) {
+            data_.key = "" + LUID++;
+        },
+        getUniqueKey: function(data_) {
+            return data_.key;
+        }
     },
     jsonTag: "addressBook",
     subNamespaces: [
@@ -113,6 +119,9 @@ var createStore = module.exports.createStore = function() {
     }
 };
 
+var resetLuid = module.exports.resetLuid = function() {
+    LUID = 1;
+};
 
 
 

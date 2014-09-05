@@ -262,7 +262,7 @@ module.exports = class Address
             addStringToken = (address_) =>
                 model = address_.getModel();
                 if model.namespaceType == 'component'
-                    key = @implementation.getLastToken().key or "-"
+                    key = address_.implementation.getLastToken().key or "-"
                     humanReadableString += ".#{key}"
                 humanReadableString += humanReadableString and ".#{model.jsonTag}" or "#{model.jsonTag}"
 
@@ -462,10 +462,11 @@ module.exports = class Address
         try
             if not (subpath_? and subpath_) then throw new Error("Missing subpath input parameter.");
 
-            # We are attempting to construct a new onm.Address object using this address
-            # object as its base.
+            newTokenVector = [];
 
-            newTokenVector = @implementation.tokenVector.slice(0, @implementation.tokenVector.length - 1) or []
+            if (@implementation.tokenVector.length > 1)
+                # The base address token vector has two more more tokens. Clone the first through penultimate token(s).
+                newTokenVector = @implementation.tokenVector.slice(0, (@implementation.tokenVector.length - 1))
 
             currentToken = @implementation.getLastToken()
 

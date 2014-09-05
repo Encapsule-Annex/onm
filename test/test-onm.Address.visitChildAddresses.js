@@ -15,8 +15,9 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
         var store, address;
         var childAddresses = [];
         var actualResult;
-        var expectedResult = '["addressBook.properties","addressBook.contacts"]';
+        var expectedResult;
         before( function() {
+            expectedResult = '["addressBook.properties","addressBook.contacts"]';
             store = testData.createStore();
             address = store.model.createRootAddress();
             address.visitChildAddresses( function(childAddress_) {
@@ -33,8 +34,9 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
         var store, address;
         var childAddresses = [];
         var actualResult;
-        var expectedResult = '["addressBook.properties.subproperties"]';
+        var expectedResult;
         before( function() {
+            expectedResult = '["addressBook.properties.subproperties"]';
             store = testData.createStore();
             address = store.model.createPathAddress("addressBook.properties");
             address.visitChildAddresses( function(childAddress_) {
@@ -51,8 +53,9 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
         var store, address;
         var childAddresses = [];
         var actualResult;
-        var expectedResult = '[]';
+        var expectedResult;
         before( function() {
+            expectedResult = '[]';
             store = testData.createStore();
             address = store.model.createPathAddress("addressBook.contacts");
             address.visitChildAddresses( function(addressChild_) {
@@ -72,8 +75,9 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
         var store, model, address;
         var childAddresses = [];
         var actualResult = null;
-        var expectedResult = '["addressBook.contacts.-.contact.emails","addressBook.contacts.-.contact.addresses"]';
+        var expectedResult;
         before(function() {
+            expectedResult = '["addressBook.contacts.-.contact.emails","addressBook.contacts.-.contact.addresses"]';
             model = testData.createModel();
             address = model.createPathAddress("addressBook.contacts.contact");
             address.visitChildAddresses( function (addressChild_) {
@@ -91,9 +95,10 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
             var addressContact;
             var childAddresses = [];
             var actualResult = null;
-            var expectedResult = '["addressBook.contacts.-.contact.emails","addressBook.contacts.-.contact.addresses"]';
+            var expectedResult;
 
             before(function() {
+                expectedResult = '["addressBook.contacts.-.contact.emails","addressBook.contacts.-.contact.addresses"]';
                 store = testData.createStore();
                 var namespace = store.createComponent(address);
                 addressContact = namespace.getResolvedAddress();
@@ -118,7 +123,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
 
                 var childAddresses = [];
                 var actualResult = null;
-                var expectedResult = '["addressBook.contacts.-.contact.emails","addressBook.contacts.-.contact.addresses"]';
+                var expectedResult = '["addressBook.contacts.3.contact.addresses.-.address.notes"]';
 
                 before(function() {
                     var address = addressContact.createSubpathAddress("addresses.address");

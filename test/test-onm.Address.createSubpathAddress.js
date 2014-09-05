@@ -8,13 +8,13 @@ var should = require('chai').should;
 var uuid = require('node-uuid');
 var onm = require('../onm');
 
-var testData = require('./fixture/test-data');
+module.exports = describe("onm.Address.createSubpathAddress tests.", function() {
 
-module.exports = describe("onm.Address.createSubpathAddress tests", function() {
-
+    var testData = require('./fixture/test-data');
     var model, addressRoot;
 
     before(function() {
+        testData.resetLuid();
         model = testData.createModel();
         addressRoot = model.createRootAddress();
     });
@@ -24,7 +24,7 @@ module.exports = describe("onm.Address.createSubpathAddress tests", function() {
         assert.isNotNull(addressRoot);
     });
 
-    describe("Create a subpath address one level above the root namespace", function() {
+    describe("Create a subpath address one level above the root namespace.", function() {
         var addressActual, addressExpected;
         before(function() {
             addressActual = addressRoot.createSubpathAddress("contacts");
@@ -39,7 +39,7 @@ module.exports = describe("onm.Address.createSubpathAddress tests", function() {
         });
     });
 
-    describe("Create a subpath address two levels above the root namespace", function() {
+    describe("Create a subpath address two levels above the root namespace.", function() {
         var addressActual, addressExpected;
         before(function() {
             addressActual = addressRoot.createSubpathAddress("contacts.contact");
@@ -53,37 +53,39 @@ module.exports = describe("onm.Address.createSubpathAddress tests", function() {
             assert.isTrue(addressActual.isEqual(addressExpected));
         });
 
-
     });
 
-    describe("Create a component and use it as the base to create a subpath address", function() {
+    describe("Create a component and use it as the base to create a subpath address.", function() {
 
         var store;
-        var actualResult = null;
-        var expectedResult = 'addressBook.contacts.3.contact.addresses';
+        var actualResult, expectedResult;
         var addressContact, addressContactAddresses;
 
         before(function() {
+            testData.resetLuid();
             store = testData.createStore();
             var addressNewContact = addressRoot.createSubpathAddress("contacts.contact");
             var namespace = store.createComponent(addressNewContact);
             addressContact = namespace.getResolvedAddress();
             addressContactAddresses = addressContact.createSubpathAddress("addresses");
+            console.log(addressContactAddresses.getHumanReadableString());
             actualResult = addressContactAddresses.getHumanReadableString();
+            expectedResult = 'addressBook.contacts.1.contact.addresses';
         });
 
         it("The actual result should match the expected result", function() {
             assert.equal(actualResult, expectedResult);
+            assert.isTrue(addressContactAddresses.isResolvable());
         });
 
-        describe("Go another level deeper", function() {
 
-            actualResult;
-            expectedResult = '';
+
+        describe("Go another level deeper.", function() {
 
             before(function() {
                 var addressTest = addressContactAddresses.createSubpathAddress('address');
                 actualResult = addressTest.getHumanReadableString();
+                expectedResult = 'addressBook.contacts.1.contact.addresses.-.address';
             });
 
             it("The actual result should match the expected result", function() {
