@@ -147,7 +147,17 @@ module.exports = class Store
                     descriptor = addressExtensionPoint_.implementation.getDescriptor()
                     if not descriptor.namespaceType == "extensionPoint" then throw new Error("The specified address does not refer to an extension point namespace.");
 
-                    namespaceExtensionPoint = @openNamespace(addressExtensionPoint_);
+                    namespaceExtensionPoint = @openNamespace(addressExtensionPoint_)
+                    dataExtensionPoint = namespaceExtensionPoint.data()
+
+                    sourceComponentKey = namespaceSource_.getComponentKey()
+
+                    # Does the component already exist in the destination store?
+                    addressSource = namespaceSource_.getResolvedAddress()
+
+                    if dataExtensionPoint[sourceComponentKey]?
+                        throw new Error("The specified component already exists in the target store.")
+
 
                     return @createComponent(addressExtensionPoint_.createSubcomponentAddress());
 

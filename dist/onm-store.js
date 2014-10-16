@@ -139,7 +139,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           }
         };
         this.injectComponent = function(addressExtensionPoint_, namespaceSource_) {
-          var descriptor, exception, namespaceExtensionPoint;
+          var addressSource, dataExtensionPoint, descriptor, exception, namespaceExtensionPoint, sourceComponentKey;
           try {
             if (!((addressExtensionPoint_ != null) && addressExtensionPoint_)) {
               throw new Error("Missing address input parameter.");
@@ -155,6 +155,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               throw new Error("The specified address does not refer to an extension point namespace.");
             }
             namespaceExtensionPoint = _this.openNamespace(addressExtensionPoint_);
+            dataExtensionPoint = namespaceExtensionPoint.data();
+            sourceComponentKey = namespaceSource_.getComponentKey();
+            addressSource = namespaceSource_.getResolvedAddress();
+            if (dataExtensionPoint[sourceComponentKey] != null) {
+              throw new Error("The specified component already exists in the target store.");
+            }
             return _this.createComponent(addressExtensionPoint_.createSubcomponentAddress());
           } catch (_error) {
             exception = _error;
