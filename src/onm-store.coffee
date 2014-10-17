@@ -133,7 +133,6 @@ module.exports = class Store
                     return componentNamespace
 
                 catch exception
-
                     throw new Error("createComponent failure: #{exception.message}");
 
 
@@ -158,9 +157,11 @@ module.exports = class Store
                     if dataExtensionPoint[sourceComponentKey]?
                         throw new Error("The specified component already exists in the target store.")
 
+                    dataExtensionPoint[sourceComponentKey] = jslib.clone(namespaceSource_.data())
+                    @implementation.reifier.reifyStoreComponent(addressSource);
 
-                    return @createComponent(addressExtensionPoint_.createSubcomponentAddress());
-
+                    @openNamespace(addressSource);
+                    
                 catch exception
                     throw new Error("injectComponent failure: #{exception.message}");
 

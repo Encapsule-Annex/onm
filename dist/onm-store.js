@@ -161,7 +161,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (dataExtensionPoint[sourceComponentKey] != null) {
               throw new Error("The specified component already exists in the target store.");
             }
-            return _this.createComponent(addressExtensionPoint_.createSubcomponentAddress());
+            dataExtensionPoint[sourceComponentKey] = jslib.clone(namespaceSource_.data());
+            _this.implementation.reifier.reifyStoreComponent(addressSource);
+            return _this.openNamespace(addressSource);
           } catch (_error) {
             exception = _error;
             throw new Error("injectComponent failure: " + exception.message);

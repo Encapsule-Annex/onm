@@ -28,10 +28,16 @@ module.exports = describe("onm.Store.injectComponent method tests.", function() 
         assert.instanceOf(namespaceContact, onm.Namespace);
     });
 
+    it("We should not be able to inject a copy of the component over itself.", function() {
+        assert.throws(function() { store1.injectComponent(addressContacts, namespaceContact); }, Error);
+    });
+
     it("We should be able to inject a copy of the contact from store1 into store2.", function() {
-
         assert.instanceOf(store2.injectComponent(addressContacts, namespaceContact), onm.Namespace);
+    });
 
+    it("We should not be able to re-inject the contact from store1 into store2.", function() {
+        assert.throws(function() { store2.injectComponent(addressContacts, namespaceContact); }, Error);
     });
 
 });
