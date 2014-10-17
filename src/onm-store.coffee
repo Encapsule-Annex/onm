@@ -119,7 +119,7 @@ module.exports = class Store
 
             #
             # ============================================================================
-            @createComponent = (address_) =>
+            @createComponent = (address_, keyArray_, propertyAssignmentObject_) =>
                 try
                     if not (address_? and address_) then throw new Error("Missing address input parameter.");
                     if not @validateAddressModel(address_) then throw new Error("Address/store data model mismatch. Can't use the specified address to access this store.");
@@ -129,7 +129,7 @@ module.exports = class Store
                     if descriptor.namespaceType == "root" then throw new Error("The specified address refers to the root namespace of the store which is created automatically.");
 
                     # Creating the root namespace of a component automatically creates all its sub-namespaces as well.
-                    componentNamespace = new Namespace(@, address_, "new")
+                    componentNamespace = new Namespace(@, address_, "new", keyArray_, propertyAssignmentObject_)
                     return componentNamespace
 
                 catch exception

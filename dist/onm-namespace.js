@@ -70,7 +70,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
   })();
 
   module.exports = Namespace = (function() {
-    function Namespace(store_, address_, mode_) {
+    function Namespace(store_, address_, mode_, keyArray_, propertyAssignmentObject_) {
       this.visitExtensionPointSubcomponents = __bind(this.visitExtensionPointSubcomponents, this);
       this.getExtensionPointSubcomponentCount = __bind(this.getExtensionPointSubcomponentCount, this);
       this.update = __bind(this.update, this);

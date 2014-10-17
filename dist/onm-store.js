@@ -112,7 +112,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             throw new Error("validateAddressModel failure: " + exception.message);
           }
         };
-        this.createComponent = function(address_) {
+        this.createComponent = function(address_, keyArray_, propertyAssignmentObject_) {
           var componentNamespace, descriptor, exception;
           try {
             if (!((address_ != null) && address_)) {
@@ -131,7 +131,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (descriptor.namespaceType === "root") {
               throw new Error("The specified address refers to the root namespace of the store which is created automatically.");
             }
-            componentNamespace = new Namespace(_this, address_, "new");
+            componentNamespace = new Namespace(_this, address_, "new", keyArray_, propertyAssignmentObject_);
             return componentNamespace;
           } catch (_error) {
             exception = _error;

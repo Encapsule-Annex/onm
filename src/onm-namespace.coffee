@@ -60,8 +60,12 @@ class NamespaceDetails
 #
 #
 # ****************************************************************************
+# optional parameters passed by onm.Store.createComponent (i.e. mode="new")
+# keyArray_ --- to be applied in order, tail-justified, to the component token vector key array
+# propertyAssignmentObject_ --- options object of property assignments to be cherry-picked and transcribed to newly-contructed components _prior_ to observer signal
+
 module.exports = class Namespace
-    constructor: (store_, address_, mode_) ->
+    constructor: (store_, address_, mode_, keyArray_, propertyAssignmentObject_) ->
         try
             if not (store_? and store_) then throw new Error("Missing object store input parameter.")
             @store = store_
