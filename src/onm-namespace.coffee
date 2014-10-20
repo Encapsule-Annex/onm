@@ -99,18 +99,14 @@ module.exports = class Namespace
             #
 
             keyArrayCount = keyArray_? and keyArray_.length or 0
+            tokenArrayCount = address.implementation.tokenVector.length
 
             if keyArrayCount
-
-                tokenArrayCount = address.implementation.tokenVector.length
                 if keyArrayCount > (tokenArrayCount - 1)
                     throw new Error("Too many component keys specified in optional key array parameter for address '#{address_.getHumanReadableString()}'.");
-
                 # Clone the address
                 address = address.clone();
-
                 # Overwrite overlapping keys
-
                 keyIndex = 0
                 while keyIndex < keyArrayCount
                     key = keyArray_[keyIndex]
@@ -118,13 +114,14 @@ module.exports = class Namespace
                     address.implementation.tokenVector[tokenIndex].key = key
                     keyIndex++
 
-
             # The actual store data.
-
+            tokenCount = 0
             for addressToken in address.implementation.tokenVector
-                tokenBinder = new AddressTokenBinder(store_, @implementation.dataReference, addressToken, mode)
+                constructionOptions = ((tokenArrayCount - 1) == tokenCount++) and propertyAssignmentObject_ or undefined;
+                tokenBinder = new AddressTokenBinder(store_, @implementation.dataReference, addressToken, mode, constructionOptions)
                 @implementation.resolvedTokenArray.push tokenBinder.resolvedToken
                 @implementation.dataReference = tokenBinder.dataReference
+
                 if mode == "new"
                     if addressToken.idComponent 
                         if not (addressToken.key? and addressToken.key)

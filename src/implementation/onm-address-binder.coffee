@@ -41,20 +41,26 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 #
 # ****************************************************************************
-InitializeNamespaceProperties = (data_, descriptor_) ->
+InitializeNamespaceProperties = (data_, descriptor_, propertyAssignmentObject_) ->
     try
-        if not (data_? and data_) then throw new Error("Missing data reference input parameter.");
-        if not (descriptor_? and descriptor_) then throw new Error("Missing descriptor input parameter.");
+        if not (data_? and data_) then throw new Error("Missing data reference input parameter.")
+        if not (descriptor_? and descriptor_) then throw new Error("Missing descriptor input parameter.")
+
+        propertyAssignmentObject = propertyAssignmentObject_? and propertyAssignmentObject_ or {}
 
         if descriptor_.userImmutable? and descriptor_.userImmutable
             for memberName, functions of descriptor_.userImmutable
-                if functions.fnCreate? and functions.fnCreate
+                if propertyAssignmentObject[memberName]? and propertyAssignmentObject[memberName]
+                    data_[memberName] = propertyAssignmentObject[memberName]
+                else if functions.fnCreate? and functions.fnCreate
                     data_[memberName] = functions.fnCreate()
                 else
                     data_[memberName] = functions.defaultValue
         if descriptor_.userMutable? and descriptor_.userMutable
             for memberName, functions of descriptor_.userMutable
-                if functions.fnCreate? and functions.fnCreate
+                if propertyAssignmentObject[memberName]? and propertyAssignmentObject[memberName]
+                    data_[memberName] = propertyAssignmentObject[memberName]
+                else if functions.fnCreate? and functions.fnCreate
                     data_[memberName] = functions.fnCreate()
                 else
                     data_[memberName] = functions.defaultValue
@@ -123,7 +129,7 @@ VerifyComponentNamespaces = (store_, data_, descriptor_, extensionPointId_) ->
 
 #
 # ****************************************************************************
-ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_, mode_) ->
+ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_, mode_, propertyAssignmentObject_) ->
     try
 
         if not (resolveActions_? and resolveActions_) then throw new Error("Internal error: missing resolve actions structure input parameter.");
@@ -153,7 +159,7 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
                     break
 
                 newData = {}
-                InitializeNamespaceProperties(newData, descriptor_.namespaceModelPropertiesDeclaration)
+                InitializeNamespaceProperties(newData, descriptor_.namespaceModelPropertiesDeclaration, propertyAssignmentObject_)
 
                 if descriptor_.namespaceType == "component"
                     if not (resolveActions_.setUniqueKey? and resolveActions_.setUniqueKey)
@@ -193,7 +199,7 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
 #
 # ****************************************************************************
 module.exports = class AddressTokenBinder
-    constructor: (store_, parentDataReference_, token_, mode_) ->
+    constructor: (store_, parentDataReference_, token_, mode_, propertyAssignmentObject_) ->
         try
             @store = store_? and store_ or throw new Error("Missing object store input parameter.");
             model = store_.model
@@ -226,7 +232,7 @@ module.exports = class AddressTokenBinder
             extensionPointId = token_.extensionPointDescriptor? and token_.extensionPointDescriptor and token_.extensionPointDescriptor.id or -1
 
             if mode_ == "new" and resolveResults.created
-                InitializeComponentNamespaces(store_, @dataReference, targetComponentDescriptor, extensionPointId, @resolvedToken.key)
+                InitializeComponentNamespaces(store_, @dataReference, targetComponentDescriptor, extensionPointId, @resolvedToken.key, propertyAssignmentObject_)
 
             if mode_ == "strict"
                 VerifyComponentNamespaces(store_, resolveResult.dataReference, targetComponentDescriptor, extensionPointId)            

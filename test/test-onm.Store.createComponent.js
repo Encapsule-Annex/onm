@@ -88,7 +88,7 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                 addressNewEmail = addressRoot.createSubpathAddress("contacts.contact.emails.email");
                 namespaceContact = store.createComponent(addressNewEmail, keyArray);
             });
-            it("We should be able to create a contact component.", function() {
+            it("A contact component should have been created.", function() {
                 assert.isDefined(namespaceContact);
                 assert.isNotNull(namespaceContact);
                 assert.instanceOf(namespaceContact, onm.Namespace);
@@ -96,7 +96,22 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
             it("The component key of the newly-created component should be 'primary'.", function() {
                 assert.equal(namespaceContact.getComponentKey(), "primary");
             });
+        });
 
+        describe("Call onm.Store.createComponent with an optional construction options object.", function() {
+            var constructionOptions = {
+                firstName: "Joe",
+                lastName: "Smith"
+            };
+            var namespace = null;
+            before(function() {
+                namespace = store.createComponent(addressNewContact, null, constructionOptions);
+            });
+            it("A contact component should have been created.", function() {
+                assert.isDefined(namespaceContact);
+                assert.isNotNull(namespaceContact);
+                assert.instanceOf(namespaceContact, onm.Namespace);
+            });
         });
 
         describe("Serialize the test data store to JSON and compare the results against a known good snapshot.", function() {

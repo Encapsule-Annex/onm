@@ -81,7 +81,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       this.getResolvedLabel = __bind(this.getResolvedLabel, this);
       this.getComponentKey = __bind(this.getComponentKey, this);
       this.getResolvedAddress = __bind(this.getResolvedAddress, this);
-      var address, addressToken, componentAddress, exception, extensionPointAddress, extensionPointNamespace, key, keyArrayCount, keyIndex, mode, objectModel, objectModelNameKeys, objectModelNameStore, resolvedAddress, tokenArrayCount, tokenBinder, tokenIndex, _i, _len, _ref;
+      var address, addressToken, componentAddress, constructionOptions, exception, extensionPointAddress, extensionPointNamespace, key, keyArrayCount, keyIndex, mode, objectModel, objectModelNameKeys, objectModelNameStore, resolvedAddress, tokenArrayCount, tokenBinder, tokenCount, tokenIndex, _i, _len, _ref;
       try {
         if (!((store_ != null) && store_)) {
           throw new Error("Missing object store input parameter.");
@@ -108,8 +108,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           throw new Error("'" + mode + "' mode error: Unresolvable address '" + (address.getHumanReadableString()) + "' invalid for this operation.");
         }
         keyArrayCount = (keyArray_ != null) && keyArray_.length || 0;
+        tokenArrayCount = address.implementation.tokenVector.length;
         if (keyArrayCount) {
-          tokenArrayCount = address.implementation.tokenVector.length;
           if (keyArrayCount > (tokenArrayCount - 1)) {
             throw new Error("Too many component keys specified in optional key array parameter for address '" + (address_.getHumanReadableString()) + "'.");
           }
@@ -122,10 +122,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             keyIndex++;
           }
         }
+        tokenCount = 0;
         _ref = address.implementation.tokenVector;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           addressToken = _ref[_i];
-          tokenBinder = new AddressTokenBinder(store_, this.implementation.dataReference, addressToken, mode);
+          constructionOptions = ((tokenArrayCount - 1) === tokenCount++) && propertyAssignmentObject_ || void 0;
+          tokenBinder = new AddressTokenBinder(store_, this.implementation.dataReference, addressToken, mode, constructionOptions);
           this.implementation.resolvedTokenArray.push(tokenBinder.resolvedToken);
           this.implementation.dataReference = tokenBinder.dataReference;
           if (mode === "new") {

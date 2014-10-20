@@ -36,8 +36,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 (function() {
   var AddressTokenBinder, InitializeComponentNamespaces, InitializeNamespaceProperties, ResolveNamespaceDescriptor, VerifyComponentNamespaces, VerifyNamespaceProperties;
 
-  InitializeNamespaceProperties = function(data_, descriptor_) {
-    var exception, functions, memberName, _ref, _ref1;
+  InitializeNamespaceProperties = function(data_, descriptor_, propertyAssignmentObject_) {
+    var exception, functions, memberName, propertyAssignmentObject, _ref, _ref1;
     try {
       if (!((data_ != null) && data_)) {
         throw new Error("Missing data reference input parameter.");
@@ -45,11 +45,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       if (!((descriptor_ != null) && descriptor_)) {
         throw new Error("Missing descriptor input parameter.");
       }
+      propertyAssignmentObject = (propertyAssignmentObject_ != null) && propertyAssignmentObject_ || {};
       if ((descriptor_.userImmutable != null) && descriptor_.userImmutable) {
         _ref = descriptor_.userImmutable;
         for (memberName in _ref) {
           functions = _ref[memberName];
-          if ((functions.fnCreate != null) && functions.fnCreate) {
+          if ((propertyAssignmentObject[memberName] != null) && propertyAssignmentObject[memberName]) {
+            data_[memberName] = propertyAssignmentObject[memberName];
+          } else if ((functions.fnCreate != null) && functions.fnCreate) {
             data_[memberName] = functions.fnCreate();
           } else {
             data_[memberName] = functions.defaultValue;
@@ -60,7 +63,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         _ref1 = descriptor_.userMutable;
         for (memberName in _ref1) {
           functions = _ref1[memberName];
-          if ((functions.fnCreate != null) && functions.fnCreate) {
+          if ((propertyAssignmentObject[memberName] != null) && propertyAssignmentObject[memberName]) {
+            data_[memberName] = propertyAssignmentObject[memberName];
+          } else if ((functions.fnCreate != null) && functions.fnCreate) {
             data_[memberName] = functions.fnCreate();
           } else {
             data_[memberName] = functions.defaultValue;
@@ -153,7 +158,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     }
   };
 
-  ResolveNamespaceDescriptor = function(resolveActions_, store_, data_, descriptor_, key_, mode_) {
+  ResolveNamespaceDescriptor = function(resolveActions_, store_, data_, descriptor_, key_, mode_, propertyAssignmentObject_) {
     var exception, newData, resolveResults, tokenString;
     try {
       if (!((resolveActions_ != null) && resolveActions_)) {
@@ -190,7 +195,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             break;
           }
           newData = {};
-          InitializeNamespaceProperties(newData, descriptor_.namespaceModelPropertiesDeclaration);
+          InitializeNamespaceProperties(newData, descriptor_.namespaceModelPropertiesDeclaration, propertyAssignmentObject_);
           if (descriptor_.namespaceType === "component") {
             if (!((resolveActions_.setUniqueKey != null) && resolveActions_.setUniqueKey)) {
               throw new Error("You must define semanticBindings.setUniqueKey function in your data model declaration.");
@@ -224,7 +229,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
   };
 
   module.exports = AddressTokenBinder = (function() {
-    function AddressTokenBinder(store_, parentDataReference_, token_, mode_) {
+    function AddressTokenBinder(store_, parentDataReference_, token_, mode_, propertyAssignmentObject_) {
       var descriptor, exception, extensionPointId, generations, getUniqueKeyFunction, model, parentPathIds, pathId, resolveActions, resolveResults, semanticBindings, setUniqueKeyFunction, targetComponentDescriptor, targetNamespaceDescriptor, _i, _len;
       try {
         this.store = (store_ != null) && store_ || (function() {
@@ -258,7 +263,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
         extensionPointId = (token_.extensionPointDescriptor != null) && token_.extensionPointDescriptor && token_.extensionPointDescriptor.id || -1;
         if (mode_ === "new" && resolveResults.created) {
-          InitializeComponentNamespaces(store_, this.dataReference, targetComponentDescriptor, extensionPointId, this.resolvedToken.key);
+          InitializeComponentNamespaces(store_, this.dataReference, targetComponentDescriptor, extensionPointId, this.resolvedToken.key, propertyAssignmentObject_);
         }
         if (mode_ === "strict") {
           VerifyComponentNamespaces(store_, resolveResult.dataReference, targetComponentDescriptor, extensionPointId);
