@@ -44,8 +44,10 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
     });
 
     describe("Call onm.Store.createComponent to create a new 'contact'.", function() {
+
         var addressNewContact = null;
         var namespaceContact = null;
+
         before(function() {
             addressNewContact = addressRoot.createSubpathAddress("contacts.contact");
             namespaceContact  = store.createComponent(addressNewContact);

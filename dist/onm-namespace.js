@@ -81,7 +81,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       this.getResolvedLabel = __bind(this.getResolvedLabel, this);
       this.getComponentKey = __bind(this.getComponentKey, this);
       this.getResolvedAddress = __bind(this.getResolvedAddress, this);
-      var address, addressToken, componentAddress, exception, extensionPointAddress, extensionPointNamespace, mode, objectModel, objectModelNameKeys, objectModelNameStore, resolvedAddress, tokenBinder, _i, _len, _ref;
+      var address, addressToken, componentAddress, exception, extensionPointAddress, extensionPointNamespace, key, keyArrayCount, keyIndex, mode, objectModel, objectModelNameKeys, objectModelNameStore, resolvedAddress, tokenArrayCount, tokenBinder, tokenIndex, _i, _len, _ref;
       try {
         if (!((store_ != null) && store_)) {
           throw new Error("Missing object store input parameter.");
@@ -106,6 +106,21 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         mode = (mode_ != null) && mode_ || "bypass";
         if ((mode !== "new") && !address.isResolvable()) {
           throw new Error("'" + mode + "' mode error: Unresolvable address '" + (address.getHumanReadableString()) + "' invalid for this operation.");
+        }
+        keyArrayCount = (keyArray_ != null) && keyArray_.length || 0;
+        if (keyArrayCount) {
+          tokenArrayCount = address.implementation.tokenVector.length;
+          if (keyArrayCount > (tokenArrayCount - 1)) {
+            throw new Error("Too many component keys specified in optional key array parameter for address '" + (address_.getHumanReadableString()) + "'.");
+          }
+          address = address.clone();
+          keyIndex = 0;
+          while (keyIndex < keyArrayCount) {
+            key = keyArray_[keyIndex];
+            tokenIndex = tokenArrayCount - keyArrayCount + keyIndex;
+            address.implementation.tokenVector[tokenIndex].key = key;
+            keyIndex++;
+          }
         }
         _ref = address.implementation.tokenVector;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {

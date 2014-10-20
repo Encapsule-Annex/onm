@@ -439,8 +439,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             this.semanticBindings.getUniqueKey = function(data_) {
               return data_.key;
             };
-            this.semanticBindings.setUniqueKey = function(data_) {
-              data_.key = "" + (LUID++);
+            this.semanticBindings.setUniqueKey = function(data_, key_) {
+              data_.key = (key_ != null) && key_ || ("" + (LUID++));
               return data_.key;
             };
             break;
@@ -448,8 +448,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             this.semanticBindings.getUniqueKey = function(data_) {
               return data_.key;
             };
-            this.semanticBindings.setUniqueKey = function(data_) {
-              return data_.key = uuid.v4();
+            this.semanticBindings.setUniqueKey = function(data_, key_) {
+              data_.key = (key_ != null) && key_ || uuid.v4();
+              return data_.key;
             };
             break;
           case "external":

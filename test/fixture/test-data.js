@@ -13,8 +13,8 @@ var LUID = 1;
 
 var modelDeclaration = module.exports.modelDeclaration = {
     semanticBindings: {
-        setUniqueKey: function(data_) {
-            data_.key = "" + LUID++;
+        setUniqueKey: function(data_, key_) {
+            data_.key = (key_ != null) && key_ || ("" + LUID++);
         },
         getUniqueKey: function(data_) {
             return data_.key;

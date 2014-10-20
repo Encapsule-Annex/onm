@@ -195,7 +195,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (!((resolveActions_.setUniqueKey != null) && resolveActions_.setUniqueKey)) {
               throw new Error("You must define semanticBindings.setUniqueKey function in your data model declaration.");
             }
-            resolveActions_.setUniqueKey(newData);
+            resolveActions_.setUniqueKey(newData, key_);
             if (!((resolveActions_.getUniqueKey != null) && resolveActions_.getUniqueKey)) {
               throw new Error("You must define semanticBindings.getUniqueKey function in your data model declaration.");
             }

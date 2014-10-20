@@ -94,6 +94,31 @@ module.exports = class Namespace
             if (mode != "new") and not address.isResolvable()
                 throw new Error("'#{mode}' mode error: Unresolvable address '#{address.getHumanReadableString()}' invalid for this operation.")
 
+
+            # Let's try to do some address manipulation here based on the keyArray_ and propertyAssignmentObject_ params
+            #
+
+            keyArrayCount = keyArray_? and keyArray_.length or 0
+
+            if keyArrayCount
+
+                tokenArrayCount = address.implementation.tokenVector.length
+                if keyArrayCount > (tokenArrayCount - 1)
+                    throw new Error("Too many component keys specified in optional key array parameter for address '#{address_.getHumanReadableString()}'.");
+
+                # Clone the address
+                address = address.clone();
+
+                # Overwrite overlapping keys
+
+                keyIndex = 0
+                while keyIndex < keyArrayCount
+                    key = keyArray_[keyIndex]
+                    tokenIndex = tokenArrayCount - keyArrayCount + keyIndex
+                    address.implementation.tokenVector[tokenIndex].key = key
+                    keyIndex++
+
+
             # The actual store data.
 
             for addressToken in address.implementation.tokenVector

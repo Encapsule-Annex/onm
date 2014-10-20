@@ -158,10 +158,14 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
                 if descriptor_.namespaceType == "component"
                     if not (resolveActions_.setUniqueKey? and resolveActions_.setUniqueKey)
                         throw new Error("You must define semanticBindings.setUniqueKey function in your data model declaration.");
-                    resolveActions_.setUniqueKey(newData)
+
+                    resolveActions_.setUniqueKey(newData, key_)
+
                     if not (resolveActions_.getUniqueKey? and resolveActions_.getUniqueKey)
                         throw new Error("You must define semanticBindings.getUniqueKey function in your data model declaration.");
+
                     resolveResults.key = resolveResults.jsonTag = resolveActions_.getUniqueKey(newData)
+
                     if not (resolveResults.key? and resolveResults.key)
                         throw new Error("Your data model's semanticBindings.getUniqueKey function returned an invalid key. Key cannot be zero or zero-length.");
 
