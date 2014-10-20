@@ -69,6 +69,45 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                 assert.isNotNull(namespaceContact);
                 assert.instanceOf(namespaceContact, onm.Namespace);
             });
+            it("The component key of the newly-created component should be 'test'.", function() {
+                assert.equal(namespaceContact.getComponentKey(), "test");
+            });
+        });
+
+        describe("Call onm.Store.createComponent with too many optional component override keys.", function() {
+            var keyArray = [ 'test', 'error' ];
+            it("The key array should be rejected because it is too long.", function() {
+                assert.throws(function() { store.createComponent(addressNewContact, keyArray); }, Error);
+            });
+        });
+
+        describe("Call onm.Store.createComponent with two optional override component keys.", function() {
+            var keyArray = [ 'JoeSmith', 'primary' ];
+            var addressNewEmail = null;
+            before(function() {
+                addressNewEmail = addressRoot.createSubpathAddress("contacts.contact.emails.email");
+                namespaceContact = store.createComponent(addressNewEmail, keyArray);
+            });
+            it("We should be able to create a contact component.", function() {
+                assert.isDefined(namespaceContact);
+                assert.isNotNull(namespaceContact);
+                assert.instanceOf(namespaceContact, onm.Namespace);
+            });
+            it("The component key of the newly-created component should be 'primary'.", function() {
+                assert.equal(namespaceContact.getComponentKey(), "primary");
+            });
+
+        });
+
+        describe("Serialize the test data store to JSON and compare the results against a known good snapshot.", function() {
+            var expectedJSON = '{"addressBook":{"properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{"5":{"firstName":"","lastName":"","key":"5","emails":{},"addresses":{}},"test":{"firstName":"","lastName":"","key":"test","emails":{},"addresses":{}},"JoeSmith":{"firstName":"","lastName":"","key":"JoeSmith","emails":{"primary":{"key":"primary"}},"addresses":{}}}}}';
+            var actualJSON = null;
+            before(function() {
+                actualJSON = store.toJSON();
+            });
+            it("The data store's JSON data should match the test's control JSON.", function() {
+                assert.equal(actualJSON, expectedJSON);
+            });
         });
 
     });
