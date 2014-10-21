@@ -60,8 +60,12 @@ class NamespaceDetails
 #
 #
 # ****************************************************************************
+# optional parameters passed by onm.Store.createComponent (i.e. mode="new")
+# keyArray_ --- to be applied in order, tail-justified, to the component token vector key array
+# propertyAssignmentObject_ --- options object of property assignments to be cherry-picked and transcribed to newly-contructed components _prior_ to observer signal
+
 module.exports = class Namespace
-    constructor: (store_, address_, mode_) ->
+    constructor: (store_, address_, mode_, keyArray_, propertyAssignmentObject_) ->
         try
             if not (store_? and store_) then throw new Error("Missing object store input parameter.")
             @store = store_
@@ -90,12 +94,34 @@ module.exports = class Namespace
             if (mode != "new") and not address.isResolvable()
                 throw new Error("'#{mode}' mode error: Unresolvable address '#{address.getHumanReadableString()}' invalid for this operation.")
 
-            # The actual store data.
 
+            # Let's try to do some address manipulation here based on the keyArray_ and propertyAssignmentObject_ params
+            #
+
+            keyArrayCount = keyArray_? and keyArray_.length or 0
+            tokenArrayCount = address.implementation.tokenVector.length
+
+            if keyArrayCount
+                if keyArrayCount > (tokenArrayCount - 1)
+                    throw new Error("Too many component keys specified in optional key array parameter for address '#{address_.getHumanReadableString()}'.");
+                # Clone the address
+                address = address.clone();
+                # Overwrite overlapping keys
+                keyIndex = 0
+                while keyIndex < keyArrayCount
+                    key = keyArray_[keyIndex]
+                    tokenIndex = tokenArrayCount - keyArrayCount + keyIndex
+                    address.implementation.tokenVector[tokenIndex].key = key
+                    keyIndex++
+
+            # The actual store data.
+            tokenCount = 0
             for addressToken in address.implementation.tokenVector
-                tokenBinder = new AddressTokenBinder(store_, @implementation.dataReference, addressToken, mode)
+                constructionOptions = ((tokenArrayCount - 1) == tokenCount++) and propertyAssignmentObject_ or undefined;
+                tokenBinder = new AddressTokenBinder(store_, @implementation.dataReference, addressToken, mode, constructionOptions)
                 @implementation.resolvedTokenArray.push tokenBinder.resolvedToken
                 @implementation.dataReference = tokenBinder.dataReference
+
                 if mode == "new"
                     if addressToken.idComponent 
                         if not (addressToken.key? and addressToken.key)

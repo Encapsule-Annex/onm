@@ -41,20 +41,26 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 #
 # ****************************************************************************
-InitializeNamespaceProperties = (data_, descriptor_) ->
+InitializeNamespaceProperties = (data_, descriptor_, propertyAssignmentObject_) ->
     try
-        if not (data_? and data_) then throw new Error("Missing data reference input parameter.");
-        if not (descriptor_? and descriptor_) then throw new Error("Missing descriptor input parameter.");
+        if not (data_? and data_) then throw new Error("Missing data reference input parameter.")
+        if not (descriptor_? and descriptor_) then throw new Error("Missing descriptor input parameter.")
+
+        propertyAssignmentObject = propertyAssignmentObject_? and propertyAssignmentObject_ or {}
 
         if descriptor_.userImmutable? and descriptor_.userImmutable
             for memberName, functions of descriptor_.userImmutable
-                if functions.fnCreate? and functions.fnCreate
+                if propertyAssignmentObject[memberName]? and propertyAssignmentObject[memberName]
+                    data_[memberName] = propertyAssignmentObject[memberName]
+                else if functions.fnCreate? and functions.fnCreate
                     data_[memberName] = functions.fnCreate()
                 else
                     data_[memberName] = functions.defaultValue
         if descriptor_.userMutable? and descriptor_.userMutable
             for memberName, functions of descriptor_.userMutable
-                if functions.fnCreate? and functions.fnCreate
+                if propertyAssignmentObject[memberName]? and propertyAssignmentObject[memberName]
+                    data_[memberName] = propertyAssignmentObject[memberName]
+                else if functions.fnCreate? and functions.fnCreate
                     data_[memberName] = functions.fnCreate()
                 else
                     data_[memberName] = functions.defaultValue
@@ -90,7 +96,7 @@ VerifyNamespaceProperties = (data_, descriptor_) ->
 
 #
 # ****************************************************************************
-InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, key_) ->
+InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, key_, propertyAssignmentObject_) ->
     try
         if not (data_? and data_) then throw new Error("Missing data reference input parameter.");
         if not (descriptor_? and descriptor_) then throw new Error("Missing descriptor input parameter.");
@@ -98,8 +104,12 @@ InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, 
 
         for childDescriptor in descriptor_.children
             if childDescriptor.namespaceType != "component"
-                resolveResults = ResolveNamespaceDescriptor({}, store_, data_, childDescriptor, key_, "new")
-                InitializeComponentNamespaces(store_, resolveResults.dataReference, childDescriptor, extensionPointId_, key_)
+
+                propertyAssignmentObject = propertyAssignmentObject_? and propertyAssignmentObject_ and 
+                    propertyAssignmentObject_[childDescriptor.jsonTag]? and propertyAssignmentObject_[childDescriptor.jsonTag] or {}
+
+                resolveResults = ResolveNamespaceDescriptor({}, store_, data_, childDescriptor, key_, "new", propertyAssignmentObject)
+                InitializeComponentNamespaces(store_, resolveResults.dataReference, childDescriptor, extensionPointId_, key_, propertyAssignmentObject)
 
         return true
 
@@ -123,7 +133,7 @@ VerifyComponentNamespaces = (store_, data_, descriptor_, extensionPointId_) ->
 
 #
 # ****************************************************************************
-ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_, mode_) ->
+ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_, mode_, propertyAssignmentObject_) ->
     try
 
         if not (resolveActions_? and resolveActions_) then throw new Error("Internal error: missing resolve actions structure input parameter.");
@@ -153,15 +163,19 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
                     break
 
                 newData = {}
-                InitializeNamespaceProperties(newData, descriptor_.namespaceModelPropertiesDeclaration)
+                InitializeNamespaceProperties(newData, descriptor_.namespaceModelPropertiesDeclaration, propertyAssignmentObject_)
 
                 if descriptor_.namespaceType == "component"
                     if not (resolveActions_.setUniqueKey? and resolveActions_.setUniqueKey)
                         throw new Error("You must define semanticBindings.setUniqueKey function in your data model declaration.");
-                    resolveActions_.setUniqueKey(newData)
+
+                    resolveActions_.setUniqueKey(newData, key_)
+
                     if not (resolveActions_.getUniqueKey? and resolveActions_.getUniqueKey)
                         throw new Error("You must define semanticBindings.getUniqueKey function in your data model declaration.");
+
                     resolveResults.key = resolveResults.jsonTag = resolveActions_.getUniqueKey(newData)
+
                     if not (resolveResults.key? and resolveResults.key)
                         throw new Error("Your data model's semanticBindings.getUniqueKey function returned an invalid key. Key cannot be zero or zero-length.");
 
@@ -189,7 +203,7 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
 #
 # ****************************************************************************
 module.exports = class AddressTokenBinder
-    constructor: (store_, parentDataReference_, token_, mode_) ->
+    constructor: (store_, parentDataReference_, token_, mode_, propertyAssignmentObject_) ->
         try
             @store = store_? and store_ or throw new Error("Missing object store input parameter.");
             model = store_.model
@@ -212,8 +226,11 @@ module.exports = class AddressTokenBinder
                 getUniqueKey: getUniqueKeyFunction
             }
 
+            propertyAssignmentObject = propertyAssignmentObject_? and propertyAssignmentObject_ or {}
+            
+
             # Resolve the input token's component namespace.
-            resolveResults = ResolveNamespaceDescriptor(resolveActions, store_, @parentDataReference, token_.componentDescriptor, token_.key, mode_)
+            resolveResults = ResolveNamespaceDescriptor(resolveActions, store_, @parentDataReference, token_.componentDescriptor, token_.key, mode_, propertyAssignmentObject)
             @dataReference = resolveResults.dataReference
 
             if resolveResults.created
@@ -222,7 +239,8 @@ module.exports = class AddressTokenBinder
             extensionPointId = token_.extensionPointDescriptor? and token_.extensionPointDescriptor and token_.extensionPointDescriptor.id or -1
 
             if mode_ == "new" and resolveResults.created
-                InitializeComponentNamespaces(store_, @dataReference, targetComponentDescriptor, extensionPointId, @resolvedToken.key)
+                # This resolves all the children and extension points of a component and initializes their properties.
+                InitializeComponentNamespaces(store_, @dataReference, targetComponentDescriptor, extensionPointId, @resolvedToken.key, propertyAssignmentObject)
 
             if mode_ == "strict"
                 VerifyComponentNamespaces(store_, resolveResult.dataReference, targetComponentDescriptor, extensionPointId)            

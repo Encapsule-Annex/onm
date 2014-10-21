@@ -476,13 +476,15 @@ class ModelDetails
                     break
                 when "internalLuid"
                     @semanticBindings.getUniqueKey = (data_) -> data_.key
-                    @semanticBindings.setUniqueKey = (data_) ->
-                        data_.key = "#{LUID++}"
+                    @semanticBindings.setUniqueKey = (data_, key_) ->
+                        data_.key = key_? and key_ or "#{LUID++}"
                         data_.key
                     break
                 when "internalUuid"
                     @semanticBindings.getUniqueKey = (data_) -> data_.key
-                    @semanticBindings.setUniqueKey = (data_) -> data_.key = uuid.v4()
+                    @semanticBindings.setUniqueKey = (data_, key_) ->
+                        data_.key = key_? and key_ or uuid.v4()
+                        data_.key
                     break
                 when "external"
                     break

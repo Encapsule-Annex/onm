@@ -119,22 +119,51 @@ module.exports = class Store
 
             #
             # ============================================================================
-            @createComponent = (address_) =>
+            @createComponent = (address_, keyArray_, propertyAssignmentObject_) =>
                 try
-                    if not (address_? and address_) then throw new Error("Missing object model namespace selector input parameter.");
-                    if not @validateAddressModel(address_) then throw new Error("The specified address cannot be used to reference this store because it's not bound to the same model as this store.");
+                    if not (address_? and address_) then throw new Error("Missing address input parameter.");
+                    if not @validateAddressModel(address_) then throw new Error("Address/store data model mismatch. Can't use the specified address to access this store.");
                     if address_.isQualified() then throw new Error("The specified address is qualified and may only be used to specify existing objects in the store.");
                     descriptor = address_.implementation.getDescriptor()
                     if not descriptor.isComponent then throw new Error("The specified address does not specify the root of a component.");
                     if descriptor.namespaceType == "root" then throw new Error("The specified address refers to the root namespace of the store which is created automatically.");
 
                     # Creating the root namespace of a component automatically creates all its sub-namespaces as well.
-                    componentNamespace = new Namespace(@, address_, "new")
+                    componentNamespace = new Namespace(@, address_, "new", keyArray_, propertyAssignmentObject_)
                     return componentNamespace
 
                 catch exception
-
                     throw new Error("createComponent failure: #{exception.message}");
+
+
+            #
+            # ============================================================================
+            @injectComponent = (addressExtensionPoint_, namespaceSource_) =>
+                try
+                    if not (addressExtensionPoint_? and addressExtensionPoint_) then throw new Error("Missing address input parameter.");
+                    if not @validateAddressModel(addressExtensionPoint_) then throw new Error("Address/store data model mismatch. Can't use the specified address to access this store.");
+                    if not addressExtensionPoint_.isQualified() then throw new Error("The specified address is not qualified and cannot be used to specify a component injection point.");
+                    descriptor = addressExtensionPoint_.implementation.getDescriptor()
+                    if not descriptor.namespaceType == "extensionPoint" then throw new Error("The specified address does not refer to an extension point namespace.");
+
+                    namespaceExtensionPoint = @openNamespace(addressExtensionPoint_)
+                    dataExtensionPoint = namespaceExtensionPoint.data()
+
+                    sourceComponentKey = namespaceSource_.getComponentKey()
+
+                    # Does the component already exist in the destination store?
+                    addressSource = namespaceSource_.getResolvedAddress()
+
+                    if dataExtensionPoint[sourceComponentKey]?
+                        throw new Error("The specified component already exists in the target store.")
+
+                    dataExtensionPoint[sourceComponentKey] = jslib.clone(namespaceSource_.data())
+                    @implementation.reifier.reifyStoreComponent(addressSource);
+
+                    @openNamespace(addressSource);
+                    
+                catch exception
+                    throw new Error("injectComponent failure: #{exception.message}");
 
             #
             # ============================================================================
@@ -145,7 +174,7 @@ module.exports = class Store
                     if not address_.isQualified() then throw new Error("You cannot use an unqualified address to remove a component.");
                     descriptor = address_.implementation.getDescriptor()
                     if not descriptor.isComponent then throw new Error("The specified address does not specify the root of a component.");
-                    if descriptor.namespace == "root" then throw new Error("The specified address refers to the root namespace of the store which cannot be removed.");
+                    if descriptor.namespaceType == "root" then throw new Error("The specified address refers to the root namespace of the store which cannot be removed.");
                     # Unrefify the component before actually making any modifications to the store.
                     # modelViewObserver_ == undefined -> broadcast to all registered observers
                     # undoFlag_ == true -> invert namespace traversal order and invoke remove callbacks

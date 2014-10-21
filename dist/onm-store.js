@@ -112,14 +112,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             throw new Error("validateAddressModel failure: " + exception.message);
           }
         };
-        this.createComponent = function(address_) {
+        this.createComponent = function(address_, keyArray_, propertyAssignmentObject_) {
           var componentNamespace, descriptor, exception;
           try {
             if (!((address_ != null) && address_)) {
-              throw new Error("Missing object model namespace selector input parameter.");
+              throw new Error("Missing address input parameter.");
             }
             if (!_this.validateAddressModel(address_)) {
-              throw new Error("The specified address cannot be used to reference this store because it's not bound to the same model as this store.");
+              throw new Error("Address/store data model mismatch. Can't use the specified address to access this store.");
             }
             if (address_.isQualified()) {
               throw new Error("The specified address is qualified and may only be used to specify existing objects in the store.");
@@ -131,11 +131,42 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (descriptor.namespaceType === "root") {
               throw new Error("The specified address refers to the root namespace of the store which is created automatically.");
             }
-            componentNamespace = new Namespace(_this, address_, "new");
+            componentNamespace = new Namespace(_this, address_, "new", keyArray_, propertyAssignmentObject_);
             return componentNamespace;
           } catch (_error) {
             exception = _error;
             throw new Error("createComponent failure: " + exception.message);
+          }
+        };
+        this.injectComponent = function(addressExtensionPoint_, namespaceSource_) {
+          var addressSource, dataExtensionPoint, descriptor, exception, namespaceExtensionPoint, sourceComponentKey;
+          try {
+            if (!((addressExtensionPoint_ != null) && addressExtensionPoint_)) {
+              throw new Error("Missing address input parameter.");
+            }
+            if (!_this.validateAddressModel(addressExtensionPoint_)) {
+              throw new Error("Address/store data model mismatch. Can't use the specified address to access this store.");
+            }
+            if (!addressExtensionPoint_.isQualified()) {
+              throw new Error("The specified address is not qualified and cannot be used to specify a component injection point.");
+            }
+            descriptor = addressExtensionPoint_.implementation.getDescriptor();
+            if (!descriptor.namespaceType === "extensionPoint") {
+              throw new Error("The specified address does not refer to an extension point namespace.");
+            }
+            namespaceExtensionPoint = _this.openNamespace(addressExtensionPoint_);
+            dataExtensionPoint = namespaceExtensionPoint.data();
+            sourceComponentKey = namespaceSource_.getComponentKey();
+            addressSource = namespaceSource_.getResolvedAddress();
+            if (dataExtensionPoint[sourceComponentKey] != null) {
+              throw new Error("The specified component already exists in the target store.");
+            }
+            dataExtensionPoint[sourceComponentKey] = jslib.clone(namespaceSource_.data());
+            _this.implementation.reifier.reifyStoreComponent(addressSource);
+            return _this.openNamespace(addressSource);
+          } catch (_error) {
+            exception = _error;
+            throw new Error("injectComponent failure: " + exception.message);
           }
         };
         this.removeComponent = function(address_) {
@@ -154,7 +185,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (!descriptor.isComponent) {
               throw new Error("The specified address does not specify the root of a component.");
             }
-            if (descriptor.namespace === "root") {
+            if (descriptor.namespaceType === "root") {
               throw new Error("The specified address refers to the root namespace of the store which cannot be removed.");
             }
             _this.implementation.reifier.reifyStoreExtensions(address_, void 0, true);

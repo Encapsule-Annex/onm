@@ -13,8 +13,8 @@ var LUID = 1;
 
 var modelDeclaration = module.exports.modelDeclaration = {
     semanticBindings: {
-        setUniqueKey: function(data_) {
-            data_.key = "" + LUID++;
+        setUniqueKey: function(data_, key_) {
+            data_.key = (key_ != null) && key_ || ("" + LUID++);
         },
         getUniqueKey: function(data_) {
             return data_.key;
@@ -93,6 +93,38 @@ var modelDeclaration = module.exports.modelDeclaration = {
                                     }
                                 }
                             ]
+                        }
+                    },
+                    {
+                        namespaceType: "extensionPoint",
+                        jsonTag: "phoneNumbers",
+                        componentArchetype: {
+                            namespaceType: "component",
+                            jsonTag: "phoneNumber",
+                            namespaceProperties: {
+                                userMutable: {
+                                    areaCode: {
+                                        defaultValue: ''
+                                    },
+                                    number: {
+                                        defaultValue: ''
+                                    }
+                                }
+                            },
+                            subNamespaces: [
+                                {
+                                    namespaceType: "child",
+                                    jsonTag: "notes",
+                                    namespaceProperties: {
+                                        userMutable: {
+                                            text: {
+                                                defaultValue: ''
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                                
                         }
                     }
                 ]
