@@ -74,7 +74,7 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
         var address;
         var extensionPointAddresses = [];
         var actualResult = "";
-        var expectedResult = '["addressBook.contacts.-.contact.emails","addressBook.contacts.-.contact.addresses"]';
+        var expectedResult = '["addressBook.contacts.-.contact.emails","addressBook.contacts.-.contact.addresses","addressBook.contacts.-.contact.phoneNumbers"]';
         before(function() {
             address = store.model.createPathAddress("addressBook.contacts.contact");
             address.visitExtensionPointAddresses(function(addressExtensionPoint_) {

@@ -77,7 +77,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
         var actualResult = null;
         var expectedResult;
         before(function() {
-            expectedResult = '["addressBook.contacts.-.contact.emails","addressBook.contacts.-.contact.addresses"]';
+            expectedResult = '["addressBook.contacts.-.contact.emails","addressBook.contacts.-.contact.addresses","addressBook.contacts.-.contact.phoneNumbers"]';
             model = testData.createModel();
             address = model.createPathAddress("addressBook.contacts.contact");
             address.visitChildAddresses( function (addressChild_) {
@@ -98,7 +98,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
             var expectedResult;
 
             before(function() {
-                expectedResult = '["addressBook.contacts.-.contact.emails","addressBook.contacts.-.contact.addresses"]';
+                expectedResult = '["addressBook.contacts.1.contact.addresses.-.address.notes"]';
                 store = testData.createStore();
                 var namespace = store.createComponent(address);
                 addressContact = namespace.getResolvedAddress();

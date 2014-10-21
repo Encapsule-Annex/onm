@@ -167,7 +167,7 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
 
         describe("Serialize the test data store to JSON and compare the results against a known good snapshot.", function() {
 
-            var expectedJSON = '{"addressBook":{"properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{"1":{"firstName":"","lastName":"","key":"1","emails":{},"addresses":{},"phoneNumbers":{}},"2":{"firstName":"Joe","lastName":"Smith","key":"2","emails":{},"addresses":{},"phoneNumbers":{"3":{"areaCode":"000","number":"123-4567","key":"3","notes":{"text":"This is a note assigned via a hierarchical component construction options object."}}}},"test":{"firstName":"","lastName":"","key":"test","emails":{},"addresses":{},"phoneNumbers":{}},"JoeSmith":{"firstName":"","lastName":"","key":"JoeSmith","emails":{"primary":{"key":"primary"}},"addresses":{},"phoneNumbers":{}}}}}';
+            var expectedJSON = '{"addressBook":{"properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{"5":{"firstName":"","lastName":"","key":"5","emails":{},"addresses":{},"phoneNumbers":{}},"6":{"firstName":"Joe","lastName":"Smith","key":"6","emails":{},"addresses":{},"phoneNumbers":{"7":{"areaCode":"000","number":"123-4567","key":"7","notes":{"text":"This is a note assigned via a hierarchical component construction options object."}}}},"test":{"firstName":"","lastName":"","key":"test","emails":{},"addresses":{},"phoneNumbers":{}},"JoeSmith":{"firstName":"","lastName":"","key":"JoeSmith","emails":{"primary":{"key":"primary"}},"addresses":{},"phoneNumbers":{}}}}}';
 
             var actualJSON = null;
             before(function() {
