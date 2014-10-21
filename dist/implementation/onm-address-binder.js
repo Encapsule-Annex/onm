@@ -115,8 +115,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     }
   };
 
-  InitializeComponentNamespaces = function(store_, data_, descriptor_, extensionPointId_, key_) {
-    var childDescriptor, exception, resolveResults, _i, _len, _ref;
+  InitializeComponentNamespaces = function(store_, data_, descriptor_, extensionPointId_, key_, propertyAssignmentObject_) {
+    var childDescriptor, exception, propertyAssignmentObject, resolveResults, _i, _len, _ref;
     try {
       if (!((data_ != null) && data_)) {
         throw new Error("Missing data reference input parameter.");
@@ -131,8 +131,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         childDescriptor = _ref[_i];
         if (childDescriptor.namespaceType !== "component") {
-          resolveResults = ResolveNamespaceDescriptor({}, store_, data_, childDescriptor, key_, "new");
-          InitializeComponentNamespaces(store_, resolveResults.dataReference, childDescriptor, extensionPointId_, key_);
+          propertyAssignmentObject = (propertyAssignmentObject_ != null) && propertyAssignmentObject_ && (propertyAssignmentObject_[childDescriptor.jsonTag] != null) && propertyAssignmentObject_[childDescriptor.jsonTag] || {};
+          resolveResults = ResolveNamespaceDescriptor({}, store_, data_, childDescriptor, key_, "new", propertyAssignmentObject);
+          InitializeComponentNamespaces(store_, resolveResults.dataReference, childDescriptor, extensionPointId_, key_, propertyAssignmentObject);
         }
       }
       return true;
@@ -230,7 +231,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
   module.exports = AddressTokenBinder = (function() {
     function AddressTokenBinder(store_, parentDataReference_, token_, mode_, propertyAssignmentObject_) {
-      var descriptor, exception, extensionPointId, generations, getUniqueKeyFunction, model, parentPathIds, pathId, resolveActions, resolveResults, semanticBindings, setUniqueKeyFunction, targetComponentDescriptor, targetNamespaceDescriptor, _i, _len;
+      var descriptor, exception, extensionPointId, generations, getUniqueKeyFunction, model, parentPathIds, pathId, propertyAssignmentObject, resolveActions, resolveResults, semanticBindings, setUniqueKeyFunction, targetComponentDescriptor, targetNamespaceDescriptor, _i, _len;
       try {
         this.store = (store_ != null) && store_ || (function() {
           throw new Error("Missing object store input parameter.");
@@ -256,14 +257,15 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           setUniqueKey: setUniqueKeyFunction,
           getUniqueKey: getUniqueKeyFunction
         };
-        resolveResults = ResolveNamespaceDescriptor(resolveActions, store_, this.parentDataReference, token_.componentDescriptor, token_.key, mode_);
+        propertyAssignmentObject = (propertyAssignmentObject_ != null) && propertyAssignmentObject_ || {};
+        resolveResults = ResolveNamespaceDescriptor(resolveActions, store_, this.parentDataReference, token_.componentDescriptor, token_.key, mode_, propertyAssignmentObject);
         this.dataReference = resolveResults.dataReference;
         if (resolveResults.created) {
           this.resolvedToken.key = resolveResults.key;
         }
         extensionPointId = (token_.extensionPointDescriptor != null) && token_.extensionPointDescriptor && token_.extensionPointDescriptor.id || -1;
         if (mode_ === "new" && resolveResults.created) {
-          InitializeComponentNamespaces(store_, this.dataReference, targetComponentDescriptor, extensionPointId, this.resolvedToken.key, propertyAssignmentObject_);
+          InitializeComponentNamespaces(store_, this.dataReference, targetComponentDescriptor, extensionPointId, this.resolvedToken.key, propertyAssignmentObject);
         }
         if (mode_ === "strict") {
           VerifyComponentNamespaces(store_, resolveResult.dataReference, targetComponentDescriptor, extensionPointId);

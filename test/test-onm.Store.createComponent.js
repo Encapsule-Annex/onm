@@ -59,6 +59,19 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
             assert.instanceOf(namespaceContact, onm.Namespace);
         });
 
+        it("Verify the property values of the newly-created contact data component.", function() {
+            var dataContact = namespaceContact.data();
+            expect(dataContact).to.have.property('firstName').equal('');
+            expect(dataContact).to.have.property('lastName').equal('');
+            expect(dataContact).to.have.property('key');
+            expect(dataContact).to.have.property('emails');
+            expect(dataContact.emails).to.be.an('object');
+            expect(dataContact).to.have.property('addresses');
+            expect(dataContact.addresses).to.be.an('object');
+            expect(dataContact).to.have.property('phoneNumbers');
+            expect(dataContact.phoneNumbers).to.be.an('object');
+        });
+
         describe("Call onm.Store.createComponent with a single-key key array parameter.", function() {
             var keyArray = [ 'test' ];
             before(function() {
@@ -98,7 +111,7 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
             });
         });
 
-        describe("Call onm.Store.createComponent with an optional construction options object.", function() {
+        describe("Call onm.Store.createComponent with a simple construction options object.", function() {
             var constructionOptions = {
                 firstName: "Joe",
                 lastName: "Smith"
@@ -108,14 +121,54 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                 namespace = store.createComponent(addressNewContact, null, constructionOptions);
             });
             it("A contact component should have been created.", function() {
-                assert.isDefined(namespaceContact);
-                assert.isNotNull(namespaceContact);
-                assert.instanceOf(namespaceContact, onm.Namespace);
+                assert.isDefined(namespace);
+                assert.isNotNull(namespace);
+                assert.instanceOf(namespace, onm.Namespace);
+            });
+            it("Verify the property values of the newly-created contact data component.", function() {
+                var dataContact = namespace.data();
+                expect(dataContact).to.have.property('firstName').equal('Joe');
+                expect(dataContact).to.have.property('lastName').equal('Smith');
+                expect(dataContact).to.have.property('key');
+                expect(dataContact).to.have.property('emails');
+                expect(dataContact.emails).to.be.an('object');
+                expect(dataContact).to.have.property('addresses');
+                expect(dataContact.addresses).to.be.an('object');
+                expect(dataContact).to.have.property('phoneNumbers');
+                expect(dataContact.phoneNumbers).to.be.an('object');
+            });
+
+            describe("Call onm.Store.createComponent with a hierarchical construction options object.", function() {
+                var addressNewPhoneNumber, namespacePhoneNumber;
+                var constructionOptions = {
+                    areaCode: '000',
+                    number: '123-4567',
+                    notes: {
+                        text: "This is a note assigned via a hierarchical component construction options object."
+                    }
+                };
+                before(function() {
+                    addressNewPhoneNumber = namespace.getResolvedAddress().createSubpathAddress("phoneNumbers.phoneNumber");
+                    namespacePhoneNumber = store.createComponent(addressNewPhoneNumber, null, constructionOptions);
+                });
+                it("A contact component should have been created.", function() {
+                    assert.isDefined(namespacePhoneNumber);
+                    assert.isNotNull(namespacePhoneNumber);
+                    assert.instanceOf(namespacePhoneNumber, onm.Namespace);
+                });
+                it("Verify the property values of the newly-created contact data component.", function() {
+                    var dataContact = namespacePhoneNumber.data();
+                    expect(dataContact).to.have.property('areaCode').equal('000');
+                    expect(dataContact).to.have.property('number').equal('123-4567');
+                    expect(dataContact).to.have.property('key');
+                });
             });
         });
 
         describe("Serialize the test data store to JSON and compare the results against a known good snapshot.", function() {
-            var expectedJSON = '{"addressBook":{"properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{"5":{"firstName":"","lastName":"","key":"5","emails":{},"addresses":{}},"test":{"firstName":"","lastName":"","key":"test","emails":{},"addresses":{}},"JoeSmith":{"firstName":"","lastName":"","key":"JoeSmith","emails":{"primary":{"key":"primary"}},"addresses":{}}}}}';
+
+            var expectedJSON = '{"addressBook":{"properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{"1":{"firstName":"","lastName":"","key":"1","emails":{},"addresses":{},"phoneNumbers":{}},"2":{"firstName":"Joe","lastName":"Smith","key":"2","emails":{},"addresses":{},"phoneNumbers":{"3":{"areaCode":"000","number":"123-4567","key":"3","notes":{"text":"This is a note assigned via a hierarchical component construction options object."}}}},"test":{"firstName":"","lastName":"","key":"test","emails":{},"addresses":{},"phoneNumbers":{}},"JoeSmith":{"firstName":"","lastName":"","key":"JoeSmith","emails":{"primary":{"key":"primary"}},"addresses":{},"phoneNumbers":{}}}}}';
+
             var actualJSON = null;
             before(function() {
                 actualJSON = store.toJSON();

@@ -94,6 +94,38 @@ var modelDeclaration = module.exports.modelDeclaration = {
                                 }
                             ]
                         }
+                    },
+                    {
+                        namespaceType: "extensionPoint",
+                        jsonTag: "phoneNumbers",
+                        componentArchetype: {
+                            namespaceType: "component",
+                            jsonTag: "phoneNumber",
+                            namespaceProperties: {
+                                userMutable: {
+                                    areaCode: {
+                                        defaultValue: ''
+                                    },
+                                    number: {
+                                        defaultValue: ''
+                                    }
+                                }
+                            },
+                            subNamespaces: [
+                                {
+                                    namespaceType: "child",
+                                    jsonTag: "notes",
+                                    namespaceProperties: {
+                                        userMutable: {
+                                            text: {
+                                                defaultValue: ''
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                                
+                        }
                     }
                 ]
             } // contact

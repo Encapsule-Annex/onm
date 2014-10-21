@@ -96,7 +96,7 @@ VerifyNamespaceProperties = (data_, descriptor_) ->
 
 #
 # ****************************************************************************
-InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, key_) ->
+InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, key_, propertyAssignmentObject_) ->
     try
         if not (data_? and data_) then throw new Error("Missing data reference input parameter.");
         if not (descriptor_? and descriptor_) then throw new Error("Missing descriptor input parameter.");
@@ -104,8 +104,12 @@ InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, 
 
         for childDescriptor in descriptor_.children
             if childDescriptor.namespaceType != "component"
-                resolveResults = ResolveNamespaceDescriptor({}, store_, data_, childDescriptor, key_, "new")
-                InitializeComponentNamespaces(store_, resolveResults.dataReference, childDescriptor, extensionPointId_, key_)
+
+                propertyAssignmentObject = propertyAssignmentObject_? and propertyAssignmentObject_ and 
+                    propertyAssignmentObject_[childDescriptor.jsonTag]? and propertyAssignmentObject_[childDescriptor.jsonTag] or {}
+
+                resolveResults = ResolveNamespaceDescriptor({}, store_, data_, childDescriptor, key_, "new", propertyAssignmentObject)
+                InitializeComponentNamespaces(store_, resolveResults.dataReference, childDescriptor, extensionPointId_, key_, propertyAssignmentObject)
 
         return true
 
@@ -222,8 +226,11 @@ module.exports = class AddressTokenBinder
                 getUniqueKey: getUniqueKeyFunction
             }
 
+            propertyAssignmentObject = propertyAssignmentObject_? and propertyAssignmentObject_ or {}
+            
+
             # Resolve the input token's component namespace.
-            resolveResults = ResolveNamespaceDescriptor(resolveActions, store_, @parentDataReference, token_.componentDescriptor, token_.key, mode_)
+            resolveResults = ResolveNamespaceDescriptor(resolveActions, store_, @parentDataReference, token_.componentDescriptor, token_.key, mode_, propertyAssignmentObject)
             @dataReference = resolveResults.dataReference
 
             if resolveResults.created
@@ -232,7 +239,8 @@ module.exports = class AddressTokenBinder
             extensionPointId = token_.extensionPointDescriptor? and token_.extensionPointDescriptor and token_.extensionPointDescriptor.id or -1
 
             if mode_ == "new" and resolveResults.created
-                InitializeComponentNamespaces(store_, @dataReference, targetComponentDescriptor, extensionPointId, @resolvedToken.key, propertyAssignmentObject_)
+                # This resolves all the children and extension points of a component and initializes their properties.
+                InitializeComponentNamespaces(store_, @dataReference, targetComponentDescriptor, extensionPointId, @resolvedToken.key, propertyAssignmentObject)
 
             if mode_ == "strict"
                 VerifyComponentNamespaces(store_, resolveResult.dataReference, targetComponentDescriptor, extensionPointId)            
