@@ -14,6 +14,7 @@ module.exports = describe("onm.Store.openNamespace method tests", function() {
     var store, addressRoot, addressNewContact;
 
     before(function() {
+        testData.resetLuid();
         store = testData.createStore();
         addressRoot = store.model.createRootAddress();
         addressNewContact = addressRoot.createSubpathAddress("contacts.contact");

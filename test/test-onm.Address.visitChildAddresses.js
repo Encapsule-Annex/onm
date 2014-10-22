@@ -17,6 +17,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
         var actualResult;
         var expectedResult;
         before( function() {
+            testData.resetLuid();
             expectedResult = '["addressBook.properties","addressBook.contacts"]';
             store = testData.createStore();
             address = store.model.createRootAddress();
@@ -123,7 +124,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
 
                 var childAddresses = [];
                 var actualResult = null;
-                var expectedResult = '["addressBook.contacts.3.contact.addresses.-.address.notes"]';
+                var expectedResult = '["addressBook.contacts.1.contact.addresses.-.address.notes"]';
 
                 before(function() {
                     var address = addressContact.createSubpathAddress("addresses.address");

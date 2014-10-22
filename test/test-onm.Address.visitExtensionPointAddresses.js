@@ -21,6 +21,7 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
         var actualResult = [];
         var expectedResult = '["addressBook.properties.subproperties.collection","addressBook.contacts"]';
         before(function() {
+            testData.resetLuid();
             address = store.model.createRootAddress();
             address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
                 extensionPointAddresses.push(addressExtensionPoint_.getHumanReadableString());
