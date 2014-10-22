@@ -209,6 +209,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (!((resolveResults.key != null) && resolveResults.key)) {
               throw new Error("Your data model's semanticBindings.getUniqueKey function returned an invalid key. Key cannot be zero or zero-length.");
             }
+            if ((key_ != null) && key_ && (key_ !== resolveResults.key)) {
+              throw new Error("Your data model's semanticBindings.setUniqueKey function seemingly ignores the second in-parameter.");
+            }
           }
           resolveResults.dataReference = resolveResults.dataParentReference[resolveResults.jsonTag] = newData;
           resolveResults.created = true;
