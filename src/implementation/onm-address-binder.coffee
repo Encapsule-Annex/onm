@@ -163,7 +163,7 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
                     break
 
                 newData = {}
-                InitializeNamespaceProperties(newData, descriptor_.namespaceModelPropertiesDeclaration, propertyAssignmentObject_)
+                # InitializeNamespaceProperties(newData, descriptor_.namespaceModelPropertiesDeclaration, propertyAssignmentObject_)
 
                 if descriptor_.namespaceType == "component"
                     if not (resolveActions_.setUniqueKey? and resolveActions_.setUniqueKey)
@@ -181,6 +181,8 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
 
                     if key_? and key_ and (key_ != resolveResults.key)
                         throw new Error("Your data model's semanticBindings.setUniqueKey function seemingly ignores the second in-parameter.");
+
+                InitializeNamespaceProperties(newData, descriptor_.namespaceModelPropertiesDeclaration, propertyAssignmentObject_)
 
                 resolveResults.dataReference = resolveResults.dataParentReference[resolveResults.jsonTag] = newData
                 resolveResults.created = true

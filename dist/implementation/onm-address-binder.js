@@ -196,7 +196,6 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             break;
           }
           newData = {};
-          InitializeNamespaceProperties(newData, descriptor_.namespaceModelPropertiesDeclaration, propertyAssignmentObject_);
           if (descriptor_.namespaceType === "component") {
             if (!((resolveActions_.setUniqueKey != null) && resolveActions_.setUniqueKey)) {
               throw new Error("You must define semanticBindings.setUniqueKey function in your data model declaration.");
@@ -213,6 +212,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               throw new Error("Your data model's semanticBindings.setUniqueKey function seemingly ignores the second in-parameter.");
             }
           }
+          InitializeNamespaceProperties(newData, descriptor_.namespaceModelPropertiesDeclaration, propertyAssignmentObject_);
           resolveResults.dataReference = resolveResults.dataParentReference[resolveResults.jsonTag] = newData;
           resolveResults.created = true;
           break;
