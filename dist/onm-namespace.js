@@ -1,3 +1,4 @@
+
 /*
 ------------------------------------------------------------------------------
 
@@ -33,8 +34,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 ------------------------------------------------------------------------------
-*/
-
+ */
 
 (function() {
   var Address, AddressToken, AddressTokenBinder, Namespace, NamespaceDetails,
@@ -48,16 +48,17 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
   NamespaceDetails = (function() {
     function NamespaceDetails(namespace_, store_, address_, mode_) {
-      var exception,
-        _this = this;
+      var exception;
       try {
         this.dataReference = (store_.implementation.dataReference != null) && store_.implementation.dataReference || (function() {
           throw new Error("Cannot resolve object store's root data reference.");
         })();
         this.resolvedTokenArray = [];
-        this.getResolvedToken = function() {
-          return _this.resolvedTokenArray.length && _this.resolvedTokenArray[_this.resolvedTokenArray.length - 1] || void 0;
-        };
+        this.getResolvedToken = (function(_this) {
+          return function() {
+            return _this.resolvedTokenArray.length && _this.resolvedTokenArray[_this.resolvedTokenArray.length - 1] || void 0;
+          };
+        })(this);
         this.resolvedAddress = void 0;
       } catch (_error) {
         exception = _error;
@@ -279,19 +280,20 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     };
 
     Namespace.prototype.update = function() {
-      var address, containingComponentNotified, count, descriptor, exception, semanticBindings, updateAction, _results,
-        _this = this;
+      var address, containingComponentNotified, count, descriptor, exception, semanticBindings, updateAction, _results;
       try {
         address = this.getResolvedAddress();
         semanticBindings = this.store.model.getSemanticBindings();
         updateAction = (semanticBindings != null) && semanticBindings && (semanticBindings.update != null) && semanticBindings.update || void 0;
         if ((updateAction != null) && updateAction) {
           updateAction(this.data());
-          address.visitParentAddressesDescending(function(address__) {
-            var dataReference;
-            dataReference = _this.store.openNamespace(address__).data();
-            return updateAction(dataReference);
-          });
+          address.visitParentAddressesDescending((function(_this) {
+            return function(address__) {
+              var dataReference;
+              dataReference = _this.store.openNamespace(address__).data();
+              return updateAction(dataReference);
+            };
+          })(this));
         }
         count = 0;
         containingComponentNotified = false;

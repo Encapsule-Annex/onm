@@ -1,3 +1,4 @@
+
 /*
 ------------------------------------------------------------------------------
 
@@ -33,8 +34,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 ------------------------------------------------------------------------------
-*/
-
+ */
 
 (function() {
   var Address, AddressDetails, AddressToken,
@@ -44,8 +44,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
   AddressDetails = (function() {
     function AddressDetails(address_, model_, tokenVector_) {
-      var exception, token, _i, _len, _ref,
-        _this = this;
+      var exception, token, _i, _len, _ref;
       try {
         this.address = ((address_ != null) && address_) || (function() {
           throw new Error("Internal error missing address input parameter.");
@@ -53,96 +52,104 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         this.model = ((model_ != null) && model_) || (function() {
           throw new Error("Internal error missing model input paramter.");
         })();
-        this.getModelPath = function() {
-          var exception, lastToken;
-          try {
-            if (!_this.tokenVector.length) {
-              throw new Error("Invalid address contains no address tokens.");
-            }
-            lastToken = _this.getLastToken();
-            return lastToken.namespaceDescriptor.path;
-          } catch (_error) {
-            exception = _error;
-            throw new Error("getModelPath failure: " + exception.message);
-          }
-        };
-        this.getModelDescriptorFromSubpath = function(subpath_) {
-          var archetypeDescriptor, archetypePathId, currentDescriptor, currentModelPath, exception, subpathTokens, token, _i, _len;
-          try {
-            currentModelPath = _this.getModelPath();
-            currentDescriptor = _this.getLastToken().namespaceDescriptor;
-            subpathTokens = subpath_.split('.');
-            for (_i = 0, _len = subpathTokens.length; _i < _len; _i++) {
-              token = subpathTokens[_i];
-              if (currentDescriptor.namespaceType !== "extensionPoint" || currentDescriptor.children.length) {
-                currentModelPath += "." + token;
-                currentDescriptor = _this.model.implementation.getNamespaceDescriptorFromPath(currentModelPath);
-              } else {
-                archetypePathId = (currentDescriptor.archetypePathId != null) && currentDescriptor.archetypePathId || (function() {
-                  throw new Error('WAT');
-                })();
-                archetypeDescriptor = _this.model.implementation.getNamespaceDescriptorFromPathId(archetypePathId);
-                if (token !== archetypeDescriptor.jsonTag) {
-                  throw new Error("Expected component name of '" + token + "' but instead found '" + archetypeDescriptor.jsonTag + "'.");
-                }
-                currentModelPath = archetypeDescriptor.path;
-                currentDescriptor = archetypeDescriptor;
+        this.getModelPath = (function(_this) {
+          return function() {
+            var exception, lastToken;
+            try {
+              if (!_this.tokenVector.length) {
+                throw new Error("Invalid address contains no address tokens.");
               }
+              lastToken = _this.getLastToken();
+              return lastToken.namespaceDescriptor.path;
+            } catch (_error) {
+              exception = _error;
+              throw new Error("getModelPath failure: " + exception.message);
             }
-            console.log(currentModelPath);
-            return currentDescriptor;
-          } catch (_error) {
-            exception = _error;
-            throw new Error("getModelDescriptorFromSubpath failure: " + exception.message);
-          }
-        };
-        this.createSubpathIdAddress = function(pathId_) {
-          var addressedComponentDescriptor, addressedComponentToken, exception, newAddress, newToken, newTokenVector, targetNamespaceDescriptor;
-          try {
-            if (!((pathId_ != null) && pathId_ > -1)) {
-              throw new Error("Missing namespace path ID input parameter.");
+          };
+        })(this);
+        this.getModelDescriptorFromSubpath = (function(_this) {
+          return function(subpath_) {
+            var archetypeDescriptor, archetypePathId, currentDescriptor, currentModelPath, exception, subpathTokens, token, _i, _len;
+            try {
+              currentModelPath = _this.getModelPath();
+              currentDescriptor = _this.getLastToken().namespaceDescriptor;
+              subpathTokens = subpath_.split('.');
+              for (_i = 0, _len = subpathTokens.length; _i < _len; _i++) {
+                token = subpathTokens[_i];
+                if (currentDescriptor.namespaceType !== "extensionPoint" || currentDescriptor.children.length) {
+                  currentModelPath += "." + token;
+                  currentDescriptor = _this.model.implementation.getNamespaceDescriptorFromPath(currentModelPath);
+                } else {
+                  archetypePathId = (currentDescriptor.archetypePathId != null) && currentDescriptor.archetypePathId || (function() {
+                    throw new Error('WAT');
+                  })();
+                  archetypeDescriptor = _this.model.implementation.getNamespaceDescriptorFromPathId(archetypePathId);
+                  if (token !== archetypeDescriptor.jsonTag) {
+                    throw new Error("Expected component name of '" + token + "' but instead found '" + archetypeDescriptor.jsonTag + "'.");
+                  }
+                  currentModelPath = archetypeDescriptor.path;
+                  currentDescriptor = archetypeDescriptor;
+                }
+              }
+              console.log(currentModelPath);
+              return currentDescriptor;
+            } catch (_error) {
+              exception = _error;
+              throw new Error("getModelDescriptorFromSubpath failure: " + exception.message);
             }
-            addressedComponentToken = _this.getLastToken();
-            addressedComponentDescriptor = addressedComponentToken.componentDescriptor;
-            targetNamespaceDescriptor = _this.model.implementation.getNamespaceDescriptorFromPathId(pathId_);
-            if (targetNamespaceDescriptor.idComponent !== addressedComponentDescriptor.id) {
-              throw new Error("Invalid path ID specified does not resolve to a namespace in the same component as the source address.");
+          };
+        })(this);
+        this.createSubpathIdAddress = (function(_this) {
+          return function(pathId_) {
+            var addressedComponentDescriptor, addressedComponentToken, exception, newAddress, newToken, newTokenVector, targetNamespaceDescriptor;
+            try {
+              if (!((pathId_ != null) && pathId_ > -1)) {
+                throw new Error("Missing namespace path ID input parameter.");
+              }
+              addressedComponentToken = _this.getLastToken();
+              addressedComponentDescriptor = addressedComponentToken.componentDescriptor;
+              targetNamespaceDescriptor = _this.model.implementation.getNamespaceDescriptorFromPathId(pathId_);
+              if (targetNamespaceDescriptor.idComponent !== addressedComponentDescriptor.id) {
+                throw new Error("Invalid path ID specified does not resolve to a namespace in the same component as the source address.");
+              }
+              newToken = new AddressToken(_this.model, addressedComponentToken.idExtensionPoint, addressedComponentToken.key, pathId_);
+              newTokenVector = _this.tokenVector.length > 0 && _this.tokenVector.slice(0, _this.tokenVector.length - 1) || [];
+              newTokenVector.push(newToken);
+              newAddress = new Address(_this.model, newTokenVector);
+              return newAddress;
+            } catch (_error) {
+              exception = _error;
+              throw new Error("createSubpathIdAddress failure: " + exception.message);
             }
-            newToken = new AddressToken(_this.model, addressedComponentToken.idExtensionPoint, addressedComponentToken.key, pathId_);
-            newTokenVector = _this.tokenVector.length > 0 && _this.tokenVector.slice(0, _this.tokenVector.length - 1) || [];
-            newTokenVector.push(newToken);
-            newAddress = new Address(_this.model, newTokenVector);
-            return newAddress;
-          } catch (_error) {
-            exception = _error;
-            throw new Error("createSubpathIdAddress failure: " + exception.message);
-          }
-        };
-        this.pushToken = function(token_) {
-          var exception, parentToken;
-          try {
-            if (_this.tokenVector.length) {
-              parentToken = _this.tokenVector[_this.tokenVector.length - 1];
-              _this.validateTokenPair(parentToken, token_);
+          };
+        })(this);
+        this.pushToken = (function(_this) {
+          return function(token_) {
+            var exception, parentToken;
+            try {
+              if (_this.tokenVector.length) {
+                parentToken = _this.tokenVector[_this.tokenVector.length - 1];
+                _this.validateTokenPair(parentToken, token_);
+              }
+              _this.tokenVector.push(token_.clone());
+              if (token_.componentDescriptor.id === 0) {
+                _this.complete = true;
+              }
+              if (token_.keyRequired) {
+                _this.keysRequired = true;
+              }
+              if (!token_.isQualified()) {
+                _this.keysSpecified = false;
+              }
+              _this.humanReadableString = void 0;
+              _this.hashString = void 0;
+              return _this.address;
+            } catch (_error) {
+              exception = _error;
+              throw new Error("pushToken failure: " + exception.message);
             }
-            _this.tokenVector.push(token_.clone());
-            if (token_.componentDescriptor.id === 0) {
-              _this.complete = true;
-            }
-            if (token_.keyRequired) {
-              _this.keysRequired = true;
-            }
-            if (!token_.isQualified()) {
-              _this.keysSpecified = false;
-            }
-            _this.humanReadableString = void 0;
-            _this.hashString = void 0;
-            return _this.address;
-          } catch (_error) {
-            exception = _error;
-            throw new Error("pushToken failure: " + exception.message);
-          }
-        };
+          };
+        })(this);
         this.validateTokenPair = function(parentToken_, childToken_) {
           var exception;
           try {
@@ -164,27 +171,31 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             throw new Error("validateTokenPair the specified parent and child tokens are incompatible and cannot be used to form an address: " + exception.message);
           }
         };
-        this.getLastToken = function() {
-          var exception;
-          try {
-            if (!_this.tokenVector.length) {
-              throw new Error("Illegal call to getLastToken on uninitialized address class instance.");
+        this.getLastToken = (function(_this) {
+          return function() {
+            var exception;
+            try {
+              if (!_this.tokenVector.length) {
+                throw new Error("Illegal call to getLastToken on uninitialized address class instance.");
+              }
+              return _this.tokenVector[_this.tokenVector.length - 1];
+            } catch (_error) {
+              exception = _error;
+              throw new Error("getLastToken failure: " + exception.message);
             }
-            return _this.tokenVector[_this.tokenVector.length - 1];
-          } catch (_error) {
-            exception = _error;
-            throw new Error("getLastToken failure: " + exception.message);
-          }
-        };
-        this.getDescriptor = function() {
-          var exception;
-          try {
-            return _this.getLastToken().namespaceDescriptor;
-          } catch (_error) {
-            exception = _error;
-            throw new Error("getDescriptor failure: " + exception.message);
-          }
-        };
+          };
+        })(this);
+        this.getDescriptor = (function(_this) {
+          return function() {
+            var exception;
+            try {
+              return _this.getLastToken().namespaceDescriptor;
+            } catch (_error) {
+              exception = _error;
+              throw new Error("getDescriptor failure: " + exception.message);
+            }
+          };
+        })(this);
         this.tokenVector = [];
         this.parentExtensionPointId = -1;
         this.complete = false;
@@ -235,25 +246,32 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       this.isRoot = __bind(this.isRoot, this);
       this.getHashString = __bind(this.getHashString, this);
       this.getHumanReadableString = __bind(this.getHumanReadableString, this);
-      var exception,
-        _this = this;
+      var exception;
       try {
         this.model = (model_ != null) && model_ || (function() {
           throw new Error("Missing required object model input parameter.");
         })();
         this.implementation = new AddressDetails(this, model_, tokenVector_);
-        this.isComplete = function() {
-          return _this.implementation.complete;
-        };
-        this.isQualified = function() {
-          return !_this.implementation.keysRequired || _this.implementation.keysSpecified;
-        };
-        this.isResolvable = function() {
-          return _this.isComplete() && _this.isQualified();
-        };
-        this.isCreatable = function() {
-          return _this.isComplete() && _this.implementation.keysRequired && !_this.implementation.keysSpecified;
-        };
+        this.isComplete = (function(_this) {
+          return function() {
+            return _this.implementation.complete;
+          };
+        })(this);
+        this.isQualified = (function(_this) {
+          return function() {
+            return !_this.implementation.keysRequired || _this.implementation.keysSpecified;
+          };
+        })(this);
+        this.isResolvable = (function(_this) {
+          return function() {
+            return _this.isComplete() && _this.isQualified();
+          };
+        })(this);
+        this.isCreatable = (function(_this) {
+          return function() {
+            return _this.isComplete() && _this.implementation.keysRequired && !_this.implementation.keysSpecified;
+          };
+        })(this);
       } catch (_error) {
         exception = _error;
         throw new Error("Address error: " + exception.message);
@@ -261,26 +279,29 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     }
 
     Address.prototype.getHumanReadableString = function() {
-      var addStringToken, exception, humanReadableString, index,
-        _this = this;
+      var addStringToken, exception, humanReadableString, index;
       try {
         if ((this.implementation.humanReadableString != null) && this.implementation.humanReadableString) {
           return this.implementation.humanReadableString;
         }
         index = 0;
         humanReadableString = "";
-        addStringToken = function(address_) {
-          var key, model;
-          model = address_.getModel();
-          if (model.namespaceType === 'component') {
-            key = address_.implementation.getLastToken().key || "-";
-            humanReadableString += "." + key;
-          }
-          return humanReadableString += humanReadableString && ("." + model.jsonTag) || ("" + model.jsonTag);
-        };
-        this.visitParentAddressesAscending(function(addressParent_) {
-          return addStringToken(addressParent_);
-        });
+        addStringToken = (function(_this) {
+          return function(address_) {
+            var key, model;
+            model = address_.getModel();
+            if (model.namespaceType === 'component') {
+              key = address_.implementation.getLastToken().key || "-";
+              humanReadableString += "." + key;
+            }
+            return humanReadableString += humanReadableString && ("." + model.jsonTag) || ("" + model.jsonTag);
+          };
+        })(this);
+        this.visitParentAddressesAscending((function(_this) {
+          return function(addressParent_) {
+            return addStringToken(addressParent_);
+          };
+        })(this));
         addStringToken(this);
         this.implementation.humanReadableString = humanReadableString;
         return humanReadableString;
@@ -581,18 +602,19 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     };
 
     Address.prototype.visitParentAddressesAscending = function(callback_) {
-      var address, exception, _i, _len, _ref,
-        _this = this;
+      var address, exception, _i, _len, _ref;
       try {
         if (!((callback_ != null) && callback_)) {
           return false;
         }
         if (!((this.parentAddressesAscending != null) && this.parentAddressesAscending)) {
           this.parentAddressesAscending = [];
-          this.visitParentAddressesDescending(function(address__) {
-            _this.parentAddressesAscending.push(address__);
-            return true;
-          });
+          this.visitParentAddressesDescending((function(_this) {
+            return function(address__) {
+              _this.parentAddressesAscending.push(address__);
+              return true;
+            };
+          })(this));
           this.parentAddressesAscending.reverse();
         }
         if (!this.parentAddressesAscending.length) {
@@ -650,8 +672,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     };
 
     Address.prototype.visitSubaddressesAscending = function(callback_) {
-      var address, childAddressesToVisit, exception, traverse, _i, _len, _ref,
-        _this = this;
+      var address, childAddressesToVisit, exception, traverse, _i, _len, _ref;
       try {
         if (!((callback_ != null) && callback_)) {
           return false;
@@ -660,14 +681,16 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           this.subnamespaceAddressesAscending = [];
           childAddressesToVisit = [];
           childAddressesToVisit.push(this);
-          traverse = function(startAddress_) {
-            if (startAddress_.getModel().namespaceType !== "extensionPoint") {
-              return startAddress_.visitChildAddresses(function(childAddress_) {
-                _this.subnamespaceAddressesAscending.push(childAddress_);
-                return childAddressesToVisit.push(childAddress_);
-              });
-            }
-          };
+          traverse = (function(_this) {
+            return function(startAddress_) {
+              if (startAddress_.getModel().namespaceType !== "extensionPoint") {
+                return startAddress_.visitChildAddresses(function(childAddress_) {
+                  _this.subnamespaceAddressesAscending.push(childAddress_);
+                  return childAddressesToVisit.push(childAddress_);
+                });
+              }
+            };
+          })(this);
           while (childAddressesToVisit.length) {
             traverse(childAddressesToVisit.pop());
           }
@@ -690,17 +713,18 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     };
 
     Address.prototype.visitSubaddressesDescending = function(callback_) {
-      var address, exception, _i, _len, _ref,
-        _this = this;
+      var address, exception, _i, _len, _ref;
       try {
         if (!(callback_ && callback_)) {
           return false;
         }
         if (!((this.subnamespaceAddressesDescending != null) && this.subnamespaceAddressesDescending)) {
           this.subnamespaceAddressesDescending = [];
-          this.visitSubaddressesAscending(function(address__) {
-            return _this.subnamespaceAddressesDescending.push(address__);
-          });
+          this.visitSubaddressesAscending((function(_this) {
+            return function(address__) {
+              return _this.subnamespaceAddressesDescending.push(address__);
+            };
+          })(this));
           this.subnamespaceAddressesDescending.reverse();
         }
         _ref = this.subnamespaceAddressesDescending;

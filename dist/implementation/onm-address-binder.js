@@ -1,3 +1,4 @@
+
 /*
 ------------------------------------------------------------------------------
 
@@ -30,8 +31,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
-*/
-
+ */
 
 (function() {
   var AddressTokenBinder, InitializeComponentNamespaces, InitializeNamespaceProperties, ResolveNamespaceDescriptor, VerifyComponentNamespaces, VerifyNamespaceProperties;

@@ -1,3 +1,4 @@
+
 /*
 ------------------------------------------------------------------------------
 
@@ -31,59 +32,61 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 ------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
-*/
-
+ */
 
 (function() {
   var BackChannel;
 
   module.exports = BackChannel = (function() {
     function BackChannel(logHandler_, errorHandler_) {
-      var exception_,
-        _this = this;
+      var exception_;
       try {
+
         /*
         callback: function(html_) { ... }
         where html_ is an HTML string
-        */
-
+         */
         this.logHandler = logHandler_;
+
         /*
         callback: function(error_) { ... }
         where error_ is an Error object
-        */
-
+         */
         this.errorHandler = errorHandler_;
-        this.log = function(html_) {
-          var exception, exception_;
-          if ((_this.logHandler != null) && _this.logHandler) {
-            try {
-              _this.logHandler(html_);
-              return true;
-            } catch (_error) {
-              exception_ = _error;
-              exception = new Error("BackChannel exception occurred in log handler callback: " + exception_.message);
-              _this.error(exception);
-              return false;
+        this.log = (function(_this) {
+          return function(html_) {
+            var exception, exception_;
+            if ((_this.logHandler != null) && _this.logHandler) {
+              try {
+                _this.logHandler(html_);
+                return true;
+              } catch (_error) {
+                exception_ = _error;
+                exception = new Error("BackChannel exception occurred in log handler callback: " + exception_.message);
+                _this.error(exception);
+                return false;
+              }
             }
-          }
-          return false;
-        };
-        this.error = function(error_) {
-          var exception_, message;
-          if ((_this.errorHandler != null) && _this.errorHandler) {
-            try {
-              _this.errorHandler(error_);
-              return true;
-            } catch (_error) {
-              exception_ = _error;
-              message = "BackChannel exception occurred in error handler callback: " + exception_.message;
-              console.error(message);
-              false;
+            return false;
+          };
+        })(this);
+        this.error = (function(_this) {
+          return function(error_) {
+            var exception_, message;
+            if ((_this.errorHandler != null) && _this.errorHandler) {
+              try {
+                _this.errorHandler(error_);
+                return true;
+              } catch (_error) {
+                exception_ = _error;
+                message = "BackChannel exception occurred in error handler callback: " + exception_.message;
+                console.error(message);
+                false;
+              }
             }
-          }
-          return console.error("BackChannel.error reported w/no registered error handler!: " + error_.message);
-        };
+            return console.error("BackChannel.error reported w/no registered error handler!: " + error_.message);
+          };
+        })(this);
       } catch (_error) {
         exception_ = _error;
         throw new Error("BackChannel failure in constructor: " + exception_.message);

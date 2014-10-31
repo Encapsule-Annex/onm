@@ -1,3 +1,4 @@
+
 /*
 ------------------------------------------------------------------------------
 
@@ -32,8 +33,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 ------------------------------------------------------------------------------
-*/
-
+ */
 
 (function() {
   var AddressStore, Model, Namespace, Store,
@@ -53,8 +53,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     function AddressStore(referenceStore_, address_) {
       this.setAddress = __bind(this.setAddress, this);
       this.getAddress = __bind(this.getAddress, this);
-      var exception, selectorAddress, selectorModel,
-        _this = this;
+      var exception, selectorAddress, selectorModel;
       try {
         if (!((referenceStore_ != null) && referenceStore_)) {
           throw new Error("Missing object store input parameter. Unable to determine external selector type.");
@@ -72,31 +71,35 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         this.selectorNamespaceData.selectedNamespace = void 0;
         this.setAddress(address_);
         this.objectStoreCallbacks = {
-          onNamespaceUpdated: function(objectStore_, observerId_, address_) {
-            var cachedAddress, exception;
-            try {
-              cachedAddress = _this.getAddress();
-              if ((cachedAddress != null) && cachedAddress && cachedAddress.isEqual(address_)) {
-                return _this.setAddress(address_);
+          onNamespaceUpdated: (function(_this) {
+            return function(objectStore_, observerId_, address_) {
+              var cachedAddress, exception;
+              try {
+                cachedAddress = _this.getAddress();
+                if ((cachedAddress != null) && cachedAddress && cachedAddress.isEqual(address_)) {
+                  return _this.setAddress(address_);
+                }
+              } catch (_error) {
+                exception = _error;
+                throw new Error("onNamespaceUpdated failure: " + exception.message);
               }
-            } catch (_error) {
-              exception = _error;
-              throw new Error("onNamespaceUpdated failure: " + exception.message);
-            }
-          },
-          onNamespaceRemoved: function(objectStore_, observerId_, address_) {
-            var cachedAddress, exception, parentAddress;
-            try {
-              cachedAddress = _this.getAddress();
-              if ((cachedAddress != null) && cachedAddress && cachedAddress.isEqual(address_)) {
-                parentAddress = cachedAddress.createParentAddress();
-                _this.setAddress(parentAddress);
+            };
+          })(this),
+          onNamespaceRemoved: (function(_this) {
+            return function(objectStore_, observerId_, address_) {
+              var cachedAddress, exception, parentAddress;
+              try {
+                cachedAddress = _this.getAddress();
+                if ((cachedAddress != null) && cachedAddress && cachedAddress.isEqual(address_)) {
+                  parentAddress = cachedAddress.createParentAddress();
+                  _this.setAddress(parentAddress);
+                }
+              } catch (_error) {
+                exception = _error;
+                throw new Error("onNamespaceRemoved failure: " + exception.message);
               }
-            } catch (_error) {
-              exception = _error;
-              throw new Error("onNamespaceRemoved failure: " + exception.message);
-            }
-          }
+            };
+          })(this)
         };
       } catch (_error) {
         exception = _error;

@@ -1,3 +1,4 @@
+
 /*
 ------------------------------------------------------------------------------
 
@@ -31,8 +32,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 ------------------------------------------------------------------------------
 Low-level library routines inspired by (and often copied) from http://coffeescriptcookbook.com
 ------------------------------------------------------------------------------
-*/
-
+ */
 
 (function() {
   var clone;
