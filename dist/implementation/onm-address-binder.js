@@ -160,7 +160,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
   };
 
   ResolveNamespaceDescriptor = function(resolveActions_, store_, data_, descriptor_, key_, mode_, propertyAssignmentObject_) {
-    var exception, newData, resolveResults, tokenString;
+    var cherryPickedKey, derivedKey, exception, newData, resolveResults, tokenString;
     try {
       if (!((resolveActions_ != null) && resolveActions_)) {
         throw new Error("Internal error: missing resolve actions structure input parameter.");
@@ -200,7 +200,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (!((resolveActions_.setUniqueKey != null) && resolveActions_.setUniqueKey)) {
               throw new Error("You must define semanticBindings.setUniqueKey function in your data model declaration.");
             }
-            resolveActions_.setUniqueKey(newData, key_);
+            cherryPickedKey = resolveActions_.getUniqueKey(propertyAssignmentObject_);
+            derivedKey = (key_ != null) && key_ || cherryPickedKey;
+            resolveActions_.setUniqueKey(newData, derivedKey);
             if (!((resolveActions_.getUniqueKey != null) && resolveActions_.getUniqueKey)) {
               throw new Error("You must define semanticBindings.getUniqueKey function in your data model declaration.");
             }
@@ -208,7 +210,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (!((resolveResults.key != null) && resolveResults.key)) {
               throw new Error("Your data model's semanticBindings.getUniqueKey function returned an invalid key. Key cannot be zero or zero-length.");
             }
-            if ((key_ != null) && key_ && (key_ !== resolveResults.key)) {
+            if ((derivedKey != null) && derivedKey && (derivedKey !== resolveResults.key)) {
               throw new Error("Your data model's semanticBindings.setUniqueKey function seemingly ignores the second in-parameter.");
             }
           }

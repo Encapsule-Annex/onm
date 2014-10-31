@@ -169,7 +169,11 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
                     if not (resolveActions_.setUniqueKey? and resolveActions_.setUniqueKey)
                         throw new Error("You must define semanticBindings.setUniqueKey function in your data model declaration.");
 
-                    resolveActions_.setUniqueKey(newData, key_)
+                    cherryPickedKey = resolveActions_.getUniqueKey(propertyAssignmentObject_)
+
+                    derivedKey = key_? and key_ or cherryPickedKey
+
+                    resolveActions_.setUniqueKey(newData, derivedKey)
 
                     if not (resolveActions_.getUniqueKey? and resolveActions_.getUniqueKey)
                         throw new Error("You must define semanticBindings.getUniqueKey function in your data model declaration.");
@@ -179,7 +183,7 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
                     if not (resolveResults.key? and resolveResults.key)
                         throw new Error("Your data model's semanticBindings.getUniqueKey function returned an invalid key. Key cannot be zero or zero-length.");
 
-                    if key_? and key_ and (key_ != resolveResults.key)
+                    if derivedKey? and derivedKey and (derivedKey != resolveResults.key)
                         throw new Error("Your data model's semanticBindings.setUniqueKey function seemingly ignores the second in-parameter.");
 
                 InitializeNamespaceProperties(newData, descriptor_.namespaceModelPropertiesDeclaration, propertyAssignmentObject_)
