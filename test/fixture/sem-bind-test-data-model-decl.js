@@ -40,7 +40,7 @@ module.exports = {
 
                 namespaceProperties: {
                     userImmutable: {
-                        // causing inconsistencices: investgate -> defaultValue: { fnCreate: function() { return uuid.v4(); } }
+                        fnCreate: function() { return uuid.v4(); }
                     }
                 }
             }

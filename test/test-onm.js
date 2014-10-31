@@ -10,6 +10,7 @@ describe("onm module export object tests", function() {
     require('./test-onm.Address');
     require('./test-onm.Store');
     require('./test-onm.Namespace');
+    require('./test-onm.Model-intrinsic-semantic-bindings');
 });
 
 
