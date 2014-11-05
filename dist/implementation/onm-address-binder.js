@@ -50,6 +50,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         _ref = descriptor_.userImmutable;
         for (memberName in _ref) {
           functions = _ref[memberName];
+          if ((data_[memberName] != null) && data_[memberName]) {
+            continue;
+          }
           if ((propertyAssignmentObject[memberName] != null) && propertyAssignmentObject[memberName]) {
             data_[memberName] = propertyAssignmentObject[memberName];
           } else if ((functions.fnCreate != null) && functions.fnCreate) {
@@ -63,6 +66,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         _ref1 = descriptor_.userMutable;
         for (memberName in _ref1) {
           functions = _ref1[memberName];
+          if ((data_[memberName] != null) && data_[memberName]) {
+            continue;
+          }
           if ((propertyAssignmentObject[memberName] != null) && propertyAssignmentObject[memberName]) {
             data_[memberName] = propertyAssignmentObject[memberName];
           } else if ((functions.fnCreate != null) && functions.fnCreate) {

@@ -50,6 +50,8 @@ InitializeNamespaceProperties = (data_, descriptor_, propertyAssignmentObject_) 
 
         if descriptor_.userImmutable? and descriptor_.userImmutable
             for memberName, functions of descriptor_.userImmutable
+                if data_[memberName]? and data_[memberName]
+                    continue
                 if propertyAssignmentObject[memberName]? and propertyAssignmentObject[memberName]
                     data_[memberName] = propertyAssignmentObject[memberName]
                 else if functions.fnCreate? and functions.fnCreate
@@ -58,6 +60,8 @@ InitializeNamespaceProperties = (data_, descriptor_, propertyAssignmentObject_) 
                     data_[memberName] = functions.defaultValue
         if descriptor_.userMutable? and descriptor_.userMutable
             for memberName, functions of descriptor_.userMutable
+                if data_[memberName]? and data_[memberName]
+                    continue
                 if propertyAssignmentObject[memberName]? and propertyAssignmentObject[memberName]
                     data_[memberName] = propertyAssignmentObject[memberName]
                 else if functions.fnCreate? and functions.fnCreate
@@ -163,7 +167,6 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
                     break
 
                 newData = {}
-                # InitializeNamespaceProperties(newData, descriptor_.namespaceModelPropertiesDeclaration, propertyAssignmentObject_)
 
                 if descriptor_.namespaceType == "component"
                     if not (resolveActions_.setUniqueKey? and resolveActions_.setUniqueKey)
