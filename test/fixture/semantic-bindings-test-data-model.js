@@ -7,14 +7,22 @@
 var uuid = require('node-uuid');
 
 module.exports = {
-    namespaceType: "root",
-    jsonTag: "semanticBindingTest",
+
     semanticBindings: {
+
+        keyPropertyName: 'key',
+
         // disabled | internalLuid | internalUuid | external (default)
         componentKeyGenerator: "internalUuid",
+
         // disabled | internalSimple | internalAdvanced | external (default)
         namespaceVersioning: "internalAdvanced"
     },
+
+
+
+    namespaceType: "root",
+    jsonTag: "semanticBindingTest",
 
     namespaceProperties: {
         userImmutable: {
@@ -40,7 +48,9 @@ module.exports = {
 
                 namespaceProperties: {
                     userImmutable: {
-                        fnCreate: function() { return uuid.v4(); }
+                        key: {
+                            defaultValue: "FAIL"
+                        }
                     }
                 }
             }

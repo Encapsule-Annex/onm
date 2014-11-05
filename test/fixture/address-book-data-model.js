@@ -13,14 +13,23 @@ var LUID = 1;
 
 var modelDeclaration = module.exports.modelDeclaration = {
     semanticBindings: {
-        setUniqueKey: function(data_, key_) {
-            data_.key = (key_ != null) && key_ || ("" + LUID++);
+        keyPropertyName: 'key',
+
+        setUniqueKey: function(data_, keyValue_) {
+            data_[modelDeclaration.semanticBindings.keyPropertyName] = (keyValue_ != null) && keyValue_ || ("" + LUID++);
         },
         getUniqueKey: function(data_) {
-            return data_.key;
+            return data_[modelDeclaration.semanticBindings.keyPropertyName];
         }
     },
     jsonTag: "addressBook",
+    namespaceProperties: {
+        userImmutable: {
+            key: {
+                defaultValue: ''
+            }
+        }
+    },
     subNamespaces: [
         {
             namespaceType: "child",
@@ -45,7 +54,14 @@ var modelDeclaration = module.exports.modelDeclaration = {
                             jsonTag: "collection",
                             componentArchetype: {
                                 namespaceType: "component",
-                                jsonTag: "someObject"
+                                jsonTag: "someObject",
+                                namespaceProperties: {
+                                    userImmutable: {
+                                        key: {
+                                            defaultValue: ''
+                                        }
+                                    }
+                                }
                             }
                         }
                     ]
@@ -59,12 +75,17 @@ var modelDeclaration = module.exports.modelDeclaration = {
                 namespaceType: "component",
                 jsonTag: "contact",
                 namespaceProperties: {
+                    userImmutable: {
+                        key: {
+                            defaultValue: ''
+                        }
+                    },
                     userMutable: {
                         firstName: {
-                            defaultValue: ""
+                            defaultValue: ''
                         },
                         lastName: {
-                            defaultValue: ""
+                            defaultValue: ''
                         }
                     }
                 },
@@ -75,6 +96,13 @@ var modelDeclaration = module.exports.modelDeclaration = {
                         componentArchetype: {
                             namespaceType: "component",
                             jsonTag: "email",
+                            namespaceProperties: {
+                                userImmutable: {
+                                    key: {
+                                        defaultValue: ''
+                                    }
+                                }
+                            }
                         }
                     },
                     {
@@ -83,13 +111,27 @@ var modelDeclaration = module.exports.modelDeclaration = {
                         componentArchetype: {
                             namespaceType: "component",
                             jsonTag: "address",
+                            namespaceProperties: {
+                                userImmutable: {
+                                    key: {
+                                        defaultValue: ''
+                                    }
+                                }
+                            },
                             subNamespaces: [
                                 {
                                     namespaceType: "extensionPoint",
                                     jsonTag: "notes",
                                     componentArchetype: {
                                         namespaceType: "component",
-                                        jsonTag: "note"
+                                        jsonTag: "note",
+                                        namespaceProperties: {
+                                            userImmutable: {
+                                                key: {
+                                                    defaultValue: ''
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             ]
@@ -102,6 +144,11 @@ var modelDeclaration = module.exports.modelDeclaration = {
                             namespaceType: "component",
                             jsonTag: "phoneNumber",
                             namespaceProperties: {
+                                userImmutable: {
+                                    key: {
+                                        defaultValue: ''
+                                    }
+                                },
                                 userMutable: {
                                     areaCode: {
                                         defaultValue: ''

@@ -10,7 +10,7 @@ var onm = require('../onm');
 
 module.exports = describe("onm.Address.createSubpathAddress tests.", function() {
 
-    var testData = require('./fixture/test-data');
+    var testData = require('./fixture/address-book-data-model');
     var model, addressRoot;
 
     before(function() {

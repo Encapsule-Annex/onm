@@ -18,7 +18,7 @@ var uuid = require('node-uuid');
 var onm = require('../onm');
 var async = require('async');
 
-var semanticBindingTestDataModelDeclaration = require('./fixture/sem-bind-test-data-model-decl');
+var semanticBindingTestDataModelDeclaration = require('./fixture/semantic-bindings-test-data-model');
 
 var testKeys = {
     key1: '7f7c1925-48a1-4e98-a2d5-095db94aea29',
@@ -85,11 +85,15 @@ module.exports = describe("onm.Model intrinsic semantic bindings white box tests
             });
             // Dynamically add a test for each subcomponent address to the parent test suite.
             for (var addressIndex in componentAddresses) {
-                var componentAddress = componentAddresses[addressIndex];
-                suite.addTest(new Test("Component '" + componentAddress.getHumanReadableString() + "' key integrity check.", function() {
-                    var namespace = store.openNamespace(componentAddress);
-                    assert.equal(namespace.getComponentKey(), namespace.data()['key']);
-                }));
+                (function() {
+                    var componentAddress = componentAddresses[addressIndex];
+                    suite.addTest(new Test("Component '" + componentAddress.getHumanReadableString() + "' key integrity check.", function() {
+                        var namespace = store.openNamespace(componentAddress);
+                        console.log("In test: " + componentAddress.getHumanReadableString());
+                        console.log("In test: " + JSON.stringify(namespace.data()));
+                        assert.equal(namespace.getComponentKey(), namespace.data()['key']);
+                    }));
+                })();
             }
             done_();
         });

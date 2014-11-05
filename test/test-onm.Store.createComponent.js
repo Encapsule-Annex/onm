@@ -6,7 +6,7 @@ var expect = require('chai').expect;
 var should = require('chai').should;
 var uuid = require('node-uuid');
 var onm = require('../onm');
-var testData = require('./fixture/test-data');
+var testData = require('./fixture/address-book-data-model');
 
 module.exports = describe("onm.Store.createComponent method tests", function() {
 

@@ -7,7 +7,7 @@ var should = require('chai').should;
 
 var onm = require('../onm');
 
-var testData = require('./fixture/test-data');
+var testData = require('./fixture/address-book-data-model');
 
 module.exports = describe("onm.Store.injectComponent method tests.", function() {
 
