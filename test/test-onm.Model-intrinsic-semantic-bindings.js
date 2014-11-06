@@ -16,7 +16,6 @@ var should = require('chai').should;
 
 var uuid = require('node-uuid');
 var onm = require('../onm');
-var async = require('async');
 
 var semanticBindingTestDataModelDeclaration = require('./fixture/semantic-bindings-test-data-model');
 
