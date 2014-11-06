@@ -99,7 +99,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
             var expectedResult;
 
             before(function() {
-                expectedResult = '["addressBook.contacts.1.contact.addresses.-.address.notes"]';
+                expectedResult = '["addressBook.contacts.5.contact.addresses.-.address.notes"]';
                 store = testData.createStore();
                 var namespace = store.createComponent(address);
                 addressContact = namespace.getResolvedAddress();
@@ -124,7 +124,7 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
 
                 var childAddresses = [];
                 var actualResult = null;
-                var expectedResult = '["addressBook.contacts.1.contact.addresses.-.address.notes"]';
+                var expectedResult = '["addressBook.contacts.5.contact.addresses.-.address.notes"]';
 
                 before(function() {
                     var address = addressContact.createSubpathAddress("addresses.address");

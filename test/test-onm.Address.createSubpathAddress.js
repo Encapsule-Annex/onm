@@ -70,7 +70,7 @@ module.exports = describe("onm.Address.createSubpathAddress tests.", function() 
             addressContactAddresses = addressContact.createSubpathAddress("addresses");
             console.log(addressContactAddresses.getHumanReadableString());
             actualResult = addressContactAddresses.getHumanReadableString();
-            expectedResult = 'addressBook.contacts.1.contact.addresses';
+            expectedResult = 'addressBook.contacts.2.contact.addresses';
         });
 
         it("The actual result should match the expected result", function() {
@@ -85,7 +85,7 @@ module.exports = describe("onm.Address.createSubpathAddress tests.", function() 
             before(function() {
                 var addressTest = addressContactAddresses.createSubpathAddress('address');
                 actualResult = addressTest.getHumanReadableString();
-                expectedResult = 'addressBook.contacts.1.contact.addresses.-.address';
+                expectedResult = 'addressBook.contacts.2.contact.addresses.-.address';
             });
 
             it("The actual result should match the expected result", function() {

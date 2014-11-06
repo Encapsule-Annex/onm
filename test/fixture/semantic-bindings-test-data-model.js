@@ -19,8 +19,6 @@ module.exports = {
         namespaceVersioning: "internalAdvanced"
     },
 
-
-
     namespaceType: "root",
     jsonTag: "semanticBindingTest",
 
@@ -48,9 +46,7 @@ module.exports = {
 
                 namespaceProperties: {
                     userImmutable: {
-                        key: {
-                            defaultValue: "FAIL"
-                        }
+                        key: {}
                     }
                 }
             }

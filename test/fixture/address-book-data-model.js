@@ -12,21 +12,21 @@ var onm = require('../../onm.js');
 var LUID = 1;
 
 var modelDeclaration = module.exports.modelDeclaration = {
+    jsonTag: "addressBook",
     semanticBindings: {
         keyPropertyName: 'key',
 
         setUniqueKey: function(data_, keyValue_) {
-            data_[modelDeclaration.semanticBindings.keyPropertyName] = (keyValue_ != null) && keyValue_ || ("" + LUID++);
+            return data_[modelDeclaration.semanticBindings.keyPropertyName] = (keyValue_ != null) && keyValue_ || ("" + LUID++);
         },
         getUniqueKey: function(data_) {
             return data_[modelDeclaration.semanticBindings.keyPropertyName];
         }
     },
-    jsonTag: "addressBook",
     namespaceProperties: {
         userImmutable: {
             key: {
-                defaultValue: ''
+                fnCreate: function () { var data = {};  return modelDeclaration.semanticBindings.setUniqueKey(data); }
             }
         }
     },
@@ -57,9 +57,7 @@ var modelDeclaration = module.exports.modelDeclaration = {
                                 jsonTag: "someObject",
                                 namespaceProperties: {
                                     userImmutable: {
-                                        key: {
-                                            defaultValue: ''
-                                        }
+                                        key: {}
                                     }
                                 }
                             }
@@ -76,9 +74,7 @@ var modelDeclaration = module.exports.modelDeclaration = {
                 jsonTag: "contact",
                 namespaceProperties: {
                     userImmutable: {
-                        key: {
-                            defaultValue: ''
-                        }
+                        key: {}
                     },
                     userMutable: {
                         firstName: {
@@ -98,9 +94,7 @@ var modelDeclaration = module.exports.modelDeclaration = {
                             jsonTag: "email",
                             namespaceProperties: {
                                 userImmutable: {
-                                    key: {
-                                        defaultValue: ''
-                                    }
+                                    key: {}
                                 }
                             }
                         }
@@ -113,9 +107,7 @@ var modelDeclaration = module.exports.modelDeclaration = {
                             jsonTag: "address",
                             namespaceProperties: {
                                 userImmutable: {
-                                    key: {
-                                        defaultValue: ''
-                                    }
+                                    key: {}
                                 }
                             },
                             subNamespaces: [
@@ -127,9 +119,7 @@ var modelDeclaration = module.exports.modelDeclaration = {
                                         jsonTag: "note",
                                         namespaceProperties: {
                                             userImmutable: {
-                                                key: {
-                                                    defaultValue: ''
-                                                }
+                                                key: {}
                                             }
                                         }
                                     }
@@ -145,9 +135,7 @@ var modelDeclaration = module.exports.modelDeclaration = {
                             jsonTag: "phoneNumber",
                             namespaceProperties: {
                                 userImmutable: {
-                                    key: {
-                                        defaultValue: ''
-                                    }
+                                    key: {}
                                 },
                                 userMutable: {
                                     areaCode: {

@@ -5,7 +5,9 @@ var assert = require('chai').assert;
 var expect = require('chai').expect;
 var should = require('chai').should;
 
-describe("Object Namespace Manager (onm) module test suite.", function() {
+var packageMeta = require('../package.json');
+
+describe("Object Namespace Manager v" + packageMeta.version + " (onm) module test suite.", function() {
 
     // Validate data models used by these tests.
     require('./test-fixture-data-models');
