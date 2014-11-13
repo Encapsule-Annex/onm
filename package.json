@@ -1,6 +1,6 @@
 {
   "name": "onm",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Object Namespace Manager (onm) data model, schema-driven JSON factory and in-memory subsystem communication bus for complex data-driven Node.js/HTML 5 client apps.",
   "keywords": [
     "JSON",
