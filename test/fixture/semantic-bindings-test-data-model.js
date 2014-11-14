@@ -8,15 +8,8 @@ var uuid = require('node-uuid');
 
 module.exports = {
 
+    // see semantic-bindings-variants.js module
     semanticBindings: {
-
-        keyPropertyName: 'key',
-
-        // disabled | internalLuid | internalUuid | external (default)
-        componentKeyGenerator: "internalUuid",
-
-        // disabled | internalSimple | internalAdvanced | external (default)
-        namespaceVersioning: "internalAdvanced"
     },
 
     namespaceType: "root",
