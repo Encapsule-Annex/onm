@@ -1,8 +1,9 @@
 // semantic-binding-variants.js
 //
-// This module defines a static vector of different onm data model
-// semanticBindings objects that are spliced into the 'SemanticBindingTest'
-// data model to create a vector of onm data models for testing.
+// Each semantic binding variant is grafted into the 'SemanticBindingTest'
+// data model declaration object to create a test vector of onm data model
+// declaration objects.
+//
 
 var semanticBindingVariants = {
 
@@ -47,10 +48,12 @@ var semanticBindingVariants = {
     ] },
 
 
+    // External key generator coverage.
+
+    // keyPropertyName setUniqueKey keyUniqueKey
 
 
-
-    { "Internal UUID component key generator. 'keyPropertyName' === undefined.", [
+    { "External key generator. 'keyPropertyName' === undefined.", [
         {
         }
     ] },
