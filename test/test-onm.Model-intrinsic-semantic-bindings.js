@@ -17,7 +17,8 @@ var should = require('chai').should;
 var uuid = require('node-uuid');
 var onm = require('../onm');
 
-var semanticBindingTestDataModelDeclaration = require('./fixture/semantic-bindings-test-data-model');
+// returns a leche.withData-style test input data vector
+var semanticBindingVariants = require('./fixture/semantic-binding-variants');
 
 var testKeys = {
     key1: '7f7c1925-48a1-4e98-a2d5-095db94aea29',
@@ -25,7 +26,7 @@ var testKeys = {
     key3: 'a2645c25-9122-49ae-92b5-5bc5813ed4a5'
 };
 
-module.exports = describe("onm.Model intrinsic semantic bindings white box tests", function(done_) {
+module.exports = describe("onm.Model intrinsic semantic bindings white box tests", function() {
 
     var model = null;
     var address = null;
