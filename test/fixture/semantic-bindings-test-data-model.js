@@ -10,6 +10,7 @@ module.exports = {
 
     // see semantic-bindings-variants.js module
     semanticBindings: {
+        componentKeyGenerator: "internalLuid"
     },
 
     namespaceType: "root",
