@@ -11,25 +11,22 @@ var testDataVector = [
 
     {
         testName: "Null component key generator.",
+        validConfig: false,
         semanticBindings: {
-            keyPropertyName: 'key',
-
-            // disabled | internalLuid | internalUuid | external (default)
-            componentKeyGenerator: "internalUuid",
-
-
         }
     },
 
     {
         testName: "With 'keyPropertyName' declaration set to some random value.",
+        validConfig: false,
         semanticBindings: {
-            keyPropertyName: 'error'
+            keyPropertyName: 'error' // should be ignored
         }
     },
 
     {
         testName: "Internal LUID component key generator. 'keyPropertyName' === undefined.",
+        validConfig: true,
         semanticBindings: {
             componentKeyGenerator: 'internalLuid'
         }
@@ -37,6 +34,7 @@ var testDataVector = [
 
     {
         testName: "Internal LUID component key generator. 'keyPropertyName' === 'key'.",
+        validConfig: true,
         semanticBindings: {
             keyPropertyName: 'key',
             componentKeyGenerator: 'internalLuid'
@@ -45,6 +43,7 @@ var testDataVector = [
 
     {
         testName: "Internal LUID component key generator. 'keyPropertyName' === 'error'.",
+        validConfig: true,
         semanticBindings: {
             keyPropertyName: 'error',
             componentKeyGenerator: 'internalLuid'
@@ -53,6 +52,7 @@ var testDataVector = [
 
     {
         testName: "Internal UUID component key generator. 'keyPropertyName' === undefined.",
+        validConfig: true,
         semanticBindings: {
             componentKeyGenerator: 'internalUuid'
         }
@@ -60,6 +60,7 @@ var testDataVector = [
 
     {
         testName: "Internal UUID component key generator. 'keyPropertyName' === 'key'.",
+        validConfig: true,
         semanticBindings: {
             keyPropertyName: 'key',
             componentKeyGenerator: 'internalUuid'
@@ -68,6 +69,7 @@ var testDataVector = [
 
     {
         testName: "Internal UUID component key generator. 'keyPropertyName' === 'error'.",
+        validConfig: false,
         semanticBindings: {
             keyPropertyName: 'error',
             componentKeyGenerator: 'internalUuid'

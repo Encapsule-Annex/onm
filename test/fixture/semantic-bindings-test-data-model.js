@@ -10,6 +10,7 @@ module.exports = {
 
     // see semantic-bindings-variants.js module
     semanticBindings: {
+        keyPropertyName: 'key',
         componentKeyGenerator: "internalLuid"
     },
 
@@ -29,7 +30,6 @@ module.exports = {
         {
             namespaceType: "child",
             jsonTag: "childA",
-
         },
         {
             namespaceType: "extensionPoint",
