@@ -49,7 +49,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
   ModelDetails = (function() {
     function ModelDetails(model_, objectModelDeclaration_) {
-      var buildOMDescriptorFromLayout, exception;
+      var buildOMDescriptorFromLayout, defaultSemanticBindings, exception, _base;
       try {
         this.model = ((model_ != null) && model_) || (function() {
           throw new Error("Internal error missing model input parameter.");
@@ -432,11 +432,19 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
         Object.freeze(this.objectModelPathMap);
         Object.freeze(this.objectModelDescriptorById);
-        this.semanticBindings = (this.objectModelDeclaration.semanticBindings != null) && this.objectModelDeclaration.semanticBindings || {};
+        defaultSemanticBindings = {
+          keyPropertyName: '_cid',
+          componentKeyGenerator: 'disabled',
+          namespaceVersion: 'disabled'
+        };
+        this.semanticBindings = (this.objectModelDeclaration.semanticBindings != null) && this.objectModelDeclaration.semanticBindings || defaultSemanticBindings;
         this.componentKeyGenerator = (this.semanticBindings.componentKeyGenerator != null) && this.semanticBindings.componentKeyGenerator || "external";
         this.namespaceVersioning = ((this.semanticBindings.update != null) && this.semanticBindings.update && "external") || ((this.semanticBindings.namespaceVersioning != null) && this.semanticBindings.namespaceVersioning || "disabled");
         switch (this.componentKeyGenerator) {
           case "disabled":
+            if ((this.semanticBindings.keyPropertyName != null) && this.semanticBindings.keyPropertyName) {
+              delete this.semanticBindings.keyPropertyName;
+            }
             if ((this.semanticBindings.getUniqueKey != null) && this.semanticBindings.getUniqueKey) {
               delete this.semanticBindings.getUniqueKey;
             }
@@ -445,24 +453,42 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             }
             break;
           case "internalLuid":
-            this.semanticBindings.getUniqueKey = function(data_) {
-              return data_.key;
-            };
-            this.semanticBindings.setUniqueKey = function(data_, key_) {
-              data_.key = (key_ != null) && key_ || ("" + (LUID++));
-              return data_.key;
-            };
+            this.semanticBindings.keyPropertyName = (this.semanticBindings.keyPropertyName != null) && this.semanticBindings.keyPropertyName || defaultSemanticBindings.keyPropertyName;
+            this.semanticBindings.getUniqueKey = (function(_this) {
+              return function(data_) {
+                return data_[_this.semanticBindings.keyPropertyName];
+              };
+            })(this);
+            this.semanticBindings.setUniqueKey = (function(_this) {
+              return function(data_, key_) {
+                data_[_this.semanticBindings.keyPropertyName] = (key_ != null) && key_ || ("" + (LUID++));
+                return data_[_this.semanticBindings.keyPropertyName];
+              };
+            })(this);
             break;
           case "internalUuid":
-            this.semanticBindings.getUniqueKey = function(data_) {
-              return data_.key;
-            };
-            this.semanticBindings.setUniqueKey = function(data_, key_) {
-              data_.key = (key_ != null) && key_ || uuid.v4();
-              return data_.key;
-            };
+            this.semanticBindings.keyPropertyName = (this.semanticBindings.keyPropertyName != null) && this.semanticBindings.keyPropertyName || defaultSemanticBindings.keyPropertyName;
+            this.semanticBindings.getUniqueKey = (function(_this) {
+              return function(data_) {
+                return data_[_this.semanticBindings.keyPropertyName];
+              };
+            })(this);
+            this.semanticBindings.setUniqueKey = (function(_this) {
+              return function(data_, key_) {
+                data_[_this.semanticBindings.keyPropertyName] = (key_ != null) && key_ || uuid.v4();
+                return data_[_this.semanticBindings.keyPropertyName];
+              };
+            })(this);
             break;
           case "external":
+            if (this.countExtensionPoints) {
+              if (!((this.semanticBindings.keyPropertyName != null) && this.semanticBindings.keyPropertyName)) {
+                this.semanticBindings.keyPropertyName = defaultSemanticBindings.keyPropertyName;
+              }
+              if (!((this.semanticBindings.getUniqueKey != null) && this.semanticBindings.getUniqueKey && (typeof (_base = this.semanticBindings).setUniqueKey === "function" ? _base.setUniqueKey(this.semanticBindings.setUniqueKey) : void 0))) {
+                throw new Error("Data model declares extension point(s) and an external component key generator but is missing get/setUniqueKey functions?");
+              }
+            }
             break;
           default:
             throw new Error("Unrecognized componentKeyGenerator='" + this.componentKeyGenerator + "'");

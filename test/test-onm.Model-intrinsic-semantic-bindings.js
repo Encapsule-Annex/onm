@@ -39,35 +39,53 @@ module.exports = describe("onm.Model intrinsic semantic bindings white box tests
         var store = null;
         var namespace = null;
 
+        var keyPropertyName = null;
+
+
         before(function(done_) {
 
-            model = new onm.Model(testInputDataModelDeclaration_);
-            assert.isNotNull(model);
-            assert.instanceOf(model, onm.Model);
+            assert.doesNotThrow(function() {
+                model = new onm.Model(testInputDataModelDeclaration_);
+                assert.isNotNull(model);
+                assert.instanceOf(model, onm.Model);
+                keyPropertyName = model.getSemanticBindings().keyPropertyName;
+            });
 
-            store = new onm.Store(model);
-            assert.isNotNull(store);
-            assert.instanceOf(store, onm.Store);
+            assert.doesNotThrow(function() {
+                store = new onm.Store(model);
+                assert.isNotNull(store);
+                assert.instanceOf(store, onm.Store);
+            });
 
-            address = model.createRootAddress().createSubpathAddress("collectionA.componentA");
-            assert.isNotNull(address);
-            assert.instanceOf(address, onm.Address);
+            assert.doesNotThrow(function() {
+                address = model.createRootAddress().createSubpathAddress("collectionA.componentA");
+                assert.isNotNull(address);
+                assert.instanceOf(address, onm.Address);
+            });
 
-            namespace = store.createComponent(address);
-            assert.isNotNull(namespace);
-            assert.instanceOf(namespace, onm.Namespace);
+            assert.doesNotThrow(function() {
+                namespace = store.createComponent(address);
+                assert.isNotNull(namespace);
+                assert.instanceOf(namespace, onm.Namespace);
+            });
 
-            namespace = store.createComponent(address, [ testKeys.key1 ]);
-            assert.isNotNull(namespace);
-            assert.instanceOf(namespace, onm.Namespace);
+            assert.doesNotThrow(function() {
+                namespace = store.createComponent(address, [ testKeys.key1 ]);
+                assert.isNotNull(namespace);
+                assert.instanceOf(namespace, onm.Namespace);
+            });
 
-            namespace = store.createComponent(address, [ testKeys.key2 ], { key: testKeys.key2 } );
-            assert.isNotNull(namespace);
-            assert.instanceOf(namespace, onm.Namespace);
+            assert.doesNotThrow(function() {
+                namespace = store.createComponent(address, [ testKeys.key2 ], { key: testKeys.key2 } );
+                assert.isNotNull(namespace);
+                assert.instanceOf(namespace, onm.Namespace);
+            });
 
-            namespace = store.createComponent(address, undefined, { key: testKeys.key3 } );
-            assert.isNotNull(namespace);
-            assert.instanceOf(namespace, onm.Namespace);
+            assert.doesNotThrow(function() {
+                namespace = store.createComponent(address, undefined, { key: testKeys.key3 } );
+                assert.isNotNull(namespace);
+                assert.instanceOf(namespace, onm.Namespace);
+            });
 
             console.log(store.toJSON());
             done_();
@@ -97,7 +115,7 @@ module.exports = describe("onm.Model intrinsic semantic bindings white box tests
                             var namespace = store.openNamespace(componentAddress);
                             console.log("In test: " + componentAddress.getHumanReadableString());
                             console.log("In test: " + JSON.stringify(namespace.data()));
-                            assert.equal(namespace.getComponentKey(), namespace.data()['key']);
+                            assert.equal(namespace.getComponentKey(), namespace.data()[keyPropertyName]);
                         }));
                     })();
                 }

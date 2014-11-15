@@ -10,7 +10,7 @@ module.exports = {
 
     // see semantic-bindings-variants.js module
     semanticBindings: {
-        keyPropertyName: 'key',
+        
         componentKeyGenerator: "internalLuid"
     },
 
@@ -37,10 +37,9 @@ module.exports = {
             componentArchetype: {
                 namespaceType: "component",
                 jsonTag: "componentA",
-
                 namespaceProperties: {
                     userImmutable: {
-                        key: {}
+                        _cid: {}
                     }
                 }
             }
