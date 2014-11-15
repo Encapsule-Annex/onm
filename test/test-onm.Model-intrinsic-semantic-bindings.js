@@ -92,6 +92,11 @@ module.exports = describe("onm.Model intrinsic semantic bindings white box tests
 
         });
 
+
+            onm.tests.verifyDataModel(testInputDataModelDeclaration_);
+
+
+
         var suite = describe("Validate component key integrity.", function(done_) {
 
             var addressCollectionA, namespaceCollectionA;
