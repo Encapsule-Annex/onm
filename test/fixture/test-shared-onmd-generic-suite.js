@@ -19,6 +19,8 @@ var assert = require('chai').assert;
 var expect = require('chai').expect;
 var should = require('chai').should;
 
+var withData = require('leche').withData;
+
 // MODULE API
 // This module exports a function that accepts a reference to the onm data model declaration.
 // e.g. var testOnmdX = require('test-onmd-X')(dataModelDeclarationObject_)
@@ -124,9 +126,56 @@ module.exports = function (dataModelDeclaration_) {
 
                         var suiteB = Suite.create(suiteA, "Check onm model '" + onmModel.jsonTag + "' component namespace key property declaration(s).");
 
+                        var componentDescriptorTestSuites = {};
+
+
                         for (var index = 0 ; index < onmModel.implementation.countDescriptors ; index++) {
                             var objectModelDescriptor = onmModel.implementation.getNamespaceDescriptorFromPathId(index);
                             if (objectModelDescriptor.namespaceType === "component") {
+                                var testName = "'" + onmModel.jsonTag + "' component namespace path '" + objectModelDescriptor.path + "' key property declaration test.";
+                                componentDescriptorTestSuites[testName] = [ {
+                                    testName: testName,
+                                    objectModelDescriptor: objectModelDescriptor
+                                } ];
+                            }
+                        }
+
+                        withData(componentDescriptorTestSuites, function (testDescriptor_) {
+
+                            var objectModelDescriptor = testDescriptor_.objectModelDescriptor;
+
+                            describe("Verify '" + objectModelDescriptor.path + "' property declaration object.", function() {
+
+                                it("Component namespace descriptor should define 'namespaceModelPropertiesDeclaration' property.", function() {
+                                    assert.property(objectModelDescriptor, 'namespaceModelPropertiesDeclaration');
+                                });
+
+                                it("Component namespace descriptor property declaration should be an object.", function() {
+                                    assert.isObject(objectModelDescriptor.namespaceModelPropertiesDeclaration);
+                                });
+
+                                it("Component namespace descriptor property declaration should define 'userImmutable'.", function() {
+                                    assert.property(objectModelDescriptor.namespaceModelPropertiesDeclaration, 'userImmutable');
+                                });
+
+                                it("Component namespace descriptor immutable property declaration should be an object.", function() {
+                                    assert.isObject(objectModelDescriptor.namespaceModelPropertiesDeclaration.userImmutable);
+                                });
+
+                                describe("Verify '" + objectModelDescriptor.path + "' component key declaration.", function() {
+
+                                    it("do it.", function() { assert.isTrue(true); });
+
+
+                                });
+
+                                
+
+                            });
+
+                        });
+
+                        /*
                                 (function() {
                                     var objectModelDescriptor_ = objectModelDescriptor;
                                     var testTitle = "'" + onmModel.jsonTag + "' component namespace path '" + objectModelDescriptor_.path + "' key property declaration test.";
@@ -164,8 +213,9 @@ module.exports = function (dataModelDeclaration_) {
 
                                     }));
                                 })();
-                            }
-                        }
+
+                        */
+
                     }
 
                     dynamicDataModelDeclSuiteDone_();

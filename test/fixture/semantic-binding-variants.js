@@ -119,23 +119,28 @@ var testDataVector = [
 
     */
 
+]; // 'semanticBindings' object variants array
 
-];
-
+// We have data model module in the fixture's directory that's used by the semantic
+// bindings tests that's used here as a template: each of the 'semanticBindings'
+// object variants above is splice into this base data model declaration to produce
+// a vector of data model declarations.
 var dataModelDeclarationTemplate = require('./semantic-bindings-test-data-model');
 
+// This is what we're exporting.
 var withDataInputVector = {};
 
+// Build a vector of onm data model declarations.
 testDataVector.forEach( function (testDescriptor_) {
-
-    var dataModelDeclaration = onm.util.clone(dataModelDeclarationTemplate);
-    dataModelDeclaration.semanticBindings = testDescriptor_.semanticBindings;
-    withDataInputVector[testDescriptor_.testName] = [ dataModelDeclaration ];
+    var testPayload = onm.util.clone(testDescriptor_);
+    testPayload.dataModelDeclaration = onm.util.clone(dataModelDeclarationTemplate);
+    testPayload.dataModelDeclaration.semanticBindings = testDescriptor_.semanticBindings;
+    withDataInputVector[testDescriptor_.testName] = [ testPayload ];
 });
 
+// Return a vector of onm data model declarations.
 module.exports = withDataInputVector;
 
-console.log(JSON.stringify(withDataInputVector));
 
 
 
