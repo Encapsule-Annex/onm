@@ -500,7 +500,7 @@ class ModelDetails
                     if @countExtensionPoints
                         if not (@semanticBindings.keyPropertyName? and @semanticBindings.keyPropertyName)
                             @semanticBindings.keyPropertyName = defaultSemanticBindings.keyPropertyName
-                        if not (@semanticBindings.getUniqueKey? and @semanticBindings.getUniqueKey and @semanticBindings.setUniqueKey? @semanticBindings.setUniqueKey)
+                        if not (@semanticBindings.getUniqueKey? and @semanticBindings.getUniqueKey and @semanticBindings.setUniqueKey? and @semanticBindings.setUniqueKey)
                             throw new Error("Data model declares extension point(s) and an external component key generator but is missing get/setUniqueKey functions?")
                     break
                 else

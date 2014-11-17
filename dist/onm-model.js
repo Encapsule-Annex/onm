@@ -49,7 +49,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
   ModelDetails = (function() {
     function ModelDetails(model_, objectModelDeclaration_) {
-      var buildOMDescriptorFromLayout, defaultSemanticBindings, exception, _base;
+      var buildOMDescriptorFromLayout, defaultSemanticBindings, exception;
       try {
         this.model = ((model_ != null) && model_) || (function() {
           throw new Error("Internal error missing model input parameter.");
@@ -485,7 +485,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               if (!((this.semanticBindings.keyPropertyName != null) && this.semanticBindings.keyPropertyName)) {
                 this.semanticBindings.keyPropertyName = defaultSemanticBindings.keyPropertyName;
               }
-              if (!((this.semanticBindings.getUniqueKey != null) && this.semanticBindings.getUniqueKey && (typeof (_base = this.semanticBindings).setUniqueKey === "function" ? _base.setUniqueKey(this.semanticBindings.setUniqueKey) : void 0))) {
+              if (!((this.semanticBindings.getUniqueKey != null) && this.semanticBindings.getUniqueKey && (this.semanticBindings.setUniqueKey != null) && this.semanticBindings.setUniqueKey)) {
                 throw new Error("Data model declares extension point(s) and an external component key generator but is missing get/setUniqueKey functions?");
               }
             }

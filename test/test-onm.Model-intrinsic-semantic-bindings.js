@@ -45,7 +45,7 @@ module.exports = describe("onm.Model intrinsic semantic bindings white box tests
         before(function(done_) {
 
             assert.doesNotThrow(function() {
-                model = new onm.Model(testInputDataModelDeclaration_);
+                model = new onm.Model(testInputDataModelDeclaration_.dataModelDeclaration);
                 assert.isNotNull(model);
                 assert.instanceOf(model, onm.Model);
                 keyPropertyName = model.getSemanticBindings().keyPropertyName;
@@ -87,15 +87,12 @@ module.exports = describe("onm.Model intrinsic semantic bindings white box tests
                 assert.instanceOf(namespace, onm.Namespace);
             });
 
+            onm.tests.verifyDataModel(testInputDataModelDeclaration_.dataModelDeclaration);
+
             console.log(store.toJSON());
             done_();
 
         });
-
-
-            onm.tests.verifyDataModel(testInputDataModelDeclaration_);
-
-
 
         var suite = describe("Validate component key integrity.", function(done_) {
 
@@ -118,8 +115,8 @@ module.exports = describe("onm.Model intrinsic semantic bindings white box tests
                         var componentAddress = componentAddresses[addressIndex];
                         suite.addTest(new Test("Component '" + componentAddress.getHumanReadableString() + "' key integrity check.", function() {
                             var namespace = store.openNamespace(componentAddress);
-                            console.log("In test: " + componentAddress.getHumanReadableString());
-                            console.log("In test: " + JSON.stringify(namespace.data()));
+                            // console.log("In test: " + componentAddress.getHumanReadableString());
+                            // console.log("In test: " + JSON.stringify(namespace.data()));
                             assert.equal(namespace.getComponentKey(), namespace.data()[keyPropertyName]);
                         }));
                     })();
@@ -130,6 +127,7 @@ module.exports = describe("onm.Model intrinsic semantic bindings white box tests
             it("Run the dynamically generated test suite.", function() {
                 assert.isTrue(true);
             });
+
 
         });
 
