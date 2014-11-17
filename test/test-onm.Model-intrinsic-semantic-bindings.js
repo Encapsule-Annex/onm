@@ -32,7 +32,7 @@ var testKeys = {
 
 module.exports = describe("onm.Model intrinsic semantic bindings white box tests", function() {
 
-    withData(testInputDataVector, function (testInputDataModelDeclaration_) {
+    withData(testInputDataVector, function (testDescriptor_) {
 
         var model = null;
         var address = null;
@@ -44,96 +44,109 @@ module.exports = describe("onm.Model intrinsic semantic bindings white box tests
 
         before(function(done_) {
 
-            assert.doesNotThrow(function() {
-                model = new onm.Model(testInputDataModelDeclaration_.dataModelDeclaration);
-                assert.isNotNull(model);
-                assert.instanceOf(model, onm.Model);
-                keyPropertyName = model.getSemanticBindings().keyPropertyName;
-            });
+            if (testDescriptor_.validConfig) {
 
-            assert.doesNotThrow(function() {
-                store = new onm.Store(model);
-                assert.isNotNull(store);
-                assert.instanceOf(store, onm.Store);
-            });
+                assert.doesNotThrow(function() {
+                    model = new onm.Model(testDescriptor_.dataModelDeclaration);
+                    assert.isNotNull(model);
+                    assert.instanceOf(model, onm.Model);
+                    keyPropertyName = model.getSemanticBindings().keyPropertyName;
+                });
 
-            assert.doesNotThrow(function() {
-                address = model.createRootAddress().createSubpathAddress("collectionA.componentA");
-                assert.isNotNull(address);
-                assert.instanceOf(address, onm.Address);
-            });
+                assert.doesNotThrow(function() {
+                    store = new onm.Store(model);
+                    assert.isNotNull(store);
+                    assert.instanceOf(store, onm.Store);
+                });
 
-            assert.doesNotThrow(function() {
-                namespace = store.createComponent(address);
-                assert.isNotNull(namespace);
-                assert.instanceOf(namespace, onm.Namespace);
-            });
+                assert.doesNotThrow(function() {
+                    address = model.createRootAddress().createSubpathAddress("collectionA.componentA");
+                    assert.isNotNull(address);
+                    assert.instanceOf(address, onm.Address);
+                });
 
-            assert.doesNotThrow(function() {
-                namespace = store.createComponent(address, [ testKeys.key1 ]);
-                assert.isNotNull(namespace);
-                assert.instanceOf(namespace, onm.Namespace);
-            });
+                assert.doesNotThrow(function() {
+                    namespace = store.createComponent(address);
+                    assert.isNotNull(namespace);
+                    assert.instanceOf(namespace, onm.Namespace);
+                });
 
-            assert.doesNotThrow(function() {
-                namespace = store.createComponent(address, [ testKeys.key2 ], { key: testKeys.key2 } );
-                assert.isNotNull(namespace);
-                assert.instanceOf(namespace, onm.Namespace);
-            });
+                assert.doesNotThrow(function() {
+                    namespace = store.createComponent(address, [ testKeys.key1 ]);
+                    assert.isNotNull(namespace);
+                    assert.instanceOf(namespace, onm.Namespace);
+                });
 
-            assert.doesNotThrow(function() {
-                namespace = store.createComponent(address, undefined, { key: testKeys.key3 } );
-                assert.isNotNull(namespace);
-                assert.instanceOf(namespace, onm.Namespace);
-            });
+                assert.doesNotThrow(function() {
+                    namespace = store.createComponent(address, [ testKeys.key2 ], { key: testKeys.key2 } );
+                    assert.isNotNull(namespace);
+                    assert.instanceOf(namespace, onm.Namespace);
+                });
 
-            onm.tests.verifyDataModel(testInputDataModelDeclaration_.dataModelDeclaration);
+                assert.doesNotThrow(function() {
+                    namespace = store.createComponent(address, undefined, { key: testKeys.key3 } );
+                    assert.isNotNull(namespace);
+                    assert.instanceOf(namespace, onm.Namespace);
+                });
 
-            console.log(store.toJSON());
+                onm.tests.verifyDataModel(testDescriptor_.dataModelDeclaration);
+
+                var suite = describe("Validate component key integrity.", function(done_) {
+
+                    var addressCollectionA, namespaceCollectionA;
+                    var subcomponentAddresses = [];
+                    var completeTestSuite = done_;
+
+                    before(function(done_) {
+                        addressCollectionA = model.createRootAddress().createSubpathAddress("collectionA");
+                        namespaceCollectionA = store.openNamespace(addressCollectionA);
+                        var componentAddresses = [];
+                        // This could be collapsed but is left expanded to make it simpler to copy and extend the pattern.
+                        // Cache the addresses of the extesion point's subcomponents. 
+                        namespaceCollectionA.visitExtensionPointSubcomponents(function(addressSubcomponent_) {
+                            componentAddresses.push(addressSubcomponent_.clone());
+                        });
+                        // Dynamically add a test for each subcomponent address to the parent test suite.
+                        for (var addressIndex in componentAddresses) {
+                            (function() {
+                                var componentAddress = componentAddresses[addressIndex];
+                                suite.addTest(new Test("Component '" + componentAddress.getHumanReadableString() + "' key integrity check.", function() {
+                                    var namespace = store.openNamespace(componentAddress);
+                                    // console.log("In test: " + componentAddress.getHumanReadableString());
+                                    // console.log("In test: " + JSON.stringify(namespace.data()));
+                                    assert.equal(namespace.getComponentKey(), namespace.data()[keyPropertyName]);
+                                }));
+                            })();
+                        }
+                        done_();
+                    });
+
+                    it("Run the dynamically generated test suite.", function() {
+                        assert.isTrue(true);
+                    });
+
+                });
+
+            } else {
+
+                assert.throws(function() {
+                    model = new onm.Model(testDescriptor_.dataModelDeclaration);
+                    // assert.isNotNull(model);
+                    // assert.instanceOf(model, onm.Model);
+                    // keyPropertyName = model.getSemanticBindings().keyPropertyName;
+                }, Error);
+
+            }
+
+            // console.log(store.toJSON());
             done_();
 
         });
 
-        var suite = describe("Validate component key integrity.", function(done_) {
-
-            var addressCollectionA, namespaceCollectionA;
-            var subcomponentAddresses = [];
-            var completeTestSuite = done_;
-
-            before(function(done_) {
-                addressCollectionA = model.createRootAddress().createSubpathAddress("collectionA");
-                namespaceCollectionA = store.openNamespace(addressCollectionA);
-                var componentAddresses = [];
-                // This could be collapsed but is left expanded to make it simpler to copy and extend the pattern.
-                // Cache the addresses of the extesion point's subcomponents. 
-                namespaceCollectionA.visitExtensionPointSubcomponents(function(addressSubcomponent_) {
-                    componentAddresses.push(addressSubcomponent_.clone());
-                });
-                // Dynamically add a test for each subcomponent address to the parent test suite.
-                for (var addressIndex in componentAddresses) {
-                    (function() {
-                        var componentAddress = componentAddresses[addressIndex];
-                        suite.addTest(new Test("Component '" + componentAddress.getHumanReadableString() + "' key integrity check.", function() {
-                            var namespace = store.openNamespace(componentAddress);
-                            // console.log("In test: " + componentAddress.getHumanReadableString());
-                            // console.log("In test: " + JSON.stringify(namespace.data()));
-                            assert.equal(namespace.getComponentKey(), namespace.data()[keyPropertyName]);
-                        }));
-                    })();
-                }
-                done_();
-            });
-
-            it("Run the dynamically generated test suite.", function() {
-                assert.isTrue(true);
-            });
-
-
+        it("Execute the test suite.", function() {
+            assert.isTrue(true);
         });
 
     });
 
 });
-
-
-

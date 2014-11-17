@@ -55,7 +55,8 @@ describe("onm v" + packageMeta.version + " test fixture regression test suite.",
 
             assert.doesNotThrow(loadAddressBookDataModelDeclaration);
             assert.doesNotThrow(loadSemanticBindingsDataModelDeclaration);
-            assert.doesNotThrow(loadSemanticBindingsDataModelDeclarationVariants);
+            // We pick up coverage for the variants in the test-onm.Model-intrinsic-semantic-bindings.js module.
+            // assert.doesNotThrow(loadSemanticBindingsDataModelDeclarationVariants);
 
             // EXECUTE DYNAMIC SUB-SUITES
 

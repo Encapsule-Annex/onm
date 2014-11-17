@@ -20,7 +20,7 @@ var testDataVector = [
         testName: "With 'keyPropertyName' declaration set to some random value.",
         validConfig: false,
         semanticBindings: {
-            keyPropertyName: 'error' // should be ignored
+            keyPropertyName: 'error'
         }
     },
 
@@ -69,7 +69,7 @@ var testDataVector = [
 
     {
         testName: "Internal UUID component key generator. 'keyPropertyName' === 'error'.",
-        validConfig: false,
+        validConfig: true,
         semanticBindings: {
             keyPropertyName: 'error',
             componentKeyGenerator: 'internalUuid'
