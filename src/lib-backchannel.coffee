@@ -43,42 +43,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 # ****************************************************************************
 module.exports = class BackChannel
     constructor: (logHandler_, errorHandler_) ->
-        try
-            ###
-            callback: function(html_) { ... }
-            where html_ is an HTML string
-            ###
-            @logHandler = logHandler_
 
-            ###
-            callback: function(error_) { ... }
-            where error_ is an Error object
-            ###
-            @errorHandler = errorHandler_
+        @log = (consoleText_) ->
+            console.log consoleText_
 
-            @log = (html_) =>
-                if @logHandler? and @logHandler
-                    try
-                        @logHandler(html_)
-                        return true
-                    catch exception_
-                        exception = new Error("BackChannel exception occurred in log handler callback: #{exception_.message}")
-                        @error(exception)
-                        return false
-                false
+        @warn = (consoleText_) ->
+            console.warn consoleText_
 
-            @error = (error_) =>
-                if @errorHandler? and @errorHandler
-                    try
-                        @errorHandler(error_)
-                        return true
-                    catch exception_
-                        message = "BackChannel exception occurred in error handler callback: #{exception_.message}"
-                        console.error(message);
-                        false
-
-                console.error("BackChannel.error reported w/no registered error handler!: #{error_.message}")
-
-        catch exception_
-            throw new Error("BackChannel failure in constructor: #{exception_.message}");
-
+        @error = (errorObject_) ->
+            console.error errorObject_.message
+            throw errorObject_

@@ -136,6 +136,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       _ref = descriptor_.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         childDescriptor = _ref[_i];
+        console.log("InitializeComponentNamespaces for descriptor '" + childDescriptor.jsonTag + "' (" + childDescriptor.namespaceType + ").");
         if (childDescriptor.namespaceType !== "component") {
           propertyAssignmentObject = (propertyAssignmentObject_ != null) && propertyAssignmentObject_ && (propertyAssignmentObject_[childDescriptor.jsonTag] != null) && propertyAssignmentObject_[childDescriptor.jsonTag] || {};
           resolveResults = ResolveNamespaceDescriptor({}, store_, data_, childDescriptor, key_, "new", propertyAssignmentObject);
@@ -158,6 +159,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       if (!((descriptor_ != null) && descriptor_)) {
         throw new Error("Missing descriptor input parameter.");
       }
+      console.warn("VerifyComponentNamespaces is not implemented?");
       return true;
     } catch (_error) {
       exception = _error;

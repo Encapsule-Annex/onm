@@ -31,6 +31,10 @@ module.exports = function (dataModelDeclaration_) {
 
     describe("Object Namespace Manager (onm) data model declaration generic acceptance test suite.", function() {
 
+        before(function(done_) {
+            done_();
+        });
+
         describe("Base level test input data acceptance tests.", function() {
             it("The input data model declaration should be defined.", function() {
                 assert.isDefined(dataModelDeclaration);
