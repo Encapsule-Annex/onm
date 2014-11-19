@@ -138,6 +138,10 @@ module.exports = class Namespace
                             extensionPointNamespace = @store.openNamespace(extensionPointAddress)
                             extensionPointNamespace.update()
 
+
+                for subcomponentDescriptor in tokenBinder.subcomponentDescriptors
+                    console.log(JSON.stringify(subcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject));
+
                 if tokenBinder.subcomponentDescriptors.length > 0
                     console.log("AND... WE HAVE UNFINISHED BUSINESS: " + tokenBinder.subcomponentDescriptors.length + " subcomponent descriptors await...")
 

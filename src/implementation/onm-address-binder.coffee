@@ -124,11 +124,12 @@ InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, 
                         console.log("data-driven extension of the target component.");
 
                         subcomponentDescriptors.push( {
-                            descriptor: childDescriptor
-                            parent:
-                                descriptor: descriptor_
-                                data: data_
-                            propertyAssignmentObject: propertyAssignmentObject_
+                            parentExtensionPoint:
+                                namespaceDescriptor: descriptor_
+                                dataReference: data_
+                                propertyAssignmentObject: propertyAssignmentObject_
+                            subcomponent:
+                                namespaceDescriptor: childDescriptor
                             } )
 
                 else

@@ -144,12 +144,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
             if (Object.keys(propertyAssignmentObject_).length > 0) {
               console.log("data-driven extension of the target component.");
               subcomponentDescriptors.push({
-                descriptor: childDescriptor,
-                parent: {
-                  descriptor: descriptor_,
-                  data: data_
+                parentExtensionPoint: {
+                  namespaceDescriptor: descriptor_,
+                  dataReference: data_,
+                  propertyAssignmentObject: propertyAssignmentObject_
                 },
-                propertyAssignmentObject: propertyAssignmentObject_
+                subcomponent: {
+                  namespaceDescriptor: childDescriptor
+                }
               });
             }
           } else {

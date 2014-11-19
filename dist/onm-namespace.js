@@ -82,7 +82,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       this.getResolvedLabel = __bind(this.getResolvedLabel, this);
       this.getComponentKey = __bind(this.getComponentKey, this);
       this.getResolvedAddress = __bind(this.getResolvedAddress, this);
-      var address, addressToken, componentAddress, constructionOptions, exception, extensionPointAddress, extensionPointNamespace, key, keyArrayCount, keyIndex, mode, objectModel, objectModelNameKeys, objectModelNameStore, resolvedAddress, tokenArrayCount, tokenBinder, tokenCount, tokenIndex, workingOnLastToken, _i, _len, _ref;
+      var address, addressToken, componentAddress, constructionOptions, exception, extensionPointAddress, extensionPointNamespace, key, keyArrayCount, keyIndex, mode, objectModel, objectModelNameKeys, objectModelNameStore, resolvedAddress, subcomponentDescriptor, tokenArrayCount, tokenBinder, tokenCount, tokenIndex, workingOnLastToken, _i, _j, _len, _len1, _ref, _ref1;
       try {
         if (!((store_ != null) && store_)) {
           throw new Error("Missing object store input parameter.");
@@ -144,6 +144,11 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                 extensionPointNamespace.update();
               }
             }
+          }
+          _ref1 = tokenBinder.subcomponentDescriptors;
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            subcomponentDescriptor = _ref1[_j];
+            console.log(JSON.stringify(subcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject));
           }
           if (tokenBinder.subcomponentDescriptors.length > 0) {
             console.log("AND... WE HAVE UNFINISHED BUSINESS: " + tokenBinder.subcomponentDescriptors.length + " subcomponent descriptors await...");
