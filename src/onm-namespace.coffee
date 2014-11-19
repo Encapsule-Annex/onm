@@ -116,8 +116,15 @@ module.exports = class Namespace
             # The actual store data.
             tokenCount = 0
             for addressToken in address.implementation.tokenVector
-                constructionOptions = ((tokenArrayCount - 1) == tokenCount++) and propertyAssignmentObject_ or undefined;
+
+                workingOnLastToken = (tokenArrayCount - 1) == tokenCount
+                tokenCount++
+
+                # do not apply the propertyAssignmentObject_ until we're creating the target data component.
+                constructionOptions = workingOnLastToken and propertyAssignmentObject_ or undefined;
+
                 tokenBinder = new AddressTokenBinder(store_, @implementation.dataReference, addressToken, mode, constructionOptions)
+
                 @implementation.resolvedTokenArray.push tokenBinder.resolvedToken
                 @implementation.dataReference = tokenBinder.dataReference
 
@@ -130,6 +137,10 @@ module.exports = class Namespace
                             extensionPointAddress = componentAddress.createParentAddress()
                             extensionPointNamespace = @store.openNamespace(extensionPointAddress)
                             extensionPointNamespace.update()
+
+                if tokenBinder.subcomponentDescriptors.length > 0
+                    console.log("AND... WE HAVE UNFINISHED BUSINESS: " + tokenBinder.subcomponentDescriptors.length + " subcomponent descriptors await...")
+
                 true
 
         catch exception

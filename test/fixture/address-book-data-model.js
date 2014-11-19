@@ -99,6 +99,11 @@ var onm = require('../../onm.js');
                                 namespaceProperties: {
                                     userImmutable: {
                                         key: {}
+                                    },
+                                    userImmutable: {
+                                        emailAddress: {
+                                            defaultValue: ""
+                                        }
                                     }
                                 }
                             }
@@ -112,6 +117,11 @@ var onm = require('../../onm.js');
                                 namespaceProperties: {
                                     userImmutable: {
                                         key: {}
+                                    },
+                                    userMutable: {
+                                        streetAddress: {
+                                            defaultValue: ""
+                                        }
                                     }
                                 },
                                 subNamespaces: [
@@ -124,6 +134,11 @@ var onm = require('../../onm.js');
                                             namespaceProperties: {
                                                 userImmutable: {
                                                     key: {}
+                                                },
+                                                userMutable: {
+                                                    text: {
+                                                        defaultValue: ""
+                                                    }
                                                 }
                                             }
                                         }

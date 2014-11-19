@@ -106,20 +106,47 @@ InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, 
         if not (descriptor_? and descriptor_) then throw new Error("Missing descriptor input parameter.")
         if not (extensionPointId_? and extensionPointId_) then throw new Error("Missing extension point ID input parameter.")
 
+        subcomponentDescriptors = [];
+
 
         for childDescriptor in descriptor_.children
 
-            console.log("InitializeComponentNamespaces for descriptor '" + childDescriptor.jsonTag + "' (" + childDescriptor.namespaceType + ").")
+            console.log("InitializeComponentNamespaces evaluating descriptor '" + childDescriptor.jsonTag + "' (" + childDescriptor.namespaceType + ").")
 
-            if childDescriptor.namespaceType != "component"
+            propertyAssignmentObject = {};
 
-                propertyAssignmentObject = propertyAssignmentObject_? and propertyAssignmentObject_ and 
-                    propertyAssignmentObject_[childDescriptor.jsonTag]? and propertyAssignmentObject_[childDescriptor.jsonTag] or {}
+            if propertyAssignmentObject_? and propertyAssignmentObject_
 
-                resolveResults = ResolveNamespaceDescriptor({}, store_, data_, childDescriptor, key_, "new", propertyAssignmentObject)
-                InitializeComponentNamespaces(store_, resolveResults.dataReference, childDescriptor, extensionPointId_, key_, propertyAssignmentObject)
+                if childDescriptor.namespaceType == "component"
+                
+                    if Object.keys(propertyAssignmentObject_).length > 0
 
-        return true
+                        console.log("data-driven extension of the target component.");
+
+                        subcomponentDescriptors.push( {
+                            descriptor: childDescriptor
+                            parent:
+                                descriptor: descriptor_
+                                data: data_
+                            propertyAssignmentObject: propertyAssignmentObject_
+                            } )
+
+                else
+
+                    # not a component (i.e. the interior of a component)
+
+                    propertyAssignmentObject = propertyAssignmentObject_? and propertyAssignmentObject_ and
+                        propertyAssignmentObject_[childDescriptor.jsonTag]? and propertyAssignmentObject_[childDescriptor.jsonTag] or
+                        {}
+
+                    resolveResults = ResolveNamespaceDescriptor({}, store_, data_, childDescriptor, key_, "new", propertyAssignmentObject)
+
+                    Array.prototype.push.apply(subcomponentDescriptors,
+                        InitializeComponentNamespaces(store_, resolveResults.dataReference, childDescriptor, extensionPointId_, key_, propertyAssignmentObject)
+                        )
+
+        console.log("InitializeComponentNamespaces exit with subcomponentDescriptors.length===" + subcomponentDescriptors.length)
+        return subcomponentDescriptors
 
     catch exception
         throw new Error("InitializeComponentNamespaces failure: #{exception.message}.")
@@ -231,6 +258,8 @@ module.exports = class AddressTokenBinder
             @dataReference = undefined
             @resolvedToken = token_.clone()
 
+            @subcomponentDescriptors = [];
+
             targetNamespaceDescriptor = token_.namespaceDescriptor
             targetComponentDescriptor = token_.componentDescriptor
 
@@ -257,11 +286,12 @@ module.exports = class AddressTokenBinder
 
             if mode_ == "new" and resolveResults.created
                 # This resolves all the children and extension points of a component and initializes their properties.
-                InitializeComponentNamespaces(store_, @dataReference, targetComponentDescriptor, extensionPointId, @resolvedToken.key, propertyAssignmentObject)
+                @subcomponentDescriptors = InitializeComponentNamespaces(store_, @dataReference, targetComponentDescriptor, extensionPointId, @resolvedToken.key, propertyAssignmentObject)
 
             if mode_ == "strict"
                 VerifyComponentNamespaces(store_, resolveResult.dataReference, targetComponentDescriptor, extensionPointId)            
 
+            # EXIT...
             # ... If we've been asked to bind the root namespace of the component then we're done.
 
             if targetNamespaceDescriptor.isComponent

@@ -141,6 +141,7 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
 
             describe("Call onm.Store.createComponent with a hierarchical construction options object.", function() {
                 var addressNewPhoneNumber, namespacePhoneNumber;
+
                 var constructionOptions = {
                     areaCode: '000',
                     number: '123-4567',
@@ -164,6 +165,47 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                     expect(dataContact).to.have.property('key');
                 });
             });
+
+            describe("Call onm.Store.createComponent with a hierarchical construction options object that includes subcomponents.", function() {
+
+                var contactConstructionData = {
+                    firstName: 'Marsellus',
+                    lastName: 'Wallace',
+                    emails: {
+                        'marsellus@pulp.net': { 
+                            emailAddress: 'marsellus@pulp.net'
+                        }
+                    },
+                    addresses: {
+                        'wallace': {
+                            streeAddress: '123 Pliers and Torch Terrace',
+                            notes: {
+                                'question': {
+                                    text: "What does Marsellus Wallace look like?"
+                                },
+                                'answer': {
+                                    text: "He does not look like a bitch."
+                                }
+                            }
+                        }
+                    }
+                };
+
+                var namespaceContact = null;
+
+                before(function() {
+                    namespaceContact = store.createComponent(addressNewContact, [], contactConstructionData);
+                });
+
+                it("A new contact component should have been created.", function() {
+                    assert.instanceOf(namespaceContact, onm.Namespace);
+                });
+
+
+            });
+
+
+
         });
 
         describe("Serialize the test data store to JSON and compare the results against a known good snapshot.", function() {

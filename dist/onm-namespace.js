@@ -82,7 +82,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       this.getResolvedLabel = __bind(this.getResolvedLabel, this);
       this.getComponentKey = __bind(this.getComponentKey, this);
       this.getResolvedAddress = __bind(this.getResolvedAddress, this);
-      var address, addressToken, componentAddress, constructionOptions, exception, extensionPointAddress, extensionPointNamespace, key, keyArrayCount, keyIndex, mode, objectModel, objectModelNameKeys, objectModelNameStore, resolvedAddress, tokenArrayCount, tokenBinder, tokenCount, tokenIndex, _i, _len, _ref;
+      var address, addressToken, componentAddress, constructionOptions, exception, extensionPointAddress, extensionPointNamespace, key, keyArrayCount, keyIndex, mode, objectModel, objectModelNameKeys, objectModelNameStore, resolvedAddress, tokenArrayCount, tokenBinder, tokenCount, tokenIndex, workingOnLastToken, _i, _len, _ref;
       try {
         if (!((store_ != null) && store_)) {
           throw new Error("Missing object store input parameter.");
@@ -127,7 +127,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         _ref = address.implementation.tokenVector;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           addressToken = _ref[_i];
-          constructionOptions = ((tokenArrayCount - 1) === tokenCount++) && propertyAssignmentObject_ || void 0;
+          workingOnLastToken = (tokenArrayCount - 1) === tokenCount;
+          tokenCount++;
+          constructionOptions = workingOnLastToken && propertyAssignmentObject_ || void 0;
           tokenBinder = new AddressTokenBinder(store_, this.implementation.dataReference, addressToken, mode, constructionOptions);
           this.implementation.resolvedTokenArray.push(tokenBinder.resolvedToken);
           this.implementation.dataReference = tokenBinder.dataReference;
@@ -142,6 +144,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                 extensionPointNamespace.update();
               }
             }
+          }
+          if (tokenBinder.subcomponentDescriptors.length > 0) {
+            console.log("AND... WE HAVE UNFINISHED BUSINESS: " + tokenBinder.subcomponentDescriptors.length + " subcomponent descriptors await...");
           }
           true;
         }

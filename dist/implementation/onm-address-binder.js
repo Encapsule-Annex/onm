@@ -122,7 +122,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
   };
 
   InitializeComponentNamespaces = function(store_, data_, descriptor_, extensionPointId_, key_, propertyAssignmentObject_) {
-    var childDescriptor, exception, propertyAssignmentObject, resolveResults, _i, _len, _ref;
+    var childDescriptor, exception, propertyAssignmentObject, resolveResults, subcomponentDescriptors, _i, _len, _ref;
     try {
       if (!((data_ != null) && data_)) {
         throw new Error("Missing data reference input parameter.");
@@ -133,17 +133,34 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
       if (!((extensionPointId_ != null) && extensionPointId_)) {
         throw new Error("Missing extension point ID input parameter.");
       }
+      subcomponentDescriptors = [];
       _ref = descriptor_.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         childDescriptor = _ref[_i];
-        console.log("InitializeComponentNamespaces for descriptor '" + childDescriptor.jsonTag + "' (" + childDescriptor.namespaceType + ").");
-        if (childDescriptor.namespaceType !== "component") {
-          propertyAssignmentObject = (propertyAssignmentObject_ != null) && propertyAssignmentObject_ && (propertyAssignmentObject_[childDescriptor.jsonTag] != null) && propertyAssignmentObject_[childDescriptor.jsonTag] || {};
-          resolveResults = ResolveNamespaceDescriptor({}, store_, data_, childDescriptor, key_, "new", propertyAssignmentObject);
-          InitializeComponentNamespaces(store_, resolveResults.dataReference, childDescriptor, extensionPointId_, key_, propertyAssignmentObject);
+        console.log("InitializeComponentNamespaces evaluating descriptor '" + childDescriptor.jsonTag + "' (" + childDescriptor.namespaceType + ").");
+        propertyAssignmentObject = {};
+        if ((propertyAssignmentObject_ != null) && propertyAssignmentObject_) {
+          if (childDescriptor.namespaceType === "component") {
+            if (Object.keys(propertyAssignmentObject_).length > 0) {
+              console.log("data-driven extension of the target component.");
+              subcomponentDescriptors.push({
+                descriptor: childDescriptor,
+                parent: {
+                  descriptor: descriptor_,
+                  data: data_
+                },
+                propertyAssignmentObject: propertyAssignmentObject_
+              });
+            }
+          } else {
+            propertyAssignmentObject = (propertyAssignmentObject_ != null) && propertyAssignmentObject_ && (propertyAssignmentObject_[childDescriptor.jsonTag] != null) && propertyAssignmentObject_[childDescriptor.jsonTag] || {};
+            resolveResults = ResolveNamespaceDescriptor({}, store_, data_, childDescriptor, key_, "new", propertyAssignmentObject);
+            Array.prototype.push.apply(subcomponentDescriptors, InitializeComponentNamespaces(store_, resolveResults.dataReference, childDescriptor, extensionPointId_, key_, propertyAssignmentObject));
+          }
         }
       }
-      return true;
+      console.log("InitializeComponentNamespaces exit with subcomponentDescriptors.length===" + subcomponentDescriptors.length);
+      return subcomponentDescriptors;
     } catch (_error) {
       exception = _error;
       throw new Error("InitializeComponentNamespaces failure: " + exception.message + ".");
@@ -261,6 +278,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
         this.dataReference = void 0;
         this.resolvedToken = token_.clone();
+        this.subcomponentDescriptors = [];
         targetNamespaceDescriptor = token_.namespaceDescriptor;
         targetComponentDescriptor = token_.componentDescriptor;
         semanticBindings = model.getSemanticBindings();
@@ -278,7 +296,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         }
         extensionPointId = (token_.extensionPointDescriptor != null) && token_.extensionPointDescriptor && token_.extensionPointDescriptor.id || -1;
         if (mode_ === "new" && resolveResults.created) {
-          InitializeComponentNamespaces(store_, this.dataReference, targetComponentDescriptor, extensionPointId, this.resolvedToken.key, propertyAssignmentObject);
+          this.subcomponentDescriptors = InitializeComponentNamespaces(store_, this.dataReference, targetComponentDescriptor, extensionPointId, this.resolvedToken.key, propertyAssignmentObject);
         }
         if (mode_ === "strict") {
           VerifyComponentNamespaces(store_, resolveResult.dataReference, targetComponentDescriptor, extensionPointId);
