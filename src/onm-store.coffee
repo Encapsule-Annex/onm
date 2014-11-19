@@ -130,6 +130,17 @@ module.exports = class Store
 
                     # Creating the root namespace of a component automatically creates all its sub-namespaces as well.
                     componentNamespace = new Namespace(@, address_, "new", keyArray_, propertyAssignmentObject_)
+
+                    unfinishedComponents = []
+                    
+                    if componentNamespace.implementation.pendingSubcomponentDescriptors.length
+                        unfinishedComponents.push componentNamespace
+
+                    resolvedComponentAddress = componentNamespace.getResolvedAddress()
+
+                    for subcomponentDescriptor in componentNamespace.implementation.pendingSubcomponentDescriptors
+                        console.log(JSON.stringify(subcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject))
+
                     return componentNamespace
 
                 catch exception

@@ -53,6 +53,7 @@ class NamespaceDetails
             @resolvedTokenArray = []
             @getResolvedToken = => @resolvedTokenArray.length and @resolvedTokenArray[@resolvedTokenArray.length - 1] or undefined
             @resolvedAddress = undefined
+            @pendingSubcomponentDescriptors = []
 
         catch exception
             throw new Error("NamespaceDetails failure: #{exception.message}")
@@ -138,12 +139,13 @@ module.exports = class Namespace
                             extensionPointNamespace = @store.openNamespace(extensionPointAddress)
                             extensionPointNamespace.update()
 
-
-                for subcomponentDescriptor in tokenBinder.subcomponentDescriptors
-                    console.log(JSON.stringify(subcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject));
-
                 if tokenBinder.subcomponentDescriptors.length > 0
                     console.log("AND... WE HAVE UNFINISHED BUSINESS: " + tokenBinder.subcomponentDescriptors.length + " subcomponent descriptors await...")
+
+                for subcomponentDescriptor in tokenBinder.subcomponentDescriptors
+                    console.log(".... onmNamepspace pending subcomponent " + JSON.stringify(subcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject))
+
+                @implementation.pendingSubcomponentDescriptors = tokenBinder.subcomponentDescriptors
 
                 true
 

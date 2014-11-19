@@ -60,6 +60,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           };
         })(this);
         this.resolvedAddress = void 0;
+        this.pendingSubcomponentDescriptors = [];
       } catch (_error) {
         exception = _error;
         throw new Error("NamespaceDetails failure: " + exception.message);
@@ -145,14 +146,15 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               }
             }
           }
-          _ref1 = tokenBinder.subcomponentDescriptors;
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            subcomponentDescriptor = _ref1[_j];
-            console.log(JSON.stringify(subcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject));
-          }
           if (tokenBinder.subcomponentDescriptors.length > 0) {
             console.log("AND... WE HAVE UNFINISHED BUSINESS: " + tokenBinder.subcomponentDescriptors.length + " subcomponent descriptors await...");
           }
+          _ref1 = tokenBinder.subcomponentDescriptors;
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            subcomponentDescriptor = _ref1[_j];
+            console.log(".... onmNamepspace pending subcomponent " + JSON.stringify(subcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject));
+          }
+          this.implementation.pendingSubcomponentDescriptors = tokenBinder.subcomponentDescriptors;
           true;
         }
       } catch (_error) {

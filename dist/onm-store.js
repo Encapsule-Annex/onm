@@ -115,7 +115,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         })(this);
         this.createComponent = (function(_this) {
           return function(address_, keyArray_, propertyAssignmentObject_) {
-            var componentNamespace, descriptor, exception;
+            var componentNamespace, descriptor, exception, resolvedComponentAddress, subcomponentDescriptor, unfinishedComponents, _i, _len, _ref;
             try {
               if (!((address_ != null) && address_)) {
                 throw new Error("Missing address input parameter.");
@@ -134,6 +134,16 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
                 throw new Error("The specified address refers to the root namespace of the store which is created automatically.");
               }
               componentNamespace = new Namespace(_this, address_, "new", keyArray_, propertyAssignmentObject_);
+              unfinishedComponents = [];
+              if (componentNamespace.implementation.pendingSubcomponentDescriptors.length) {
+                unfinishedComponents.push(componentNamespace);
+              }
+              resolvedComponentAddress = componentNamespace.getResolvedAddress();
+              _ref = componentNamespace.implementation.pendingSubcomponentDescriptors;
+              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                subcomponentDescriptor = _ref[_i];
+                console.log(JSON.stringify(subcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject));
+              }
               return componentNamespace;
             } catch (_error) {
               exception = _error;
