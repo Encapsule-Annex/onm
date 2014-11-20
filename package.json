@@ -1,6 +1,6 @@
 {
   "name": "onm",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Object Namespace Manager (onm) data model, schema-driven JSON factory and in-memory subsystem communication bus for complex data-driven Node.js/HTML 5 client apps.",
   "scripts": {
     "test": "mocha -R spec ./test/test-onm.js"
@@ -29,7 +29,7 @@
     "mocha": "^2.0.1",
     "leche": "~1.0.1",
     "lodash": "^2.4.1",
-    "onm-data-model-validator": "git://github.com/Encapsule/onm-data-model-validator#test/rc/v0.1"
+    "onm-data-model-tests": "git://github.com/Encapsule/onm-data-model-tests#test/rc/v0.1"
   },
   "dependencies": {
     "node-uuid": "^1.4.1"
