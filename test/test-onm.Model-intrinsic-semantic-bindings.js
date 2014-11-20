@@ -30,7 +30,7 @@ var testKeys = {
     key3: 'a2645c25-9122-49ae-92b5-5bc5813ed4a5'
 };
 
-var validateDataModelDeclaration = require('onm-data-model-validator')(onm).validateDataModelDeclaration
+var validateDataModelDeclaration = require('onm-data-model-tests')(onm).validateDataModelDeclaration
 
 
 module.exports = describe("onm.Model intrinsic semantic bindings white box tests", function() {
