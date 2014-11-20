@@ -10,7 +10,7 @@ var packageMeta = require('../package.json');
 var onm = require('../onm');
 
 // Dynamic test suite for generically testing onm data model declarations.
-var validateDataModelDeclaration = require('onm-data-model-tests')(onm).validateDataModelDeclaration
+var validateDataModelDeclaration = require('onm-data-model-tests').validateDataModelDeclaration
 
 
 describe("onm v" + packageMeta.version + " test fixture regression test suite.", function() {
@@ -63,7 +63,7 @@ describe("onm v" + packageMeta.version + " test fixture regression test suite.",
             describe("Wrap it up mother fucker.", function() {
                 before(function(done_) {
                     withData(inputTestDataVector, function(dataModelTestDescriptor_) {
-                        validateDataModelDeclaration(dataModelTestDescriptor_.dataModelDeclaration);
+                        validateDataModelDeclaration(dataModelTestDescriptor_.dataModelDeclaration, onm);
                     });
                     done_();
                 });
