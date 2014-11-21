@@ -178,7 +178,7 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                     },
                     addresses: {
                         'wallace': {
-                            streeAddress: '123 Pliers and Torch Terrace',
+                            streeAddress: 'Vincent & Jules Blvd',
                             notes: {
                                 'question': {
                                     text: "What does Marsellus Wallace look like?"
@@ -187,6 +187,13 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                                     text: "He does not look like a bitch."
                                 }
                             }
+                        }
+                    },
+                    notInTheDataModel: {
+                        someProperty: "This is some property of a data namespace that is not declared in the data model.",
+                        someOtherProperty: "This is yet another property of the undeclared namespace.",
+                        subnamespaceOfUndeclared: {
+                            becauseWeCan: "define a child namespace and and see that onm does with the construct."
                         }
                     }
                 };
