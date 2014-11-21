@@ -208,6 +208,50 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                     assert.instanceOf(namespaceContact, onm.Namespace);
                 });
 
+                describe("Inspect the property values and subnamespaces of the newly created component.", function() {
+
+                    var dataContact = null;
+
+                    before(function() {
+                        dataContact = namespaceContact.data();
+                    });
+
+                    it("'contact' data component should define string value for property 'firstName'.", function() {
+                        assert.property(dataContact, 'firstName');
+                        assert.isString(dataContact.firstName);
+                    });
+
+                    it("'contact.firstName' property value should be 'Marsellus'.", function() {
+                        assert.equal(dataContact.firstName, 'Marsellus');
+                    });
+
+                    it("'contact' data component should define string value for property 'lastName'.", function() {
+                        assert.property(dataContact, 'lastName');
+                        assert.isString(dataContact.lastName);
+                    });
+
+                    it("'contact.lastName' property value should be 'Wallace'.", function() {
+                        assert.equal(dataContact.lastName, 'Wallace');
+                    });
+
+                    it("'contact.emails' should be an object.", function() {
+                        assert.property(dataContact, 'emails');
+                        assert.isObject(dataContact.emails);
+                    });
+
+                    it("'contact.emails' should contain a single object.", function() {
+                        assert.equal(Object.keys(dataContact.emails).length, 1);
+                    });
+
+                    it("'contact.emails' should contain object named 'marsellus@pulp.net'.", function() {
+                        assert.property(dataContact.emails, 'marsellus@pulp.net');
+                        assert.isObject(dataContact.emails['marsellus@pulp.net']);
+                    });
+
+
+
+                });
+
 
             });
 
