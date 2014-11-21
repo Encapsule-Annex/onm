@@ -210,11 +210,12 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
 
         describe("Serialize the test data store to JSON and compare the results against a known good snapshot.", function() {
 
-            var expectedJSON = '{"addressBook":{"properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{"1":{"key":"1","firstName":"","lastName":"","emails":{},"addresses":{},"phoneNumbers":{}},"2":{"key":"2","firstName":"Joe","lastName":"Smith","emails":{},"addresses":{},"phoneNumbers":{"3":{"key":"3","areaCode":"000","number":"123-4567","notes":{"text":"This is a note assigned via a hierarchical component construction options object."}}}},"test":{"key":"test","firstName":"","lastName":"","emails":{},"addresses":{},"phoneNumbers":{}},"JoeSmith":{"key":"JoeSmith","firstName":"","lastName":"","emails":{"primary":{"key":"primary"}},"addresses":{},"phoneNumbers":{}}}}}';
+            var expectedJSON = '{"addressBook":{"properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{"1":{"key":"1","firstName":"","lastName":"","emails":{},"addresses":{},"phoneNumbers":{}},"2":{"key":"2","firstName":"Joe","lastName":"Smith","emails":{},"addresses":{},"phoneNumbers":{"3":{"key":"3","areaCode":"000","number":"123-4567","notes":{"text":"This is a note assigned via a hierarchical component construction options object."}}}},"4":{"key":"4","firstName":"Marsellus","lastName":"Wallace","emails":{"marsellus@pulp.net":{"key":"marsellus@pulp.net","emailAddress":"marsellus@pulp.net"}},"addresses":{"wallace":{"key":"wallace","streetAddress":"","notes":{"question":{"key":"question","text":"What does Marsellus Wallace look like?"},"answer":{"key":"answer","text":"He does not look like a bitch."}}}},"phoneNumbers":{}},"test":{"key":"test","firstName":"","lastName":"","emails":{},"addresses":{},"phoneNumbers":{}},"JoeSmith":{"key":"JoeSmith","firstName":"","lastName":"","emails":{"primary":{"key":"primary","emailAddress":""}},"addresses":{},"phoneNumbers":{}}}}}';
 
             var actualJSON = null;
             before(function() {
                 actualJSON = store.toJSON();
+                // console.log(store.toJSON(undefined, 4));
             });
             it("The data store's JSON data should match the test's control JSON.", function() {
                 assert.equal(actualJSON, expectedJSON);

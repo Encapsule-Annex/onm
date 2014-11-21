@@ -115,7 +115,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         })(this);
         this.createComponent = (function(_this) {
           return function(address_, keyArray_, propertyAssignmentObject_) {
-            var componentNamespace, descriptor, exception, resolvedComponentAddress, subcomponentDescriptor, unfinishedComponents, _i, _len, _ref;
+            var componentNamespace, descriptor, exception, key, newComponentAddress, parentExtensionPointAddress, parentExtensionPointId, parentExtensionPointPropertyAssignmentObject, pendingSubcomponentDescriptor, resultNamespace, unfinishedComponentNamespaces, value, workingComponentAddress, workingComponentNamespace, workingComponentPendingSubcomponentDescriptors;
             try {
               if (!((address_ != null) && address_)) {
                 throw new Error("Missing address input parameter.");
@@ -133,18 +133,33 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               if (descriptor.namespaceType === "root") {
                 throw new Error("The specified address refers to the root namespace of the store which is created automatically.");
               }
-              componentNamespace = new Namespace(_this, address_, "new", keyArray_, propertyAssignmentObject_);
-              unfinishedComponents = [];
+              resultNamespace = componentNamespace = new Namespace(_this, address_, "new", keyArray_, propertyAssignmentObject_);
+              unfinishedComponentNamespaces = [];
               if (componentNamespace.implementation.pendingSubcomponentDescriptors.length) {
-                unfinishedComponents.push(componentNamespace);
+                unfinishedComponentNamespaces.push(componentNamespace);
               }
-              resolvedComponentAddress = componentNamespace.getResolvedAddress();
-              _ref = componentNamespace.implementation.pendingSubcomponentDescriptors;
-              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                subcomponentDescriptor = _ref[_i];
-                console.log(JSON.stringify(subcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject));
+              while (unfinishedComponentNamespaces.length) {
+                workingComponentNamespace = unfinishedComponentNamespaces.pop();
+                workingComponentAddress = workingComponentNamespace.getResolvedAddress();
+                workingComponentPendingSubcomponentDescriptors = workingComponentNamespace.implementation.pendingSubcomponentDescriptors;
+                while (workingComponentPendingSubcomponentDescriptors.length) {
+                  pendingSubcomponentDescriptor = workingComponentNamespace.implementation.pendingSubcomponentDescriptors.pop();
+                  parentExtensionPointId = pendingSubcomponentDescriptor.parentExtensionPoint.namespaceDescriptor.id;
+                  parentExtensionPointAddress = workingComponentAddress.implementation.createSubpathIdAddress(parentExtensionPointId);
+                  newComponentAddress = parentExtensionPointAddress.createSubcomponentAddress();
+                  parentExtensionPointPropertyAssignmentObject = pendingSubcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject;
+                  for (key in parentExtensionPointPropertyAssignmentObject) {
+                    value = parentExtensionPointPropertyAssignmentObject[key];
+                    console.log("Dig it: onm.Store.createComponent('" + (newComponentAddress.getHumanReadableString()) + "', [ '" + key + "' ], '" + (JSON.stringify(value)) + "'");
+                    componentNamespace = _this.createComponent(newComponentAddress, [key], value);
+                    if (componentNamespace.implementation.pendingSubcomponentDescriptors.length) {
+                      console.log("... adding more unfinished work: '" + (componentNamespace.getResolvedAddress().getHumanReadableString()) + "'");
+                      unfinishedComponentNamespaces.push(componentNamespace);
+                    }
+                  }
+                }
               }
-              return componentNamespace;
+              return resultNamespace;
             } catch (_error) {
               exception = _error;
               throw new Error("createComponent failure: " + exception.message);

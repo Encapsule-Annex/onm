@@ -146,7 +146,6 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
               subcomponentDescriptors.push({
                 parentExtensionPoint: {
                   namespaceDescriptor: descriptor_,
-                  dataReference: data_,
                   propertyAssignmentObject: propertyAssignmentObject_
                 },
                 subcomponent: {

@@ -126,7 +126,6 @@ InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, 
                         subcomponentDescriptors.push( {
                             parentExtensionPoint:
                                 namespaceDescriptor: descriptor_
-                                dataReference: data_
                                 propertyAssignmentObject: propertyAssignmentObject_
                             subcomponent:
                                 namespaceDescriptor: childDescriptor

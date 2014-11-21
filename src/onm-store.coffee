@@ -127,21 +127,40 @@ module.exports = class Store
                     descriptor = address_.implementation.getDescriptor()
                     if not descriptor.isComponent then throw new Error("The specified address does not specify the root of a component.");
                     if descriptor.namespaceType == "root" then throw new Error("The specified address refers to the root namespace of the store which is created automatically.");
-
                     # Creating the root namespace of a component automatically creates all its sub-namespaces as well.
-                    componentNamespace = new Namespace(@, address_, "new", keyArray_, propertyAssignmentObject_)
+                    resultNamespace = componentNamespace = new Namespace(@, address_, "new", keyArray_, propertyAssignmentObject_)
 
-                    unfinishedComponents = []
-                    
+                    unfinishedComponentNamespaces = []
+
                     if componentNamespace.implementation.pendingSubcomponentDescriptors.length
-                        unfinishedComponents.push componentNamespace
+                        unfinishedComponentNamespaces.push(componentNamespace)
 
-                    resolvedComponentAddress = componentNamespace.getResolvedAddress()
+                    while unfinishedComponentNamespaces.length
 
-                    for subcomponentDescriptor in componentNamespace.implementation.pendingSubcomponentDescriptors
-                        console.log(JSON.stringify(subcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject))
+                        workingComponentNamespace = unfinishedComponentNamespaces.pop()
+                        workingComponentAddress = workingComponentNamespace.getResolvedAddress()
+                        workingComponentPendingSubcomponentDescriptors = workingComponentNamespace.implementation.pendingSubcomponentDescriptors
 
-                    return componentNamespace
+                        while workingComponentPendingSubcomponentDescriptors.length
+
+                            pendingSubcomponentDescriptor = workingComponentNamespace.implementation.pendingSubcomponentDescriptors.pop()
+                            parentExtensionPointId = pendingSubcomponentDescriptor.parentExtensionPoint.namespaceDescriptor.id
+                            parentExtensionPointAddress = workingComponentAddress.implementation.createSubpathIdAddress(parentExtensionPointId)
+                            newComponentAddress = parentExtensionPointAddress.createSubcomponentAddress()
+
+                            parentExtensionPointPropertyAssignmentObject = pendingSubcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject
+
+                            for key, value of parentExtensionPointPropertyAssignmentObject
+
+                                console.log("Dig it: onm.Store.createComponent('#{newComponentAddress.getHumanReadableString()}', [ '#{key}' ], '#{JSON.stringify(value)}'")
+                                componentNamespace = @createComponent(newComponentAddress, [ key ], value)
+
+                                if componentNamespace.implementation.pendingSubcomponentDescriptors.length
+                                    console.log("... adding more unfinished work: '#{componentNamespace.getResolvedAddress().getHumanReadableString()}'");
+                                    unfinishedComponentNamespaces.push(componentNamespace)
+
+
+                    return resultNamespace
 
                 catch exception
                     throw new Error("createComponent failure: #{exception.message}");
