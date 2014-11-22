@@ -178,7 +178,7 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                     },
                     addresses: {
                         'wallace': {
-                            streeAddress: 'Vincent & Jules Blvd',
+                            streetAddress: 'Vincent & Jules Blvd',
                             notes: {
                                 'question': {
                                     text: "What does Marsellus Wallace look like?"
@@ -248,6 +248,51 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                         assert.isObject(dataContact.emails['marsellus@pulp.net']);
                     });
 
+                    it("'contact.emails.marsellus@pulp.net' object should have property 'emailAddress'.", function() {
+                        assert.property(dataContact.emails['marsellus@pulp.net'], 'emailAddress');
+                        assert.isString(dataContact.emails['marsellus@pulp.net'].emailAddress);
+                    });
+
+                    it("'contact.emails.marsellus@pulp.net' object should have property 'key'.", function() {
+                        assert.property(dataContact.emails['marsellus@pulp.net'], 'key');
+                        assert.isString(dataContact.emails['marsellus@pulp.net'].key);
+                    });
+
+                    it("'contact.emails.marsellus@pulp.net.key' property value should be 'marsellus@pulp.net'.", function() {
+                        assert.equal(dataContact.emails['marsellus@pulp.net'].key, 'marsellus@pulp.net');
+                    });
+
+                    it("'contact' should define sub-object 'addresses'.", function() {
+                        assert.property(dataContact, 'addresses');
+                        assert.isObject(dataContact.addresses);
+                    });
+
+                    it("'contact.addresses' object should contain one key.", function() {
+                        assert.equal(Object.keys(dataContact.addresses).length, 1);
+                    });
+
+                    it("'contact.addresses' sub-object should be named 'wallace'.", function() {
+                        assert.property(dataContact.addresses, 'wallace');
+                        assert.isObject(dataContact.addresses.wallace);
+                    });
+
+                    describe("Examine the data component 'wallace' of type 'address'.", function() {
+                        var dataWallace = null;
+                        before(function() {
+                            dataWallace = dataContact.addresses.wallace;
+                        });
+                        it("'wallace' component should define property 'streetAddress'.", function() {
+                            assert.property(dataWallace, 'streetAddress');
+                            assert.isString(dataWallace.streetAddress);
+                        });
+                        it("'wallace.streetAddress' property value should equal 'Vincent & Jules Blvd'.", function() {
+                            assert.equal(dataWallace.streetAddress, 'Vincent & Jules Blvd');
+                        });
+
+
+                    });
+
+
 
 
                 });
@@ -261,7 +306,7 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
 
         describe("Serialize the test data store to JSON and compare the results against a known good snapshot.", function() {
 
-            var expectedJSON = '{"addressBook":{"properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{"1":{"key":"1","firstName":"","lastName":"","emails":{},"addresses":{},"phoneNumbers":{}},"2":{"key":"2","firstName":"Joe","lastName":"Smith","emails":{},"addresses":{},"phoneNumbers":{"3":{"key":"3","areaCode":"000","number":"123-4567","notes":{"text":"This is a note assigned via a hierarchical component construction options object."}}}},"4":{"key":"4","firstName":"Marsellus","lastName":"Wallace","emails":{"marsellus@pulp.net":{"key":"marsellus@pulp.net","emailAddress":"marsellus@pulp.net"}},"addresses":{"wallace":{"key":"wallace","streetAddress":"","notes":{"question":{"key":"question","text":"What does Marsellus Wallace look like?"},"answer":{"key":"answer","text":"He does not look like a bitch."}}}},"phoneNumbers":{}},"test":{"key":"test","firstName":"","lastName":"","emails":{},"addresses":{},"phoneNumbers":{}},"JoeSmith":{"key":"JoeSmith","firstName":"","lastName":"","emails":{"primary":{"key":"primary","emailAddress":""}},"addresses":{},"phoneNumbers":{}}}}}';
+            var expectedJSON = '{"addressBook":{"properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{"1":{"key":"1","firstName":"","lastName":"","emails":{},"addresses":{},"phoneNumbers":{}},"2":{"key":"2","firstName":"Joe","lastName":"Smith","emails":{},"addresses":{},"phoneNumbers":{"3":{"key":"3","areaCode":"000","number":"123-4567","notes":{"text":"This is a note assigned via a hierarchical component construction options object."}}}},"4":{"key":"4","firstName":"Marsellus","lastName":"Wallace","emails":{"marsellus@pulp.net":{"key":"marsellus@pulp.net","emailAddress":"marsellus@pulp.net"}},"addresses":{"wallace":{"key":"wallace","streetAddress":"Vincent & Jules Blvd","notes":{"question":{"key":"question","text":"What does Marsellus Wallace look like?"},"answer":{"key":"answer","text":"He does not look like a bitch."}}}},"phoneNumbers":{}},"test":{"key":"test","firstName":"","lastName":"","emails":{},"addresses":{},"phoneNumbers":{}},"JoeSmith":{"key":"JoeSmith","firstName":"","lastName":"","emails":{"primary":{"key":"primary","emailAddress":""}},"addresses":{},"phoneNumbers":{}}}}}';
 
             var actualJSON = null;
             before(function() {
