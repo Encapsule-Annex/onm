@@ -246,7 +246,7 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
 
 #
 # ****************************************************************************
-module.exports = class AddressTokenBinder
+module.exports = class AddressTokenResolver
     constructor: (store_, parentDataReference_, token_, mode_, propertyAssignmentObject_) ->
         try
             @store = store_? and store_ or throw new Error("Missing object store input parameter.")
@@ -321,6 +321,6 @@ module.exports = class AddressTokenBinder
             # ----------------------------------------------------------------------------
 
         catch exception
-            throw new Error("AddressTokenBinder failure: #{exception.message}")
+            throw new Error("AddressTokenResolver failure: #{exception.message}")
 
 

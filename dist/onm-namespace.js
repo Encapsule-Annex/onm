@@ -37,12 +37,12 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
  */
 
 (function() {
-  var Address, AddressToken, AddressTokenBinder, Namespace, NamespaceDetails,
+  var Address, AddressToken, AddressTokenResolver, Namespace, NamespaceDetails,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   AddressToken = require('./implementation/onm-address-token');
 
-  AddressTokenBinder = require('./implementation/onm-address-binder');
+  AddressTokenResolver = require('./implementation/onm-address-token-resolver');
 
   Address = require('./onm-address');
 
@@ -131,7 +131,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           workingOnLastToken = (tokenArrayCount - 1) === tokenCount;
           tokenCount++;
           constructionOptions = workingOnLastToken && propertyAssignmentObject_ || void 0;
-          tokenBinder = new AddressTokenBinder(store_, this.implementation.dataReference, addressToken, mode, constructionOptions);
+          tokenBinder = new AddressTokenResolver(store_, this.implementation.dataReference, addressToken, mode, constructionOptions);
           this.implementation.resolvedTokenArray.push(tokenBinder.resolvedToken);
           this.implementation.dataReference = tokenBinder.dataReference;
           if (mode === "new") {

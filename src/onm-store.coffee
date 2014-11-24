@@ -42,7 +42,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 jslib = require('./lib-javascript')
 StoreReifier = require('./implementation/onm-store-reifier')
 AddressToken = require('./implementation/onm-address-token')
-AddressTokenBinder = require('./implementation/onm-address-binder')
+AddressTokenResolver = require('./implementation/onm-address-token-resolver')
 Namespace = require('./onm-namespace')
 uuid = require('node-uuid')
 
@@ -102,7 +102,7 @@ module.exports = class Store
                 @implementation.objectStoreSource = "new"
                 # Low-level create of the root component.
                 token = new AddressToken(model_, undefined, undefined, 0)
-                tokenBinder = new AddressTokenBinder(@, @implementation.dataReference, token, "new")
+                tokenBinder = new AddressTokenResolver(@, @implementation.dataReference, token, "new")
 
 
             #

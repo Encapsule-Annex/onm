@@ -40,7 +40,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 AddressToken = require('./implementation/onm-address-token')
-AddressTokenBinder = require('./implementation/onm-address-binder')
+AddressTokenResolver = require('./implementation/onm-address-token-resolver')
 Address = require('./onm-address')
 
 #
@@ -124,7 +124,7 @@ module.exports = class Namespace
                 # do not apply the propertyAssignmentObject_ until we're creating the target data component.
                 constructionOptions = workingOnLastToken and propertyAssignmentObject_ or undefined;
 
-                tokenBinder = new AddressTokenBinder(store_, @implementation.dataReference, addressToken, mode, constructionOptions)
+                tokenBinder = new AddressTokenResolver(store_, @implementation.dataReference, addressToken, mode, constructionOptions)
 
                 @implementation.resolvedTokenArray.push tokenBinder.resolvedToken
                 @implementation.dataReference = tokenBinder.dataReference

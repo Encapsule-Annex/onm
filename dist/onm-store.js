@@ -37,7 +37,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
  */
 
 (function() {
-  var AddressToken, AddressTokenBinder, Namespace, Store, StoreDetails, StoreReifier, jslib, uuid;
+  var AddressToken, AddressTokenResolver, Namespace, Store, StoreDetails, StoreReifier, jslib, uuid;
 
   jslib = require('./lib-javascript');
 
@@ -45,7 +45,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
   AddressToken = require('./implementation/onm-address-token');
 
-  AddressTokenBinder = require('./implementation/onm-address-binder');
+  AddressTokenResolver = require('./implementation/onm-address-token-resolver');
 
   Namespace = require('./onm-namespace');
 
@@ -94,7 +94,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
           this.implementation.dataReference = {};
           this.implementation.objectStoreSource = "new";
           token = new AddressToken(model_, void 0, void 0, 0);
-          tokenBinder = new AddressTokenBinder(this, this.implementation.dataReference, token, "new");
+          tokenBinder = new AddressTokenResolver(this, this.implementation.dataReference, token, "new");
         }
         this.validateAddressModel = (function(_this) {
           return function(address_) {

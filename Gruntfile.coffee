@@ -12,12 +12,11 @@ module.exports = (grunt) ->
                     'dist/onm-store.js': 'src/onm-store.coffee'
                     'dist/onm-namespace.js': 'src/onm-namespace.coffee'
                     'dist/onm-address-store.js': 'src/onm-address-store.coffee'
-                    'dist/implementation/onm-address-binder.js': 'src/implementation/onm-address-binder.coffee'
                     'dist/implementation/onm-address-token.js': 'src/implementation/onm-address-token.coffee'
+                    'dist/implementation/onm-address-token-resolver.js': 'src/implementation/onm-address-token-resolver.coffee'
                     'dist/implementation/onm-store-reifier.js': 'src/implementation/onm-store-reifier.coffee'
                     'dist/lib-backchannel.js': 'src/lib-backchannel.coffee'
                     'dist/lib-javascript.js': 'src/lib-javascript.coffee'
-
 
         jshint:
             options: {}

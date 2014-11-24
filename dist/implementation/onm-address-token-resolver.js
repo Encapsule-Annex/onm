@@ -34,7 +34,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
  */
 
 (function() {
-  var AddressTokenBinder, InitializeComponentNamespaces, InitializeNamespaceProperties, ResolveNamespaceDescriptor, VerifyComponentNamespaces, VerifyNamespaceProperties;
+  var AddressTokenResolver, InitializeComponentNamespaces, InitializeNamespaceProperties, ResolveNamespaceDescriptor, VerifyComponentNamespaces, VerifyNamespaceProperties;
 
   InitializeNamespaceProperties = function(data_, descriptor_, propertyAssignmentObject_) {
     var exception, functions, memberName, propertyAssignmentObject, _ref, _ref1;
@@ -260,8 +260,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
     }
   };
 
-  module.exports = AddressTokenBinder = (function() {
-    function AddressTokenBinder(store_, parentDataReference_, token_, mode_, propertyAssignmentObject_) {
+  module.exports = AddressTokenResolver = (function() {
+    function AddressTokenResolver(store_, parentDataReference_, token_, mode_, propertyAssignmentObject_) {
       var descriptor, exception, extensionPointId, generations, getUniqueKeyFunction, model, parentPathIds, pathId, propertyAssignmentObject, resolveActions, resolveResults, semanticBindings, setUniqueKeyFunction, targetComponentDescriptor, targetNamespaceDescriptor, _i, _len;
       try {
         this.store = (store_ != null) && store_ || (function() {
@@ -317,11 +317,11 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
         return;
       } catch (_error) {
         exception = _error;
-        throw new Error("AddressTokenBinder failure: " + exception.message);
+        throw new Error("AddressTokenResolver failure: " + exception.message);
       }
     }
 
-    return AddressTokenBinder;
+    return AddressTokenResolver;
 
   })();
 
