@@ -7,7 +7,7 @@ var assert = Chai.assert;
 var withData = require('leche').withData;
 
 var packageMeta = require('../package.json');
-var onm = require('../onm');
+var onm = require('../index');
 
 // Dynamic test suite for generically testing onm data model declarations.
 var validateDataModelDeclaration = require('onm-data-model-tests').validateDataModelDeclaration

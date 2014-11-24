@@ -5,7 +5,7 @@
 // declaration objects.
 //
 
-var onm = require('../../onm');
+var onm = require('../../index');
 
 var testDataVector = [
 

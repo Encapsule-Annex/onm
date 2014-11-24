@@ -7,7 +7,7 @@ var assert = require('chai').assert;
 var expect = require('chai').expect;
 var should = require('chai').should;
 
-var onm = require('../../onm.js');
+var onm = require('../../index');
 
 
 

@@ -6,7 +6,7 @@ var expect = require('chai').expect;
 var should = require('chai').should;
 
 var uuid = require('node-uuid');
-var onm = require('../onm');
+var onm = require('../index');
 
 module.exports = describe("onm.Address.createSubpathAddress tests.", function() {
 

@@ -7,20 +7,20 @@ module.exports = (grunt) ->
         coffee:
             compile:
                 files:
-                    'dist/onm-model.js': 'src/onm-model.coffee'
-                    'dist/onm-address.js': 'src/onm-address.coffee'
-                    'dist/onm-store.js': 'src/onm-store.coffee'
-                    'dist/onm-namespace.js': 'src/onm-namespace.coffee'
-                    'dist/onm-address-store.js': 'src/onm-address-store.coffee'
-                    'dist/implementation/onm-address-token.js': 'src/implementation/onm-address-token.coffee'
-                    'dist/implementation/onm-address-token-resolver.js': 'src/implementation/onm-address-token-resolver.coffee'
-                    'dist/implementation/onm-store-reifier.js': 'src/implementation/onm-store-reifier.coffee'
-                    'dist/lib-backchannel.js': 'src/lib-backchannel.coffee'
-                    'dist/lib-javascript.js': 'src/lib-javascript.coffee'
+                    'lib/onm-model.js': 'src/onm-model.coffee'
+                    'lib/onm-address.js': 'src/onm-address.coffee'
+                    'lib/onm-store.js': 'src/onm-store.coffee'
+                    'lib/onm-namespace.js': 'src/onm-namespace.coffee'
+                    'lib/onm-address-store.js': 'src/onm-address-store.coffee'
+                    'lib/implementation/onm-address-token.js': 'src/implementation/onm-address-token.coffee'
+                    'lib/implementation/onm-address-token-resolver.js': 'src/implementation/onm-address-token-resolver.coffee'
+                    'lib/implementation/onm-store-reifier.js': 'src/implementation/onm-store-reifier.coffee'
+                    'lib/lib-backchannel.js': 'src/lib-backchannel.coffee'
+                    'lib/lib-javascript.js': 'src/lib-javascript.coffee'
 
         jshint:
             options: {}
-            files: [ 'onm.js', './dist/*.js', './dist/**/*.js' ]
+            files: [ '*.js', './lib/*.js', './lib/**/*.js' ]
 
 
         mochaTest:
@@ -30,7 +30,7 @@ module.exports = (grunt) ->
  
             src: [ 'test/test-onm.js' ]
 
-        clean: [ 'dist' ]
+        clean: [ 'lib' ]
 
     grunt.initConfig configObject
 

@@ -16,7 +16,7 @@ var expect = require('chai').expect;
 var should = require('chai').should;
 
 var uuid = require('node-uuid');
-var onm = require('../onm');
+var onm = require('../index');
 
 // remove this
 var semanticBindingTestDataModelDeclaration = require('./fixture/semantic-bindings-test-data-model');
