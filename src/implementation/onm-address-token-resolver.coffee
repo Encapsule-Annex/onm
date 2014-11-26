@@ -37,7 +37,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 
-
+jslib = require('../lib-javascript')
 
 #
 # ****************************************************************************
@@ -195,10 +195,12 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
                     throw new Error("Unable to resolve expected namespace descriptor for namespace type '#{descriptor_.namespaceType}' for token '#{tokenString}'.")
                 break
             when "new"
+                ###
                 if (resolveResults.dataReference? and resolveResults.dataReference)
                     break
+                ###
 
-                newData = {}
+                newData = resolveResults.dataReference? and resolveResults.dataReference and jslib.clone(resolveResults.dataReference) or {}
 
                 if descriptor_.namespaceType == "component"
                     if not (resolveActions_.setUniqueKey? and resolveActions_.setUniqueKey)

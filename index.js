@@ -1,10 +1,8 @@
 ////
-// Object Namespace Manager (onm) index.js module exports.
+// Object Namespace Manager (onm) 
 // MIT License // Copyright (C) 2014 Encapsule Project
 // https://github.com/Encapsule/onm/blob/master/LICENSE
 
-////
-// CORE OBJECT NAMESPACE MANAGER OBJECT EXPORTS
 //
 // A 'data model' represents the schema of a class of JSON documents
 // in terms of addressable, dot-delimited, namespace hierarchy.
@@ -14,6 +12,7 @@
 // var exampleDataModel = new onm(exampleDataModelDeclaration);
 module.exports.Model = require('./lib/onm-model');
 
+//
 // A 'data store' represents a specific instance of a JSON document that
 // conforms to the schema defined by an onm.Model object instance.
 // Typically:
@@ -22,6 +21,7 @@ module.exports.Model = require('./lib/onm-model');
 // -> '{ "exampleDataComponent": {} }'
 module.exports.Store = require('./lib/onm-store');
 
+//
 // A 'data address' represents the data model declaration of a specific
 // namespace node in an onm.Model object, and is used to access the specific
 // details of that namespace declaration at runtime. Note, that this is the
@@ -32,6 +32,7 @@ module.exports.Store = require('./lib/onm-store');
 // -> "{ 'jsonTag': 'exampleDataComponent' }"
 module.exports.Address = require('./lib/onm-address');
 
+//
 // A 'data namespace' is a proxy object that is used to access JSON document
 // data inside an onm.Store object.
 // Typically:

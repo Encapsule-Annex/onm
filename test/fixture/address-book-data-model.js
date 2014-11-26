@@ -32,6 +32,14 @@ var onm = require('../../index');
         namespaceProperties: {
             userImmutable: {
                 key: {}
+            },
+            userMutable: {
+                name: {
+                    defaultValue: ""
+                },
+                description: {
+                    defaultValue: ""
+                }
             }
         },
         subNamespaces: [

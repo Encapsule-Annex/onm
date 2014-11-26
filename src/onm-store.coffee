@@ -61,13 +61,11 @@ class StoreDetails
 
             @objectStoreSource = undefined # this is flag indicating if the store was created from a JSON string
 
-
             # We use a map to store registered model view observers. 
             @observers = {}
 
             # Private (and opaque) state managed on behalf of registered model view observers.
             @observersState = {}
-
 
         catch exception
             throw new Error("StoreDetails failure: #{exception.message}");
@@ -91,19 +89,24 @@ module.exports = class Store
             @label = model_.label
             @description = model_.description
  
+            propertyAssignmentObject = undefined
+
             if initialStateJSON_? and initialStateJSON_
                 @implementation.dataReference = JSON.parse(initialStateJSON_)
                 if not (@implementation.dataReference? and @implementation.dataReference)
-                    throw new Error("Cannot deserialize specified JSON string!");
-                @implementation.objectStoreSource = "json"
-                
-            else
-                @implementation.dataReference = {}
-                @implementation.objectStoreSource = "new"
-                # Low-level create of the root component.
-                token = new AddressToken(model_, undefined, undefined, 0)
-                tokenBinder = new AddressTokenResolver(@, @implementation.dataReference, token, "new")
+                    throw new Error("Cannot deserialize specified JSON string!")
 
+                propertyAssignmentObject = undefined
+                if @implementation.dataReference? and @implementation.dataReference
+                    propertyAssignmentObject = jslib.clone(@implementation.dataReference)
+                    @implementation.objectStoreSource = "json"
+
+            @implementation.dataReference = @implementation.dataReference? and @implementation.dataReference or {}
+            @implementation.objectStoreSource = @implementation.objectStoreSource? and @implementation.objectStoreSource or "new"
+
+            # Low-level create of the root component.
+            token = new AddressToken(model_, undefined, undefined, 0)
+            tokenBinder = new AddressTokenResolver(@, @implementation.dataReference, token, "new", propertyAssignmentObject)
 
             #
             # ============================================================================
@@ -255,17 +258,6 @@ module.exports = class Store
 
             # 
             # ============================================================================
-            # A model view object may be registered with the OM store object to receive
-            # callbacks when the contents of the store is modified. In the context of
-            # registration, the observer will receive series of callbacks (one per store
-            # namespace) that the model view class leverages to initialize its internal
-            # state. Subsequently, mutation of the store will generate additional callback(s)
-            # specifying the namespace(s) that have been modified. Any number of model view
-            # object may be registered with the store. Upon successful registration, this
-            # method returns an "observer ID code" that the observer should cache. An
-            # observer can be unregistered by calling unregisterModelViewObserver providing
-            # the "observer ID code" received when it was registered.
-            #
             @registerObserver = (observerCallbackInterface_, observingEntityReference_) =>
                 try
                     if not (observerCallbackInterface_? and observerCallbackInterface_) then throw new Error("Missing callback interface namespace input parameter..");
