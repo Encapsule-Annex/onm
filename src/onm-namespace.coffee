@@ -92,7 +92,7 @@ module.exports = class Namespace
 
             mode = mode_? and mode_ or "bypass"
 
-            console.log("onm.Namespace address: '" + address_.getHumanReadableString() + "'.")
+            console.log("onm.Namespace constructor enter: '" + address_.getHumanReadableString() + "'.")
 
             if (mode != "new") and not address.isResolvable()
                 throw new Error("'#{mode}' mode error: Unresolvable address '#{address.getHumanReadableString()}' invalid for this operation.")
