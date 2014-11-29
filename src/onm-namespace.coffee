@@ -92,6 +92,8 @@ module.exports = class Namespace
 
             mode = mode_? and mode_ or "bypass"
 
+            console.log("onm.Namespace address: '" + address_.getHumanReadableString() + "'.")
+
             if (mode != "new") and not address.isResolvable()
                 throw new Error("'#{mode}' mode error: Unresolvable address '#{address.getHumanReadableString()}' invalid for this operation.")
 
@@ -122,8 +124,13 @@ module.exports = class Namespace
                 tokenCount++
 
                 # do not apply the propertyAssignmentObject_ until we're creating the target data component.
-                constructionOptions = workingOnLastToken and propertyAssignmentObject_ or undefined;
+                constructionOptions = workingOnLastToken and propertyAssignmentObject_ or undefined
 
+                # Resolve the next token. That is, use the meta-data in the token, and a parent namespace
+                # data reference and a bunch other information to resolve an existing, or create a new data
+                # component in the store, and ensure that it is constructed per the model and has any
+                # user-supplied construction options object namespaces and/or properties applied.
+                #
                 tokenBinder = new AddressTokenResolver(store_, @implementation.dataReference, addressToken, mode, constructionOptions)
 
                 @implementation.resolvedTokenArray.push tokenBinder.resolvedToken
@@ -139,15 +146,16 @@ module.exports = class Namespace
                             extensionPointNamespace = @store.openNamespace(extensionPointAddress)
                             extensionPointNamespace.update()
 
-                if tokenBinder.subcomponentDescriptors.length > 0
-                    console.log("AND... WE HAVE UNFINISHED BUSINESS: " + tokenBinder.subcomponentDescriptors.length + " subcomponent descriptors await...")
-
-                for subcomponentDescriptor in tokenBinder.subcomponentDescriptors
-                    console.log(".... onmNamepspace pending subcomponent " + JSON.stringify(subcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject))
-
-                @implementation.pendingSubcomponentDescriptors = tokenBinder.subcomponentDescriptors
-
                 true
+
+            if tokenBinder.subcomponentDescriptors.length > 0
+                console.log("onm.Namespace pending: '" + address_.getHumanReadableString() + "' " + tokenBinder.subcomponentDescriptors.length + " pending records.")
+                for subcomponentDescriptor in tokenBinder.subcomponentDescriptors
+                    console.log(".... ... record: '" + JSON.stringify(subcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject) + "'")
+
+            @implementation.pendingSubcomponentDescriptors = tokenBinder.subcomponentDescriptors
+            console.log("onm.Namespace constructor exit: '" + address_.getHumanReadableString() + "'.")
+
 
         catch exception
             throw new Error("Namespace failure: #{exception.message}")

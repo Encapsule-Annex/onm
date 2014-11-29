@@ -200,7 +200,8 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
                     break
                 ###
 
-                newData = resolveResults.dataReference? and resolveResults.dataReference and jslib.clone(resolveResults.dataReference) or {}
+                # think this is evil: newData = resolveResults.dataReference? and resolveResults.dataReference and jslib.clone(resolveResults.dataReference) or {}
+                newData = resolveResults.dataReference? and resolveResults.dataReference or {}
 
                 if descriptor_.namespaceType == "component"
                     if not (resolveActions_.setUniqueKey? and resolveActions_.setUniqueKey)
