@@ -289,19 +289,9 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                             assert.equal(dataWallace.streetAddress, 'Vincent & Jules Blvd');
                         });
 
-
                     });
-
-
-
-
                 });
-
-
             });
-
-
-
         });
 
         describe("Serialize the test data store to JSON and compare the results against a known good snapshot.", function() {
