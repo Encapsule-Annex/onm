@@ -108,10 +108,11 @@ InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, 
 
         subcomponentDescriptors = [];
 
+        console.log("InitializeComponentNamespaces for '" + descriptor_.jsonTag + "'.")
 
         for childDescriptor in descriptor_.children
 
-            console.log("InitializeComponentNamespaces evaluating descriptor '" + childDescriptor.jsonTag + "' (" + childDescriptor.namespaceType + ").")
+            console.log("... InitializeComponentNamespaces evaluating descriptor '" + childDescriptor.jsonTag + "' (" + childDescriptor.namespaceType + ").")
 
             propertyAssignmentObject = {};
 
@@ -121,7 +122,7 @@ InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, 
                 
                     if Object.keys(propertyAssignmentObject_).length > 0
 
-                        console.log("data-driven extension of the target component.");
+                        console.log("... ... ... data-driven extension of the target component.");
 
                         subcomponentDescriptors.push( {
                             parentExtensionPoint:
@@ -135,6 +136,8 @@ InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, 
 
                     # not a component (i.e. the interior of a component)
 
+                    console.log("... ... ... start normal initialization.")
+
                     propertyAssignmentObject = propertyAssignmentObject_? and propertyAssignmentObject_ and
                         propertyAssignmentObject_[childDescriptor.jsonTag]? and propertyAssignmentObject_[childDescriptor.jsonTag] or
                         {}
@@ -144,6 +147,9 @@ InitializeComponentNamespaces = (store_, data_, descriptor_, extensionPointId_, 
                     Array.prototype.push.apply(subcomponentDescriptors,
                         InitializeComponentNamespaces(store_, resolveResults.dataReference, childDescriptor, extensionPointId_, key_, propertyAssignmentObject)
                         )
+
+                    console.log("... ... ... end normal initialization.")
+
 
         console.log("InitializeComponentNamespaces exit with subcomponentDescriptors.length===" + subcomponentDescriptors.length)
         return subcomponentDescriptors
@@ -176,6 +182,8 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
         if not (data_? and data_) then throw new Error("Internal error: missing parent data reference input parameter.")
         if not (descriptor_? and descriptor_) then throw new Error("Internal error: missing object model descriptor input parameter.")
         if not (mode_? and mode_) then throw new Error("Internal error: missing mode input parameter.")
+
+        console.log("ResolveNamespaceDescriptor enter: '" + descriptor_.jsonTag + "'.")
 
         tokenString =  ((descriptor_.namespaceType != "component") and descriptor_.jsonTag) or key_ or undefined
 
@@ -239,6 +247,8 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
             else
                 throw new Error("Unrecognized mode parameter value.")
 
+        console.log("ResolveNamespaceDescriptor exit: '" + descriptor_.jsonTag + "'.")
+
         return resolveResults
 
     catch exception
@@ -275,13 +285,16 @@ module.exports = class AddressTokenResolver
                 getUniqueKey: getUniqueKeyFunction
             }
 
-            propertyAssignmentObject = propertyAssignmentObject_? and propertyAssignmentObject_ or {}
-            
+            # Clone the incoming propertyAssignmentObject parameter. Or, default to an empty propertyAssignmentObject
+            propertyAssignmentObject = propertyAssignmentObject_? and propertyAssignmentObject_ and jslib.clone(propertyAssignmentObject_) or {}
 
-            # Resolve the input token's component namespace.
+            console.log("AddressTokenResolver enter: '" + token_.namespaceDescriptor.jsonTag + "'.")
+            
+            # Resolve the input token's component namespace. This is the root namespace of the component only.
             resolveResults = ResolveNamespaceDescriptor(resolveActions, store_, @parentDataReference, token_.componentDescriptor, token_.key, mode_, propertyAssignmentObject)
             @dataReference = resolveResults.dataReference
 
+            # Think we always want to traverse the component now?
             if resolveResults.created
                 @resolvedToken.key = resolveResults.key
 
@@ -289,7 +302,10 @@ module.exports = class AddressTokenResolver
 
             if mode_ == "new" and resolveResults.created
                 # This resolves all the children and extension points of a component and initializes their properties.
+                console.log("We appear to have just created the root namespace of a component. Proceeding to initialize its children and EP's")
                 @subcomponentDescriptors = InitializeComponentNamespaces(store_, @dataReference, targetComponentDescriptor, extensionPointId, @resolvedToken.key, propertyAssignmentObject)
+            else
+                console.log("No further resolution.");
 
             if mode_ == "strict"
                 VerifyComponentNamespaces(store_, resolveResult.dataReference, targetComponentDescriptor, extensionPointId)            
@@ -298,6 +314,7 @@ module.exports = class AddressTokenResolver
             # ... If we've been asked to bind the root namespace of the component then we're done.
 
             if targetNamespaceDescriptor.isComponent
+                console.log("AddressTokenResolver enter: '" + token_.namespaceDescriptor.jsonTag + "'.")
                 return
 
             # ... otherwise the request is to bind a subnamespace of the component we just bound (i.e. created or opened depending on mode) above.
@@ -317,6 +334,7 @@ module.exports = class AddressTokenResolver
             resolveResults = ResolveNamespaceDescriptor(resolveActions, store_, resolveResults.dataReference, targetNamespaceDescriptor, resolveResults.key, mode_)
             @dataReference = resolveResults.dataReference
 
+            console.log("AddressTokenResolver enter: '" + token_.namespaceDescriptor.jsonTag + "'.")
             return
 
             # ----------------------------------------------------------------------------

@@ -49,6 +49,37 @@ var inputTestDataVector = {
             },
             expectedJSON: '{"addressBook":{"name":"Another Address Book Test","somePropertyNotInTheModel":"This property is not in the address book data.","description":"","properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{}}}'
         }
+    ],
+
+    'JSON parameter contains nested subcomponents.': [
+        {
+            inputObject: {
+                addressBook: {
+                    name: 'Nested Subcomponents Test 1',
+                    description: 'Some descriptive text.',
+                    contacts: {
+                        'testkey1': {
+                            name: "Joe"
+                        }
+                    }
+                }
+            },
+            expectedJSON: ''
+        }
+    ],
+
+    'JSON parameter contains some random stuff completely unrelated to the address book data model.': [
+        {
+            inputObject: {
+                someOtherRandomObject: {
+                    x: 'marks the spot',
+                    randomSubnamespace: {
+                        y: 'whatever'
+                    }
+                }
+            },
+            expectedJSON: '{"addressBook":{"name":"","description":"","properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{}}}'
+        }
     ]
     
 };
