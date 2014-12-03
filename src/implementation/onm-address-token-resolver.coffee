@@ -255,6 +255,23 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
         throw new Error("ResolveNamespaceDescriptor failure: #{exception.message}")
 
 
+###
+
+The construction of an AddressTokenResolver object instance is a request to
+'resolve' (i.e. determine), primarily, a JavaScript object reference to the
+namepspace resource indicated by the specified onm address token object.
+
+Address token objects specifically represent a single namespace at the root
+of, or within a so-called onm data component (a single-rooted hierarchy of
+one namespace declared w/namespaceType === 'component', and zero or more
+descendent namespace(s) declared w/namespaceType === 'child' || 'extensionPoint'.
+'child' namespaces may be nested within an onm data component at arbitrary
+breadth and depth. 'extensionPoint' namespaces are, by convention, always
+considered leaf nodes by onm because they do not declare child namespaces
+(but rather a component archetype that is used to normalize the objects
+stored within the extension point container).
+
+###
 
 
 #
