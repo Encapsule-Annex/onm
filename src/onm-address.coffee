@@ -257,23 +257,22 @@ module.exports = class Address
                 return @implementation.humanReadableString
 
             index = 0
-            humanReadableString = ""
+            stringTokens = []
 
             addStringToken = (address_) =>
                 model = address_.getModel();
                 if model.namespaceType == 'component'
                     key = address_.implementation.getLastToken().key or "-"
-                    humanReadableString += ".#{key}"
-                humanReadableString += humanReadableString and ".#{model.jsonTag}" or "#{model.jsonTag}"
+                    stringTokens.push("#{key}")
+                stringTokens.push("#{model.jsonTag}")
 
             @visitParentAddressesAscending( (addressParent_) =>
                 addStringToken(addressParent_)
             )
-
             addStringToken(@)
 
-            @implementation.humanReadableString = humanReadableString
-            return humanReadableString
+            @implementation.humanReadableString = stringTokens.join(".")
+            return @implementation.humanReadableString
 
         catch exception
             throw new Error("getHumanReadableString failure: #{exception.message}");
@@ -288,18 +287,18 @@ module.exports = class Address
                 return @implementation.hashString
 
             index = 0
-            hashSource = ""
+            stringTokens = []
 
             for token in @implementation.tokenVector
                 if not index
-                    hashSource += "#{token.model.jsonTag}"
+                    stringTokens.push("#{token.model.jsonTag}")
                 if token.key? and token.key
-                    hashSource += ".#{token.key}"
+                    stringTokens.push("#{token.key}")
                 else
                     if token.idExtensionPoint > 0
-                        hashSource += ".-"
+                        stringTokens.push("-");
                 if token.idNamespace
-                    hashSource += ".#{token.idNamespace}"
+                    stringTokens.push("#{token.idNamespace}")
                 index++
 
             # Given that an ONM object model is a singly-rooted tree structure, the raw
@@ -314,6 +313,8 @@ module.exports = class Address
             # generally meaningless to humans, and the original string may be recovered
             # by reversing the process. https://github.com/mathiasbynens/esrever is a good
             # sample of how one should reverse a string if maintaining Unicode is important.
+
+            hashSource = stringTokens.join(".");
 
             @implementation.hashString = encodeURIComponent(hashSource).replace(/[!'()]/g, escape).replace(/\*/g, "%2A")
             #reversedHashString = humanReadableString.split('').reverse().join('')
