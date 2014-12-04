@@ -261,8 +261,35 @@ The construction of an AddressTokenResolver object instance is a request to
 'resolve' (i.e. determine), primarily, a JavaScript object reference to the
 namespace resource indicated by the specified onm address token object.
 
-###
+AddressTokenResolver constructor implements construction modes: 'open' and 'create'.
 
+'open' presumes the existence of the namespace specified by the token parameter as well as
+the existence of any containing parent namespace(s).
+
+If the addressed namespace (i.e. object
+in JSON parlance) does not exist, then AddressTokenResolver's constructor function will throw
+a new Error.
+
+When constructed in 'open' mode, AddressTokenResolver ignores the property assignment object
+in-parameter entirely as 'open' is simply a dereference, not an assignment.
+
+'create' presumes that the namespace addressed by the token parameter does not exist. In other
+words, no part of the data component into which the token parameter addresses exists.
+
+So, before resolving the specific namespace data reference indicated by the token parameter,
+AddressTokenResolver must create and initialize the entire data component in the store before
+ultimately returning the sought-after namespace data reference.
+
+Creating and initializing each namespace in a data component is a bit tricky as the
+set of properties in each namespace to be initialized derives from (a) reserved properties
+used by onm intrinsic semantic bindings (if enabled), (b) namespace properties and default values
+declared in the data model (c) the specifics of the property assignment object (iff defined).
+
+Additionally, it's the responsibility of AddressTokenResolver to prune any incoming
+property assignment object in order to correctly frame the construction of subcomponents
+encountered in property assignment object.
+
+###
 
 #
 # ****************************************************************************
@@ -270,7 +297,6 @@ module.exports = class AddressTokenResolver
     constructor: (store_, parentDataReference_, token_, mode_, propertyAssignmentObject_) ->
         try
             @store = store_? and store_ or throw new Error("Missing object store input parameter.")
-            model = store_.model
             @parentDataReference = parentDataReference_? and parentDataReference_ or throw new Error("Missing parent data reference input parameter.")
             if not (token_? and token_) then throw new Error("Missing object model address token object input parameter.")
             if not (mode_? and mode_) then throw new Error("Missing mode input parameter.")
@@ -279,6 +305,8 @@ module.exports = class AddressTokenResolver
             @resolvedToken = token_.clone()
 
             @subcomponentDescriptors = [];
+
+            model = store_.model
 
             targetNamespaceDescriptor = token_.namespaceDescriptor
             targetComponentDescriptor = token_.componentDescriptor
