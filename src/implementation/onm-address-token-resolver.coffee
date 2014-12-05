@@ -288,8 +288,12 @@ declared in the data model (c) the specifics of the property assignment object (
 Additionally, it's the responsibility of AddressTokenResolver to prune any incoming
 property assignment object in order to correctly frame the construction of subcomponents
 encountered in property assignment object. It's not the responsibility of AddressTokenResolver
-to actually invoke itself (i.e. it's not recursive). Instead, this responsibility is relegated
-to the layer above: onm.Namespace.
+to actually invoke itself (i.e. an AddressTokenResolver never recursively constructs
+sub-instances). Instead, each AddressTokenResolver instance maintains a record of
+pending subcomponents it encounters during onm data component initialization, and
+relies on its client (typically onm.Namespace) to interogate each AddressTokenResolver
+and construct new AddressTokenResolver object instance(s) as required to construct
+all data components touched by data present in the property assignment object.
 
 ###
 
@@ -306,14 +310,21 @@ module.exports = class AddressTokenResolver
             @dataReference = undefined
             @resolvedToken = token_.clone()
 
-            @subcomponentDescriptors = [];
+            # Array is populated at construction-time iff the property assignment object touches
+            # subcomponent(s) of the component addressed by the specified token in-parameter.
+            # By convention, the client of this object (typically onm.Namespace) alters the state
+            # of this object by popping subcomponentDescriptor objects from the array as they are
+            # processed as described in the comments above.
+            @subcomponentDescriptors = []
 
-            model = store_.model
-
-            targetNamespaceDescriptor = token_.namespaceDescriptor
+            # The model namespace descriptor of the addressed data component's root namespace.
             targetComponentDescriptor = token_.componentDescriptor
 
-            semanticBindings = model.getSemanticBindings()
+            # The model namespace descriptor of the addressed data namespace. 
+            # Equivalent to component descriptor iff token addresses the root of a data component.
+            targetNamespaceDescriptor = token_.namespaceDescriptor
+
+            semanticBindings = store_.model.getSemanticBindings()
             setUniqueKeyFunction = semanticBindings? and semanticBindings and semanticBindings.setUniqueKey? and semanticBindings.setUniqueKey or undefined
             getUniqueKeyFunction = semanticBindings? and semanticBindings and semanticBindings.getUniqueKey? and semanticBindings.getUniqueKey or undefined
 
@@ -364,7 +375,7 @@ module.exports = class AddressTokenResolver
 
             # ... Resolve the component subnamespace parents of the target namespace.
             for pathId in parentPathIds
-                descriptor = model.implementation.getNamespaceDescriptorFromPathId(pathId)
+                descriptor = store_.model.implementation.getNamespaceDescriptorFromPathId(pathId)
                 resolveResults = ResolveNamespaceDescriptor(resolveActions, store_, resolveResults.dataReference, descriptor, resolveResults.key, mode_)
 
             # ... Resolve the target namespace
