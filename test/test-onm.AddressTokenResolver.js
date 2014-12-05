@@ -4,6 +4,8 @@
 var assert = require('chai').assert;
 var expect = require('chai').expect;
 var should = require('chai').should;
+var withData = require('leche').withData;
+
 var uuid = require('node-uuid');
 var onm = require('../index');
 var testData = require('./fixture/address-book-data-model');
@@ -11,6 +13,15 @@ var testData = require('./fixture/address-book-data-model');
 // onm.AddressTokenResolver is an internal implementation object of onm that is deliberately
 // not exposed via onm's public API surface. 
 var AddressTokenResolver = require('../lib/implementation/onm-address-token-resolver');
+
+
+var testDataVector = [
+
+    {
+    }
+
+];
+
 
 
 module.exports = describe("onm.AddressTokenResolver implementation object whitebox tests.", function() {
