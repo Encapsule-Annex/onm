@@ -3,7 +3,7 @@
 module.exports = describe("onm.Address object method tests", function() {
 
     // Internal white box tests.
-    require('./test-onm.AddressTokenResolver');
+    // disable temporarily for re-write: require('./test-onm.AddressTokenResolver');
 
     // Public API level functional tests.
     require('./test-onm.Address.createSubpathAddress');

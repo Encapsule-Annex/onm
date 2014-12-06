@@ -14,7 +14,10 @@ module.exports = (grunt) ->
                     'lib/onm-address-store.js': 'src/onm-address-store.coffee'
                     'lib/implementation/onm-address-token.js': 'src/implementation/onm-address-token.coffee'
                     'lib/implementation/onm-address-token-resolver.js': 'src/implementation/onm-address-token-resolver.coffee'
-                    'lib/implementation/onm-address-token-resolver2.js': 'src/implementation/onm-address-token-resolver2.coffee'
+
+                    'lib/implementation/onm-namespace-resolver.js': 'src/implementation/onm-namespace-resolver.coffee'
+                    'lib/implementation/onm-namespace-descriptor-resolver.js': 'src/implementation/onm-namespace-descriptor-resolver.coffee'
+
                     'lib/implementation/onm-store-reifier.js': 'src/implementation/onm-store-reifier.coffee'
                     'lib/lib-backchannel.js': 'src/lib-backchannel.coffee'
                     'lib/lib-javascript.js': 'src/lib-javascript.coffee'
