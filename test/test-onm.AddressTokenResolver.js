@@ -10,40 +10,76 @@ var uuid = require('node-uuid');
 var onm = require('../index');
 var testData = require('./fixture/address-book-data-model');
 
-// onm.AddressTokenResolver is an internal implementation object of onm that is deliberately
-// not exposed via onm's public API surface. 
-var AddressTokenResolver = require('../lib/implementation/onm-address-token-resolver');
+var testDataModel = testData.createModel();
+var testDataRootAddress = testDataModel.createRootAddress();
+var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 
 
-var testDataVector = [
 
-    {
-    }
+var testSpecifications = {
 
-];
+    "Missing constructor options": [
+        {
+            constructorOptions: null,
+            validConfig: false
+        }
+    ],
+
+    "Malformed constructor options (missing everything)": [
+        {
+            constructorOptions: {
+            },
+            validConfig: false
+        }
+    ],
+
+    "Malformed constructor options (bad mode)": [
+        {
+            constructorOptions: {
+                model: testDataModel,
+                parentDataReference: {},
+                token: testDataRootToken,
+                mode: "no-such-mode",
+                propertyAssignmentObject: {}
+            },
+            validConfig: false
+        }
+    ],
+
+};
 
 
+
+var AddressTokenResolver2 = require('../lib/implementation/onm-address-token-resolver2');
 
 module.exports = describe("onm.AddressTokenResolver implementation object whitebox tests.", function() {
 
-    var parentDataObject = {};
-    var testStore = null;
-    var addressRoot = null;
-    var addressToken = null;
-    var addressTokenResolver = null;
+    var tokenResolverOptions = {};
+    var tokenResolver = null;
 
-    before(function() {
-        
-        testStore = testData.createStore();
-        addressRoot = testStore.model.createRootAddress();
-        addressToken = addressRoot.implementation.getLastToken();
-        addressTokenResolver = new AddressTokenResolver(testStore, parentDataObject, addressToken, "new");
-    });
+    before(function(done_) {
 
-    it("An instance of AddressTokenResolver object should have been constructed.", function() {
-        assert.isNotNull(addressTokenResolver);
-        assert.instanceOf(addressTokenResolver, AddressTokenResolver);
-        console.log(JSON.stringify(addressTokenResolver.dataReference));
+        withData(testSpecifications, function(testSpecification_) {
+
+            var addressTokenResolver = null;
+
+            var functionUnderTest = function() {
+                addressTokenResolver = new AddressTokenResolver2(testSpecification_.constructorOptions);
+            };
+
+            if (testSpecification_.validConfig) {
+                it("Attempt to construct AddressTokenResolver object should not throw.", function() {
+                    assert.doesNotThrow(functionUnderTest);
+                });
+            } else {
+                it("Attempt to construct AddressTokenResolver object is expected to throw.", function() {
+                    assert.throws(functionUnderTest);
+                });
+            }
+
+        });
+
+        done_();
     });
 
     it("Execute the test suite.", function() {
