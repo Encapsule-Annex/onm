@@ -36,43 +36,58 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-module.exports = class AddressTokenResolver2
 
-    constructor: (constructorOptions_) ->
 
+
+namespaceDescriptorResolver = require('./onm-descriptor-resolve')
+
+# ==============================================================================
+class AddressTokenResolver
+
+    constructor: (tokenResolveOptions_) ->
         try
+            if not (tokenResolveOptions_? and tokenResolveOptions_ and 
+                tokenResolveOptions_.model? and tokenResolveOptions_.model and
+                tokenResolveOptions_.parentDataReference? and tokenResolveOptions_.parentDataReference and
+                tokenResolveOptions_.token? and tokenResolveOptions_.token and
+                tokenResolveOptions_.mode? and tokenResolveOptions_.mode and
+                tokenResolveOptions_.propertyAssignmentObject? and tokenResolveOptions_.propertyAssignmentObject)
+                    throw new Error("Invalid resolve options object.")
 
-            if not (constructorOptions_? and constructorOptions_)
-                throw new Error("Missing required constructor options object parameter.")
-
-            if not (contructorOptions_.store? and constructorOptions_.store and
-                constructorOptions_.parentDataReference? and constructorOptions_.parentDataReference and
-                constructorOptions_.token? and constructorOptions_.token and
-                constructorOptions_.mode? and constructorOptions_.mode and
-                constructorOptions_.propertyAssignmentObject? and constructorOptions_.propertyAssignmentObject)
-                     throw new Error("Constructor options object is malformed.")
-
-
-            switch (constructorOptions_.mode)
-
+            switch (tokenResolveOptions_.mode)
                 when 'open'
                     break
-
                 when 'create'
                     break
-
                 else
-                    throw new Error("Unrecognized mode value '#{constructorOptions_.mode}'")
+                    throw new Error("Unrecognized mode value '#{tokenResolveOptions_.mode}'")
 
         catch exception_
-
             throw new Error("AddressTokenResolver2 construction failure: #{exception_.message}")
 
 
+# ==============================================================================
+openTokenNamespace = (tokenResolveOptions_) ->
+    try
+
+    catch exception_
+        throw new Error("openTokenNamespace failure: #{exception_.message}")
 
 
+# ==============================================================================
+createTokenNamespace = (tokenResolveOptions_) ->
+    try
+
+    catch exception_
+        throw new Error("createTokenNamespace failure: #{exception_.message}")
+
+# ==============================================================================
 
 
-        
-
-            
+module.exports = {
+    # exports for client(s)
+    AddressTokenResolver: AddressTokenResolver,
+    # exports for tests
+    openTokenNamespace: openTokenNamespace,
+    createTokenNamespace: createTokenNamespace
+}
