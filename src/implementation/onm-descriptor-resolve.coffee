@@ -78,7 +78,7 @@ module.exports = {
             jsonTag = (descriptor.namespaceType != 'extensionPoint') and descriptor.jsonTag or key
             resolveResults.namespaceDataReference = options_.parentDataReference[jsonTag]
             # As a matter of policy, onm currently throws a new Error object iff the requested namespace cannot be resolved in the onm.Store data.
-            if not (namespaceDataReference? and namespaceDataReference)
+            if not (resolveResults.namespaceDataReference? and resolveResults.namespaceDataReference)
                 message = "Cannot open expected child object '#{jsonTag}' in data for namespace descriptor 'path'='#{descriptor.path}' 'namespaceType'='#{descriptor.namespaceType}'"
                 throw new Error(message)
                 
@@ -112,12 +112,13 @@ module.exports = {
 
         openResult = 
             options_.parentDataReference? and options_.parentDataReference and
-            options_.targetNamespaceDescriptor? and options_.targetNamespaceDescriptor
+            options_.targetNamespaceDescriptor? and options_.targetNamespaceDescriptor and true or false
 
         if not (isOpenResolve_? and isOpenResolve_)
             return openResult and
-                options_.targetNamespaceKey? and #options_.targetNamespaceKey and
-                options_.propertyAsssignmentObject? #and options_.propertyAssignmentObject
+                options_.targetNamespaceKey? and options_.targetNamespaceKey and
+                options_.propertyAsssignmentObject? and options_.propertyAssignmentObject and
+                true or false
 
         openResult
 

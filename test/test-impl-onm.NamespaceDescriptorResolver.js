@@ -57,6 +57,54 @@ module.exports = describe("onm.NamespaceDescriptorResolver whitebox tests.", fun
         assert.isFunction(moduleUnderTest.checkValidDescriptorResolveResults);
     });
 
+    describe("'checkValidDescriptorResolveOptions' function export test suite.", function() {
+        var testVector = {
+
+            'Bad params: missing parameters': [{
+                testData: {},
+                validConfig: false
+            }],
+            'Bad params: malformed open 1': [{
+                testData: { options: {} },
+                validConfig: false
+            }],
+            'Bad params: malformed open 2': [{
+                testData: { options: { }, isOpenResolve: true },
+                validConfig: false
+            }],
+            'Bad params: malformed open 3': [{
+                testData: { options: { parentDataReference: {} }, isOpenResovle: true },
+                validConfig: false
+            }],
+            'Bad params: malformed open 4': [{
+                testData: { options: { parentDataReference: {}, targetNamespaceDescriptor: {} } },
+                validConfig: false
+            }],
+            'Valid params: open options test 1': [{
+                testData: { options: { parentDataReference: {}, targetNamespaceDescriptor: {} }, isOpenResolve: true },
+                validConfig: true
+            }]
+        };
+        before(function(done_) {
+            withData(testVector, function(inputData_) {
+                var result = null;
+                before(function(done_) {
+                    var functionUnderTest = function() {
+                        result = moduleUnderTest.checkValidDescriptorResolveOptions(inputData_.testData.options, inputData_.testData.isOpenResolve);
+                    };
+                    assert.doesNotThrow(functionUnderTest);
+                    done_();
+                });
+                it("Result value should be '" + inputData_.validConfig + "'.", function() {
+                    assert.equal(result, inputData_.validConfig);
+                });
+            });
+            done_();
+        });
+        it("Execute the test suite.", function() {
+            assert.isTrue(true);
+        });
+    });
 
     describe("'resolveNamespaceDescriptorOpen' function export tests.", function() {
 
@@ -68,12 +116,13 @@ module.exports = describe("onm.NamespaceDescriptorResolver whitebox tests.", fun
             propertyAssignmentObject: undefined
         };
 
-        before(function() {
+        before(function(done_) {
             var functionUnderTest = function() {
 
                 resolveResults = moduleUnderTest.resolveNamespaceDescriptorOpen(descriptorResolveOptions);
             };
             assert.doesNotThrow(functionUnderTest);
+            done_();
         });
 
         it("Execute the test suite.", function() {
