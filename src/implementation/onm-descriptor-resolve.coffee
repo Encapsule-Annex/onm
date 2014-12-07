@@ -29,6 +29,30 @@ OPEN SOURCES: http://github.com/Encapsule HOMEPAGE: http://Encapsule.org
 BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 ------------------------------------------------------------------------------
+
+A namespace descriptor is a low-level, should-be-viewed-as-frozen object
+maintained by onm.Model used to cache details about a specific namespace
+declaration in an onm data model.
+
+Namespace descriptor objects are the basis of AddressToken object implementation,
+and are ultimately the source of truth when it comes to opening or creating
+specifc JavaScript object references within the scope of an onm.Store object.
+
+Recall that a "namespace" in the parlance of onm is a generic moniker for a
+named JavaScript object that has one of several onm-defined possible object roles
+assigned via its 'namespaceType' property value declaration.
+
+Generically, this module implements the low-level policy over the opening
+(i.e. the resolution of onm.Address resource locators against a specific
+onm.Store addressable, in-memory data store), and the creation (i.e. allocation
+and initialization via multi-way priority merge algorithm) of data namespaces
+within the scope of an onm.Store.
+
+onm.Store -> delegates to...
+onm.Namespace -> delegates to ...
+omm.AddressTokenResolver -> delegates to...
+onm.NamespaceDescriptorResolver -> this module gets it done
+
 ------------------------------------------------------------------------------
 
 ###
@@ -76,11 +100,11 @@ module.exports = {
 
 
     # ==============================================================================
-    checkValidDescriptorResolveResults: (result_) ->
-        return result_? and result_ and
-            result_.namespaceDataReference? and result_.namespaceDataReference_ and
-            result_.pendingNamespaceDescriptors? and result_.pendingNamespaceDescriptors and
-            Array.isArray(result_.pendingNamespaceDescriptors)
+    checkValidDescriptorResolveResults: (results_) ->
+        return results_? and results_ and
+            results_.namespaceDataReference? and results_.namespaceDataReference_ and
+            results_.pendingNamespaceDescriptors? and results_.pendingNamespaceDescriptors and
+            Array.isArray(results_.pendingNamespaceDescriptors)
 
 
 }
