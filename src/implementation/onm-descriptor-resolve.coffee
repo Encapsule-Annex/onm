@@ -76,7 +76,7 @@ module.exports = {
 
 
     # ==============================================================================
-    checkValidDescriptorResolveResult: (result_) ->
+    checkValidDescriptorResolveResults: (result_) ->
         return result_? and result_ and
             result_.namespaceDataReference? and result_.namespaceDataReference_ and
             result_.pendingNamespaceDescriptors? and result_.pendingNamespaceDescriptors and

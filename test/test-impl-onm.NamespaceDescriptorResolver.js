@@ -36,5 +36,25 @@ module.exports = describe("onm.NamespaceDescriptorResolver whitebox tests.", fun
         assert.isObject(moduleUnderTest);
     });
 
+    it("Module should export function 'resolveNamespaceDescriptorOpen'.", function() {
+        assert.property(moduleUnderTest, 'resolveNamespaceDescriptorOpen');
+        assert.isFunction(moduleUnderTest.resolveNamespaceDescriptorOpen);
+    });
+
+    it("Module should export function 'resolveNamespaceDescriptorCreate'.", function() {
+        assert.property(moduleUnderTest, 'resolveNamespaceDescriptorCreate');
+        assert.isFunction(moduleUnderTest.resolveNamespaceDescriptorCreate);
+    });
+
+    it("Module should export function 'checkValidDescriptorResolveOptions'.", function() {
+        assert.property(moduleUnderTest, 'checkValidDescriptorResolveOptions');
+        assert.isFunction(moduleUnderTest.checkValidDescriptorResolveOptions);
+    });
+
+    it("Module should export function 'checkValidDescriptorResolveResults.", function() {
+        assert.property(moduleUnderTest, 'checkValidDescriptorResolveResults');
+        assert.isFunction(moduleUnderTest.checkValidDescriptorResolveResults);
+    });
+
 });
 
