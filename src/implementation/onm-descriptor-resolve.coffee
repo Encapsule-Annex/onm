@@ -64,25 +64,41 @@ onm.NamespaceDescriptorResolver -> this module gets it done
 module.exports = {
 
     # ==============================================================================
-    resolveNamespaceDescriptorOpen: (descriptorResolveOptions_) ->
+    resolveNamespaceDescriptorOpen: (options_) ->
         try
-            if not checkValidDescriptorResolveOptions descriptorResolveOptions_
+            if not @checkValidDescriptorResolveOptions options_, true
                 throw new Error("Invalid descriptor resolve options.")
 
-            resolveResults = {};
+            resolveResults =
+                namespaceDataReference: null
+                pendingNamespaceDescriptors: []
 
+            descriptor = options_.targetNamespaceDescriptor
+            key = options_.targetNamespaceKey
+            jsonTag = (descriptor.namespaceType != 'extensionPoint') and descriptor.jsonTag or key
+            resolveResults.namespaceDataReference = options_.parentDataReference[jsonTag]
+            # As a matter of policy, onm currently throws a new Error object iff the requested namespace cannot be resolved in the onm.Store data.
+            if not (namespaceDataReference? and namespaceDataReference)
+                message = "Cannot open expected child object '#{jsonTag}' in data for namespace descriptor 'path'='#{descriptor.path}' 'namespaceType'='#{descriptor.namespaceType}'"
+                throw new Error(message)
+                
+            resolveResults
 
         catch exception_
             throw new Error("resolveNamespaceDescriptorOpen failure: #{exception_.message}")
 
 
     # ==============================================================================
-    resolveNamespaceDescriptorCreate: (descriptorResolveOptions_) ->
+    resolveNamespaceDescriptorCreate: (options_) ->
         try
-            if not checkValidDescriptorResolveOptions descriptorResolveOptions_
+            if not @checkValidDescriptorResolveOptions options_
                 throw new Error("Invalid descriptor resolve options.")
 
-            resolveResults = {};
+            resolveResults =
+                namespaceDataReference: null
+                pendingNamespaceDescriptors: []
+
+            resolveResults
 
         catch exception_
             throw new Error("resolveNamespaceDescirptorCreate failure: #{exception_.message}")
@@ -90,12 +106,20 @@ module.exports = {
 
 
     # ==============================================================================
-    checkValidDescriptorResolveOptions: (options_) ->
-        return options_? and options_ and
+    checkValidDescriptorResolveOptions: (options_, isOpenResolve_) ->
+        if not (options_? and options_)
+            return false
+
+        openResult = 
             options_.parentDataReference? and options_.parentDataReference and
-            options_.targetNamespaceDescriptor? and options_.targetNamespaceDescriptor and
-            options_.targetNamespaceKey? and options_.targetNamespaceKey and
-            options_.propertyAsssignmentObject? and options_.propertyAssignmentObject
+            options_.targetNamespaceDescriptor? and options_.targetNamespaceDescriptor
+
+        if not (isOpenResolve_? and isOpenResolve_)
+            return openResult and
+                options_.targetNamespaceKey? and #options_.targetNamespaceKey and
+                options_.propertyAsssignmentObject? #and options_.propertyAssignmentObject
+
+        openResult
 
 
 

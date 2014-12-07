@@ -13,6 +13,7 @@ var testData = require('./fixture/address-book-data-model');
 var testDataModel = testData.createModel();
 var testDataRootAddress = testDataModel.createRootAddress();
 var testDataRootToken = testDataRootAddress.implementation.getLastToken();
+var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
 
 
 module.exports = describe("onm.NamespaceDescriptorResolver whitebox tests.", function() {
@@ -55,6 +56,33 @@ module.exports = describe("onm.NamespaceDescriptorResolver whitebox tests.", fun
         assert.property(moduleUnderTest, 'checkValidDescriptorResolveResults');
         assert.isFunction(moduleUnderTest.checkValidDescriptorResolveResults);
     });
+
+
+    describe("'resolveNamespaceDescriptorOpen' function export tests.", function() {
+
+        var resolveResults = null;
+        var descriptorResolveOptions = {
+            parentDataReference: { 'addressBook': {} },
+            targetNamespaceDescriptor: testDataRootDescriptor,
+            targetNamespaceKey: undefined,
+            propertyAssignmentObject: undefined
+        };
+
+        before(function() {
+            var functionUnderTest = function() {
+
+                resolveResults = moduleUnderTest.resolveNamespaceDescriptorOpen(descriptorResolveOptions);
+            };
+            assert.doesNotThrow(functionUnderTest);
+        });
+
+        it("Execute the test suite.", function() {
+            assert.isTrue(true);
+        });
+
+
+    });
+
 
 });
 
