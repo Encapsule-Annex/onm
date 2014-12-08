@@ -3,8 +3,8 @@
 module.exports = describe("onm.Address object method tests", function() {
 
     // Internal white box tests.
-    require('./test-impl-onm.NamespaceDescriptorResolver');
-    require('./test-impl-onm.AddressTokenResolver');
+    require('./test-impl-onm-descriptor-resolver');
+    require('./test-impl-onm-token-resolver');
 
     // Public API level functional tests.
     require('./test-onm.Address.createSubpathAddress');

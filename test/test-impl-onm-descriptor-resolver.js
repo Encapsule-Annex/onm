@@ -16,7 +16,7 @@ var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
 
 
-module.exports = describe("onm.NamespaceDescriptorResolver whitebox tests.", function() {
+module.exports = describe("onm.NamespaceDescriptorResolver white box tests.", function() {
     var moduleUnderTest = null;
     before(function(done_) {
         var loadModuleUnderTest = function() {
