@@ -93,6 +93,54 @@ module.exports =
             throw new Error("resolveNamespaceDescriptorOpen failure: #{exception_.message}")
 
     # ==============================================================================
+    resolveNamespaceDescriptorCreate: (options_) ->
+        try
+            if not implementation.checkValidDescriptorResolveOptions options_
+                throw new Error("Invalid descriptor resolve options.")
+
+            # Determine if an object of that name already exists in the store data.
+            resolveResults = @resolveNamespaceDescriptorOpenImpl options_
+
+            # Policy implementation: throw if object implied by namespace descriptor already exists.
+            if resolveResults.namespaceDataReference? and resolveResults.namespaceDataReference
+                resourceString = @createResourceString options_, resolveResults
+                throw new Error "Child object already exists in data: #{resourceString}"
+
+            # Create the requested named child object without regard to namespace type.
+            resolveResults.namespaceDataReference = options_.parentDataReference[resolveResults.namespaceEffectiveKey] = {}
+
+            # Assign the child object's onm key property iff 'root' or 'component' namespace type.
+            switch options_.targetNamespaceDescriptor.namespaceType
+                when 'root' or 'component'
+                    # Determine if the propertyAssignmentObject contains an onm component key value.
+                    effectiveKeyValue = undefined
+                    assignmentKeyValue = options_.semanticBindingsReference.getUniqueKey(options_.propertyAssignmentObject)
+                    if assignmentKeyValue? and assignmentKeyValue
+                        if options_.targetNamespaceKey and (options_.targetNamespaceKey != assignmentKeyValue)
+                            resourceString = @createResourceString options_, resolveResults
+                            throw new Error "Contradictory onm component key values '#{assignmentKeyValue}' !== '#{options_.targetNamespaceKey}'."
+                        delete options_.propertyAssignmentObject[options_.semanticBindingsReference.keyPropertyName]
+                    effectiveKeyValue = assignmentKeyValue or options_.targetNamespaceKey or undefined
+                    assignedKeyValue = options_.semanticBindingsReference.setUniqueKey(resolveResults.namespaceDataReference, effectiveKeyValue)
+                    break
+                else
+                    break
+
+
+            resolveResults
+
+        catch exception_
+            throw new Error("resolveNamespaceDescriptorCreate failure: #{exception_.message}")
+
+
+    # ****************************************************************************
+    # ****************************************************************************
+    # ****************************************************************************
+    # White box test exports
+    #
+    #
+
+    # ==============================================================================
     resolveNamespaceDescriptorOpenImpl: (options_) ->
 
         # checkValidDescriptorResolveOptions(options_) == true assumed
@@ -109,33 +157,6 @@ module.exports =
 
         resolveResults
 
-
-    # ==============================================================================
-    resolveNamespaceDescriptorCreate: (options_) ->
-        try
-            if not implementation.checkValidDescriptorResolveOptions options_
-                throw new Error("Invalid descriptor resolve options.")
-
-            # Determine if an object of that name already exists in the store data.
-            resolveResults = @resolveNamespaceDescriptorOpenImpl options_
-
-            # Policy implementation: throw if object implied by namespace exists already.
-            if resolveResults.namespaceDataReference? and resolveResults.namespaceDataReference
-                resourceString = @createResourceString options_, resolveResults
-                throw new Error "Child object already exists in data: #{resourceString}"
-
-            resolveResults
-
-        catch exception_
-            throw new Error("resolveNamespaceDescriptorCreate failure: #{exception_.message}")
-
-
-    # ****************************************************************************
-    # ****************************************************************************
-    # ****************************************************************************
-    # White box test exports
-    #
-    #
 
     createResourceString: implementation.createResourceString
     checkValidDescriptorResolveOptions: implementation.checkValidDescriptorResolveOptions

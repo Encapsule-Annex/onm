@@ -129,11 +129,11 @@ module.exports = describe("onm.NamespaceDescriptorResolver whitebox tests.", fun
 
         var resolveResults = null;
         var descriptorResolveOptions = {
-            parentDataReference: { 'addressBook': {} },
+            parentDataReference: {},
             targetNamespaceDescriptor: testDataRootDescriptor,
-            targetNamespaceKey: "test",
-            propertyAssignmentObject: {},
-            semanticBindingsReference: {}
+            targetNamespaceKey: '',
+            propertyAssignmentObject: { key: 'fuckyou' },
+            semanticBindingsReference: testDataModel.getSemanticBindings()
         };
 
         before(function(done_) {
@@ -154,7 +154,18 @@ module.exports = describe("onm.NamespaceDescriptorResolver whitebox tests.", fun
             assert.isTrue(moduleUnderTest.checkValidDescriptorResolveResults(resolveResults));
         });
 
+        it("Verify that named child object 'addressBook' was created in the parent store object.", function() {
+            assert.property(descriptorResolveOptions.parentDataReference, 'addressBook');
+            assert.isObject(descriptorResolveOptions.parentDataReference.addressBook);
+        });
 
+        it("Verify the integrity of the resolved child object 'addressBook' data reference.", function() {
+            assert.doesNotThrow(function() {
+                resolveResults.namespaceDataReference.test = "test property touched";
+            });
+            assert.property(descriptorResolveOptions.parentDataReference.addressBook, 'test');
+            assert.equal(descriptorResolveOptions.parentDataReference.addressBook.test, "test property touched");
+        });
 
     });
 

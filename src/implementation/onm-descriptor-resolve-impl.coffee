@@ -65,7 +65,7 @@ module.exports =
 
         if not (isOpenResolve_? and isOpenResolve_)
             return openResult and
-                options_.targetNamespaceKey? and options_.targetNamespaceKey and
+                options_.targetNamespaceKey? and
                 options_.semanticBindingsReference? and options_.semanticBindingsReference and
                 options_.propertyAssignmentObject? and options_.propertyAssignmentObject and
                 true or false
