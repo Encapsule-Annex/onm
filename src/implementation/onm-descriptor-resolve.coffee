@@ -171,6 +171,7 @@ module.exports =
                         # Interpret remaining properties on property assignment object as subcomponents key values.
                         # For each named object in the property assignment object, queue a deferred descriptor
                         # resolve operations
+                        deleteKeyNames = []
                         for keyName, subcomponentPropertyAssignmentObject of options_.propertyAssignmentObject
                             pendingDescriptorResolveOptions =
                                 parentDataReference: resolveResults.namespaceDataReference
@@ -179,6 +180,9 @@ module.exports =
                                 semanticBindingReference: options_.semanticBindingsReference
                                 propertyAssignmentObject: subcomponentPropertyAssignmentObject
                             resolveResults.pendingNamespaceDescriptors.push pendingDescriptorResolveOptions
+                            deleteKeyNames.push keyName
+                        while deleteKeyNames.length
+                            delete options_.propertyAssignmentObject[deleteKeyNames.pop()]
                         break
 
                     else
@@ -192,9 +196,15 @@ module.exports =
                             semanticBindingReference: options_.semanticBindingsReference
                             propertyAssignmentObject: options_.propertyAssignmentObject[childNamespaceDescriptor.jsonTag]
                         resolveResults.pendingNamespaceDescriptors.push pendingDescriptorResolveOptions
+                        delete options_.propertyAssignmentObject[childNamespaceDescriptor.jsonTag]
 
             # Clone remaining properties from the property assignment object on to the child object.
-
+            deleteKeys = []
+            for propertyName, subObject of options_.propertyAssignmentObject
+                resolveResults.namespaceDataReference[propertyName] = subObject
+                deleteKeys.push propertyName
+            while deleteKeys.length
+                delete options_.propertyAssignmentObject[deleteKeys.pop()]
 
             resolveResults
 
