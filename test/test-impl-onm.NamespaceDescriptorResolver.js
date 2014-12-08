@@ -17,46 +17,35 @@ var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
 
 
 module.exports = describe("onm.NamespaceDescriptorResolver whitebox tests.", function() {
-
     var moduleUnderTest = null;
-
     before(function(done_) {
-
         var loadModuleUnderTest = function() {
             moduleUnderTest = require('../lib/implementation/onm-descriptor-resolve');
         };
-
         assert.doesNotThrow(loadModuleUnderTest);
         done_();
-
     });
-
     it("The 'onm-namespace-resolver' module should have loaded.", function() {
         assert.isDefined(moduleUnderTest);
         assert.isNotNull(moduleUnderTest);
         assert.isObject(moduleUnderTest);
     });
-
     it("Module should export function 'resolveNamespaceDescriptorOpen'.", function() {
         assert.property(moduleUnderTest, 'resolveNamespaceDescriptorOpen');
         assert.isFunction(moduleUnderTest.resolveNamespaceDescriptorOpen);
     });
-
     it("Module should export function 'resolveNamespaceDescriptorCreate'.", function() {
         assert.property(moduleUnderTest, 'resolveNamespaceDescriptorCreate');
         assert.isFunction(moduleUnderTest.resolveNamespaceDescriptorCreate);
     });
-
     it("Module should export function 'checkValidDescriptorResolveOptions'.", function() {
         assert.property(moduleUnderTest, 'checkValidDescriptorResolveOptions');
         assert.isFunction(moduleUnderTest.checkValidDescriptorResolveOptions);
     });
-
     it("Module should export function 'checkValidDescriptorResolveResults.", function() {
         assert.property(moduleUnderTest, 'checkValidDescriptorResolveResults');
         assert.isFunction(moduleUnderTest.checkValidDescriptorResolveResults);
     });
-
     describe("'checkValidDescriptorResolveOptions' function export test suite.", function() {
         var testVector = {
 
@@ -111,14 +100,11 @@ module.exports = describe("onm.NamespaceDescriptorResolver whitebox tests.", fun
         var resolveResults = null;
         var descriptorResolveOptions = {
             parentDataReference: { 'addressBook': {} },
-            targetNamespaceDescriptor: testDataRootDescriptor,
-            targetNamespaceKey: undefined,
-            propertyAssignmentObject: undefined
+            targetNamespaceDescriptor: testDataRootDescriptor
         };
 
         before(function(done_) {
             var functionUnderTest = function() {
-
                 resolveResults = moduleUnderTest.resolveNamespaceDescriptorOpen(descriptorResolveOptions);
             };
             assert.doesNotThrow(functionUnderTest);
@@ -134,6 +120,40 @@ module.exports = describe("onm.NamespaceDescriptorResolver whitebox tests.", fun
         it("The returned object should be a valid descriptor resolve results object.", function() {
             assert.isTrue(moduleUnderTest.checkValidDescriptorResolveResults(resolveResults));
         });
+
+
+    });
+
+
+    describe("'resolveNamespaceDescriptorCreate' function export tests.", function() {
+
+        var resolveResults = null;
+        var descriptorResolveOptions = {
+            parentDataReference: { 'addressBook': {} },
+            targetNamespaceDescriptor: testDataRootDescriptor,
+            targetNamespaceKey: "test",
+            propertyAssignmentObject: {},
+            semanticBindingsReference: {}
+        };
+
+        before(function(done_) {
+            var functionUnderTest = function() {
+                resolveResults = moduleUnderTest.resolveNamespaceDescriptorCreate(descriptorResolveOptions);
+            };
+            assert.doesNotThrow(functionUnderTest);
+            done_();
+        });
+
+        it("Function call should have returned an object.", function() {
+            assert.isDefined(resolveResults);
+            assert.isNotNull(resolveResults);
+            assert.isObject(resolveResults);
+        });
+
+        it("The returned object should be a valid descriptor resolve results object.", function() {
+            assert.isTrue(moduleUnderTest.checkValidDescriptorResolveResults(resolveResults));
+        });
+
 
 
     });

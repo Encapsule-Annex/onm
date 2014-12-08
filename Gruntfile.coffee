@@ -17,6 +17,7 @@ module.exports = (grunt) ->
 
                     'lib/implementation/onm-token-resolve.js': 'src/implementation/onm-token-resolve.coffee'
                     'lib/implementation/onm-descriptor-resolve.js': 'src/implementation/onm-descriptor-resolve.coffee'
+                    'lib/implementation/onm-descriptor-resolve-impl.js': 'src/implementation/onm-descriptor-resolve-impl.coffee'
 
                     'lib/implementation/onm-store-reifier.js': 'src/implementation/onm-store-reifier.coffee'
                     'lib/lib-backchannel.js': 'src/lib-backchannel.coffee'

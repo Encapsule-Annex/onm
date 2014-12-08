@@ -61,78 +61,82 @@ onm.NamespaceDescriptorResolver -> this module gets it done
 #
 
 
+implementation = require './onm-descriptor-resolve-impl'
+
 module.exports =
+
+
+    # ****************************************************************************
+    # ****************************************************************************
+    # ****************************************************************************
+    # Main API
+    #
+    #
 
     # ==============================================================================
     resolveNamespaceDescriptorOpen: (options_) ->
         try
-            if not @checkValidDescriptorResolveOptions options_, true
+            if not implementation.checkValidDescriptorResolveOptions options_, true
                 throw new Error("Invalid descriptor resolve options.")
 
-            resolveResults =
-                namespaceDataReference: null
-                pendingNamespaceDescriptors: []
+            # resolveNamespaceDescriptorOpen is a policy wrapper around resolveNamespaceDescriptorOpenImpl.
+            resolveResults = @resolveNamespaceDescriptorOpenImpl options_
 
-            descriptor = options_.targetNamespaceDescriptor
-            key = options_.targetNamespaceKey
-            jsonTag = (descriptor.namespaceType != 'extensionPoint') and descriptor.jsonTag or key
-            resolveResults.namespaceDataReference = options_.parentDataReference[jsonTag]
-            # As a matter of policy, onm currently throws a new Error object iff the requested namespace cannot be resolved in the onm.Store data.
+            # Policy implementation: throw if object implied by namespace descriptor does not exist.
             if not (resolveResults.namespaceDataReference? and resolveResults.namespaceDataReference)
-                message = "Cannot open expected child object '#{jsonTag}' in data for namespace descriptor 'path'='#{descriptor.path}' 'namespaceType'='#{descriptor.namespaceType}'"
-                throw new Error(message)
+                resourceString = @createResourceString options_, resolveResults
+                throw new Error "Cannot open expected child object in data: #{resourceString}"
                 
             resolveResults
 
         catch exception_
             throw new Error("resolveNamespaceDescriptorOpen failure: #{exception_.message}")
 
+    # ==============================================================================
+    resolveNamespaceDescriptorOpenImpl: (options_) ->
+
+        # checkValidDescriptorResolveOptions(options_) == true assumed
+
+        resolveResults =
+            namespaceEffectiveKey: null
+            namespaceDataReference: null
+            pendingNamespaceDescriptors: []
+
+        descriptor = options_.targetNamespaceDescriptor
+        key = options_.targetNamespaceKey
+        resolveResults.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'extensionPoint') and descriptor.jsonTag or key
+        resolveResults.namespaceDataReference = options_.parentDataReference[effectiveKey]
+
+        resolveResults
+
 
     # ==============================================================================
     resolveNamespaceDescriptorCreate: (options_) ->
         try
-            if not @checkValidDescriptorResolveOptions options_
+            if not implementation.checkValidDescriptorResolveOptions options_
                 throw new Error("Invalid descriptor resolve options.")
 
-            resolveResults =
-                namespaceDataReference: null
-                pendingNamespaceDescriptors: []
+            # Determine if an object of that name already exists in the store data.
+            resolveResults = @resolveNamespaceDescriptorOpenImpl options_
+
+            # Policy implementation: throw if object implied by namespace exists already.
+            if resolveResults.namespaceDataReference? and resolveResults.namespaceDataReference
+                resourceString = @createResourceString options_, resolveResults
+                throw new Error "Child object already exists in data: #{resourceString}"
 
             resolveResults
 
         catch exception_
-            throw new Error("resolveNamespaceDescirptorCreate failure: #{exception_.message}")
+            throw new Error("resolveNamespaceDescriptorCreate failure: #{exception_.message}")
 
 
+    # ****************************************************************************
+    # ****************************************************************************
+    # ****************************************************************************
+    # White box test exports
+    #
+    #
 
-    # ==============================================================================
-    checkValidDescriptorResolveOptions: (options_, isOpenResolve_) ->
-        if not (options_? and options_)
-            return false
-
-        openResult = 
-            options_.parentDataReference? and options_.parentDataReference and
-            options_.targetNamespaceDescriptor? and options_.targetNamespaceDescriptor and
-            true or false
-
-        if not (isOpenResolve_? and isOpenResolve_)
-            return openResult and
-                options_.targetNamespaceKey? and options_.targetNamespaceKey and
-                options_.propertyAsssignmentObject? and options_.propertyAssignmentObject and
-                true or false
-
-        openResult
-
-
-
-    # ==============================================================================
-    checkValidDescriptorResolveResults: (results_) ->
-        results_? and results_ and
-            results_.namespaceDataReference? and results_.namespaceDataReference and
-            results_.pendingNamespaceDescriptors? and results_.pendingNamespaceDescriptors and
-            Array.isArray(results_.pendingNamespaceDescriptors) and
-            true or false
-
-
-
-
+    createResourceString: implementation.createResourceString
+    checkValidDescriptorResolveOptions: implementation.checkValidDescriptorResolveOptions
+    checkValidDescriptorResolveResults: implementation.checkValidDescriptorResolveResults
