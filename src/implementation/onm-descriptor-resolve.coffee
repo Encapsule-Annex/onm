@@ -158,49 +158,40 @@ module.exports =
                     resolveResults.namespaceDataReference[memberName] = effectiveValue
 
 
-            # If the target namespace has declared type extension point, then interpret
-            # any remaining properties on the options_.propertiesAssignmentObject as
-            # subcomponent key values, and for each queue a deferred descriptor resolve
-            # operation.
-
-
-
-
             # Process the target namespace's declared subnamespaces and queue deferred operations.
 
             for childNamespaceDescriptor in options_.targetNamespaceDescriptor.children
 
                 # Every declared child namespace is queued for deferred processing.
 
-                # Default construct the deferred descriptor resolve options object.
-                pendingDescriptorResolveOptions =
-                    parentDataReference: resolveResults.namespaceDataReference
-                    targetNamespaceDescriptor: childNamespaceDescriptor
-                    targetNamespaceKey: ''
-                    semanticBindingReference: options_.semanticBindingReference
-                    propertyAssignmentObject: {}
-
                 
                 switch childNamespaceDescriptor.namespaceType
 
                     when 'component'
-
-                        # Interpret remaining properties on the options_.propertiesAssignmentObject
-                        # as subcomponent key values, and for each queue a deferred descriptor resolve
-                        # operation.
-
+                        # Interpret remaining properties on property assignment object as subcomponents key values.
+                        # For each named object in the property assignment object, queue a deferred descriptor
+                        # resolve operations
+                        for keyName, subcomponentPropertyAssignmentObject of options_.propertyAssignmentObject
+                            pendingDescriptorResolveOptions =
+                                parentDataReference: resolveResults.namespaceDataReference
+                                targetNamespaceDescriptor: childNamespaceDescriptor
+                                targetNamespaceKey: keyName
+                                semanticBindingReference: options_.semanticBindingsReference
+                                propertyAssignmentObject: subcomponentPropertyAssignmentObject
+                            resolveResults.pendingNamespaceDescriptors.push pendingDescriptorResolveOptions
                         break
 
                     else
 
                         # child namespaces of declared types 'child' and 'extensionPoint'.
-
-
-
-
-
-
-
+                        # Default construct the deferred descriptor resolve options object.
+                        pendingDescriptorResolveOptions =
+                            parentDataReference: resolveResults.namespaceDataReference
+                            targetNamespaceDescriptor: childNamespaceDescriptor
+                            targetNamespaceKey: ''
+                            semanticBindingReference: options_.semanticBindingsReference
+                            propertyAssignmentObject: options_.propertyAssignmentObject[childNamespaceDescriptor.jsonTag]
+                        resolveResults.pendingNamespaceDescriptors.push pendingDescriptorResolveOptions
 
             # Clone remaining properties from the property assignment object on to the child object.
 
