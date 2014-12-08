@@ -126,6 +126,84 @@ module.exports =
                 else
                     break
 
+            # Assign the namespace's declared property values.
+            propertiesDeclaration = options_.targetNamespaceDescriptor.namespaceModelPropertiesDeclaration
+            if propertiesDeclaration.userImmutable? and propertiesDeclaration.userImmutable
+                for memberName, functions of propertiesDeclaration.userImmutable
+                    if resolveResults.namespaceDataReference[memberName]
+                        continue
+                    # Determine if the declared property has a value in the property assignment object.
+                    effectiveValue = options_.propertyAssignmentObject[memberName]
+                    if effectiveValue? and effectiveValue
+                        delete options_.propertyAssignmentObject[memberName]
+                    else
+                        effectiveValue = (functions.defaultValue? and functions.defaultValue) or
+                            (functions.fnCreate? and functions.fnCreate and functions.fnCreate()) or
+                            throw new Error "Internal error: Unable to determine how to assign declared property default value."
+                    resolveResults.namespaceDataReference[memberName] = effectiveValue
+            if propertiesDeclaration.userMutable? and propertiesDeclaration.userMutable
+                for memberName, functions of propertiesDeclaration.userMutable
+                    if resolveResults.namespaceDataReference[memberName]
+                        continue
+                    # Determine if the declared property has a value in the property assignment object.
+                    effectiveValue = options_.propertyAssignmentObject[memberName]
+                    if effectiveValue? and effectiveValue
+                        delete options_.propertyAssignmentObject[memberName]
+                    else
+                        if functions.fnCreate? and functions.fnCreate
+                            effectiveValue = functions.fnCreate()
+                        else
+                            effectiveValue = functions.defaultValue
+
+                    resolveResults.namespaceDataReference[memberName] = effectiveValue
+
+
+            # If the target namespace has declared type extension point, then interpret
+            # any remaining properties on the options_.propertiesAssignmentObject as
+            # subcomponent key values, and for each queue a deferred descriptor resolve
+            # operation.
+
+
+
+
+            # Process the target namespace's declared subnamespaces and queue deferred operations.
+
+            for childNamespaceDescriptor in options_.targetNamespaceDescriptor.children
+
+                # Every declared child namespace is queued for deferred processing.
+
+                # Default construct the deferred descriptor resolve options object.
+                pendingDescriptorResolveOptions =
+                    parentDataReference: resolveResults.namespaceDataReference
+                    targetNamespaceDescriptor: childNamespaceDescriptor
+                    targetNamespaceKey: ''
+                    semanticBindingReference: options_.semanticBindingReference
+                    propertyAssignmentObject: {}
+
+                
+                switch childNamespaceDescriptor.namespaceType
+
+                    when 'component'
+
+                        # Interpret remaining properties on the options_.propertiesAssignmentObject
+                        # as subcomponent key values, and for each queue a deferred descriptor resolve
+                        # operation.
+
+                        break
+
+                    else
+
+                        # child namespaces of declared types 'child' and 'extensionPoint'.
+
+
+
+
+
+
+
+
+            # Clone remaining properties from the property assignment object on to the child object.
+
 
             resolveResults
 

@@ -132,7 +132,7 @@ module.exports = describe("onm.NamespaceDescriptorResolver whitebox tests.", fun
             parentDataReference: {},
             targetNamespaceDescriptor: testDataRootDescriptor,
             targetNamespaceKey: '',
-            propertyAssignmentObject: { key: 'fuckyou' },
+            propertyAssignmentObject: { key: 'fuckyou', name: "Does he look like a bitch?" },
             semanticBindingsReference: testDataModel.getSemanticBindings()
         };
 
