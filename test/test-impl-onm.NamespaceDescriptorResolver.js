@@ -125,8 +125,14 @@ module.exports = describe("onm.NamespaceDescriptorResolver whitebox tests.", fun
             done_();
         });
 
-        it("Execute the test suite.", function() {
-            assert.isTrue(true);
+        it("Function call should have returned an object.", function() {
+            assert.isDefined(resolveResults);
+            assert.isNotNull(resolveResults);
+            assert.isObject(resolveResults);
+        });
+
+        it("The returned object should be a valid descriptor resolve results object.", function() {
+            assert.isTrue(moduleUnderTest.checkValidDescriptorResolveResults(resolveResults));
         });
 
 

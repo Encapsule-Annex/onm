@@ -61,7 +61,7 @@ onm.NamespaceDescriptorResolver -> this module gets it done
 #
 
 
-module.exports = {
+module.exports =
 
     # ==============================================================================
     resolveNamespaceDescriptorOpen: (options_) ->
@@ -112,7 +112,8 @@ module.exports = {
 
         openResult = 
             options_.parentDataReference? and options_.parentDataReference and
-            options_.targetNamespaceDescriptor? and options_.targetNamespaceDescriptor and true or false
+            options_.targetNamespaceDescriptor? and options_.targetNamespaceDescriptor and
+            true or false
 
         if not (isOpenResolve_? and isOpenResolve_)
             return openResult and
@@ -126,11 +127,12 @@ module.exports = {
 
     # ==============================================================================
     checkValidDescriptorResolveResults: (results_) ->
-        return results_? and results_ and
-            results_.namespaceDataReference? and results_.namespaceDataReference_ and
+        results_? and results_ and
+            results_.namespaceDataReference? and results_.namespaceDataReference and
             results_.pendingNamespaceDescriptors? and results_.pendingNamespaceDescriptors and
-            Array.isArray(results_.pendingNamespaceDescriptors)
+            Array.isArray(results_.pendingNamespaceDescriptors) and
+            true or false
 
 
-}
+
 
