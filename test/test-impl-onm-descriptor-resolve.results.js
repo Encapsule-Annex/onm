@@ -6,7 +6,7 @@ var withData = require('leche').withData;
 
 var moduleUnderTest = require('../lib/implementation/onm-descriptor-resolve-impl');
 
-testVector = {
+var testVector = {
 
     'Bad descriptor resolve results: Malformed result object 1': [{
         testData: { results: {} },
