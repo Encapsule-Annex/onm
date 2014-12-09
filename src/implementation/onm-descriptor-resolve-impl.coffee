@@ -61,6 +61,7 @@ module.exports =
         openResult = 
             options_.parentDataReference? and options_.parentDataReference and
             options_.targetNamespaceDescriptor? and options_.targetNamespaceDescriptor and
+            options_.targetNamespaceDescriptor.archetypePathId? and options_.targetNamespaceDescriptor.archetypePathId and
             true or false
 
         if not (isOpenResolve_? and isOpenResolve_)
