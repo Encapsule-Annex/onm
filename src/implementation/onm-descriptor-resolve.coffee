@@ -107,23 +107,36 @@ module.exports =
                 throw new Error "Child object already exists in data: #{resourceString}"
 
             # Create the requested named child object without regard to namespace type.
-            resolveResults.namespaceDataReference = options_.parentDataReference[resolveResults.namespaceEffectiveKey] = {}
+            # resolveResults.namespaceDataReference = options_.parentDataReference[resolveResults.namespaceEffectiveKey] = {}
 
             # Assign the child object's onm key property iff 'root' or 'component' namespace type.
             switch options_.targetNamespaceDescriptor.namespaceType
                 when 'root' or 'component'
+
                     # Determine if the propertyAssignmentObject contains an onm component key value.
-                    effectiveKeyValue = undefined
-                    assignmentKeyValue = options_.semanticBindingsReference.getUniqueKey(options_.propertyAssignmentObject)
-                    if assignmentKeyValue? and assignmentKeyValue
-                        if options_.targetNamespaceKey and (options_.targetNamespaceKey != assignmentKeyValue)
-                            resourceString = @createResourceString options_, resolveResults
-                            throw new Error "Contradictory onm component key values '#{assignmentKeyValue}' !== '#{options_.targetNamespaceKey}'."
-                        delete options_.propertyAssignmentObject[options_.semanticBindingsReference.keyPropertyName]
-                    effectiveKeyValue = assignmentKeyValue or options_.targetNamespaceKey or undefined
+                    effectiveKeyValue =  options_.semanticBindingsReference.getUniqueKey(options_.propertyAssignmentObject)
+                    
+                    # If a key value was specified in the property options object...
+                    if effectiveKeyValue? and effectiveKeyValue 
+                        # ... ensure that there's not a contradictory specifiction.
+                        if effectiveKeyValue != options_.targetNamespaceKey
+                            throw new Error "Contradictory onm component key values '#{effectiveKeyValue}' !== '#{options_.targetNamespaceKey}'."
+                        # ... or cleanup and proceed.
+                            delete options_.propertyAssignmentObject[options_.semanticBindingsReference.keyPropertyName]
+                    else
+                        # Next, consider the option object's targetNamespaceKey value.
+                        effectiveKeyValue  = options_.targetNamespaceKey? and options_.targetNamespaceKey and options_.targetNamespaceKey.length and options_.targetNamespaceKey or undefined
+                        if not (effectiveKeyValue? and effectiveKeyValue)
+                            # THIS IS A TOTAL HACK. REWORKED KEY GENERATOR INTERFACE REQUIRED.
+                            effectiveKeyValue = options_.semanticBindingsReference.setUniqueKey({});
+
+                    resolveResults.namespaceEffectiveKey = effectiveKeyValue
+                    resolveResults.namespaceDataReference = options_.parentDataReference[effectiveKeyValue] = {}
                     assignedKeyValue = options_.semanticBindingsReference.setUniqueKey(resolveResults.namespaceDataReference, effectiveKeyValue)
                     break
                 else
+                    resolveResults.namespaceEffectiveValue = effectiveValue = options_.targetNamespaceDescriptor.jsonTag
+                    resolveResults.namespaceDataReference = options_.parentDataReference[effectiveValue] = {}
                     break
 
             # Assign the namespace's declared property values.
@@ -139,7 +152,7 @@ module.exports =
                     else
                         effectiveValue = (functions.defaultValue? and functions.defaultValue) or
                             (functions.fnCreate? and functions.fnCreate and functions.fnCreate()) or
-                            throw new Error "Internal error: Unable to determine how to assign declared property default value."
+                            throw new Error "Internal error: Unable to deduce initialization method from data model for property '#{memberName}'."
                     resolveResults.namespaceDataReference[memberName] = effectiveValue
             if propertiesDeclaration.userMutable? and propertiesDeclaration.userMutable
                 for memberName, functions of propertiesDeclaration.userMutable
@@ -209,7 +222,7 @@ module.exports =
             resolveResults
 
         catch exception_
-            throw new Error("resolveNamespaceDescriptorCreate failure: #{exception_.message}")
+            throw new Error("resolveNamespaceDescriptorCreate failure on decriptor '#{options_.targetNamespaceDescriptor.jsonTag}': #{exception_.message}")
 
 
     # ****************************************************************************
@@ -231,7 +244,7 @@ module.exports =
 
         descriptor = options_.targetNamespaceDescriptor
         key = options_.targetNamespaceKey
-        resolveResults.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'extensionPoint') and descriptor.jsonTag or key
+        resolveResults.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or key
         resolveResults.namespaceDataReference = options_.parentDataReference[effectiveKey]
 
         resolveResults

@@ -27,11 +27,9 @@ var moduleUnderTest = require('../lib/implementation/onm-descriptor-resolve');
 // - property assignment: undefined, prop subset, prop superset, prop disjoint set simple, prop disjoint set compount
 // - subobject assignment: undefined, child, extension point, component
 
-
-
 var testDataVector = {
 
-    'test': [{
+    'Valid input options, root namespace descriptor': [{
         options: {
             parentDataReference: {},
             targetNamespaceDescriptor: rootDescriptor,
@@ -40,7 +38,38 @@ var testDataVector = {
             semanticBindingsReference: semanticBindingsObject
         },
         validConfig: true
-    }]
+    }],
+    'Valid input options, child namespace descriptor': [{
+        options: {
+            parentDataReference: {},
+            targetNamespaceDescriptor: childDescriptor,
+            targetNamespaceKey: '',
+            propertyAssignmentObject: {},
+            semanticBindingsReference: semanticBindingsObject
+        },
+        validConfig: true
+    }],
+    'Valid input options, extension point namespace descriptor': [{
+        options: {
+            parentDataReference: {},
+            targetNamespaceDescriptor: extensionPointDescriptor,
+            targetNamespaceKey: '',
+            propertyAssignmentObject: {},
+            semanticBindingsReference: semanticBindingsObject
+        },
+        validConfig: true
+    }],
+    'Valid input options, component namespace descriptor': [{
+        options: {
+            parentDataReference: {},
+            targetNamespaceDescriptor: componentDescriptor,
+            targetNamespaceKey: '',
+            propertyAssignmentObject: {},
+            semanticBindingsReference: semanticBindingsObject
+        },
+        validConfig: true
+    }],
+
 };
 
 
@@ -56,38 +85,57 @@ module.exports = describe("'resolveNamespaceDescriptorCreate' function export te
                 testData.options.targetNamespaceDescriptor.namespaceType + "'.";
 
             describe(testName, function() {
+
                 var resolveResults = null;
+
                 before(function(done_) {
                     var functionUnderTest = function() {
                         resolveResults = moduleUnderTest.resolveNamespaceDescriptorCreate(testData.options);
                     };
-                    assert.doesNotThrow(functionUnderTest);
+                    if (testData.validConfig) {
+                        assert.doesNotThrow(functionUnderTest);
+                    } else {
+                        assert.throws(functionUnderTest);
+                    }
+                    done_();
                 });
-                it("Function call should have returned an object.", function() {
-                    assert.isDefined(resolveResults);
-                    assert.isNotNull(resolveResults);
-                    assert.isObject(resolveResults);
-                });
-                it("The returned object should be a valid descriptor resolve results object.", function() {
-                    assert.isTrue(moduleUnderTest.checkValidDescriptorResolveResults(resolveResults));
-                });
-                it("Verify that named child object 'addressBook' was created in the parent store object.", function() {
-                    assert.property(testData.options.parentDataReference, 'addressBook');
-                    assert.isObject(testData.options.parentDataReference.addressBook);
-                });
-                it("Verify the integrity of the resolved child object 'addressBook' data reference.", function() {
-                    assert.doesNotThrow(function() {
-                        resolveResults.namespaceDataReference.test = "test property touched";
+
+                if (testData.validConfig) {
+
+                    it("Function call should have returned an object.", function() {
+                        assert.isDefined(resolveResults);
+                        assert.isNotNull(resolveResults);
+                        assert.isObject(resolveResults);
                     });
-                    assert.property(testData.options.parentDataReference.addressBook, 'test');
-                    assert.equal(testData.options.parentDataReference.addressBook.test, "test property touched");
-                });
-                it("Execute the test.", function() {
-                    assert.isTrue(true);
-                });                    
+
+                    it("The returned object should be a valid descriptor resolve results object.", function() {
+                        assert.isTrue(moduleUnderTest.checkValidDescriptorResolveResults(resolveResults));
+                    });
+
+                    it("Verify that named child object '" + testData.options.targetNamespaceDescriptor.jsonTag + "' was created in the parent store object.", function() {
+                        assert.property(testData.options.parentDataReference, testData.options.targetNamespaceDescriptor.jsonTag);
+                        assert.isObject(testData.options.parentDataReference[testData.options.targetNamespaceDescriptor.jsonTag]);
+                    });
+
+                    it("Verify the integrity of the resolved child object '" + testData.options.targetNamespaceDescriptor.jsonTag + "' data reference.", function() {
+                        assert.doesNotThrow(function() {
+                            resolveResults.namespaceDataReference.test = "test property touched";
+                        });
+                        assert.property(testData.options.parentDataReference[testData.options.targetNamespaceDescriptor.jsonTag], 'test');
+                        assert.equal(testData.options.parentDataReference[testData.options.targetNamespaceDescriptor.jsonTag].test, "test property touched");
+                    });
+
+                } else {
+                    it("Execute the test.", function() {
+                        assert.isTrue(true);
+                    });
+                }
             });
         });
         done_();
+    });
+    it("Execute the test.", function() {
+        assert.isTrue(true);
     });
 });
 
