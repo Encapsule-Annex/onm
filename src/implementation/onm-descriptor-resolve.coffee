@@ -110,39 +110,37 @@ module.exports =
             # resolveResults.namespaceDataReference = options_.parentDataReference[resolveResults.namespaceEffectiveKey] = {}
 
             # Assign the child object's onm key property iff 'root' or 'component' namespace type.
-            switch options_.targetNamespaceDescriptor.namespaceType
-                when 'root' or 'component'
 
-                    # Determine if the propertyAssignmentObject contains an onm component key value.
-                    effectiveKeyValue =  options_.semanticBindingsReference.getUniqueKey(options_.propertyAssignmentObject)
-                    
-                    # If a key value was specified in the property options object...
-                    if effectiveKeyValue? and effectiveKeyValue 
-                        # ... ensure that there's not a contradictory specifiction.
-                        if effectiveKeyValue != options_.targetNamespaceKey
+            effectiveKeyValue = ((options_.targetNamespaceDescriptor.namespaceType != 'component') and options_.targetNamespaceDescriptor.jsonTag) or undefined
+            if not (effectiveKeyValue? and effectiveKeyValue)
+                effectiveKeyValue = options_.propertyAssignmentObject[options_.semanticBindingsReference.keyPropertyName]
+                if effectiveKeyValue? and effectiveKeyValue
+                    if options_.targetNamespaceKey? and options_.targetNamespaceKey and 
+                        options_.targetNamespaceKey.length and (effectiveKeyValue != options_.targetNamespaceKey)
                             throw new Error "Contradictory onm component key values '#{effectiveKeyValue}' !== '#{options_.targetNamespaceKey}'."
-                        # ... or cleanup and proceed.
-                            delete options_.propertyAssignmentObject[options_.semanticBindingsReference.keyPropertyName]
-                    else
-                        # Next, consider the option object's targetNamespaceKey value.
-                        effectiveKeyValue  = options_.targetNamespaceKey? and options_.targetNamespaceKey and options_.targetNamespaceKey.length and options_.targetNamespaceKey or undefined
-                        if not (effectiveKeyValue? and effectiveKeyValue)
-                            # THIS IS A TOTAL HACK. REWORKED KEY GENERATOR INTERFACE REQUIRED.
-                            effectiveKeyValue = options_.semanticBindingsReference.setUniqueKey({});
-
-                    resolveResults.namespaceEffectiveKey = effectiveKeyValue
-                    resolveResults.namespaceDataReference = options_.parentDataReference[effectiveKeyValue] = {}
-                    assignedKeyValue = options_.semanticBindingsReference.setUniqueKey(resolveResults.namespaceDataReference, effectiveKeyValue)
-                    break
                 else
-                    resolveResults.namespaceEffectiveValue = effectiveValue = options_.targetNamespaceDescriptor.jsonTag
-                    resolveResults.namespaceDataReference = options_.parentDataReference[effectiveValue] = {}
-                    break
+                    effectiveKeyValue = options_.targetNamespaceKey
+                    if not (effectiveKeyValue? and effectiveKeyValue and (effectiveKeyValue.length > 0))
+                        effectiveKeyValue = options_.semanticBindingsReference.setUniqueKey({});
+
+            # record the namespace's assigned, or effective, key value
+            resolveResults.namespaceEffectiveKey = effectiveKeyValue? and effectiveKeyValue and
+                effectiveKeyValue.length and effectiveKeyValue or throw
+                    new Error "INTERNAL ERROR"
+
+            # create the namespace
+            resolveResults.namespaceDataReference = options_.parentDataReference[effectiveKeyValue] = {}
+
+            # Iff component namespace, set the key property.
+            if options_.targetNamespaceDescriptor.namespaceType == 'component'
+                resolveResults.namespaceDataReference[options_.semanticBindingsReference.keyPropertyName] = effectiveKeyValue
 
             # Assign the namespace's declared property values.
             propertiesDeclaration = options_.targetNamespaceDescriptor.namespaceModelPropertiesDeclaration
+
             if propertiesDeclaration.userImmutable? and propertiesDeclaration.userImmutable
                 for memberName, functions of propertiesDeclaration.userImmutable
+                    console.log "eval prop '#{memberName}'"
                     if resolveResults.namespaceDataReference[memberName]
                         continue
                     # Determine if the declared property has a value in the property assignment object.
@@ -154,8 +152,10 @@ module.exports =
                             (functions.fnCreate? and functions.fnCreate and functions.fnCreate()) or
                             throw new Error "Internal error: Unable to deduce initialization method from data model for property '#{memberName}'."
                     resolveResults.namespaceDataReference[memberName] = effectiveValue
+
             if propertiesDeclaration.userMutable? and propertiesDeclaration.userMutable
                 for memberName, functions of propertiesDeclaration.userMutable
+                    console.log "eval prop '#{memberName}'"
                     if resolveResults.namespaceDataReference[memberName]
                         continue
                     # Determine if the declared property has a value in the property assignment object.
@@ -172,12 +172,8 @@ module.exports =
 
 
             # Process the target namespace's declared subnamespaces and queue deferred operations.
-
             for childNamespaceDescriptor in options_.targetNamespaceDescriptor.children
-
                 # Every declared child namespace is queued for deferred processing.
-
-                
                 switch childNamespaceDescriptor.namespaceType
 
                     when 'component'
