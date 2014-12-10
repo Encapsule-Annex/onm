@@ -132,7 +132,7 @@ module.exports =
             resolveResults.namespaceDataReference = options_.parentDataReference[effectiveKeyValue] = {}
 
             # Iff component namespace, set the key property.
-            if options_.targetNamespaceDescriptor.namespaceType == 'component'
+            if (options_.targetNamespaceDescriptor.namespaceType == 'component') or (options_.targetNamespaceDescriptor.namespaceType =='root')
                 resolveResults.namespaceDataReference[options_.semanticBindingsReference.keyPropertyName] = effectiveKeyValue
 
             # Assign the namespace's declared property values.

@@ -112,17 +112,34 @@ module.exports = describe("'resolveNamespaceDescriptorCreate' function export te
                         assert.isTrue(moduleUnderTest.checkValidDescriptorResolveResults(resolveResults));
                     });
 
+                    switch (testData.options.targetNamespaceDescriptor.namespaceType) {
+                    case 'root':
+                    case 'child':
+                    case 'extensionPoint':
+                        it("Resolve results effective namespace key should be '" + testData.options.targetNamespaceDescriptor.jsonTag + "'.", function() {
+                            assert.equal(testData.options.targetNamespaceDescriptor.jsonTag, resolveResults.namespaceEffectiveKey);
+                        });
+                        break;
+                    case 'component':
+                        it("Resolve results effective namespace key should not be '" + testData.options.targetNamespaceDescriptor.jsonTag + "'.", function() {
+                            assert.notEqual(testData.options.targetNamespaceDescriptor.jsonTag, resolveResults.namespaceEffectiveKey);
+                        });
+                        break;
+                    default:
+                        break;
+                    }
+
                     it("Verify that named child object '" + testData.options.targetNamespaceDescriptor.jsonTag + "' was created in the parent store object.", function() {
-                        assert.property(testData.options.parentDataReference, testData.options.targetNamespaceDescriptor.jsonTag);
-                        assert.isObject(testData.options.parentDataReference[testData.options.targetNamespaceDescriptor.jsonTag]);
+                        assert.property(testData.options.parentDataReference, resolveResults.namespaceEffectiveKey);
+                        assert.isObject(testData.options.parentDataReference[resolveResults.namespaceEffectiveKey]);
                     });
 
                     it("Verify the integrity of the resolved child object '" + testData.options.targetNamespaceDescriptor.jsonTag + "' data reference.", function() {
                         assert.doesNotThrow(function() {
                             resolveResults.namespaceDataReference.test = "test property touched";
                         });
-                        assert.property(testData.options.parentDataReference[testData.options.targetNamespaceDescriptor.jsonTag], 'test');
-                        assert.equal(testData.options.parentDataReference[testData.options.targetNamespaceDescriptor.jsonTag].test, "test property touched");
+                        assert.property(testData.options.parentDataReference[resolveResults.namespaceEffectiveKey], 'test');
+                        assert.equal(testData.options.parentDataReference[resolveResults.namespaceEffectiveKey].test, "test property touched");
                     });
 
                 } else {
