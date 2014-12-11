@@ -18,6 +18,7 @@ module.exports = describe("onm.NamespaceDescriptorResolver white box tests.", fu
     var moduleUnderTest = null;
 
     before(function(done_) {
+        testData.resetLuid();
         var loadModuleUnderTest = function() {
             moduleUnderTest = require('../lib/implementation/onm-descriptor-resolve');
         };

@@ -8,9 +8,9 @@ var withData = require('leche').withData;
 
 var uuid = require('node-uuid');
 var onm = require('../index');
-var testData = require('./fixture/address-book-data-model');
+var testDataModule = require('./fixture/address-book-data-model');
 
-var testDataModel = testData.createModel();
+var testDataModel = testDataModule.createModel();
 var semanticBindingsObject = testDataModel.getSemanticBindings();
 
 var rootAddress = testDataModel.createRootAddress();
@@ -89,6 +89,9 @@ module.exports = describe("'resolveNamespaceDescriptorCreate' function export te
                 var resolveResults = null;
 
                 before(function(done_) {
+
+                    testDataModule.resetLuid();
+
                     var functionUnderTest = function() {
                         resolveResults = moduleUnderTest.resolveNamespaceDescriptorCreate(testData.options);
                     };
@@ -100,7 +103,11 @@ module.exports = describe("'resolveNamespaceDescriptorCreate' function export te
                     done_();
                 });
 
-                if (testData.validConfig) {
+                if (!testData.validConfig) {
+                    it("Execute the test setup which is expected to throw (concluding this test suite).", function() {
+                        assert.isTrue(true);
+                    });
+                } else {
 
                     it("Function call should have returned an object.", function() {
                         assert.isDefined(resolveResults);
@@ -142,11 +149,8 @@ module.exports = describe("'resolveNamespaceDescriptorCreate' function export te
                         assert.equal(testData.options.parentDataReference[resolveResults.namespaceEffectiveKey].test, "test property touched");
                     });
 
-                } else {
-                    it("Execute the test.", function() {
-                        assert.isTrue(true);
-                    });
                 }
+
             });
         });
         done_();

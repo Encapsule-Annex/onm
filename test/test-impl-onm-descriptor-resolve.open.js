@@ -24,6 +24,7 @@ module.exports = describe("'resolveNamespaceDescriptorOpen' function export test
     };
 
     before(function(done_) {
+        testData.resetLuid();
         var functionUnderTest = function() {
             resolveResults = moduleUnderTest.resolveNamespaceDescriptorOpen(descriptorResolveOptions);
         };
