@@ -1,4 +1,4 @@
-// trest-impl-onm-descriptor-resovler.resolveCreate.js
+// trest-impl-onm-descriptor-resovle.create.js
 //
 
 var assert = require('chai').assert;
@@ -21,72 +21,20 @@ var componentDescriptor = rootAddress.implementation.getModelDescriptorFromSubpa
 
 var moduleUnderTest = require('../lib/implementation/onm-descriptor-resolve');
 
-// Test dimensions for resolve descriptor create
-// - namespace type: root, child, extension point, component
-// - target namespace key: undefined, defined, mismatch
-// - property assignment: undefined, prop subset, prop superset, prop disjoint set simple, prop disjoint set compount
-// - subobject assignment: undefined, child, extension point, component
-
-var testDataVector = {
-
-    'Valid input options, root namespace descriptor': [{
-        options: {
-            parentDataReference: {},
-            targetNamespaceDescriptor: rootDescriptor,
-            targetNamespaceKey: '',
-            propertyAssignmentObject: {},
-            semanticBindingsReference: semanticBindingsObject
-        },
-        validConfig: true,
-        expectedParentNamespaceJSON: ''
-    }],
-    'Valid input options, child namespace descriptor': [{
-        options: {
-            parentDataReference: {},
-            targetNamespaceDescriptor: childDescriptor,
-            targetNamespaceKey: '',
-            propertyAssignmentObject: {},
-            semanticBindingsReference: semanticBindingsObject
-        },
-        validConfig: true,
-        expectedParentNamespaceJSON: ''
-    }],
-    'Valid input options, extension point namespace descriptor': [{
-        options: {
-            parentDataReference: {},
-            targetNamespaceDescriptor: extensionPointDescriptor,
-            targetNamespaceKey: '',
-            propertyAssignmentObject: {},
-            semanticBindingsReference: semanticBindingsObject
-        },
-        validConfig: true,
-        expectedParentNamespaceJSON: ''
-    }],
-    'Valid input options, component namespace descriptor': [{
-        options: {
-            parentDataReference: {},
-            targetNamespaceDescriptor: componentDescriptor,
-            targetNamespaceKey: '',
-            propertyAssignmentObject: {},
-            semanticBindingsReference: semanticBindingsObject
-        },
-        validConfig: true,
-        expectedParentNamespaceJSON: ''
-    }],
-
-};
-
-
+var testVectors = require('./vectors/descriptor-resolve-create-vectors')();
 
 module.exports = describe("'resolveNamespaceDescriptorCreate' function export tests.", function() {
 
     before(function(done_) {
 
-        withData(testDataVector, function(testData) {
+        withData(testVectors, function(testData) {
+
             var testName = "Attempt to resolve the namespace descriptor '" +
                 testData.options.targetNamespaceDescriptor.jsonTag + "' of type '" +
                 testData.options.targetNamespaceDescriptor.namespaceType + "'.";
+
             describe(testName, function() {
+
                 var resolveResults = null;
                 before(function(done_) {
                     testDataModule.resetLuid();

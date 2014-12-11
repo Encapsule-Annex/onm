@@ -65,7 +65,6 @@ implementation = require './onm-descriptor-resolve-impl'
 
 module.exports =
 
-
     # ****************************************************************************
     # ****************************************************************************
     # ****************************************************************************
@@ -106,11 +105,6 @@ module.exports =
                 resourceString = @createResourceString options_, resolveResults
                 throw new Error "Child object already exists in data: #{resourceString}"
 
-            # Create the requested named child object without regard to namespace type.
-            # resolveResults.namespaceDataReference = options_.parentDataReference[resolveResults.namespaceEffectiveKey] = {}
-
-            # Assign the child object's onm key property iff 'root' or 'component' namespace type.
-
             effectiveKeyValue = ((options_.targetNamespaceDescriptor.namespaceType != 'component') and options_.targetNamespaceDescriptor.jsonTag) or undefined
             if not (effectiveKeyValue? and effectiveKeyValue)
                 effectiveKeyValue = options_.propertyAssignmentObject[options_.semanticBindingsReference.keyPropertyName]
@@ -125,8 +119,7 @@ module.exports =
 
             # record the namespace's assigned, or effective, key value
             resolveResults.namespaceEffectiveKey = effectiveKeyValue? and effectiveKeyValue and
-                effectiveKeyValue.length and effectiveKeyValue or throw
-                    new Error "INTERNAL ERROR"
+                effectiveKeyValue.length and effectiveKeyValue or throw new Error "INTERNAL ERROR deriving namespace effective key value."
 
             # create the namespace
             resolveResults.namespaceDataReference = options_.parentDataReference[effectiveKeyValue] = {}
@@ -140,7 +133,6 @@ module.exports =
 
             if propertiesDeclaration.userImmutable? and propertiesDeclaration.userImmutable
                 for memberName, functions of propertiesDeclaration.userImmutable
-                    console.log "eval prop '#{memberName}'"
                     if resolveResults.namespaceDataReference[memberName]
                         continue
                     # Determine if the declared property has a value in the property assignment object.
@@ -155,7 +147,6 @@ module.exports =
 
             if propertiesDeclaration.userMutable? and propertiesDeclaration.userMutable
                 for memberName, functions of propertiesDeclaration.userMutable
-                    console.log "eval prop '#{memberName}'"
                     if resolveResults.namespaceDataReference[memberName]
                         continue
                     # Determine if the declared property has a value in the property assignment object.
@@ -244,7 +235,6 @@ module.exports =
         resolveResults.namespaceDataReference = options_.parentDataReference[effectiveKey]
 
         resolveResults
-
 
     createResourceString: implementation.createResourceString
     checkValidDescriptorResolveOptions: implementation.checkValidDescriptorResolveOptions

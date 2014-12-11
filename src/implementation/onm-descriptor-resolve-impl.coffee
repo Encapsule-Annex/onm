@@ -65,8 +65,12 @@ module.exports =
             true or false
 
         if not (isOpenResolve_? and isOpenResolve_)
+            keyValid = true
+            if options_.targetNamespaceKey? and options_.targetNamespaceKey
+                keyValid = options_.targetNamespaceKey.length > 0 or false
+
             return openResult and
-                options_.targetNamespaceKey? and
+                keyValid and
                 options_.semanticBindingsReference? and options_.semanticBindingsReference and
                 options_.propertyAssignmentObject? and options_.propertyAssignmentObject and
                 true or false
