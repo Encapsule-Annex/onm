@@ -37,7 +37,8 @@ var testDataVector = {
             propertyAssignmentObject: {},
             semanticBindingsReference: semanticBindingsObject
         },
-        validConfig: true
+        validConfig: true,
+        expectedParentNamespaceJSON: ''
     }],
     'Valid input options, child namespace descriptor': [{
         options: {
@@ -47,7 +48,8 @@ var testDataVector = {
             propertyAssignmentObject: {},
             semanticBindingsReference: semanticBindingsObject
         },
-        validConfig: true
+        validConfig: true,
+        expectedParentNamespaceJSON: ''
     }],
     'Valid input options, extension point namespace descriptor': [{
         options: {
@@ -57,7 +59,8 @@ var testDataVector = {
             propertyAssignmentObject: {},
             semanticBindingsReference: semanticBindingsObject
         },
-        validConfig: true
+        validConfig: true,
+        expectedParentNamespaceJSON: ''
     }],
     'Valid input options, component namespace descriptor': [{
         options: {
@@ -67,7 +70,8 @@ var testDataVector = {
             propertyAssignmentObject: {},
             semanticBindingsReference: semanticBindingsObject
         },
-        validConfig: true
+        validConfig: true,
+        expectedParentNamespaceJSON: ''
     }],
 
 };
@@ -79,19 +83,13 @@ module.exports = describe("'resolveNamespaceDescriptorCreate' function export te
     before(function(done_) {
 
         withData(testDataVector, function(testData) {
-
             var testName = "Attempt to resolve the namespace descriptor '" +
                 testData.options.targetNamespaceDescriptor.jsonTag + "' of type '" +
                 testData.options.targetNamespaceDescriptor.namespaceType + "'.";
-
             describe(testName, function() {
-
                 var resolveResults = null;
-
                 before(function(done_) {
-
                     testDataModule.resetLuid();
-
                     var functionUnderTest = function() {
                         resolveResults = moduleUnderTest.resolveNamespaceDescriptorCreate(testData.options);
                     };
@@ -148,9 +146,7 @@ module.exports = describe("'resolveNamespaceDescriptorCreate' function export te
                         assert.property(testData.options.parentDataReference[resolveResults.namespaceEffectiveKey], 'test');
                         assert.equal(testData.options.parentDataReference[resolveResults.namespaceEffectiveKey].test, "test property touched");
                     });
-
                 }
-
             });
         });
         done_();
