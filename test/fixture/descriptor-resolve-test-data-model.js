@@ -29,23 +29,46 @@ var testProperties = {
 
 var descriptorResolveModelDeclaration = module.exports = {
     semanticBindings: {
-        keyGenerator: 'internalUuidAdvanced'
+        componentKeyGenerator: 'internalLuid'
     },
 
     jsonTag: 'namespaceRoot',
     namespaceProperties: testProperties,
-    subnamespaces: [
+    subNamespaces: [
         {
-            jsonTag: 'namespaceChildA',
             namespaceType: 'child',
-            namespaceProperties: testProperties
+            jsonTag: 'namespaceChildA',
+            namespaceProperties: testProperties,
+            subNamespaces: [
+                {
+                    namespaceType: 'child',
+                    jsonTag: 'namespaceChildB',
+                    namespaceProperties: testProperties
+                },
+                {
+                    namespaceType: 'extensionPoint',
+                    jsonTag: 'namespaceExtensionPointB',
+                    componentArchetype: {
+                        namespaceType: 'component',
+                        jsonTag: 'namespaceComponentB',
+                        namespaceProperties: testProperties,
+                        subNamespaces: [
+                            {
+                                namespaceType: 'child',
+                                jsonTag: 'namespaceChildC',
+                                namespaceProperties: testProperties
+                            }
+                        ]
+                    }
+                }
+            ]
         },
         {
-            jsonTag: 'namespaceExtensionPointA',
             namespaceType: 'extensionPoint',
+            jsonTag: 'namespaceExtensionPointA',
             componentArchetype: {
-                jsonTag: 'namespaceComponentA',
                 namespaceType: 'component',
+                jsonTag: 'namespaceComponentA',
                 namespaceProperties: testProperties
             }
         }

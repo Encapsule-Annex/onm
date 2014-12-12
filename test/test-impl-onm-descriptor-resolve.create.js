@@ -9,17 +9,6 @@ var withData = require('leche').withData;
 var uuid = require('node-uuid');
 var onm = require('../index');
 
-var testDataModule = require('./fixture/address-book-data-model');
-var testDataModel = testDataModule.createModel();
-var semanticBindingsObject = testDataModel.getSemanticBindings();
-var rootAddress = testDataModel.createRootAddress();
-var rootDescriptor = rootAddress.implementation.getDescriptor();
-var childDescriptor = rootAddress.implementation.getModelDescriptorFromSubpath("properties");
-var extensionPointDescriptor = rootAddress.implementation.getModelDescriptorFromSubpath("contacts");
-var componentDescriptor = rootAddress.implementation.getModelDescriptorFromSubpath("contacts.contact");
-
-
-
 var moduleUnderTest = require('../lib/implementation/onm-descriptor-resolve');
 
 var testVectors = require('./vectors/descriptor-resolve-create-vectors')();
@@ -38,7 +27,7 @@ module.exports = describe("'resolveNamespaceDescriptorCreate' function export te
 
                 var resolveResults = null;
                 before(function(done_) {
-                    testDataModule.resetLuid();
+
                     var functionUnderTest = function() {
                         resolveResults = moduleUnderTest.resolveNamespaceDescriptorCreate(testData.options);
                         console.log("RESOLVE RESULTS::" + JSON.stringify(testData.options.parentDataReference));

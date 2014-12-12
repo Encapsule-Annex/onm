@@ -1,10 +1,9 @@
 // descriptor-resolve-create-vectors.js
 //
 
-var jslib = require('../../lib/lib-javascript');
-
-var testDataModule = require('../fixture/address-book-data-model');
-var testDataModel = testDataModule.createModel();
+var onm = require('../../index')
+var testDataModelDeclaration = require('../fixture/descriptor-resolve-test-data-model');
+var testDataModel = new onm.Model(testDataModelDeclaration);
 
 var dimensionNamespaceType = require('./descriptor-resolve/vector-dimension-create-namespace-type');
 var dimensionNamespaceKey = require('./descriptor-resolve/vector-dimension-create-namespace-key');
@@ -16,7 +15,7 @@ var generateTestVectors = module.exports = function() {
         dimensionNamespaceKey.testValues.forEach(function(namespaceKey_) {
             dimensionPropertyAssignment.testValues.forEach(function(propertyAssignmentObject_) {
                 var testName = namespaceDescriptor_.label + " | " + namespaceKey_.label + " | " + propertyAssignmentObject_.label;
-                var propertyAssignmentObject = (namespaceDescriptor_.data.namespaceType !== 'extensionPoint') && jslib.clone(propertyAssignmentObject_.data) || {};
+                var propertyAssignmentObject = (namespaceDescriptor_.data.namespaceType !== 'extensionPoint') && onm.util.clone(propertyAssignmentObject_.data) || {};
                 var options = {
                     parentDataReference: {},
                     targetNamespaceDescriptor: namespaceDescriptor_.data,
