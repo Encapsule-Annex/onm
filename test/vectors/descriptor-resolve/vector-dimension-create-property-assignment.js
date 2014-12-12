@@ -14,6 +14,11 @@ module.exports = {
         {
             label: 'declared properties subset',
             data: {
+                contacts: {
+                    testKey: {
+                        name: "set via properties object"
+                    }
+                }
             },
             validConfig: true
         },
