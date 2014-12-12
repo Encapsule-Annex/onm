@@ -45,6 +45,7 @@ describe("onm v" + packageMeta.version + " test fixture regression test suite.",
                 addDataModelToTestSuite("Data model declaration '" + semanticBindingsDataModelDeclaration.jsonTag + "'.", semanticBindingsDataModelDeclaration);
             };
 
+            /*
             var loadSemanticBindingsDataModelDeclarationVariants = function() {
                 var dataModelDeclarationVariants = require('./fixture/semantic-binding-variants');
                 for (var testName in dataModelDeclarationVariants) {
@@ -52,22 +53,31 @@ describe("onm v" + packageMeta.version + " test fixture regression test suite.",
                     addDataModelToTestSuite(testDescriptor.testName, testDescriptor.dataModelDeclaration);
                 }
             };
+            */
+
+            var loadDescriptorResolveDataModelDeclaration = function() {
+                var descriptorResolveTestDataModelDeclaration = require('./fixture/descriptor-resolve-test-data-model');
+                addDataModelToTestSuite("Data model declaration '" + descriptorResolveTestDataModelDeclaration.jsonTag + "'.", descriptorResolveTestDataModelDeclaration);
+            };
+
 
             assert.doesNotThrow(loadAddressBookDataModelDeclaration);
             assert.doesNotThrow(loadSemanticBindingsDataModelDeclaration);
+            assert.doesNotThrow(loadDescriptorResolveDataModelDeclaration);
+
             // We pick up coverage for the variants in the test-onm.Model-intrinsic-semantic-bindings.js module.
             // assert.doesNotThrow(loadSemanticBindingsDataModelDeclarationVariants);
 
             // EXECUTE DYNAMIC SUB-SUITES
 
-            describe("Wrap it up mother fucker.", function() {
+            describe("Invoke the generic data model validation test suite on each registered onm data data model declaration used by onm's tests.", function() {
                 before(function(done_) {
                     withData(inputTestDataVector, function(dataModelTestDescriptor_) {
                         validateDataModelDeclaration(dataModelTestDescriptor_.dataModelDeclaration, onm);
                     });
                     done_();
                 });
-                it("Wrap it.", function() { assert.isTrue(true); } );
+                it("Execute the test suite.", function() { assert.isTrue(true); } );
             });
 
             done_();

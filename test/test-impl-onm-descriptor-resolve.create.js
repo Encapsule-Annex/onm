@@ -1,4 +1,4 @@
-// trest-impl-onm-descriptor-resovle.create.js
+// test-impl-onm-descriptor-resovle.create.js
 //
 
 var assert = require('chai').assert;
@@ -8,16 +8,17 @@ var withData = require('leche').withData;
 
 var uuid = require('node-uuid');
 var onm = require('../index');
-var testDataModule = require('./fixture/address-book-data-model');
 
+var testDataModule = require('./fixture/address-book-data-model');
 var testDataModel = testDataModule.createModel();
 var semanticBindingsObject = testDataModel.getSemanticBindings();
-
 var rootAddress = testDataModel.createRootAddress();
 var rootDescriptor = rootAddress.implementation.getDescriptor();
 var childDescriptor = rootAddress.implementation.getModelDescriptorFromSubpath("properties");
 var extensionPointDescriptor = rootAddress.implementation.getModelDescriptorFromSubpath("contacts");
 var componentDescriptor = rootAddress.implementation.getModelDescriptorFromSubpath("contacts.contact");
+
+
 
 var moduleUnderTest = require('../lib/implementation/onm-descriptor-resolve');
 
@@ -126,39 +127,34 @@ module.exports = describe("'resolveNamespaceDescriptorCreate' function export te
 
                         var expectedCount = null;
                         var actualCount = null;
+                        var testMessage = null;
 
                         before(function(done_) {
                             actualCount = resolveResults.pendingNamespaceDescriptors.length;
+
+                            switch (testData.options.targetNamespaceDescriptor.namespaceType) {
+                            case 'extensionPoint':
+                                var expectedCount = (testData.expectedPendingCount !== null) && testData.expectedPendingCount || 0;
+                                // I disabled the application of the property assignment dimension value iff extension point
+                                // thus expected will always be zero. Subcomponent creation needs its own list test matrix and
+                                // is to be handled in a separate test module.
+                                if (!expectedCount) {
+                                    testMessage = "The extension point namespace's object is expected to be empty (i.e. zero subcomponents).";
+                                } else {
+                                    testMessage = "The extension point namespace's object is expected to contain " + expectedCount + " subcomponent object(s).";
+                                }
+                                break;
+                            default:
+                                testMessage = "There should be a pending descriptor resolve object pending for each child namespace of the descriptor."
+                                expectedCount = testData.options.targetNamespaceDescriptor.children.length;
+                                break;
+                            }
+                            it(testMessage, function() {
+                                assert.equal(actualCount, expectedCount);
+                            });
                             done_();
                         });
 
-                        switch (testData.options.targetNamespaceDescriptor.namespaceType) {
-
-                        case 'extensionPoint':
-                            console.log("processing EP");
-                            // Keep this for reference...
-                            var expectedCount = (testData.expectedPendingCount !== null) && testData.expectedPendingCount || 0;
-                            // I disabled the application of the property assignment dimension value iff extension point
-                            // thus expected will always be zero. Subcomponent creation needs its own list test matrix and
-                            // is to be handled in a separate test module.
-                            if (!expectedCount) {
-                                it("The extension point namespace's object is expected to be empty (i.e. zero subcomponents).", function() {
-                                    assert.equal(actualCount, expectedCount);
-                                });
-                            } else {
-                                it("The extension point namespace's object is expected to contain " + expectedCount + " subcomponent object(s).", function() {
-                                    assert.equal(actualCount, expectedCount);
-                                });
-                            }
-                            break;
-
-                        default:
-                            console.log("processing !EP");
-                            it("There should be a pending descriptor resolve object pending for each child namespace of the descriptor.", function() {
-                                var expectedCount = testData.options.targetNamespaceDescriptor.children.length;
-                                assert.equal(actualCount, expectedCount);
-                            });
-                        }
 
                     });
                 }
