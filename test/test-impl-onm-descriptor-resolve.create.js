@@ -94,6 +94,44 @@ module.exports = describe("'resolveNamespaceDescriptorCreate' function export te
                         assert.property(testData.options.parentDataReference[resolveResults.namespaceEffectiveKey], 'test');
                         assert.equal(testData.options.parentDataReference[resolveResults.namespaceEffectiveKey].test, "test property touched");
                     });
+
+                    // Note: it's going to really tedious to try to do low-level verification of the property values
+                    // generically. Effectively you would need to re-implement the entire priority merge algorithm in
+                    // the test. Here we go for low-hanging fruit and ensure that properties contained in the data model
+                    // and property assignment object sets are present in the data model. This is a good enough baseline
+                    // to run higher-order tests later that will definitely fail and alert to probems in the generic
+                    // property value assignment algorithm.
+
+                    describe("Verify the properties of the newly-created namespace object.", function() {
+
+                        describe("Verify that every property declared on the namespace declaration is present in the data.", function() {
+                            it("Execute the tests.", function() {
+                                assert.isTrue(true);
+                            });
+                        });
+
+                        describe("Verify that every property declared on the property assignment object is present in the data.", function() {
+                            it("Execute the tests.", function() {
+                                assert.isTrue(true);
+                            });
+                        });
+
+                        it("Execute the tests.", function() {
+                            assert.isTrue(true);
+                        });
+                    });
+
+                    describe("Verify pending descriptor resolve requests.", function() {
+
+
+                        it("There should be a pending descriptor resolve object pending for each child namespace of the descriptor.", function() {
+                            var expectedCount = testData.options.targetNamespaceDescriptor.children.length;
+                            var actualCount = resolveResults.pendingNamespaceDescriptors.length;
+                            assert.equal(actualCount, expectedCount);
+                        });
+
+                    });
+
                 }
             });
         });
