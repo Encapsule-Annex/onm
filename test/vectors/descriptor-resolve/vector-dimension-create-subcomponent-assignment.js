@@ -13,40 +13,40 @@ var testDimensionDescriptor = {
     testDimension: 'subcomponent creation via property assignment object',
     testValues: [
         {
-            label: 'test 1',
+            label: 'Extension point namespace descriptor | empty assignment object',
             namespaceDescriptor: extensionPointDescriptor,
             propertyAssignmentObject: {}
         },
         {
-            label: 'test 2',
+            label: 'Extension point namespace descriptor | single property x w/undefined value',
             namespaceDescriptor: extensionPointDescriptor,
             propertyAssignmentObject: {
                 x: undefined
             }
         },
         {
-            label: 'test 3',
+            label: 'Extension point namespace descriptor | single property x w/null value',
             namespaceDescriptor: extensionPointDescriptor,
             propertyAssignmentObject: {
                 x: null
             }
         },
         {
-            label: 'test 5',
+            label: 'Extension point namespace descriptor | single property x w/empty array value',
             namespaceDescriptor: extensionPointDescriptor,
             propertyAssignmentObject: {
                 x: []
             }
         },
         {
-            label: 'test 4',
+            label: 'Extension point namespace descriptor | single property x w/empty object value',
             namespaceDescriptor: extensionPointDescriptor,
             propertyAssignmentObject: {
                 x: {}
             }
         },
         {
-            label: 'test 7',
+            label: 'Extension point namespace descriptor | multiple properties on property assignment object',
             namespaceDescriptor: extensionPointDescriptor,
             propertyAssignmentObject: {
                 x: {
@@ -69,17 +69,17 @@ var generateTestVectors = module.exports = function() {
 
     testDimensionDescriptor.testValues.forEach(function(dimensionValue_) {
         var testName = testDimensionDescriptor.testDimension + " " + dimensionValue_.label;
-        testVectors[testName] = [ { options: {
-            parentDataReference: {},
-            targetNamespaceDescriptor: dimensionValue_.namespaceDescriptor,
-            targetNamespaceKey: "",
-            propertyAssignmentObject: dimensionValue_.propertyAssignmentObject,
-            semanticBindingsReference: testDataModel.getSemanticBindings()
-        }}];
+        testVectors[testName] = [ { 
+            options: {
+                parentDataReference: {},
+                targetNamespaceDescriptor: dimensionValue_.namespaceDescriptor,
+                targetNamespaceKey: "",
+                propertyAssignmentObject: dimensionValue_.propertyAssignmentObject,
+                semanticBindingsReference: testDataModel.getSemanticBindings()
+            }
+        }];
     });
-
     return testVectors;
-
 };
 
 
