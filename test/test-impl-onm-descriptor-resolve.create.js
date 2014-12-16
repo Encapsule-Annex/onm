@@ -13,147 +13,173 @@ var moduleUnderTest = require('../lib/implementation/onm-descriptor-resolve');
 
 var testVectors = require('./vectors/descriptor-resolve-create-vectors')();
 
-module.exports = describe("'resolveNamespaceDescriptorCreate' function export tests.", function() {
+withData(testVectors, function(testData) {
 
-    before(function(done_) {
+    var testName = "Attempt to resolve the namespace descriptor '" +
+        testData.options.targetNamespaceDescriptor.jsonTag + "' of type '" +
+        testData.options.targetNamespaceDescriptor.namespaceType + "'.";
 
-        withData(testVectors, function(testData) {
+    var resolveResults = null;
 
-            var testName = "Attempt to resolve the namespace descriptor '" +
-                testData.options.targetNamespaceDescriptor.jsonTag + "' of type '" +
-                testData.options.targetNamespaceDescriptor.namespaceType + "'.";
+    it(testName, function() {
+        var functionUnderTest = function() {
+            resolveResults = moduleUnderTest.resolveNamespaceDescriptorCreate(testData.options);
+            console.log("RESOLVE RESULTS::" + JSON.stringify(testData.options.parentDataReference));
+        };
 
-            describe(testName, function() {
+        if (testData.validConfig) {
+            assert.doesNotThrow(functionUnderTest, testName);
+        } else {
+            assert.throws(functionUnderTest, testName);
+        }
+    });
 
-                var resolveResults = null;
-                before(function(done_) {
 
-                    var functionUnderTest = function() {
-                        resolveResults = moduleUnderTest.resolveNamespaceDescriptorCreate(testData.options);
-                        console.log("RESOLVE RESULTS::" + JSON.stringify(testData.options.parentDataReference));
-                    };
-                    if (testData.validConfig) {
-                        assert.doesNotThrow(functionUnderTest);
-                    } else {
-                        assert.throws(functionUnderTest);
-                    }
-                    done_();
-                });
+    if (!testData.validConfig) {
+        it("Execute the test setup which is expected to throw (concluding this test suite).", function() {
+            assert.isTrue(true);
+        });
+    } else {
 
-                if (!testData.validConfig) {
-                    it("Execute the test setup which is expected to throw (concluding this test suite).", function() {
-                        assert.isTrue(true);
-                    });
-                } else {
+        it("Function call should have returned an object.", function() {
+            assert.isDefined(resolveResults);
+            assert.isNotNull(resolveResults);
+            assert.isObject(resolveResults);
+        });
 
-                    it("Function call should have returned an object.", function() {
-                        assert.isDefined(resolveResults);
-                        assert.isNotNull(resolveResults);
-                        assert.isObject(resolveResults);
-                    });
+        it("The returned object should be a valid descriptor resolve results object.", function() {
+            assert.isTrue(moduleUnderTest.checkValidDescriptorResolveResults(resolveResults));
+        });
 
-                    it("The returned object should be a valid descriptor resolve results object.", function() {
-                        assert.isTrue(moduleUnderTest.checkValidDescriptorResolveResults(resolveResults));
-                    });
+        switch (testData.options.targetNamespaceDescriptor.namespaceType) {
+        case 'root':
+        case 'child':
+        case 'extensionPoint':
+            it("Resolve results effective namespace key should be '" + testData.options.targetNamespaceDescriptor.jsonTag + "'.", function() {
+                assert.equal(testData.options.targetNamespaceDescriptor.jsonTag, resolveResults.namespaceEffectiveKey);
+            });
+            break;
+        case 'component':
+            it("Resolve results effective namespace key should not be '" + testData.options.targetNamespaceDescriptor.jsonTag + "'.", function() {
+                assert.notEqual(testData.options.targetNamespaceDescriptor.jsonTag, resolveResults.namespaceEffectiveKey);
+            });
+            break;
+        default:
+            break;
+        }
 
-                    switch (testData.options.targetNamespaceDescriptor.namespaceType) {
-                    case 'root':
-                    case 'child':
-                    case 'extensionPoint':
-                        it("Resolve results effective namespace key should be '" + testData.options.targetNamespaceDescriptor.jsonTag + "'.", function() {
-                            assert.equal(testData.options.targetNamespaceDescriptor.jsonTag, resolveResults.namespaceEffectiveKey);
-                        });
-                        break;
-                    case 'component':
-                        it("Resolve results effective namespace key should not be '" + testData.options.targetNamespaceDescriptor.jsonTag + "'.", function() {
-                            assert.notEqual(testData.options.targetNamespaceDescriptor.jsonTag, resolveResults.namespaceEffectiveKey);
-                        });
-                        break;
-                    default:
-                        break;
-                    }
+        it("Verify that named child object '" + testData.options.targetNamespaceDescriptor.jsonTag + "' was created in the parent store object.", function() {
+            assert.property(testData.options.parentDataReference, resolveResults.namespaceEffectiveKey);
+            assert.isObject(testData.options.parentDataReference[resolveResults.namespaceEffectiveKey]);
+        });
 
-                    it("Verify that named child object '" + testData.options.targetNamespaceDescriptor.jsonTag + "' was created in the parent store object.", function() {
-                        assert.property(testData.options.parentDataReference, resolveResults.namespaceEffectiveKey);
-                        assert.isObject(testData.options.parentDataReference[resolveResults.namespaceEffectiveKey]);
-                    });
+        it("Verify the integrity of the resolved child object '" + testData.options.targetNamespaceDescriptor.jsonTag + "' data reference.", function() {
+            assert.doesNotThrow(function() {
+                resolveResults.namespaceDataReference.test = "test property touched";
+            });
+            assert.property(testData.options.parentDataReference[resolveResults.namespaceEffectiveKey], 'test');
+            assert.equal(testData.options.parentDataReference[resolveResults.namespaceEffectiveKey].test, "test property touched");
+        });
 
-                    it("Verify the integrity of the resolved child object '" + testData.options.targetNamespaceDescriptor.jsonTag + "' data reference.", function() {
-                        assert.doesNotThrow(function() {
-                            resolveResults.namespaceDataReference.test = "test property touched";
-                        });
-                        assert.property(testData.options.parentDataReference[resolveResults.namespaceEffectiveKey], 'test');
-                        assert.equal(testData.options.parentDataReference[resolveResults.namespaceEffectiveKey].test, "test property touched");
-                    });
+        // Note: it's going to really tedious to try to do low-level verification of the property values
+        // generically. Effectively you would need to re-implement the entire priority merge algorithm in
+        // the test. Here we go for low-hanging fruit and ensure that properties contained in the data model
+        // and property assignment object sets are present in the data model. This is a good enough baseline
+        // to run higher-order tests later that will definitely fail and alert to probems in the generic
+        // property value assignment algorithm.
 
-                    // Note: it's going to really tedious to try to do low-level verification of the property values
-                    // generically. Effectively you would need to re-implement the entire priority merge algorithm in
-                    // the test. Here we go for low-hanging fruit and ensure that properties contained in the data model
-                    // and property assignment object sets are present in the data model. This is a good enough baseline
-                    // to run higher-order tests later that will definitely fail and alert to probems in the generic
-                    // property value assignment algorithm.
+        describe("Verify the properties of the newly-created namespace object.", function() {
 
-                    describe("Verify the properties of the newly-created namespace object.", function() {
+            describe("Verify that every property declared on the namespace declaration is present in the data.", function() {
 
-                        describe("Verify that every property declared on the namespace declaration is present in the data.", function() {
-                            it("Execute the tests.", function() {
-                                assert.isTrue(true);
-                            });
-                        });
+                if (testData.options.targetNamespaceDescriptor.namespaceType !== 'extensionPoint') {
 
-                        describe("Verify that every property declared on the property assignment object is present in the data.", function() {
-                            it("Execute the tests.", function() {
-                                assert.isTrue(true);
-                            });
-                        });
-
-                        it("Execute the tests.", function() {
-                            assert.isTrue(true);
-                        });
+                    it("The namespace object should define property 'a'.", function() {
+                        assert.property(resolveResults.namespaceDataReference, 'a');
+                        assert.isString(resolveResults.namespaceDataReference.a);
                     });
 
-                    describe("Verify pending descriptor resolve requests.", function() {
-
-                        var expectedCount = null;
-                        var actualCount = null;
-                        var testMessage = null;
-
-                        before(function(done_) {
-                            actualCount = resolveResults.pendingNamespaceDescriptors.length;
-
-                            switch (testData.options.targetNamespaceDescriptor.namespaceType) {
-                            case 'extensionPoint':
-                                var expectedCount = (testData.expectedPendingCount !== null) && testData.expectedPendingCount || 0;
-                                // I disabled the application of the property assignment dimension value iff extension point
-                                // thus expected will always be zero. Subcomponent creation needs its own list test matrix and
-                                // is to be handled in a separate test module.
-                                if (!expectedCount) {
-                                    testMessage = "The extension point namespace's object is expected to be empty (i.e. zero subcomponents).";
-                                } else {
-                                    testMessage = "The extension point namespace's object is expected to contain " + expectedCount + " subcomponent object(s).";
-                                }
-                                break;
-                            default:
-                                testMessage = "There should be a pending descriptor resolve object pending for each child namespace of the descriptor."
-                                expectedCount = testData.options.targetNamespaceDescriptor.children.length;
-                                break;
-                            }
-                            it(testMessage, function() {
-                                assert.equal(actualCount, expectedCount);
-                            });
-                            done_();
-                        });
-
+                    it("The namespace object should define property 'b'.", function() {
+                        assert.property(resolveResults.namespaceDataReference, 'a');
+                        assert.isString(resolveResults.namespaceDataReference.a);
 
                     });
+
+                    it("The namespace object should define property 'c'.", function() {
+                        assert.property(resolveResults.namespaceDataReference, 'a');
+                        assert.isString(resolveResults.namespaceDataReference.a);
+                    });
+
+                    it("The namespace object should define property 'd'.", function() {
+                        assert.property(resolveResults.namespaceDataReference, 'a');
+                        assert.isString(resolveResults.namespaceDataReference.a);
+                    });
+
+                    it("The namespace object should define property 'e'.", function() {
+
+                        assert.property(resolveResults.namespaceDataReference, 'a');
+                        assert.isString(resolveResults.namespaceDataReference.a);
+                    });
+
+                    it("The namespace object should deinfe property 'f'.", function() {
+                        assert.property(resolveResults.namespaceDataReference, 'a');
+                        assert.isString(resolveResults.namespaceDataReference.a);
+                    });
+
                 }
+
+            });
+
+            describe("Verify that every property declared on the property assignment object is present in the data.", function() {
+                it("Execute the tests.", function() {
+                    assert.isTrue(true);
+                });
+            });
+
+            it("Execute the tests.", function() {
+                assert.isTrue(true);
             });
         });
-        done_();
-    });
-    it("Execute the test.", function() {
-        assert.isTrue(true);
-    });
-});
 
+        describe("Verify pending descriptor resolve requests.", function() {
+
+            var expectedCount = null;
+            var actualCount = null;
+            var testMessage = null;
+
+            before(function() {
+
+                actualCount = resolveResults.pendingNamespaceDescriptors.length;
+
+                switch (testData.options.targetNamespaceDescriptor.namespaceType) {
+
+                case 'extensionPoint':
+                    expectedCount = (testData.expectedPendingCount !== null) && testData.expectedPendingCount || 0;
+                    // I disabled the application of the property assignment dimension value iff extension point
+                    // thus expected will always be zero. Subcomponent creation needs its own list test matrix and
+                    // is to be handled in a separate test module.
+                    if (!expectedCount) {
+                        testMessage = "The extension point namespace's object is expected to be empty (i.e. zero subcomponents).";
+                    } else {
+                        testMessage = "The extension point namespace's object is expected to contain " + expectedCount + " subcomponent object(s).";
+                    }
+                    break;
+
+                default:
+                    testMessage = "There should be a pending descriptor resolve object pending for each child namespace of the descriptor."
+                    expectedCount = testData.options.targetNamespaceDescriptor.children.length;
+                    break;
+
+                }
+
+            });
+
+            it("Actual and expected pending descriptor resolve request counts should be equal.", function() {
+                assert.equal(actualCount, expectedCount, testMessage);
+            });
+
+        });
+    }
+
+}); // withData
 
