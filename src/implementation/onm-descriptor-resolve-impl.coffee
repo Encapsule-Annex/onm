@@ -55,27 +55,43 @@ module.exports =
 
     # ==============================================================================
     checkValidDescriptorResolveOptions: (options_, isOpenResolve_) ->
+
         if not (options_? and options_)
+            console.log("Missing options.")
             return false
 
-        openResult = 
-            options_.parentDataReference? and options_.parentDataReference and
-            options_.targetNamespaceDescriptor? and options_.targetNamespaceDescriptor and
-            options_.targetNamespaceDescriptor.archetypePathId? and options_.targetNamespaceDescriptor.archetypePathId and
-            true or false
+        if not (options_.parentDataReference? and options_.parentDataReference)
+            console.log("Invalid parentDataReference.")
+            return false
 
-        if not (isOpenResolve_? and isOpenResolve_)
-            keyValid = true
-            if options_.targetNamespaceKey? and options_.targetNamespaceKey
-                keyValid = options_.targetNamespaceKey.length > 0 or false
+        if not (options_.targetNamespaceDescriptor? and options_.targetNamespaceDescriptor)
+            console.log("Invalid targetNamespaceDescriptor.")
+            return false
 
-            return openResult and
-                keyValid and
-                options_.semanticBindingsReference? and options_.semanticBindingsReference and
-                options_.propertyAssignmentObject? and options_.propertyAssignmentObject and
-                true or false
+        if not (options_.targetNamespaceDescriptor.jsonTag? and options_.targetNamespaceDescriptor.jsonTag)
+            console.log("Invalid targetNamespaceDescriptor.")
+            return false
 
-        openResult
+        if isOpenResolve_? and isOpenResolve_
+            return true
+
+        keyValid = true
+        if options_.targetNamespaceKey? and options_.targetNamespaceKey
+            keyValid = options_.targetNamespaceKey.length > 0 or false
+
+        if not keyValid
+            console.log("Invalid targetNamespaceKey.")
+            return false
+
+        if not (options_.semanticBindingsReference? and options_.semanticBindingsReference)
+            console.log("Invalid semanticBindingsReference.")
+            return false
+
+        if not (options_.propertyAssignmentObject? and options_.propertyAssignmentObject)
+            console.log("Invalid propertyAsssignmentObject.")
+            return false
+
+        true
 
 
 

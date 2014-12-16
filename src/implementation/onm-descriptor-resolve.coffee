@@ -180,7 +180,7 @@ module.exports =
                                 parentDataReference: resolveResults.namespaceDataReference
                                 targetNamespaceDescriptor: childNamespaceDescriptor
                                 targetNamespaceKey: keyName
-                                semanticBindingReference: options_.semanticBindingsReference
+                                semanticBindingsReference: options_.semanticBindingsReference
                                 propertyAssignmentObject: subcomponentPropertyAssignmentObject
                             resolveResults.pendingNamespaceDescriptors.push pendingDescriptorResolveOptions
                             deleteKeyNames.push keyName
@@ -196,7 +196,7 @@ module.exports =
                             parentDataReference: resolveResults.namespaceDataReference
                             targetNamespaceDescriptor: childNamespaceDescriptor
                             targetNamespaceKey: ''
-                            semanticBindingReference: options_.semanticBindingsReference
+                            semanticBindingsReference: options_.semanticBindingsReference
                             propertyAssignmentObject: propertyAssignmentObject[childNamespaceDescriptor.jsonTag]
                         resolveResults.pendingNamespaceDescriptors.push pendingDescriptorResolveOptions
                         delete propertyAssignmentObject[childNamespaceDescriptor.jsonTag]
