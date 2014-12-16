@@ -162,7 +162,6 @@ module.exports =
                             effectiveValue = functions.fnCreate()
                         else
                             effectiveValue = functions.defaultValue
-
                     resolveResults.namespaceDataReference[memberName] = effectiveValue
 
             # Process the target namespace's declared subnamespaces and queue deferred operations.
@@ -171,19 +170,23 @@ module.exports =
                 switch childNamespaceDescriptor.namespaceType
 
                     when 'component'
+
                         # Interpret remaining properties on property assignment object as subcomponents key values.
                         # For each named object in the property assignment object, queue a deferred descriptor
                         # resolve operations
                         deleteKeyNames = []
+
                         for keyName, subcomponentPropertyAssignmentObject of propertyAssignmentObject
+
                             pendingDescriptorResolveOptions =
                                 parentDataReference: resolveResults.namespaceDataReference
                                 targetNamespaceDescriptor: childNamespaceDescriptor
                                 targetNamespaceKey: keyName
                                 semanticBindingsReference: options_.semanticBindingsReference
-                                propertyAssignmentObject: subcomponentPropertyAssignmentObject
+                                propertyAssignmentObject: subcomponentPropertyAssignmentObject? and subcomponentPropertyAssignmentObject or {}
                             resolveResults.pendingNamespaceDescriptors.push pendingDescriptorResolveOptions
                             deleteKeyNames.push keyName
+
                         while deleteKeyNames.length
                             delete propertyAssignmentObject[deleteKeyNames.pop()]
                         break
@@ -192,6 +195,7 @@ module.exports =
 
                         # child namespaces of declared types 'child' and 'extensionPoint'.
                         # Default construct the deferred descriptor resolve options object.
+                        subcomponentPropertyAssignmentObject = propertyAssignmentObject[childNamespaceDescriptor.jsonTag]? and propertyAssignmentObject[childNamespaceDescriptor.jsonTag] or {}
                         pendingDescriptorResolveOptions =
                             parentDataReference: resolveResults.namespaceDataReference
                             targetNamespaceDescriptor: childNamespaceDescriptor
@@ -200,6 +204,7 @@ module.exports =
                             propertyAssignmentObject: propertyAssignmentObject[childNamespaceDescriptor.jsonTag]
                         resolveResults.pendingNamespaceDescriptors.push pendingDescriptorResolveOptions
                         delete propertyAssignmentObject[childNamespaceDescriptor.jsonTag]
+                        break
 
             # Graft remaining properies on the assignment object on to the child object.
             deleteKeys = []
