@@ -131,7 +131,23 @@ withData(testVectors, function(testData) {
             });
 
             describe("Verify that every property declared on the property assignment object is present in the data.", function() {
-                it("Execute the tests.", function() {
+
+                var propertyTestVector = {};
+
+                before(function(done_) {
+
+                    var key,value;
+
+                    for (key in testData.options.propertyAssignmentObject) {
+                        value = testData.options.propertyAssignmentObject[key];
+                        console.log("YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" + key + " " + value);
+                    }
+
+                    done_();
+
+                });
+
+                it("Execute the tests with lemon.", function() {
                     assert.isTrue(true);
                 });
             });

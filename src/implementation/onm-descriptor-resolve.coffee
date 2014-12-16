@@ -62,6 +62,7 @@ onm.NamespaceDescriptorResolver -> this module gets it done
 
 
 implementation = require './onm-descriptor-resolve-impl'
+util = require('../../index').util
 
 module.exports =
 
@@ -131,14 +132,16 @@ module.exports =
             # Assign the namespace's declared property values.
             propertiesDeclaration = options_.targetNamespaceDescriptor.namespaceModelPropertiesDeclaration
 
+            propertyAssignmentObject = util.clone options_.propertyAssignmentObject
+
             if propertiesDeclaration.userImmutable? and propertiesDeclaration.userImmutable
                 for memberName, functions of propertiesDeclaration.userImmutable
                     if resolveResults.namespaceDataReference[memberName]
                         continue
                     # Determine if the declared property has a value in the property assignment object.
-                    effectiveValue = options_.propertyAssignmentObject[memberName]
+                    effectiveValue = propertyAssignmentObject[memberName]
                     if effectiveValue? and effectiveValue
-                        delete options_.propertyAssignmentObject[memberName]
+                        delete propertyAssignmentObject[memberName]
                     else
                         effectiveValue = (functions.defaultValue? and functions.defaultValue) or
                             (functions.fnCreate? and functions.fnCreate and functions.fnCreate()) or
@@ -150,9 +153,9 @@ module.exports =
                     if resolveResults.namespaceDataReference[memberName]
                         continue
                     # Determine if the declared property has a value in the property assignment object.
-                    effectiveValue = options_.propertyAssignmentObject[memberName]
+                    effectiveValue = propertyAssignmentObject[memberName]
                     if effectiveValue? and effectiveValue
-                        delete options_.propertyAssignmentObject[memberName]
+                        delete propertyAssignmentObject[memberName]
                     else
                         if functions.fnCreate? and functions.fnCreate
                             effectiveValue = functions.fnCreate()
@@ -172,7 +175,7 @@ module.exports =
                         # For each named object in the property assignment object, queue a deferred descriptor
                         # resolve operations
                         deleteKeyNames = []
-                        for keyName, subcomponentPropertyAssignmentObject of options_.propertyAssignmentObject
+                        for keyName, subcomponentPropertyAssignmentObject of propertyAssignmentObject
                             pendingDescriptorResolveOptions =
                                 parentDataReference: resolveResults.namespaceDataReference
                                 targetNamespaceDescriptor: childNamespaceDescriptor
@@ -182,7 +185,7 @@ module.exports =
                             resolveResults.pendingNamespaceDescriptors.push pendingDescriptorResolveOptions
                             deleteKeyNames.push keyName
                         while deleteKeyNames.length
-                            delete options_.propertyAssignmentObject[deleteKeyNames.pop()]
+                            delete propertyAssignmentObject[deleteKeyNames.pop()]
                         break
 
                     else
@@ -194,17 +197,17 @@ module.exports =
                             targetNamespaceDescriptor: childNamespaceDescriptor
                             targetNamespaceKey: ''
                             semanticBindingReference: options_.semanticBindingsReference
-                            propertyAssignmentObject: options_.propertyAssignmentObject[childNamespaceDescriptor.jsonTag]
+                            propertyAssignmentObject: propertyAssignmentObject[childNamespaceDescriptor.jsonTag]
                         resolveResults.pendingNamespaceDescriptors.push pendingDescriptorResolveOptions
-                        delete options_.propertyAssignmentObject[childNamespaceDescriptor.jsonTag]
+                        delete propertyAssignmentObject[childNamespaceDescriptor.jsonTag]
 
             # Clone remaining properties from the property assignment object on to the child object.
             deleteKeys = []
-            for propertyName, subObject of options_.propertyAssignmentObject
+            for propertyName, subObject of propertyAssignmentObject
                 resolveResults.namespaceDataReference[propertyName] = subObject
                 deleteKeys.push propertyName
             while deleteKeys.length
-                delete options_.propertyAssignmentObject[deleteKeys.pop()]
+                delete propertyAssignmentObject[deleteKeys.pop()]
 
             resolveResults
 
