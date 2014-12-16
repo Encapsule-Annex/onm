@@ -134,29 +134,19 @@ withData(testVectors, function(testData) {
 
                 var propertyTestVector = {};
 
-                before(function(done_) {
+                var key,value;
 
-                    var key,value;
+                for (key in testData.options.propertyAssignmentObject) {
+                    value = testData.options.propertyAssignmentObject[key];
+                    var testName = "Property assignment object property '" + key + "' w/value='" + JSON.stringify(value) + "'.";
+                    propertyTestVector[testName] = { key: key, value: value };
+                }
 
-                    for (key in testData.options.propertyAssignmentObject) {
-                        value = testData.options.propertyAssignmentObject[key];
-                        var testName = "Property assignment object property '" + key + "' w/value='" + JSON.stringify(value) + "'.";
-                        propertyTestVector[testName] = { key: key, value: value };
-                    }
-
-                    withData(propertyTestVector, function(propertyTestVector_) {
-
-                        before(function(x_) { x_(); });
-
-                        it("test", function() {
-                            assert.property(resolveResults.namespaceDataReference, key);
-                            assert.deepEqual(resolveResults.namespaceDataReference[key], value);
-                        });
-
+                withData(propertyTestVector, function(propertyTestVector_) {
+                    it("Verify actual value equals expected value.", function() {
+                        assert.property(resolveResults.namespaceDataReference, propertyTestVector_.key);
+                        assert.deepEqual(resolveResults.namespaceDataReference[propertyTestVector_.key], propertyTestVector_.value);
                     });
-
-                    done_();
-
                 });
 
                 it("Execute the tests with lemon.", function() {
