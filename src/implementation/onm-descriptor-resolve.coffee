@@ -102,6 +102,7 @@ module.exports =
             resolveResults = @resolveNamespaceDescriptorOpenImpl options_
 
             # Policy implementation: throw if object implied by namespace descriptor already exists.
+
             if resolveResults.namespaceDataReference? and resolveResults.namespaceDataReference
                 resourceString = @createResourceString options_, resolveResults
                 throw new Error "Child object already exists in data: #{resourceString}"
@@ -164,7 +165,6 @@ module.exports =
 
                     resolveResults.namespaceDataReference[memberName] = effectiveValue
 
-
             # Process the target namespace's declared subnamespaces and queue deferred operations.
             for childNamespaceDescriptor in options_.targetNamespaceDescriptor.children
                 # Every declared child namespace is queued for deferred processing.
@@ -201,7 +201,7 @@ module.exports =
                         resolveResults.pendingNamespaceDescriptors.push pendingDescriptorResolveOptions
                         delete propertyAssignmentObject[childNamespaceDescriptor.jsonTag]
 
-            # Clone remaining properties from the property assignment object on to the child object.
+            # Graft remaining properies on the assignment object on to the child object.
             deleteKeys = []
             for propertyName, subObject of propertyAssignmentObject
                 resolveResults.namespaceDataReference[propertyName] = subObject
