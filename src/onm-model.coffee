@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 jslib = require('./lib-javascript')
 Address = require('./onm-address')
-AddressToken = require('./implementation/onm-address-token')
+AddressToken = require('./impl/onm-address-token')
 uuid = require('node-uuid')
 
 LUID = 1

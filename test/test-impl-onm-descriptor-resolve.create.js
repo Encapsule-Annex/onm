@@ -9,7 +9,7 @@ var withData = require('leche').withData;
 var uuid = require('node-uuid');
 var onm = require('../index');
 
-var moduleUnderTest = require('../lib/implementation/onm-descriptor-resolve');
+var moduleUnderTest = require('../lib/impl/onm-namespace-resolver');
 
 var namespaceDescriptorResolveCreateVectors = require('./vectors/descriptor-resolve-create-vectors')();
 var subcomponentCreationTestVectors = require('./vectors/descriptor-resolve/vector-dimension-create-subcomponent-assignment')();

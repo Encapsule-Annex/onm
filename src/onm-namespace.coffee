@@ -39,8 +39,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-AddressToken = require('./implementation/onm-address-token')
-AddressTokenResolver = require('./implementation/onm-address-token-resolver')
+AddressToken = require('./impl/onm-address-token')
+AddressTokenResolver = require('./impl/onm-address-token-resolver')
 Address = require('./onm-address')
 
 #

@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 
 
-namespaceDescriptorResolver = require('./onm-descriptor-resolve')
+namespaceDescriptorResolver = require('./onm-namespace-resolver')
 
 # ==============================================================================
 class AddressTokenResolver

@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-AddressToken = require('./implementation/onm-address-token')
+AddressToken = require('./impl/onm-address-token')
 
 #
 #

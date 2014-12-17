@@ -22,7 +22,7 @@ module.exports = describe("onm.AddressTokenResolver whitebox tests.", function()
     before(function(done_) {
 
         var loadModuleUnderTest = function() {
-            moduleUnderTest = require('../lib/implementation/onm-token-resolve');
+            moduleUnderTest = require('../lib/impl/onm-component-resolver');
         };
 
         assert.doesNotThrow(loadModuleUnderTest);

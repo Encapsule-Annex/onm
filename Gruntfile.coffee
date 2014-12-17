@@ -12,14 +12,16 @@ module.exports = (grunt) ->
                     'lib/onm-store.js': 'src/onm-store.coffee'
                     'lib/onm-namespace.js': 'src/onm-namespace.coffee'
                     'lib/onm-address-store.js': 'src/onm-address-store.coffee'
-                    'lib/implementation/onm-address-token.js': 'src/implementation/onm-address-token.coffee'
-                    'lib/implementation/onm-address-token-resolver.js': 'src/implementation/onm-address-token-resolver.coffee'
+                    'lib/impl/onm-address-token.js': 'src/impl/onm-address-token.coffee'
 
-                    'lib/implementation/onm-token-resolve.js': 'src/implementation/onm-token-resolve.coffee'
-                    'lib/implementation/onm-descriptor-resolve.js': 'src/implementation/onm-descriptor-resolve.coffee'
-                    'lib/implementation/onm-descriptor-resolve-impl.js': 'src/implementation/onm-descriptor-resolve-impl.coffee'
+                    # legacy
+                    'lib/impl/onm-address-token-resolver.js': 'src/impl/onm-address-token-resolver.coffee'
 
-                    'lib/implementation/onm-store-reifier.js': 'src/implementation/onm-store-reifier.coffee'
+                    'lib/impl/onm-component-resolver.js': 'src/impl/onm-component-resolver.coffee'
+                    'lib/impl/onm-namespace-resolver.js': 'src/impl/onm-namespace-resolver.coffee'
+                    'lib/impl/onm-namespace-resolver-impl.js': 'src/impl/onm-namespace-resolver-impl.coffee'
+
+                    'lib/impl/onm-store-reifier.js': 'src/impl/onm-store-reifier.coffee'
                     'lib/lib-javascript.js': 'src/lib-javascript.coffee'
 
         jshint:

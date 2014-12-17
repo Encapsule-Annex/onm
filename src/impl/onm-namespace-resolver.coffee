@@ -61,7 +61,7 @@ onm.NamespaceDescriptorResolver -> this module gets it done
 #
 
 
-implementation = require './onm-descriptor-resolve-impl'
+implementation = require './onm-namespace-resolver-impl'
 util = require('../../index').util
 
 module.exports =
