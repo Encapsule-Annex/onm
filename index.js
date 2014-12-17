@@ -49,4 +49,4 @@ module.exports.util = require('./lib/lib-javascript');
 ////
 // DEPRECATED in onm v0.3+
 module.exports.AddressStore = require('./lib/onm-address-store');
-module.exports.BackChannel = require('./lib/lib-backchannel');
+

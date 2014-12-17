@@ -20,7 +20,6 @@ module.exports = (grunt) ->
                     'lib/implementation/onm-descriptor-resolve-impl.js': 'src/implementation/onm-descriptor-resolve-impl.coffee'
 
                     'lib/implementation/onm-store-reifier.js': 'src/implementation/onm-store-reifier.coffee'
-                    'lib/lib-backchannel.js': 'src/lib-backchannel.coffee'
                     'lib/lib-javascript.js': 'src/lib-javascript.coffee'
 
         jshint:

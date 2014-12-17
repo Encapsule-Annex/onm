@@ -1,7 +1,7 @@
 {
   "name": "onm",
-  "version": "0.3.9",
-  "description": "Object Namespace Manager (onm) data model, schema-driven JSON factory and in-memory subsystem communication bus for complex data-driven Node.js/HTML 5 client apps.",
+  "version": "0.3.10",
+  "description": "Object Namespace Manager (onm) in-memory data modeling, storage, addressing, traversal, introspection, normalization, serialization, and abstraction framework for Node.js and HTML 5.",
   "scripts": {
     "test": "mocha -R spec ./test/test-onm.js"
   },
