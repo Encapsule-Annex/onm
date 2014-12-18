@@ -6,7 +6,7 @@ module.exports = describe("onm.Address object method tests", function() {
 
     before(function(done_) {
         // Internal white box tests.
-        require('./test-impl-onm-descriptor-resolve');
+        require('./test-onm-namespace-resolver');
         require('./test-impl-onm-token-resolve');
         // Public API level functional tests.
         require('./test-onm.Address.createSubpathAddress');

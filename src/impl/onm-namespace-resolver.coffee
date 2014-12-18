@@ -221,6 +221,10 @@ module.exports =
 
         resolveResults
 
+    # TODO: Remove these exports and require the impl module directly into test scope
     createResourceString: implementation.createResourceString
     checkValidDescriptorResolveOptions: implementation.checkValidDescriptorResolveOptions
     checkValidDescriptorResolveResults: implementation.checkValidDescriptorResolveResults
+
+
+
