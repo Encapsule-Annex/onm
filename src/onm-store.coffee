@@ -42,7 +42,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 jslib = require('./lib-javascript')
 StoreReifier = require('./impl/onm-store-reifier')
 AddressToken = require('./impl/onm-address-token')
-AddressTokenResolver = require('./impl/onm-address-token-resolver')
+AddressTokenResolver = require('./impl/onm-address-token-resolver-legacy')
 Namespace = require('./onm-namespace')
 uuid = require('node-uuid')
 

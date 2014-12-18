@@ -15,7 +15,7 @@ module.exports = (grunt) ->
                     'lib/impl/onm-address-token.js': 'src/impl/onm-address-token.coffee'
 
                     # legacy
-                    'lib/impl/onm-address-token-resolver.js': 'src/impl/onm-address-token-resolver.coffee'
+                    'lib/impl/onm-address-token-resolver-legacy.js': 'src/impl/onm-address-token-resolver-legacy.coffee'
 
                     'lib/impl/onm-component-resolver.js': 'src/impl/onm-component-resolver.coffee'
                     'lib/impl/onm-namespace-resolver.js': 'src/impl/onm-namespace-resolver.coffee'
