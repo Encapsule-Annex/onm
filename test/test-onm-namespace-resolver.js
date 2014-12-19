@@ -52,10 +52,10 @@ module.exports = describe("onm.NamespaceDescriptorResolver white box tests.", fu
         assert.isFunction(moduleUnderTest.checkValidDescriptorResolveResults);
     });
 
-    require('./test-impl-onm-descriptor-resolve.options');
-    require('./test-impl-onm-descriptor-resolve.results');
-    require('./test-impl-onm-descriptor-resolve.open');
-    require('./test-impl-onm-descriptor-resolve.create');
+    require('./test-onm-namespace-resolver.options');
+    require('./test-onm-namespace-resolver.results');
+    require('./test-onm-namespace-resolver.open');
+    require('./test-onm-namespace-resolver.create');
 
 });
 
