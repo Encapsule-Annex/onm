@@ -40,15 +40,10 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 implementation = require './onm-namespace-resolver-impl'
 util = require('../../index').util
 
+resolveOpenNamespaceDescriptor = require('./onm-namespace-resolver.open').resolveOpenNamespaceDescriptor
+
+
 module.exports =
-
-    # ****************************************************************************
-    # ****************************************************************************
-    # ****************************************************************************
-    # Main API
-    #
-    #
-
     # ==============================================================================
     resolveNamespaceDescriptorOpen: (options_) ->
         try
@@ -56,7 +51,7 @@ module.exports =
                 throw new Error("Invalid descriptor resolve options.")
 
             # resolveNamespaceDescriptorOpen is a policy wrapper around resolveNamespaceDescriptorOpenImpl.
-            resolveResults = @resolveNamespaceDescriptorOpenImpl options_
+            resolveResults = resolveOpenNamespaceDescriptor options_
 
             # Policy implementation: throw if object implied by namespace descriptor does not exist.
             if not (resolveResults.namespaceDataReference? and resolveResults.namespaceDataReference)
@@ -75,7 +70,7 @@ module.exports =
                 throw new Error("Invalid descriptor resolve options.")
 
             # Determine if an object of that name already exists in the store data.
-            resolveResults = @resolveNamespaceDescriptorOpenImpl options_
+            resolveResults = resolveOpenNamespaceDescriptor options_
 
             # Policy implementation: throw if object implied by namespace descriptor already exists.
 
@@ -93,6 +88,7 @@ module.exports =
                 else
                     effectiveKeyValue = options_.targetNamespaceKey
                     if not (effectiveKeyValue? and effectiveKeyValue and (effectiveKeyValue.length > 0))
+                        # TODO: UPDATE THIS CALL WITH NEW SEMANTIC BINDINGS GETUNIQUEKEY
                         effectiveKeyValue = options_.semanticBindingsReference.setUniqueKey({});
 
             # record the namespace's assigned, or effective, key value
@@ -197,29 +193,10 @@ module.exports =
             throw new Error("resolveNamespaceDescriptorCreate failure on decriptor '#{options_.targetNamespaceDescriptor.jsonTag}': #{exception_.message}")
 
 
-    # ****************************************************************************
-    # ****************************************************************************
-    # ****************************************************************************
-    # White box test exports
-    #
-    #
 
-    # ==============================================================================
-    resolveNamespaceDescriptorOpenImpl: (options_) ->
 
-        # checkValidDescriptorResolveOptions(options_) == true assumed
 
-        resolveResults =
-            namespaceEffectiveKey: null
-            namespaceDataReference: null
-            pendingNamespaceDescriptors: []
 
-        descriptor = options_.targetNamespaceDescriptor
-        key = options_.targetNamespaceKey
-        resolveResults.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or key
-        resolveResults.namespaceDataReference = options_.parentDataReference[effectiveKey]
-
-        resolveResults
 
     # TODO: Remove these exports and require the impl module directly into test scope
     createResourceString: implementation.createResourceString
