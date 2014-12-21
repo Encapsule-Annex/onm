@@ -10,6 +10,7 @@ var uuid = require('node-uuid');
 var onm = require('../index');
 
 var moduleUnderTest = require('../lib/impl/onm-namespace-resolver');
+var moduleUnderTestImpl = require('../lib/impl/onm-namespace-resolver-impl');
 
 var namespaceDescriptorResolveCreateVectors = require('./vectors/descriptor-resolve-create-vectors')();
 var subcomponentCreationTestVectors = require('./vectors/descriptor-resolve/vector-dimension-create-subcomponent-assignment')();
@@ -42,7 +43,7 @@ describe("resolveNamespaceDescriptorCreate internal function whitebox test matri
                 assert.isObject(resolveResults);
             });
             it("The returned object should be a valid descriptor resolve results object.", function() {
-                assert.isTrue(moduleUnderTest.checkValidDescriptorResolveResults(resolveResults));
+                assert.isTrue(moduleUnderTestImpl.checkValidDescriptorResolveResults(resolveResults));
             });
             switch (testData.options.targetNamespaceDescriptor.namespaceType) {
             case 'root':
@@ -187,7 +188,7 @@ describe("resolveNamespaceDescriptorCreate internal function whitebox test matri
                     var optionsValid = false;
                     it("Attempt to validate the pending namespace descriptor should not throw.", function() {
                         var functionUnderTest = function() {
-                            optionsValid = moduleUnderTest.checkValidDescriptorResolveOptions(options_);
+                            optionsValid = moduleUnderTestImpl.checkValidDescriptorResolveOptions(options_);
                         };
                         assert.doesNotThrow(functionUnderTest);
                     });

@@ -14,6 +14,7 @@ var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
 
 var moduleUnderTest = require('../lib/impl/onm-namespace-resolver');
+var moduleUnderTestImpl = require('../lib/impl/onm-namespace-resolver-impl');
 
 module.exports = describe("'resolveNamespaceDescriptorOpen' function export tests.", function() {
 
@@ -39,7 +40,7 @@ module.exports = describe("'resolveNamespaceDescriptorOpen' function export test
     });
 
     it("The returned object should be a valid descriptor resolve results object.", function() {
-        assert.isTrue(moduleUnderTest.checkValidDescriptorResolveResults(resolveResults));
+        assert.isTrue(moduleUnderTestImpl.checkValidDescriptorResolveResults(resolveResults));
     });
 
 });

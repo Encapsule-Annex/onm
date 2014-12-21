@@ -193,15 +193,3 @@ module.exports =
             throw new Error("resolveNamespaceDescriptorCreate failure on decriptor '#{options_.targetNamespaceDescriptor.jsonTag}': #{exception_.message}")
 
 
-
-
-
-
-
-    # TODO: Remove these exports and require the impl module directly into test scope
-    createResourceString: implementation.createResourceString
-    checkValidDescriptorResolveOptions: implementation.checkValidDescriptorResolveOptions
-    checkValidDescriptorResolveResults: implementation.checkValidDescriptorResolveResults
-
-
-

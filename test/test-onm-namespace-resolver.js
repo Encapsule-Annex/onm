@@ -16,11 +16,13 @@ var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
 module.exports = describe("onm.NamespaceDescriptorResolver white box tests.", function() {
 
     var moduleUnderTest = null;
+    var moduleUnderTestImpl = null;
 
     before(function(done_) {
         testData.resetLuid();
         var loadModuleUnderTest = function() {
             moduleUnderTest = require('../lib/impl/onm-namespace-resolver');
+            moduleUnderTestImpl = require('../lib/impl/onm-namespace-resolver-impl');
         };
         assert.doesNotThrow(loadModuleUnderTest);
         done_();
@@ -42,14 +44,14 @@ module.exports = describe("onm.NamespaceDescriptorResolver white box tests.", fu
         assert.isFunction(moduleUnderTest.resolveNamespaceDescriptorCreate);
     });
 
-    it("Module should export function 'checkValidDescriptorResolveOptions'.", function() {
-        assert.property(moduleUnderTest, 'checkValidDescriptorResolveOptions');
-        assert.isFunction(moduleUnderTest.checkValidDescriptorResolveOptions);
+    it("Module impl should export function 'checkValidDescriptorResolveOptions'.", function() {
+        assert.property(moduleUnderTestImpl, 'checkValidDescriptorResolveOptions');
+        assert.isFunction(moduleUnderTestImpl.checkValidDescriptorResolveOptions);
     });
 
     it("Module should export function 'checkValidDescriptorResolveResults.", function() {
-        assert.property(moduleUnderTest, 'checkValidDescriptorResolveResults');
-        assert.isFunction(moduleUnderTest.checkValidDescriptorResolveResults);
+        assert.property(moduleUnderTestImpl, 'checkValidDescriptorResolveResults');
+        assert.isFunction(moduleUnderTestImpl.checkValidDescriptorResolveResults);
     });
 
     require('./test-onm-namespace-resolver.options');
