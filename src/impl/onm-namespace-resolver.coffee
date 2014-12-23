@@ -43,7 +43,57 @@ util = require('../../index').util
 resolveOpenNamespaceDescriptor = require('./onm-namespace-resolver.open').resolveOpenNamespaceDescriptor
 
 
+# Helpers
+
+namespaceDescriptorFromContext = (context_) -> context_.options.targetNamespaceDescriptor
+
+
+# Internal visitor stages
+
+dereferenceNamedObject = (visitorInterface_, context_) ->
+    visitorInterface_.dereferenceNamedObject context_
+
+
+visitNamespaceProperties = (visitorInterface_, context_) ->
+    namespaceDescriptor = namespaceDescriptorFromContext context_
+    if (namespaceDescriptor.namespaceType == 'extensionPoint') or (not (visitorInterface_.visitNamespaceProperty? and visitorInterface_.visitNamespaceProperty))
+        return true
+    true
+
+visitNamespaceChildren = (visitorInterface_, context_) ->
+    if not (visitorInterface_.visitNamespaceChild? and visitorInterface_.visitNamespaceChild)
+        return true
+    true
+
+visitRemainingData = (visitorInterface_, context_) ->
+    if not (visitorInterface_.visitDataProperty? and visitorInterface_.visitDataProperty)
+        return true
+    true
+
+finalizeNamedObject = (visitorInterface_, context_) ->
+    visitorInterface_.finalizeNamedObject? and visitorInterface_.finalizeNamedObject and visitorInterface_.finalizeNamedObject(context_) or true
+
+
 module.exports =
+
+
+    # ==============================================================================
+    resolveNamespaceDescriptor: (visitorInterface_, context_) ->
+        try
+            if not (visitorInterface_? and visitorInterface_)
+                throw new Error "Missing required visitor interface in-parameter."
+            result = true
+            result = result and dereferenceNamedObject(visitorInterface_, context_)
+            result = result and visitNamespaceProperties(visitorInterface_, context_)
+            result = result and visitNamespaceChildren(visitorInterface_, context_)
+            result = result and visitRemainingData(visitorInterface_, context_)
+            result = result and finalizeNamedObject(visitorInterface_, context_)
+            result
+        catch exception_
+            message = "resolveNamespaceDescriptor failed: #{exception_.message}"
+            throw new Error message
+
+
     # ==============================================================================
     resolveNamespaceDescriptorOpen: (options_) ->
         try
@@ -93,7 +143,8 @@ module.exports =
 
             # record the namespace's assigned, or effective, key value
             resolveResults.namespaceEffectiveKey = effectiveKeyValue? and effectiveKeyValue and
-                effectiveKeyValue.length and effectiveKeyValue or throw new Error "INTERNAL ERROR deriving namespace effective key value."
+                effectiveKeyValue.length and effectiveKeyValue or
+                throw new Error "INTERNAL ERROR deriving namespace effective key value."
 
             # create the namespace
             resolveResults.namespaceDataReference = options_.parentDataReference[effectiveKeyValue] = {}
