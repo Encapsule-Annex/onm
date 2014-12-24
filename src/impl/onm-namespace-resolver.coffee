@@ -37,12 +37,17 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 namespaceResolverCore = require('./onm-namespace-resolver-core')
-namespaceResolverOpenPolicy = require('./onm-namespace-resolver-open-policy')
-namespaceResolverCreatePolicy = require('./onm-namespace-resolver-create-policy')
+openPolicyBinding = require('./onm-namespace-resolver-open-policy')
+createPolicyBinding = require('./onm-namespace-resolver-create-policy')
 
 module.exports =
-    resolveNamespaceDescriptorOpen: (options_) -> namespaceResolverCore.resolve namespaceResolverOpenPolicy, { options: options_ }
-    resolveNamespaceDescriptorCreate: (options_) -> namespaceResolverCore.resolve namespaceResolverCreatePolicy, { options: options_ }
+    resolveNamespaceDescriptorOpen: (options_) ->
+        namespaceResolverCore.resolve openPolicyBinding, { options: options_ }
+        options_.resolveResults
+
+    resolveNamespaceDescriptorCreate: (options_) ->
+        namespaceResolverCore.resolve createPolicyBinding, { options: options_ }
+        options_.resolveResults
         
 
 # legacy

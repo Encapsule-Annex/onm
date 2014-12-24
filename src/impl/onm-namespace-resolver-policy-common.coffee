@@ -36,41 +36,10 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-policyCommon = require('./onm-namespace-resolver-policy-common')
-
 module.exports =
 
-    ### open existing namespace policy implementation
-    - open existing namespace
-    - throw if namespace does not exist
-    - write declared property values specified in caller-provided data
-    - visit declared child namespaces and queue deferred resolves based on caller-provided data only
-    - overlay namespace data with remaining, caller-provided properties
-    ###
-
-    policyName: 'open existing namespace'
-
-    prepareInputContext: (context_) ->
-        policyCommon.initializeResolveResults context_
-        true
-
-    dereferenceNamedObject: (context_) ->
-        descriptor = context_.options.targetNamespaceDescriptor
-        context_.resolveResults.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or context_.options.targetNamespaceKey
-        context_.resolveResults.namespaceDataReference = options_.parentDataReference[effectiveKey]
-        if not (resolveResults.namespaceDataReference? and resolveResults.namespaceDataReference)
-            message = "Failed to open existing named object '#{effectiveKey}' for data model path '#{descriptor.path}'."
-            throw new Error message
-        true
-
-    processNamespaceProperty: (name_, declaration_, context_) ->
-        true
-
-    processSubnamespace: (descriptor_, context_) ->
-        true
-
-    finalizeOutputContext: (context_) ->
-        true
-
-
-
+    initializeResolveResults: (context_) ->
+        context_.resolveResults =
+            namespaceEffectiveKey: null
+            namespaceDataReference: null
+            pendingResolves: []
