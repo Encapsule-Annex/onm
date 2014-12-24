@@ -36,6 +36,16 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+namespaceResolverCore = require('./onm-namespace-resolver-core')
+namespaceResolverOpenPolicy = require('./onm-namespace-resolver-open-policy')
+namespaceResolverCreatePolicy = require('./onm-namespace-resolver-create-policy')
+
+module.exports =
+    resolveNamespaceDescriptorOpen: (options_) -> namespaceResolverCore.resolve namespaceResolverOpenPolicy, { options: options_ }
+    resolveNamespaceDescriptorCreate: (options_) -> namespaceResolverCore.resolve namespaceResolverCreatePolicy, { options: options_ }
+        
+
+# legacy
 
 implementation = require './onm-namespace-resolver-impl'
 util = require('../../index').util
@@ -43,82 +53,9 @@ util = require('../../index').util
 resolveOpenNamespaceDescriptor = require('./onm-namespace-resolver.open').resolveOpenNamespaceDescriptor
 
 
-# Helpers
-helpers = {}
-
-# ==============================================================================
-helpers.getNamespaceDescriptorFromContext = (context_) ->
-    context_.options.targetNamespaceDescriptor
 
 
-# Namespace resolver visitor implementation.
-visitor = {}
-
-# ==============================================================================
-visitor.prepareInputContext = (visitorInterface_, context_) ->
-    visitorInterface_.prepareInputContext context_
-
-# ==============================================================================
-visitor.dereferenceNamedObject = (visitorInterface_, context_) ->
-   visitorInterface_.dereferenceNamedObject context_
-
-# ==============================================================================
-visitor.visitNamespaceProperties = (visitorInterface_, context_) ->
-    if not (visitorInterface_.processNamespaceProperty? and visitorInterface_.processNamespaceProperty) then return true
-    namespaceDescriptor = helpers.getNamespaceDescriptorFromContext context_
-    if (namespaceDescriptor.namespaceType == 'extensionPoint') then return true
-    result = true
-    propertiesDeclaration = namespaceDescriptor.namespaceModelPropertiesDeclaration
-    if propertiesDeclaration.userImmutable? and propertiesDeclaration.userImmutable
-        for propertyName, propertyDeclaration of propertiesDeclaration.userImmutable
-            if not result then break
-            result = visitorInterface_.processNamespaceProperty propertyName, propertyDeclaration, context_
-    if propertiesDeclaration.userMutable? and propertiesDeclaration.userMutable
-        for propertyName, propertyDeclaration of propertiesDeclaration.userMutable
-            if not result then break
-            result = visitorInterface_.processNamespaceProperty propertyName, propertyDeclaration, context_
-    result
-
-# ==============================================================================
-visitor.visitNamespaceChildren = (visitorInterface_, context_) ->
-    if not (visitorInterface_.processSubnamespaceChild? and visitorInterface_.processSubnamespaceChild) then return true
-    result = true
-    namespaceDescriptor = helpers.getNamespaceDescriptorFromContext context_
-    for childNamespaceDescriptor of namespaceDescriptor.children
-        if not result then break
-        result = visitorInterface_.processSubnamespace(childNamespaceDescriptor, context_)
-    result
-
-# ==============================================================================
-visitor.finalizeOutputContext = (visitorInterface_, context_) ->
-    visitorInterface_.finalizeOutputContext? and visitorInterface_.finalizeOutputContext and visitorInterface_.finalizeOutputContext(context_) or true
-
-
-
-module.exports =
-
-
-    # ==============================================================================
-    resolveNamespaceDescriptor: (visitorInterface_, context_) ->
-        state = '0:4::dereference'
-
-        try
-            if not (visitorInterface_? and visitorInterface_) then throw new Error "Missing required visitor interface in-parameter."
-            result = visitor.dereferenceNamedObject(visitorInterface_, context_)
-            state = '1:4::visitNamespaceProperties'
-            result = result and visitor.visitNamespaceProperties(visitorInterface_, context_)
-            state = '2:4::visitNamespaceChildren'
-            result = result and visitor.visitNamespaceChildren(visitorInterface_, context_)
-            state = '3:4::visitDataProperties'
-            result = result and visitor.visitRemainingData(visitorInterface_, context_)
-            state = '4:4::finalizeNamedObject'
-            result = result and visitor.finalizeNamedObject(visitorInterface_, context_)
-            result
-
-        catch exception_
-            message = "resolveNamespaceDescriptor failed in state '#{state}': #{exception_.message}"
-            throw new Error message
-
+oldImplementation =
 
     # ==============================================================================
     resolveNamespaceDescriptorOpen: (options_) ->

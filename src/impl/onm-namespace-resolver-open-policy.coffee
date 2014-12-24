@@ -43,7 +43,7 @@ module.exports =
     - throw if namespace does not exist
     - write declared property values specified in caller-provided data
     - visit declared child namespaces and queue deferred resolves based on caller-provided data only
-    - overlay namespace data with remaining, unmodeled caller-provided properties
+    - overlay namespace data with remaining, caller-provided properties
     ###
 
     policyName: 'open existing namespace'

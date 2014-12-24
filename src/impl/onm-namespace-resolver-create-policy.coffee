@@ -45,7 +45,7 @@ module.exports =
       1. caller-provided value
       2. declared default value
     - visit declared subnamespaces and queue deferred resolves based on data model and caller-supplied data
-    - overlay namespace data with remaining, unmodeled, caller-provided properties
+    - overlay namespace data with remaining, caller-provided properties
     ###
 
     policyName: 'create new namespace'
