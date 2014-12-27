@@ -43,3 +43,4 @@ module.exports =
             namespaceEffectiveKey: null
             namespaceDataReference: null
             pendingResolves: []
+            pendingNamespaceDescriptors: [] # deprecated

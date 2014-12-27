@@ -50,12 +50,15 @@ module.exports =
     - overlay namespace data with remaining, caller-provided properties
     ###
 
+    # ----------------------------------------------------------------------------
     policyName: 'create new namespace'
 
-    prepareInputContext: (context_) ->
+    # ----------------------------------------------------------------------------
+    initializeContext: (context_) ->
         policyCommon.initializeResolveResults context_
         true
 
+    # ----------------------------------------------------------------------------
     dereferenceNamedObject: (context_) ->
         descriptor = context_.options.targetNamespaceDescriptor
         resolveResults = context_.resolveResults
@@ -69,6 +72,7 @@ module.exports =
         resolveResults.namespaceDataReference = context_.options.parentDataReference[effectiveKey] = {}
         true
 
+    # ----------------------------------------------------------------------------
     processNamespaceProperty: (name_, declaration_, context_) ->
         value = context_.options.propertyAssignmentObject[name_]
         if value? and value
@@ -82,11 +86,15 @@ module.exports =
         context_.resolveResults.namespaceDataReference[name_] = value
         true
 
+    # ----------------------------------------------------------------------------
     processSubnamespace: (descriptor_, context_) ->
         true
 
-    finalizeOutputContext: (context_) ->
+    # ----------------------------------------------------------------------------
+    processPropertyOptions: (context_) ->
         true
 
-
+    # ----------------------------------------------------------------------------
+    finalizeContext: (context_) ->
+        true
 

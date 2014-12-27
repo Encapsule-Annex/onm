@@ -45,19 +45,28 @@ namespaceResolver.resolve = (visitorInterface_, context_) ->
     state = '0:0::start'
     try
         result = true
-        state = '0:5::prepareInputContext'
-        result = result and namespaceResolver.visitor.prepareInputContext(visitorInterface_, context_)
+
+        # ----------------------------------------------------------------------------
+        state = '0:5::prepareContext'
+        result = result and namespaceResolver.visitor.initializeContext(visitorInterface_, context_)
+        # ----------------------------------------------------------------------------
         state = '1:5::dereferenceNamedObject'
         result = result and namespaceResolver.visitor.dereferenceNamedObject(visitorInterface_, context_)
+        # ----------------------------------------------------------------------------
         state = '2:5::visitNamespaceProperties'
         result = result and namespaceResolver.visitor.visitNamespaceProperties(visitorInterface_, context_)
+        # ----------------------------------------------------------------------------
         state = '3:5::visitNamespaceChildren'
         result = result and namespaceResolver.visitor.visitNamespaceChildren(visitorInterface_, context_)
-        state = '4:5::visitDataProperties'
-        result = result and namespaceResolver.visitor.visitRemainingData(visitorInterface_, context_)
-        state = '5:5::finalizeNamedObject'
-        result = result and namespaceResolver.visitor.finalizeNamedObject(visitorInterface_, context_)
+        # ----------------------------------------------------------------------------
+        state = '4:5::processPropertyOptions'
+        result = result and namespaceResolver.visitor.processPropertyOptions(visitorInterface_, context_)
+        # ----------------------------------------------------------------------------
+        state = '5:5::finalizeContext'
+        result = result and namespaceResolver.visitor.finalizeContext(visitorInterface_, context_)
+
         result
+
     catch exception_
         message = "resolveNamespaceDescriptor failed in state '#{state}' while executing policy '#{visitorInterface_.policyName}': #{exception_.message}"
         throw new Error message
@@ -67,8 +76,8 @@ namespaceResolver.helpers.getNamespaceDescriptorFromContext = (context_) ->
     context_.options.targetNamespaceDescriptor
 
 # ==============================================================================
-namespaceResolver.visitor.prepareInputContext = (visitorInterface_, context_) ->
-    visitorInterface_.prepareInputContext context_
+namespaceResolver.visitor.initializeContext = (visitorInterface_, context_) ->
+    visitorInterface_.initializeContext context_
 
 # ==============================================================================
 namespaceResolver.visitor.dereferenceNamedObject = (visitorInterface_, context_) ->
@@ -96,14 +105,18 @@ namespaceResolver.visitor.visitNamespaceChildren = (visitorInterface_, context_)
     if not (visitorInterface_.processSubnamespace? and visitorInterface_.processSubnamespace) then return true
     result = true
     namespaceDescriptor = namespaceResolver.helpers.getNamespaceDescriptorFromContext context_
-    for childNamespaceDescriptor of namespaceDescriptor.children
+    for childNamespaceDescriptor in namespaceDescriptor.children
         if not result then break
         result = visitorInterface_.processSubnamespace(childNamespaceDescriptor, context_)
     result
 
 # ==============================================================================
-namespaceResolver.visitor.finalizeOutputContext = (visitorInterface_, context_) ->
-    visitorInterface_.finalizeOutputContext? and visitorInterface_.finalizeOutputContext and visitorInterface_.finalizeOutputContext(context_) or true
+namespaceResolver.visitor.processPropertyOptions = (visitorInterface_, context_) ->
+    visitorInterface_.processPropertyOptions? and visitorInterface_.processPropertyOptions and visitorInterface_.processPropertyOptions(context_) or true
+
+# ==============================================================================
+namespaceResolver.visitor.finalizeContext = (visitorInterface_, context_) ->
+    visitorInterface_.finalizeContext? and visitorInterface_.finalizeContext and visitorInterface_.finalizeContext(context_) or true
 
 
 

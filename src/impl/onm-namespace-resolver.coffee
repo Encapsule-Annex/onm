@@ -42,12 +42,14 @@ createPolicyBinding = require('./onm-namespace-resolver-create-policy')
 
 module.exports =
     resolveNamespaceDescriptorOpen: (options_) ->
-        namespaceResolverCore.resolve openPolicyBinding, { options: options_ }
-        options_.resolveResults
+        context = { options: options_ }
+        namespaceResolverCore.resolve openPolicyBinding, context
+        context.resolveResults
 
     resolveNamespaceDescriptorCreate: (options_) ->
-        namespaceResolverCore.resolve createPolicyBinding, { options: options_ }
-        options_.resolveResults
+        context = { options: options_ }
+        namespaceResolverCore.resolve createPolicyBinding, context
+        context.resolveResults
         
 
 # legacy
