@@ -58,14 +58,15 @@ module.exports =
 
     dereferenceNamedObject: (context_) ->
         descriptor = context_.options.targetNamespaceDescriptor
-        context_.resolveResults.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or context_.options.targetNamespaceKey
-        context_.resolveResults.namespaceDataReference = options_.parentDataReference[effectiveKey]
+        resolveResults = context_.resolveResults
+        resolveResults.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or context_.options.targetNamespaceKey
+        resolveResults.namespaceDataReference = context_.options.parentDataReference[effectiveKey]
         if resolveResults.namespaceDataReference? and resolveResults.namespaceDataReference
             message = "Cannot re-create named object '#{effectiveKey}' for data model path '#{descriptor.path}'."
             throw new Error message
         if not (effectiveKey? and effectiveKey and effectiveKey.length > 0)
-            context_.resolveResults.namespaceEffectiveKey = effectiveKey = context_.options.semanticBindingsReference.setUniqueKey({});
-        context_.resolveResults.namespaceDataReference = options_.parentDataReference[effectiveKeyValue] = {}
+            resolveResults.namespaceEffectiveKey = effectiveKey = context_.options.semanticBindingsReference.setUniqueKey({});
+        resolveResults.namespaceDataReference = context_.options.parentDataReference[effectiveKey] = {}
         true
 
     processNamespaceProperty: (name_, declaration_, context_) ->

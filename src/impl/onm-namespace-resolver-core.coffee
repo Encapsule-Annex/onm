@@ -45,7 +45,9 @@ namespaceResolver.resolve = (visitorInterface_, context_) ->
     state = '0:0::start'
     try
         result = true
-        state = '1:5 ::dereferenceNamedObject'
+        state = '0:5::prepareInputContext'
+        result = result and namespaceResolver.visitor.prepareInputContext(visitorInterface_, context_)
+        state = '1:5::dereferenceNamedObject'
         result = result and namespaceResolver.visitor.dereferenceNamedObject(visitorInterface_, context_)
         state = '2:5::visitNamespaceProperties'
         result = result and namespaceResolver.visitor.visitNamespaceProperties(visitorInterface_, context_)
@@ -64,7 +66,6 @@ namespaceResolver.resolve = (visitorInterface_, context_) ->
 namespaceResolver.helpers.getNamespaceDescriptorFromContext = (context_) ->
     context_.options.targetNamespaceDescriptor
 
-
 # ==============================================================================
 namespaceResolver.visitor.prepareInputContext = (visitorInterface_, context_) ->
     visitorInterface_.prepareInputContext context_
@@ -76,7 +77,7 @@ namespaceResolver.visitor.dereferenceNamedObject = (visitorInterface_, context_)
 # ==============================================================================
 namespaceResolver.visitor.visitNamespaceProperties = (visitorInterface_, context_) ->
     if not (visitorInterface_.processNamespaceProperty? and visitorInterface_.processNamespaceProperty) then return true
-    namespaceDescriptor = helpers.getNamespaceDescriptorFromContext context_
+    namespaceDescriptor = namespaceResolver.helpers.getNamespaceDescriptorFromContext context_
     if (namespaceDescriptor.namespaceType == 'extensionPoint') then return true
     result = true
     propertiesDeclaration = namespaceDescriptor.namespaceModelPropertiesDeclaration
@@ -92,9 +93,9 @@ namespaceResolver.visitor.visitNamespaceProperties = (visitorInterface_, context
 
 # ==============================================================================
 namespaceResolver.visitor.visitNamespaceChildren = (visitorInterface_, context_) ->
-    if not (visitorInterface_.processSubnamespaceChild? and visitorInterface_.processSubnamespaceChild) then return true
+    if not (visitorInterface_.processSubnamespace? and visitorInterface_.processSubnamespace) then return true
     result = true
-    namespaceDescriptor = helpers.getNamespaceDescriptorFromContext context_
+    namespaceDescriptor = namespaceResolver.helpers.getNamespaceDescriptorFromContext context_
     for childNamespaceDescriptor of namespaceDescriptor.children
         if not result then break
         result = visitorInterface_.processSubnamespace(childNamespaceDescriptor, context_)
