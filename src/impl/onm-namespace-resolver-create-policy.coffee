@@ -54,44 +54,83 @@ module.exports =
     policyName: 'create new namespace'
 
     # ----------------------------------------------------------------------------
-    initializeContext: (context_) ->
-        policyCommon.initializeResolveResults context_
+    initializeContext: (context_, options_) ->
+        # Default initialize context_.input object from the specified options_ object.
+        policyCommon.initializeContextInput context_, options_
+        # Default initialize the context_.output object.
+        policyCommon.initializeContextOutput context_
         true
-
+ 
     # ----------------------------------------------------------------------------
     dereferenceNamedObject: (context_) ->
-        descriptor = context_.options.targetNamespaceDescriptor
-        resolveResults = context_.resolveResults
-        resolveResults.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or context_.options.targetNamespaceKey
-        resolveResults.namespaceDataReference = context_.options.parentDataReference[effectiveKey]
+        descriptor = context_.input.targetNamespaceDescriptor
+        resolveResults = context_.output
+        resolveResults.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or context_.input.targetNamespaceKey
+        resolveResults.namespaceDataReference = context_.input.parentDataReference[effectiveKey]
         if resolveResults.namespaceDataReference? and resolveResults.namespaceDataReference
             message = "Cannot re-create named object '#{effectiveKey}' for data model path '#{descriptor.path}'."
             throw new Error message
         if not (effectiveKey? and effectiveKey and effectiveKey.length > 0)
-            resolveResults.namespaceEffectiveKey = effectiveKey = context_.options.semanticBindingsReference.setUniqueKey({});
-        resolveResults.namespaceDataReference = context_.options.parentDataReference[effectiveKey] = {}
+            resolveResults.namespaceEffectiveKey = effectiveKey = context_.input.semanticBindingsReference.setUniqueKey({}); # FIX THIS (function call semantic should be simplified to 'create key' only)
+        resolveResults.namespaceDataReference = context_.input.parentDataReference[effectiveKey] = {}
         true
 
     # ----------------------------------------------------------------------------
     processNamespaceProperty: (name_, declaration_, context_) ->
-        value = context_.options.propertyAssignmentObject[name_]
+        value = context_.input.propertyAssignmentObject[name_]
         if value? and value
-            delete context_.options.propertyAssignmentObject[name_]
+            delete context_.input.propertyAssignmentObject[name_]
         else
             value = declaration_.defaultValue
             if not (value? and value)
                 value = declaration_.fnCreate? and declaration_.fnCreate and declaration_.fnCreate()
                 if not (value? and value)
                     throw new Error "Cannot deduce property value for assignment for name '#{name_}'"
-        context_.resolveResults.namespaceDataReference[name_] = value
+        context_.output.namespaceDataReference[name_] = value
         true
 
     # ----------------------------------------------------------------------------
     processSubnamespace: (descriptor_, context_) ->
+        propertyAssignmentObject = context_.input.propertyAssignmentObject
+        switch descriptor_.namespaceType
+            when 'component'
+                deleteKeyNames = []
+                for keyName, subcomponentPropertyAssignmentObject of propertyAssignmentObject
+                    deleteKeyNames.push keyName
+                    context_.output.pendingNamespaceDescriptors.push {
+                        parentDataReference: context_.output.namespaceDataReference
+                        targetNamespaceDescriptor: descriptor_
+                        targetNamespaceKey: keyName
+                        semanticBindingsReference: context_.input.semanticBindingsReference
+                        propertyAssignmentObject: subcomponentPropertyAssignmentObject? and subcomponentPropertyAssignmentObject or {}
+                    }
+                while deleteKeyNames.length
+                    delete context_.input.propertyAssignmentObject[deleteKeyNames.pop()]
+                break
+            else
+                subcomponentPropertyAssignmentObject = propertyAssignmentObject[descriptor_.jsonTag]
+                if subcomponentPropertyAssignmentObject? and subcomponentPropertyAssignmentObject
+                    delete context_.input.propertyAssignmentObject[childNamespaceDescriptor.jsonTag]
+                else
+                    subcomponentPropertyAssignmentObject = {}
+                context_.output.pendingNamespaceDescriptors.push {
+                    parentDataReference: context_.output.namespaceDataReference
+                    targetNamespaceDescriptor: descriptor_
+                    targetNamespaceKey: ''
+                    semanticBindingsReference: context_.input.semanticBindingsReference
+                    propertyAssignmentObject: subcomponentPropertyAssignmentObject
+                }
+                break
         true
 
     # ----------------------------------------------------------------------------
     processPropertyOptions: (context_) ->
+        deleteKeyNames = []
+        for propertyName, subObject of context_.input.propertyAssignmentObject
+            context_.output.namespaceDataReference[propertyName] = subObject
+            deleteKeyNames.push propertyName
+        while deleteKeyNames.length
+            delete context_.input.propertyAssignmentObject[deleteKeyNames.pop()]
         true
 
     # ----------------------------------------------------------------------------

@@ -50,15 +50,18 @@ module.exports =
 
     policyName: 'open existing namespace'
 
-    initializeContext: (context_) ->
-        policyCommon.initializeResolveResults context_
+    initializeContext: (context_, options_) ->
+        # Default initialize context_.input object from the specified options_ object.
+        policyCommon.initializeContextInput context_, options_
+        # Default initialize the context_.output object.
+        policyCommon.initializeContextOutput context_
         true
-
+ 
     dereferenceNamedObject: (context_) ->
-        descriptor = context_.options.targetNamespaceDescriptor
-        context_.resolveResults.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or context_.options.targetNamespaceKey
-        context_.resolveResults.namespaceDataReference = context_.options.parentDataReference[effectiveKey]
-        if not (context_.resolveResults.namespaceDataReference? and context_.resolveResults.namespaceDataReference)
+        descriptor = context_.input.targetNamespaceDescriptor
+        context_.output.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or context_.input.targetNamespaceKey
+        context_.output.namespaceDataReference = context_.input.parentDataReference[effectiveKey]
+        if not (context_.output.namespaceDataReference? and context_.output.namespaceDataReference)
             message = "Failed to open existing named object '#{effectiveKey}' for data model path '#{descriptor.path}'."
             throw new Error message
         true

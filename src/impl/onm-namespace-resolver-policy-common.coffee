@@ -36,11 +36,21 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+util = require('../lib-javascript')
+
 module.exports =
 
-    initializeResolveResults: (context_) ->
-        context_.resolveResults =
+    initializeContextInput: (context_, options_) ->
+        context_.input =
+            parentDataReference: options_.parentDataReference
+            targetNamespaceDescriptor: options_.targetNamespaceDescriptor
+            targetNamespaceKey: options_.targetNamespaceKey
+            semanticBindingsReference: options_.semanticBindingsReference
+            propertyAssignmentObject: options_.propertyAssignmentObject? and options_.propertyAssignmentObject and util.clone(options_.propertyAssignmentObject) or {}
+
+    initializeContextOutput: (context_) ->
+        context_.output =
             namespaceEffectiveKey: null
             namespaceDataReference: null
-            pendingResolves: []
-            pendingNamespaceDescriptors: [] # deprecated
+            pendingNamespaceDescriptors: [] # shorten name
+        

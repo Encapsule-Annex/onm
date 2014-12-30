@@ -41,31 +41,32 @@ namespaceResolver.helpers = {}
 namespaceResolver.visitor = {}
 
 # ==============================================================================
-namespaceResolver.resolve = (visitorInterface_, context_) ->
+namespaceResolver.resolve = (visitorInterface_, options_) ->
     state = '0:0::start'
     try
         result = true
+        context = { input: {}, output: {} }
 
         # ----------------------------------------------------------------------------
         state = '0:5::prepareContext'
-        result = result and namespaceResolver.visitor.initializeContext(visitorInterface_, context_)
+        result = result and namespaceResolver.visitor.initializeContext(visitorInterface_, context, options_)
         # ----------------------------------------------------------------------------
         state = '1:5::dereferenceNamedObject'
-        result = result and namespaceResolver.visitor.dereferenceNamedObject(visitorInterface_, context_)
+        result = result and namespaceResolver.visitor.dereferenceNamedObject(visitorInterface_, context)
         # ----------------------------------------------------------------------------
         state = '2:5::visitNamespaceProperties'
-        result = result and namespaceResolver.visitor.visitNamespaceProperties(visitorInterface_, context_)
+        result = result and namespaceResolver.visitor.visitNamespaceProperties(visitorInterface_, context)
         # ----------------------------------------------------------------------------
         state = '3:5::visitNamespaceChildren'
-        result = result and namespaceResolver.visitor.visitNamespaceChildren(visitorInterface_, context_)
+        result = result and namespaceResolver.visitor.visitNamespaceChildren(visitorInterface_, context)
         # ----------------------------------------------------------------------------
         state = '4:5::processPropertyOptions'
-        result = result and namespaceResolver.visitor.processPropertyOptions(visitorInterface_, context_)
+        result = result and namespaceResolver.visitor.processPropertyOptions(visitorInterface_, context)
         # ----------------------------------------------------------------------------
         state = '5:5::finalizeContext'
-        result = result and namespaceResolver.visitor.finalizeContext(visitorInterface_, context_)
+        result = result and namespaceResolver.visitor.finalizeContext(visitorInterface_, context)
 
-        result
+        context.output
 
     catch exception_
         message = "resolveNamespaceDescriptor failed in state '#{state}' while executing policy '#{visitorInterface_.policyName}': #{exception_.message}"
@@ -73,11 +74,11 @@ namespaceResolver.resolve = (visitorInterface_, context_) ->
 
 # ==============================================================================
 namespaceResolver.helpers.getNamespaceDescriptorFromContext = (context_) ->
-    context_.options.targetNamespaceDescriptor
+    context_.input.targetNamespaceDescriptor
 
 # ==============================================================================
-namespaceResolver.visitor.initializeContext = (visitorInterface_, context_) ->
-    visitorInterface_.initializeContext context_
+namespaceResolver.visitor.initializeContext = (visitorInterface_, context_, options_) ->
+    visitorInterface_.initializeContext context_, options_
 
 # ==============================================================================
 namespaceResolver.visitor.dereferenceNamedObject = (visitorInterface_, context_) ->
