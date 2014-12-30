@@ -18,15 +18,12 @@ module.exports = (grunt) ->
                     'lib/impl/onm-address-token-resolver-legacy.js': 'src/impl/onm-address-token-resolver-legacy.coffee'
 
                     'lib/impl/onm-component-resolver.js': 'src/impl/onm-component-resolver.coffee'
-                    'lib/impl/onm-namespace-resolver.js': 'src/impl/onm-namespace-resolver.coffee'
-                    'lib/impl/onm-namespace-resolver.open.js': 'src/impl/onm-namespace-resolver.open.coffee'
-                    'lib/impl/onm-namespace-resolver-impl.js': 'src/impl/onm-namespace-resolver-impl.coffee'
 
+                    'lib/impl/onm-namespace-resolver.js': 'src/impl/onm-namespace-resolver.coffee'
                     'lib/impl/onm-namespace-resolver-core.js': 'src/impl/onm-namespace-resolver-core.coffee'
                     'lib/impl/onm-namespace-resolver-policy-common.js': 'src/impl/onm-namespace-resolver-policy-common.coffee'
-
-                    'lib/impl/onm-namespace-resolver-open-policy.js': 'src/impl/onm-namespace-resolver-open-policy.coffee'
-                    'lib/impl/onm-namespace-resolver-create-policy.js': 'src/impl/onm-namespace-resolver-create-policy.coffee'
+                    'lib/impl/onm-namespace-resolver-policy-create.js': 'src/impl/onm-namespace-resolver-policy-create.coffee'
+                    'lib/impl/onm-namespace-resolver-policy-open.js': 'src/impl/onm-namespace-resolver-policy-open.coffee'
 
                     'lib/impl/onm-store-reifier.js': 'src/impl/onm-store-reifier.coffee'
                     'lib/lib-javascript.js': 'src/lib-javascript.coffee'

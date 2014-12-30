@@ -73,10 +73,6 @@ namespaceResolver.resolve = (visitorInterface_, options_) ->
         throw new Error message
 
 # ==============================================================================
-namespaceResolver.helpers.getNamespaceDescriptorFromContext = (context_) ->
-    context_.input.targetNamespaceDescriptor
-
-# ==============================================================================
 namespaceResolver.visitor.initializeContext = (visitorInterface_, context_, options_) ->
     visitorInterface_.initializeContext context_, options_
 
@@ -118,6 +114,80 @@ namespaceResolver.visitor.processPropertyOptions = (visitorInterface_, context_)
 # ==============================================================================
 namespaceResolver.visitor.finalizeContext = (visitorInterface_, context_) ->
     visitorInterface_.finalizeContext? and visitorInterface_.finalizeContext and visitorInterface_.finalizeContext(context_) or true
+
+
+
+# ==============================================================================
+namespaceResolver.helpers.getNamespaceDescriptorFromContext = (context_) ->
+    context_.input.targetNamespaceDescriptor
+
+
+# ==============================================================================
+namespaceResolver.helpers.checkValidDescriptorResolveOptions = (options_, isOpenResolve_) ->
+
+    if not (options_? and options_)
+        console.log("Missing options.")
+        return false
+
+    if not (options_.parentDataReference? and options_.parentDataReference)
+        console.log("Invalid parentDataReference.")
+        return false
+
+    if not (options_.targetNamespaceDescriptor? and options_.targetNamespaceDescriptor)
+        console.log("Invalid targetNamespaceDescriptor.")
+        return false
+
+    if not (options_.targetNamespaceDescriptor.jsonTag? and options_.targetNamespaceDescriptor.jsonTag)
+        console.log("Invalid targetNamespaceDescriptor.")
+        return false
+
+    if isOpenResolve_? and isOpenResolve_
+        return true
+
+    keyValid = true
+    if options_.targetNamespaceKey? and options_.targetNamespaceKey
+        keyValid = options_.targetNamespaceKey.length > 0 or false
+
+    if not keyValid
+        console.log("Invalid targetNamespaceKey.")
+        return false
+
+    if not (options_.semanticBindingsReference? and options_.semanticBindingsReference)
+        console.log("Invalid semanticBindingsReference.")
+        return false
+
+    if not (options_.propertyAssignmentObject? and options_.propertyAssignmentObject)
+        console.log("Invalid propertyAsssignmentObject.")
+        return false
+
+    true
+
+# ==============================================================================
+namespaceResolver.helpers.checkValidDescriptorResolveResults = (results_) ->
+    results_? and results_ and
+        results_.namespaceEffectiveKey? and results_.namespaceEffectiveKey and
+        results_.namespaceDataReference? and results_.namespaceDataReference and
+        results_.pendingNamespaceDescriptors? and results_.pendingNamespaceDescriptors and
+        Array.isArray(results_.pendingNamespaceDescriptors) and
+        true or false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
