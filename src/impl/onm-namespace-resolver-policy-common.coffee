@@ -40,6 +40,7 @@ util = require('../lib-javascript')
 
 module.exports =
 
+    # ----------------------------------------------------------------------------
     initializeContextInput: (context_, options_) ->
         context_.input =
             parentDataReference: options_.parentDataReference
@@ -48,9 +49,11 @@ module.exports =
             semanticBindingsReference: options_.semanticBindingsReference
             propertyAssignmentObject: options_.propertyAssignmentObject? and options_.propertyAssignmentObject and util.clone(options_.propertyAssignmentObject) or {}
 
+    # ----------------------------------------------------------------------------
     initializeContextOutput: (context_) ->
         context_.output =
             namespaceEffectiveKey: null
             namespaceDataReference: null
+            dataChangeEventJournal: []
             pendingNamespaceDescriptors: [] # shorten name
         

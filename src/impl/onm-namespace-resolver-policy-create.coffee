@@ -73,20 +73,44 @@ module.exports =
         if not (effectiveKey? and effectiveKey and effectiveKey.length > 0)
             resolveResults.namespaceEffectiveKey = effectiveKey = context_.input.semanticBindingsReference.setUniqueKey({}); # FIX THIS (function call semantic should be simplified to 'create key' only)
         resolveResults.namespaceDataReference = context_.input.parentDataReference[effectiveKey] = {}
+
+        resolveResults.dataChangeEventJournal.push
+            layer: 'namespace'
+            event: 'namespaceCreated'
+            eventData:
+                namespaceType: descriptor.namespaceType
+                jsonTag: descriptor.jsonTag
+                key: effectiveKey
+
+
         true
 
     # ----------------------------------------------------------------------------
     processNamespaceProperty: (name_, declaration_, context_) ->
         value = context_.input.propertyAssignmentObject[name_]
+        valueFromCallerData = false
         if value? and value
             delete context_.input.propertyAssignmentObject[name_]
+            valueFromCallerData = true
         else
             value = declaration_.defaultValue
             if not (value? and value)
                 value = declaration_.fnCreate? and declaration_.fnCreate and declaration_.fnCreate()
                 if not (value? and value)
                     throw new Error "Cannot deduce property value for assignment for name '#{name_}'"
-        context_.output.namespaceDataReference[name_] = value
+
+        output = context_.output
+        output.namespaceDataReference[name_] = value
+
+        output.dataChangeEventJournal.push
+            layer: 'namespace'
+            event: 'propertyInitialized'
+            eventData:
+                name: name_
+                model: true
+                value: JSON.stringify(value)
+                source: valueFromCallerData and 'data' or 'model'
+
         true
 
     # ----------------------------------------------------------------------------
@@ -126,14 +150,27 @@ module.exports =
     # ----------------------------------------------------------------------------
     processPropertyOptions: (context_) ->
         deleteKeyNames = []
-        for propertyName, subObject of context_.input.propertyAssignmentObject
-            context_.output.namespaceDataReference[propertyName] = subObject
+        input = context_.input
+        output = context_.output
+        for propertyName, subObject of input.propertyAssignmentObject
+            output.namespaceDataReference[propertyName] = subObject
             deleteKeyNames.push propertyName
+            output.dataChangeEventJournal.push
+                layer: 'namespace'
+                event: 'propertyInitialized'
+                eventData:
+                    name: propertyName
+                    model: false
+                    value: JSON.stringify(subObject)
+                    source: 'data'
+
         while deleteKeyNames.length
-            delete context_.input.propertyAssignmentObject[deleteKeyNames.pop()]
+            delete input.propertyAssignmentObject[deleteKeyNames.pop()]
+
         true
 
     # ----------------------------------------------------------------------------
     finalizeContext: (context_) ->
+        output = context_.output
         true
 

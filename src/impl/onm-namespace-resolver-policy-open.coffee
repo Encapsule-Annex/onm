@@ -50,6 +50,7 @@ module.exports =
 
     policyName: 'open existing namespace'
 
+    # ----------------------------------------------------------------------------
     initializeContext: (context_, options_) ->
         # Default initialize context_.input object from the specified options_ object.
         policyCommon.initializeContextInput context_, options_
@@ -57,6 +58,7 @@ module.exports =
         policyCommon.initializeContextOutput context_
         true
  
+    # ----------------------------------------------------------------------------
     dereferenceNamedObject: (context_) ->
         descriptor = context_.input.targetNamespaceDescriptor
         context_.output.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or context_.input.targetNamespaceKey
@@ -66,15 +68,19 @@ module.exports =
             throw new Error message
         true
 
+    # ----------------------------------------------------------------------------
     processNamespaceProperty: (name_, declaration_, context_) ->
         true
 
+    # ----------------------------------------------------------------------------
     processSubnamespace: (descriptor_, context_) ->
         true
 
+    # ----------------------------------------------------------------------------
     processPropertyOptions: (context_) ->
         true
 
+    # ----------------------------------------------------------------------------
     finalizeContext: (context_) ->
         true
 
