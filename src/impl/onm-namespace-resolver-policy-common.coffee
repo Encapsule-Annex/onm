@@ -41,13 +41,14 @@ util = require('../lib-javascript')
 module.exports =
 
     # ----------------------------------------------------------------------------
-    initializeContextInput: (context_, options_) ->
+    initializeContextInput: (context_) ->
         context_.input =
-            parentDataReference: options_.parentDataReference
-            targetNamespaceDescriptor: options_.targetNamespaceDescriptor
-            targetNamespaceKey: options_.targetNamespaceKey
-            semanticBindingsReference: options_.semanticBindingsReference
-            propertyAssignmentObject: options_.propertyAssignmentObject? and options_.propertyAssignmentObject and util.clone(options_.propertyAssignmentObject) or {}
+            parentDataReference: context_.input.parentDataReference
+            targetNamespaceDescriptor: context_.input.targetNamespaceDescriptor
+            targetNamespaceKey: context_.input.targetNamespaceKey
+            semanticBindingsReference: context_.input.semanticBindingsReference
+            propertyAssignmentObject: context_.input.propertyAssignmentObject? and context_.input.propertyAssignmentObject and util.clone(context_.input.propertyAssignmentObject) or {}
+        context_.input
 
     # ----------------------------------------------------------------------------
     initializeContextOutput: (context_) ->
@@ -56,4 +57,6 @@ module.exports =
             namespaceDataReference: null
             dataChangeEventJournal: []
             pendingNamespaceDescriptors: [] # shorten name
+        context_.output
+
         

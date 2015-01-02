@@ -54,9 +54,9 @@ module.exports =
     policyName: 'create new namespace'
 
     # ----------------------------------------------------------------------------
-    initializeContext: (context_, options_) ->
+    initializeContext: (context_) ->
         # Default initialize context_.input object from the specified options_ object.
-        policyCommon.initializeContextInput context_, options_
+        policyCommon.initializeContextInput context_
         # Default initialize the context_.output object.
         policyCommon.initializeContextOutput context_
         true
@@ -86,7 +86,7 @@ module.exports =
         true
 
     # ----------------------------------------------------------------------------
-    processNamespaceProperty: (name_, declaration_, context_) ->
+    processNamespaceProperty: (context_, name_, declaration_) ->
         value = context_.input.propertyAssignmentObject[name_]
         valueFromCallerData = false
         if value? and value
@@ -114,7 +114,7 @@ module.exports =
         true
 
     # ----------------------------------------------------------------------------
-    processSubnamespace: (descriptor_, context_) ->
+    processSubnamespace: (context_, descriptor_) ->
         propertyAssignmentObject = context_.input.propertyAssignmentObject
         switch descriptor_.namespaceType
             when 'component'

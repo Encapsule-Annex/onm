@@ -43,9 +43,28 @@ createPolicyBinding = require('./onm-namespace-resolver-policy-create')
 module.exports =
 
     # ==============================================================================
+    resolveNamespaceDescriptor: (options_) ->
+
+        # Resolve (i.e. open an existing or create a new) named object in the scope of a parent named object.
+
+        # Initialize the named object's properties, and analyze its subnamespaces (if any) based on the disposition of named object resolution.
+
+
+
+
+
+
+
+
+
+
+
+    # ==============================================================================
     resolveNamespaceDescriptorOpen: (options_) ->
-        namespaceResolverCore.resolve openPolicyBinding, options_
+        context = input: options_, output: {}
+        namespaceResolverCore.resolve openPolicyBinding, context
 
     # ==============================================================================
     resolveNamespaceDescriptorCreate: (options_) ->
-        namespaceResolverCore.resolve createPolicyBinding, options_
+        context = input: options_, output: {}
+        namespaceResolverCore.resolve createPolicyBinding, context
