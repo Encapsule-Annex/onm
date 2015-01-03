@@ -43,26 +43,14 @@ createPolicyBinding = require('./onm-namespace-resolver-policy-create')
 module.exports =
 
     # ==============================================================================
-    resolveNamespaceDescriptor: (options_) ->
-
-        # Resolve (i.e. open an existing or create a new) named object in the scope of a parent named object.
-
-        # Initialize the named object's properties, and analyze its subnamespaces (if any) based on the disposition of named object resolution.
-
-
-
-
-
-
-
-
-
-
-
-    # ==============================================================================
     resolveNamespaceDescriptorOpen: (options_) ->
         context = input: options_, output: {}
-        namespaceResolverCore.resolve openPolicyBinding, context
+        output = namespaceResolverCore.resolve openPolicyBinding, context
+        if not (output.namespaceDataReference? and output.namespaceDataReference)
+            message = "Failed to open existing named object for data model path '#{options_.input.targetNamespaceDescriptor.path}'."
+            throw new Error message
+        output
+
 
     # ==============================================================================
     resolveNamespaceDescriptorCreate: (options_) ->

@@ -63,9 +63,6 @@ module.exports =
         descriptor = context_.input.targetNamespaceDescriptor
         context_.output.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or context_.input.targetNamespaceKey
         context_.output.namespaceDataReference = context_.input.parentDataReference[effectiveKey]
-        if not (context_.output.namespaceDataReference? and context_.output.namespaceDataReference)
-            message = "Failed to open existing named object '#{effectiveKey}' for data model path '#{descriptor.path}'."
-            throw new Error message
         true
 
     # ----------------------------------------------------------------------------

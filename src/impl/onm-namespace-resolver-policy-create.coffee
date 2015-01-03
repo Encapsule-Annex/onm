@@ -127,6 +127,7 @@ module.exports =
                         targetNamespaceKey: keyName
                         semanticBindingsReference: context_.input.semanticBindingsReference
                         propertyAssignmentObject: subcomponentPropertyAssignmentObject? and subcomponentPropertyAssignmentObject or {}
+                        policyBinding: 'create'
                     }
                 while deleteKeyNames.length
                     delete context_.input.propertyAssignmentObject[deleteKeyNames.pop()]
@@ -143,6 +144,7 @@ module.exports =
                     targetNamespaceKey: ''
                     semanticBindingsReference: context_.input.semanticBindingsReference
                     propertyAssignmentObject: subcomponentPropertyAssignmentObject
+                    policyBinding: 'create'
                 }
                 break
         true
