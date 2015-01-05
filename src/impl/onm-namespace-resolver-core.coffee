@@ -35,6 +35,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 #
+util = require('../lib-javascript')
 
 module.exports = namespaceResolver = {}
 namespaceResolver.helpers = {}
@@ -73,6 +74,7 @@ namespaceResolver.resolve = (visitorInterface_, context_) ->
 
 # ==============================================================================
 namespaceResolver.visitor.initializeContext = (visitorInterface_, context_) ->
+    namespaceResolver.helpers.initializeContextObject context_
     visitorInterface_.initializeContext context_
 
 # ==============================================================================
@@ -113,6 +115,25 @@ namespaceResolver.visitor.processPropertyOptions = (visitorInterface_, context_)
 # ==============================================================================
 namespaceResolver.visitor.finalizeContext = (visitorInterface_, context_) ->
     visitorInterface_.finalizeContext? and visitorInterface_.finalizeContext and visitorInterface_.finalizeContext(context_) or true
+
+# ==============================================================================
+namespaceResolver.helpers.initializeContextObject = (context_) ->
+
+    context_.input =
+        parentDataReference: context_.input.parentDataReference
+        targetNamespaceDescriptor: context_.input.targetNamespaceDescriptor
+        targetNamespaceKey: context_.input.targetNamespaceKey
+        semanticBindingsReference: context_.input.semanticBindingsReference
+        propertyAssignmentObject: context_.input.propertyAssignmentObject? and context_.input.propertyAssignmentObject and
+            util.clone(context_.input.propertyAssignmentObject) or {}
+
+    context_.output =
+        namespaceEffectiveKey: null
+        namespaceDataReference: null
+        dataChangeEventJournal: []
+        pendingNamespaceDescriptors: [] # shorten name
+
+    context_
 
 # ==============================================================================
 namespaceResolver.helpers.getNamespaceDescriptorFromContext = (context_) ->
@@ -166,24 +187,6 @@ namespaceResolver.helpers.checkValidDescriptorResolveResults = (results_) ->
         results_.pendingNamespaceDescriptors? and results_.pendingNamespaceDescriptors and
         Array.isArray(results_.pendingNamespaceDescriptors) and
         true or false
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

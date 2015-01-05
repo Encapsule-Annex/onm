@@ -36,27 +36,6 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-util = require('../lib-javascript')
 
-module.exports =
-
-    # ----------------------------------------------------------------------------
-    initializeContextInput: (context_) ->
-        context_.input =
-            parentDataReference: context_.input.parentDataReference
-            targetNamespaceDescriptor: context_.input.targetNamespaceDescriptor
-            targetNamespaceKey: context_.input.targetNamespaceKey
-            semanticBindingsReference: context_.input.semanticBindingsReference
-            propertyAssignmentObject: context_.input.propertyAssignmentObject? and context_.input.propertyAssignmentObject and util.clone(context_.input.propertyAssignmentObject) or {}
-        context_.input
-
-    # ----------------------------------------------------------------------------
-    initializeContextOutput: (context_) ->
-        context_.output =
-            namespaceEffectiveKey: null
-            namespaceDataReference: null
-            dataChangeEventJournal: []
-            pendingNamespaceDescriptors: [] # shorten name
-        context_.output
 
         

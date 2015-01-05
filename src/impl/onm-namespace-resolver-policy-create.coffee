@@ -55,10 +55,6 @@ module.exports =
 
     # ----------------------------------------------------------------------------
     initializeContext: (context_) ->
-        # Default initialize context_.input object from the specified options_ object.
-        policyCommon.initializeContextInput context_
-        # Default initialize the context_.output object.
-        policyCommon.initializeContextOutput context_
         true
  
     # ----------------------------------------------------------------------------
