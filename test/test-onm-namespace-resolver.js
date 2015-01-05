@@ -59,10 +59,6 @@ module.exports = describe("onm.NamespaceDescriptorResolver white box tests.", fu
             assert.isObject(moduleUnderTestImpl.visitor);
         });
         describe("Verify the 'visitor' namespace exports.", function() {
-            it("'visitor' should export function 'initializeContext'.", function() {
-                assert.property(moduleUnderTestImpl.visitor, 'initializeContext');
-                assert.isFunction(moduleUnderTestImpl.visitor.initializeContext);
-            });
             it("'visitor' should export function 'dereferenceNamedObject'.", function() {
                 assert.property(moduleUnderTestImpl.visitor, 'dereferenceNamedObject');
                 assert.isFunction(moduleUnderTestImpl.visitor.dereferenceNamedObject);

@@ -54,10 +54,6 @@ module.exports =
     policyName: 'create new namespace'
 
     # ----------------------------------------------------------------------------
-    initializeContext: (context_) ->
-        true
- 
-    # ----------------------------------------------------------------------------
     dereferenceNamedObject: (context_) ->
         descriptor = context_.input.targetNamespaceDescriptor
         resolveResults = context_.output

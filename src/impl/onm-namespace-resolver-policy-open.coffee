@@ -51,10 +51,6 @@ module.exports =
     policyName: 'open existing namespace'
 
     # ----------------------------------------------------------------------------
-    initializeContext: (context_) ->
-        true
- 
-    # ----------------------------------------------------------------------------
     dereferenceNamedObject: (context_) ->
         descriptor = context_.input.targetNamespaceDescriptor
         context_.output.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or context_.input.targetNamespaceKey

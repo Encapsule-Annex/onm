@@ -3,7 +3,7 @@
 
 The MIT License (MIT)
 
-Copyright (c) 2014 Encapsule Project
+Copyright (c) 2015 Encapsule Project
   
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -43,13 +43,14 @@ namespaceResolver.visitor = {}
 
 # ==============================================================================
 namespaceResolver.resolve = (visitorInterface_, context_) ->
-    state = '0:0::start'
+    state = 'start'
     try
         result = true
 
         # ----------------------------------------------------------------------------
-        state = '0:5::prepareContext'
-        result = result and namespaceResolver.visitor.initializeContext visitorInterface_, context_
+        state = 'prepareContext'
+        namespaceResolver.helpers.initializeContextObject context_
+
         # ----------------------------------------------------------------------------
         state = '1:5::dereferenceNamedObject'
         result = result and namespaceResolver.visitor.dereferenceNamedObject visitorInterface_, context_
@@ -71,11 +72,6 @@ namespaceResolver.resolve = (visitorInterface_, context_) ->
     catch exception_
         message = "resolveNamespaceDescriptor failed in state '#{state}' while executing policy '#{visitorInterface_.policyName}': #{exception_.message}"
         throw new Error message
-
-# ==============================================================================
-namespaceResolver.visitor.initializeContext = (visitorInterface_, context_) ->
-    namespaceResolver.helpers.initializeContextObject context_
-    visitorInterface_.initializeContext context_
 
 # ==============================================================================
 namespaceResolver.visitor.dereferenceNamedObject = (visitorInterface_, context_) ->
