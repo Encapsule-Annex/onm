@@ -114,12 +114,9 @@ namespaceResolver.visitor.processPropertyOptions = (visitorInterface_, context_)
 namespaceResolver.visitor.finalizeContext = (visitorInterface_, context_) ->
     visitorInterface_.finalizeContext? and visitorInterface_.finalizeContext and visitorInterface_.finalizeContext(context_) or true
 
-
-
 # ==============================================================================
 namespaceResolver.helpers.getNamespaceDescriptorFromContext = (context_) ->
     context_.input.targetNamespaceDescriptor
-
 
 # ==============================================================================
 namespaceResolver.helpers.checkValidDescriptorResolveOptions = (options_, isOpenResolve_) ->
