@@ -41,8 +41,14 @@ module.exports = namespaceResolver = {}
 namespaceResolver.helpers = {}
 namespaceResolver.visitor = {}
 
+visitorInterfaces =
+    open: require('./onm-namespace-resolver-policy-open')
+    create: require('./onm-namespace-resolver-policy-create')
+
+
+
 # ==============================================================================
-namespaceResolver.resolve = (visitorInterface_, context_) ->
+namespaceResolver.resolve = (context_) ->
     state = 'start'
     try
         result = true
@@ -54,24 +60,30 @@ namespaceResolver.resolve = (visitorInterface_, context_) ->
         # ----------------------------------------------------------------------------
         state = 'dereferenceNamedObject'
         result = result and namespaceResolver.visitor.dereferenceNamedObject context_
+        selectedVisitorInterface = visitorInterfaces[context_.output.resolutionStrategy]
+        if not (selectedVisitorInterface? and selectedVisitorInterface)
+            throw new Error "Internal error determining named object property initialization strategy."
 
         # ----------------------------------------------------------------------------
-        state = '2:5::visitNamespaceProperties'
-        result = result and namespaceResolver.visitor.visitNamespaceProperties visitorInterface_, context_
+        state = 'visitNamespaceProperties'
+        result = result and namespaceResolver.visitor.visitNamespaceProperties selectedVisitorInterface, context_
+
         # ----------------------------------------------------------------------------
-        state = '3:5::visitNamespaceChildren'
-        result = result and namespaceResolver.visitor.visitNamespaceChildren visitorInterface_, context_
+        state = 'visitNamespaceChildren'
+        result = result and namespaceResolver.visitor.visitNamespaceChildren selectedVisitorInterface, context_
+
         # ----------------------------------------------------------------------------
-        state = '4:5::processPropertyOptions'
-        result = result and namespaceResolver.visitor.processPropertyOptions visitorInterface_, context_
+        state = 'processPropertyOptions'
+        result = result and namespaceResolver.visitor.processPropertyOptions selectedVisitorInterface, context_
+
         # ----------------------------------------------------------------------------
-        state = '5:5::finalizeContext'
-        result = result and namespaceResolver.visitor.finalizeContext visitorInterface_, context_
+        state = 'finalizeContext'
+        result = result and namespaceResolver.visitor.finalizeContext selectedVisitorInterface, context_
 
         context_.output
 
     catch exception_
-        message = "resolveNamespaceDescriptor failed in state '#{state}' while executing policy '#{visitorInterface_.policyName}': #{exception_.message}"
+        message = "resolveNamespaceDescriptor failed in state '#{state}' while executing policy '#{selectedVisitorInterface.policyName}': #{exception_.message}"
         throw new Error message
 
 # ==============================================================================

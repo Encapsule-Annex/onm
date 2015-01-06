@@ -3,7 +3,7 @@
 
 The MIT License (MIT)
 
-Copyright (c) 2014 Encapsule Project
+Copyright (c) 2015 Encapsule Project
   
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,24 +37,18 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 namespaceResolverCore = require('./onm-namespace-resolver-core')
-openPolicyBinding = require('./onm-namespace-resolver-policy-open')
-createPolicyBinding = require('./onm-namespace-resolver-policy-create')
 
 module.exports =
+
 
     # ==============================================================================
     resolveNamespaceDescriptorOpen: (options_) ->
         context = input: options_, output: {}
         context.input.strategy = 'open'
-        output = namespaceResolverCore.resolve openPolicyBinding, context
-        if not (output.namespaceDataReference? and output.namespaceDataReference)
-            message = "Failed to open existing named object for data model path '#{options_.input.targetNamespaceDescriptor.path}'."
-            throw new Error message
-        output
-
+        namespaceResolverCore.resolve context
 
     # ==============================================================================
     resolveNamespaceDescriptorCreate: (options_) ->
         context = input: options_, output: {}
         context.input.strategy = 'create'
-        namespaceResolverCore.resolve createPolicyBinding, context
+        namespaceResolverCore.resolve context
