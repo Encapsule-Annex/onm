@@ -44,6 +44,8 @@ module.exports = describe("onm.NamespaceDescriptorResolver white box tests.", fu
         assert.isFunction(moduleUnderTest.resolveNamespaceDescriptorCreate);
     });
 
+    /*
+
     describe("Verify the export signature of onm-namespace-resolver-core module.", function() {
         it("Module implementation should export an object.", function() {
             assert.isNotNull(moduleUnderTestImpl);
@@ -59,10 +61,6 @@ module.exports = describe("onm.NamespaceDescriptorResolver white box tests.", fu
             assert.isObject(moduleUnderTestImpl.visitor);
         });
         describe("Verify the 'visitor' namespace exports.", function() {
-            it("'visitor' should export function 'dereferenceNamedObject'.", function() {
-                assert.property(moduleUnderTestImpl.visitor, 'dereferenceNamedObject');
-                assert.isFunction(moduleUnderTestImpl.visitor.dereferenceNamedObject);
-            });
             it("'visitor' should export function 'visitNamespaceProperties'.", function() {
                 assert.property(moduleUnderTestImpl.visitor, 'visitNamespaceProperties');
                 assert.isFunction(moduleUnderTestImpl.visitor.visitNamespaceProperties);
@@ -96,10 +94,14 @@ module.exports = describe("onm.NamespaceDescriptorResolver white box tests.", fu
         });
     });
 
+
+    */
+
     require('./test-onm-namespace-resolver.options');
     require('./test-onm-namespace-resolver.results');
     require('./test-onm-namespace-resolver.open');
     require('./test-onm-namespace-resolver.create');
+
 
 });
 

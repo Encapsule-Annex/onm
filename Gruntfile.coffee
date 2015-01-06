@@ -21,6 +21,13 @@ module.exports = (grunt) ->
 
                     'lib/impl/onm-namespace-resolver.js': 'src/impl/onm-namespace-resolver.coffee'
                     'lib/impl/onm-namespace-resolver-core.js': 'src/impl/onm-namespace-resolver-core.coffee'
+                    'lib/impl/onm-namespace-resolver-context.js': 'src/impl/onm-namespace-resolver-context.coffee'
+
+                    'lib/impl/onm-named-object-resolver.js': 'src/impl/onm-named-object-resolver.coffee'
+                    'lib/impl/onm-named-object-property-resolver.js': 'src/impl/onm-named-object-property-resolver.coffee'
+
+
+
                     'lib/impl/onm-namespace-resolver-policy-common.js': 'src/impl/onm-namespace-resolver-policy-common.coffee'
                     'lib/impl/onm-namespace-resolver-policy-create.js': 'src/impl/onm-namespace-resolver-policy-create.coffee'
                     'lib/impl/onm-namespace-resolver-policy-open.js': 'src/impl/onm-namespace-resolver-policy-open.coffee'

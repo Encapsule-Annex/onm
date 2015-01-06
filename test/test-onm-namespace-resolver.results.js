@@ -4,7 +4,7 @@
 var assert = require('chai').assert;
 var withData = require('leche').withData;
 
-var moduleUnderTest = require('../lib/impl/onm-namespace-resolver-core').helpers;
+var moduleUnderTest = require('../lib/impl/onm-namespace-resolver-context')
 
 var testVector = {
 
