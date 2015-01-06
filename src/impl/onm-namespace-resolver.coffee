@@ -45,6 +45,7 @@ module.exports =
     # ==============================================================================
     resolveNamespaceDescriptorOpen: (options_) ->
         context = input: options_, output: {}
+        context.input.strategy = 'open'
         output = namespaceResolverCore.resolve openPolicyBinding, context
         if not (output.namespaceDataReference? and output.namespaceDataReference)
             message = "Failed to open existing named object for data model path '#{options_.input.targetNamespaceDescriptor.path}'."
@@ -55,4 +56,5 @@ module.exports =
     # ==============================================================================
     resolveNamespaceDescriptorCreate: (options_) ->
         context = input: options_, output: {}
+        context.input.strategy = 'create'
         namespaceResolverCore.resolve createPolicyBinding, context

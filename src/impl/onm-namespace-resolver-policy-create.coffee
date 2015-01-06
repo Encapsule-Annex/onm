@@ -54,30 +54,6 @@ module.exports =
     policyName: 'create new namespace'
 
     # ----------------------------------------------------------------------------
-    dereferenceNamedObject: (context_) ->
-        descriptor = context_.input.targetNamespaceDescriptor
-        resolveResults = context_.output
-        resolveResults.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or context_.input.targetNamespaceKey
-        resolveResults.namespaceDataReference = context_.input.parentDataReference[effectiveKey]
-        if resolveResults.namespaceDataReference? and resolveResults.namespaceDataReference
-            message = "Cannot re-create named object '#{effectiveKey}' for data model path '#{descriptor.path}'."
-            throw new Error message
-        if not (effectiveKey? and effectiveKey and effectiveKey.length > 0)
-            resolveResults.namespaceEffectiveKey = effectiveKey = context_.input.semanticBindingsReference.setUniqueKey({}); # FIX THIS (function call semantic should be simplified to 'create key' only)
-        resolveResults.namespaceDataReference = context_.input.parentDataReference[effectiveKey] = {}
-
-        resolveResults.dataChangeEventJournal.push
-            layer: 'namespace'
-            event: 'namespaceCreated'
-            eventData:
-                namespaceType: descriptor.namespaceType
-                jsonTag: descriptor.jsonTag
-                key: effectiveKey
-
-
-        true
-
-    # ----------------------------------------------------------------------------
     processNamespaceProperty: (context_, name_, declaration_) ->
         value = context_.input.propertyAssignmentObject[name_]
         valueFromCallerData = false

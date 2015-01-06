@@ -52,8 +52,9 @@ namespaceResolver.resolve = (visitorInterface_, context_) ->
         namespaceResolver.helpers.initializeContextObject context_
 
         # ----------------------------------------------------------------------------
-        state = '1:5::dereferenceNamedObject'
-        result = result and namespaceResolver.visitor.dereferenceNamedObject visitorInterface_, context_
+        state = 'dereferenceNamedObject'
+        result = result and namespaceResolver.visitor.dereferenceNamedObject context_
+
         # ----------------------------------------------------------------------------
         state = '2:5::visitNamespaceProperties'
         result = result and namespaceResolver.visitor.visitNamespaceProperties visitorInterface_, context_
@@ -74,8 +75,63 @@ namespaceResolver.resolve = (visitorInterface_, context_) ->
         throw new Error message
 
 # ==============================================================================
-namespaceResolver.visitor.dereferenceNamedObject = (visitorInterface_, context_) ->
-   visitorInterface_.dereferenceNamedObject context_
+namespaceResolver.visitor.dereferenceNamedObject = (context_) ->
+    input = context_.input
+    output = context_.output
+    output.resolutionStrategy = 'error'
+    descriptor = input.targetNamespaceDescriptor
+
+    # Deduce and cache the named object's effective object name, or key.
+    output.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or input.targetNamespaceKey
+    # Attempt to dereference an existing object of the same name in the context of the parent object.
+    output.namespaceDataReference = input.parentDataReference[effectiveKey]
+    # Policy implementation based on existence and resolution strategy.
+    switch input.strategy
+        when 'open'
+            if not (output.namespaceDataReference? and output.namespaceDataReference)
+                switch descriptor.namespaceType
+                    when 'component'
+                        message = "Cannot open named object '#{effectiveKey}' for component namespace '#{descriptor.jsonTag}'. Object does not exist."
+                        break
+                    else
+                        message = "Cannot open named object for #{descriptor.namespaceType} namespace '#{descriptor.jsonTag}'. Object does not exist."
+                        break
+                throw new Error message
+            output.resolutionStrategy = 'open'
+            break
+        when 'create'
+            if output.namespaceDataReference? and output.namespaceDataReference
+                switch descriptor.namespaceType
+                    when 'component'
+                        message = "Cannot create named object '#{effectiveKey}' for component namespace '#{descriptor.jsonTag}'. Object already exists."
+                        break
+                    else
+                        message = "Cannot create named object for #{descriptor.namespaceType} namespace '#{descriptor.jsonTag}'. Object already exists."
+                        break
+                throw new Error message
+            output.resolutionStrategy = 'create'
+            break
+        when 'negotiate'
+            output.resolutionStrategy = output.namespaceDataReference? and output.namespaceDataReference and 'open' or 'create'
+            break
+        else
+            throw new Error "Unrecognized named object dereference strategy '#{input.strategy}'."
+
+    if output.resolutionStrategy == 'create'
+        if not (effectiveKey? and effectiveKey and effectiveKey.length > 0)
+            # FIX THIS (function call semantic should be simplified to 'create key' only)
+            output.namespaceEffectiveKey = effectiveKey = input.semanticBindingsReference.setUniqueKey({}); 
+        output.namespaceDataReference = input.parentDataReference[effectiveKey] = {}
+        output.dataChangeEventJournal.push
+            layer: 'namespace'
+            event: 'namespaceCreated'
+            eventData:
+                namespaceType: descriptor.namespaceType
+                jsonTag: descriptor.jsonTag
+                key: effectiveKey
+
+
+    true
 
 # ==============================================================================
 namespaceResolver.visitor.visitNamespaceProperties = (visitorInterface_, context_) ->
@@ -116,6 +172,7 @@ namespaceResolver.visitor.finalizeContext = (visitorInterface_, context_) ->
 namespaceResolver.helpers.initializeContextObject = (context_) ->
 
     context_.input =
+        strategy: context_.input.strategy? and context_.input.strategy or 'error'
         parentDataReference: context_.input.parentDataReference
         targetNamespaceDescriptor: context_.input.targetNamespaceDescriptor
         targetNamespaceKey: context_.input.targetNamespaceKey
@@ -124,10 +181,11 @@ namespaceResolver.helpers.initializeContextObject = (context_) ->
             util.clone(context_.input.propertyAssignmentObject) or {}
 
     context_.output =
+        resolutionStrategy: 'error'
         namespaceEffectiveKey: null
         namespaceDataReference: null
         dataChangeEventJournal: []
-        pendingNamespaceDescriptors: [] # shorten name
+        pendingNamespaceDescriptors: [] # TODO: pick a better name for this
 
     context_
 
@@ -177,13 +235,17 @@ namespaceResolver.helpers.checkValidDescriptorResolveOptions = (options_, isOpen
 
 # ==============================================================================
 namespaceResolver.helpers.checkValidDescriptorResolveResults = (results_) ->
-    results_? and results_ and
-        results_.namespaceEffectiveKey? and results_.namespaceEffectiveKey and
-        results_.namespaceDataReference? and results_.namespaceDataReference and
-        results_.pendingNamespaceDescriptors? and results_.pendingNamespaceDescriptors and
-        Array.isArray(results_.pendingNamespaceDescriptors) and
-        true or false
-
-
-
+    if not (results_? and results_)
+        console.log "Missing results"
+        return false
+    if not (results_.namespaceEffectiveKey? and results_.namespaceEffectiveKey)
+        console.log "Invalid namespaceEffectiveKey"
+        return false
+    if not (results_.namespaceDataReference? and results_.namespaceDataReference)
+        console.log "Invalid namespaceDataReference"
+        return false
+    if not (results_.pendingNamespaceDescriptors? and results_.pendingNamespaceDescriptors and Array.isArray(results_.pendingNamespaceDescriptors))
+        console.log "Invalid pendingNamespaceDescriptors"
+        return false
+    return true
 
