@@ -36,16 +36,18 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-namespaceResolverContext = require('./onm-namespace-resolver-context')
-
+# Dependencies
 namedObjectResolver = require('./onm-named-object-resolver')
 namedObjectPropertyResolver = require('./onm-named-object-property-resolver')
+namespaceResolverContext = require('./onm-namespace-resolver-context')
 
-module.exports = namespaceResolver = {}
-
+# Look-up tabl
 propertyResolutionPolicyInterfaces =
     open: require('./onm-namespace-resolver-policy-open')
     create: require('./onm-namespace-resolver-policy-create')
+
+# Module exports
+module.exports = namespaceResolver = {}
 
 
 # ==============================================================================
@@ -54,36 +56,37 @@ namespaceResolver.resolve = (context_) ->
     try
         result = true
 
-        # ----------------------------------------------------------------------------
+        # Perform generic initialization of the context paramater.
         state = 'prepareContext'
         namespaceResolverContext.initializeContextObject context_
 
-        # ----------------------------------------------------------------------------
+        # Obtain a reference to the specified named object.
         state = 'resolveNamedObject'
         result = namedObjectResolver.resolve context_
 
+        # Dynamically select named object property resolution policy.
         propertyResolutionPolicyInterface = propertyResolutionPolicyInterfaces[context_.output.resolutionStrategy]
-        if not (propertyResolutionPolicyInterface? and propertyResolutionPolicyInterface)
-            throw new Error "Internal error: no named object property initialization policy interface is available."
 
-        # ----------------------------------------------------------------------------
+        # Visit the namespace's declared properties.
         state = 'visitNamespaceProperties'
         result = result and namedObjectPropertyResolver.visitNamespaceProperties propertyResolutionPolicyInterface, context_
 
-        # ----------------------------------------------------------------------------
+        # Visit the namespace's declared subnamespaces.
         state = 'visitNamespaceChildren'
         result = result and namedObjectPropertyResolver.visitNamespaceChildren propertyResolutionPolicyInterface, context_
 
-        # ----------------------------------------------------------------------------
+        # Process remaining caller-supplied data not consumed by the previous stages.
         state = 'processPropertyOptions'
         result = result and namedObjectPropertyResolver.processPropertyOptions propertyResolutionPolicyInterface, context_
 
-        # ----------------------------------------------------------------------------
+        # Finalize the context object prior to returning results.
         state = 'finalizeContext'
         result = result and namedObjectPropertyResolver.finalizeContext propertyResolutionPolicyInterface, context_
 
+        # Return the results.
         context_.output
 
     catch exception_
-        message = "resolveNamespaceDescriptor failed in state '#{state}' while executing policy '#{propertyResolutionPolicyInterface.policyName}': #{exception_.message}"
+        policyName = propertyResolutionPolicyInterface? and propertyResolutionPolicyInterface and propertyResolutionPropertyInterface.policyName or 'not yet determined'
+        message = "resolveNamespaceDescriptor failed in state '#{state}' while executing policy '#{policyName}': #{exception_.message}"
         throw new Error message
