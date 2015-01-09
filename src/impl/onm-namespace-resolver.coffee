@@ -36,19 +36,75 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-namespaceResolverCore = require('./onm-namespace-resolver-core')
-
+# ============================================================================
 module.exports =
-
 
     # ==============================================================================
     resolveNamespaceDescriptorOpen: (options_) ->
-        context = input: options_, output: {}
-        context.input.strategy = 'open'
-        namespaceResolverCore.resolve context
+        if options_? and options_
+            options_.strategy = 'open'
+        resolveNamespaceDescriptor options_
 
     # ==============================================================================
     resolveNamespaceDescriptorCreate: (options_) ->
+        if options_? and options_
+            options_.strategy = 'create'
+        resolveNamespaceDescriptor options_
+
+
+# IMPLEMENTATION
+# ============================================================================
+
+# Dependencies
+namedObjectResolver = require('./onm-named-object-resolver')
+namedObjectPropertyResolver = require('./onm-named-object-property-resolver')
+namespaceResolverContext = require('./onm-namespace-resolver-context')
+
+# Look-up table
+propertyResolutionPolicyInterfaces =
+    open: require('./onm-namespace-resolver-policy-open')
+    create: require('./onm-namespace-resolver-policy-create')
+
+
+# ==============================================================================
+resolveNamespaceDescriptor = (options_) ->
+    try
         context = input: options_, output: {}
-        context.input.strategy = 'create'
-        namespaceResolverCore.resolve context
+        result = true
+
+        # Perform generic initialization of the context paramater.
+        state = 'prepareContext'
+        namespaceResolverContext.initializeContextObject context
+
+        # Obtain a reference to the specified named object.
+        state = 'resolveNamedObject'
+        result = namedObjectResolver.resolve context
+
+        # Dynamically select named object property resolution policy.
+        propertyResolutionPolicyInterface = propertyResolutionPolicyInterfaces[context.output.resolutionStrategy]
+
+        # Visit the namespace's declared properties.
+        state = 'visitNamespaceProperties'
+        result = result and namedObjectPropertyResolver.visitNamespaceProperties propertyResolutionPolicyInterface, context
+
+        # Visit the namespace's declared subnamespaces.
+        state = 'visitNamespaceChildren'
+        result = result and namedObjectPropertyResolver.visitNamespaceChildren propertyResolutionPolicyInterface, context
+
+        # Process remaining caller-supplied data not consumed by the previous stages.
+        state = 'processPropertyOptions'
+        result = result and namedObjectPropertyResolver.processPropertyOptions propertyResolutionPolicyInterface, context
+
+        # Finalize the context object prior to returning results.
+        state = 'finalizeContext'
+        result = result and namedObjectPropertyResolver.finalizeContext propertyResolutionPolicyInterface, context
+
+        # Return the results.
+        context.output
+
+    catch exception_
+        policyName = propertyResolutionPolicyInterface? and propertyResolutionPolicyInterface and propertyResolutionPropertyInterface.policyName or 'not yet determined'
+        message = "resolveNamespaceDescriptor failed in state '#{state}' while executing policy '#{policyName}': #{exception_.message}"
+        throw new Error message
+
+
