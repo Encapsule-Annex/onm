@@ -36,7 +36,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-namespaceResolverContext = require('./onm-namespace-resolver-context')
+namespaceResolverContext = require('./onm-named-object-context')
 
 module.exports = namedObjectPropertyResolver = {}
 

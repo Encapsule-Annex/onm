@@ -13,7 +13,7 @@ var testDataRootAddress = testDataModel.createRootAddress();
 var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
 
-var moduleUnderTest = require('../lib/impl/onm-namespace-resolver-context')
+var moduleUnderTest = require('../lib/impl/onm-named-object-context')
 
 var testVector = {
 

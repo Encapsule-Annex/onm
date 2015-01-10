@@ -10,7 +10,7 @@ var uuid = require('node-uuid');
 var onm = require('../index');
 
 var moduleUnderTest = require('../lib/impl/onm-namespace-resolver');
-var moduleUnderTestImpl = require('../lib/impl/onm-namespace-resolver-context')
+var moduleUnderTestImpl = require('../lib/impl/onm-named-object-context')
 
 var namespaceDescriptorResolveCreateVectors = require('./vectors/descriptor-resolve-create-vectors')();
 var subcomponentCreationTestVectors = require('./vectors/descriptor-resolve/vector-dimension-create-subcomponent-assignment')();

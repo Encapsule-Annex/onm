@@ -36,12 +36,51 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-# Resolve a reference to an onm named object.
+namedObjectContextHelpers =  require('./onm-named-object-context')
 
-module.exports = namedObjectResolver = {}
+namedObjectPropertyVisitor = require('./onm-named-object-property-visitor')
+
+namedObjectPropertyVisitorInterfaces =
+    open: require('./onm-named-object-property-policy-update')
+    create: require('./onm-named-object-property-policy-initialize')
+    
 
 # ==============================================================================
-namedObjectResolver.resolve = (context_) ->
+module.exports = resolveNamedObject = (options_) ->
+    try
+        # Initialize the data I/O context object shared by all stages of the named object resolver.
+        context = input: options_, output: {}
+        namedObjectContextHelpers.initializeContextObject context
+
+        # Obtain a reference to the specified named object.
+        result = resolveNamedObjectReference context
+
+        # Dynamically select named object property resolution policy.
+        propertyResolutionPolicyInterface = namedObjectPropertyVisitorInterfaces[context.output.strategyFollowed]
+
+        # Visit the namespace's declared properties.
+        result = result and namedObjectPropertyVisitor.visitNamespaceProperties propertyResolutionPolicyInterface, context
+
+        # Visit the namespace's declared subnamespaces.
+        result = result and namedObjectPropertyVisitor.visitNamespaceChildren propertyResolutionPolicyInterface, context
+
+        # Process remaining caller-supplied data not consumed by the previous stages.
+        result = result and namedObjectPropertyVisitor.processPropertyOptions propertyResolutionPolicyInterface, context
+
+        # Finalize the context object prior to returning results.
+        result = result and namedObjectPropertyVisitor.finalizeContext propertyResolutionPolicyInterface, context
+
+        # Return the results.
+        context.output
+
+    catch exception_
+        policyName = propertyResolutionPolicyInterface? and propertyResolutionPolicyInterface and propertyResolutionPropertyInterface.policyName or 'not yet determined'
+        message = "resolveNamespaceDescriptor failure '#{exception_.message}' while executing policy '#{policyName}'."
+        throw new Error message
+
+
+# ==============================================================================
+resolveNamedObjectReference = (context_) ->
     try
         input = context_.input
         output = context_.output
@@ -85,7 +124,7 @@ namedObjectResolver.resolve = (context_) ->
 
         if output.strategyFollowed == 'create'
             if not (effectiveKey? and effectiveKey and effectiveKey.length > 0)
-                # FIX THIS (function call semantic should be simplified to 'create key' only)
+                # TODO: FIX THIS: function call semantic should be simplified to 'create key' only
                 output.namespaceEffectiveKey = effectiveKey = input.semanticBindingsReference.setUniqueKey({}); 
             output.namespaceDataReference = input.parentDataReference[effectiveKey] = {}
             output.dataChangeEventJournal.push

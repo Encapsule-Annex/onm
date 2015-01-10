@@ -14,7 +14,7 @@ var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
 
 var moduleUnderTest = require('../lib/impl/onm-namespace-resolver');
-var moduleUnderTestImpl = require('../lib/impl/onm-namespace-resolver-context')
+var moduleUnderTestImpl = require('../lib/impl/onm-named-object-context')
 
 module.exports = describe("'resolveNamespaceDescriptorOpen' function export tests.", function() {
 
