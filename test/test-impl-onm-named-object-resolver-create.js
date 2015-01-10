@@ -9,7 +9,7 @@ var withData = require('leche').withData;
 var uuid = require('node-uuid');
 var onm = require('../index');
 
-var moduleUnderTest = require('../lib/impl/onm-namespace-resolver');
+var functionUnderTest = require('../lib/impl/onm-named-object-resolver');
 var moduleUnderTestImpl = require('../lib/impl/onm-named-object-context')
 
 var namespaceDescriptorResolveCreateVectors = require('./vectors/descriptor-resolve-create-vectors')();
@@ -22,14 +22,14 @@ describe("resolveNamespaceDescriptorCreate internal function whitebox test matri
             testData.options.targetNamespaceDescriptor.namespaceType + "'.";
         var resolveResults = null;
         it(testName, function() {
-            var functionUnderTest = function() {
-                resolveResults = moduleUnderTest.resolveNamespaceDescriptorCreate(testData.options);
+            var functionUnderTestWrapper = function() {
+                resolveResults = functionUnderTest(testData.options);
                 console.log("RESOLVE RESULTS::" + JSON.stringify(testData.options.parentDataReference));
             };
             if (testData.validConfig) {
-                assert.doesNotThrow(functionUnderTest, testName);
+                assert.doesNotThrow(functionUnderTestWrapper, testName);
             } else {
-                assert.throws(functionUnderTest, testName);
+                assert.throws(functionUnderTestWrapper, testName);
             }
         });
         if (!testData.validConfig) {
@@ -171,14 +171,14 @@ describe("resolveNamespaceDescriptorCreate internal function whitebox test matri
     describe("Dynamic subcomponent creation via property assignment object tests.", function() {
         withData(subcomponentCreationTestVectors, function(testData) {
             var resolveResults = null;
-            var functionUnderTest = function() {
-                resolveResults = moduleUnderTest.resolveNamespaceDescriptorCreate(testData.options);
+            var functionUnderTestWrapper = function() {
+                resolveResults = functionUnderTest(testData.options);
                 console.log("----------------------------------------------------------------------------");
                 console.log("NAMESPACE RESOSUTION RESULTS");
                 console.log("Parent data namespace JSON: " + JSON.stringify(testData.options.parentDataReference));
                 console.log("Pending: " + resolveResults.pendingNamespaceDescriptors.length);
             };
-            assert.doesNotThrow(functionUnderTest);
+            assert.doesNotThrow(functionUnderTestWrapper);
             it("There should be a pending namespace descriptor resolve for each property defined in the property assignment object.", function() {
                 assert.equal(resolveResults.pendingNamespaceDescriptors.length, Object.keys(testData.options.propertyAssignmentObject).length);
             });

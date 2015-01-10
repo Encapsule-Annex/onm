@@ -13,23 +13,24 @@ var testDataRootAddress = testDataModel.createRootAddress();
 var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
 
-var moduleUnderTest = require('../lib/impl/onm-namespace-resolver');
+var functionUnderTest = require('../lib/impl/onm-named-object-resolver');
 var moduleUnderTestImpl = require('../lib/impl/onm-named-object-context')
 
 module.exports = describe("'resolveNamespaceDescriptorOpen' function export tests.", function() {
 
     var resolveResults = null;
     var descriptorResolveOptions = {
+        strategy: 'open',
         parentDataReference: { 'addressBook': {} },
         targetNamespaceDescriptor: testDataRootDescriptor
     };
 
     before(function(done_) {
         testData.resetLuid();
-        var functionUnderTest = function() {
-            resolveResults = moduleUnderTest.resolveNamespaceDescriptorOpen(descriptorResolveOptions);
+        var functionUnderTestWrapper = function() {
+            resolveResults = functionUnderTest(descriptorResolveOptions);
         };
-        assert.doesNotThrow(functionUnderTest);
+        assert.doesNotThrow(functionUnderTestWrapper);
         done_();
     });
 

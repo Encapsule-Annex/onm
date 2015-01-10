@@ -19,7 +19,7 @@ module.exports = (grunt) ->
 
                     'lib/impl/onm-component-resolver.js': 'src/impl/onm-component-resolver.coffee'
 
-                    'lib/impl/onm-namespace-resolver.js': 'src/impl/onm-namespace-resolver.coffee'
+
 
                     'lib/impl/onm-named-object-resolver.js': 'src/impl/onm-named-object-resolver.coffee'
                     'lib/impl/onm-named-object-context.js': 'src/impl/onm-named-object-context.coffee'
@@ -28,7 +28,9 @@ module.exports = (grunt) ->
                     'lib/impl/onm-named-object-property-policy-initialize.js': 'src/impl/onm-named-object-property-policy-initialize.coffee'
                     'lib/impl/onm-named-object-property-policy-update.js': 'src/impl/onm-named-object-property-policy-update.coffee'
 
+
                     'lib/impl/onm-store-reifier.js': 'src/impl/onm-store-reifier.coffee'
+
                     'lib/lib-javascript.js': 'src/lib-javascript.coffee'
 
         jshint:

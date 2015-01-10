@@ -17,6 +17,7 @@ var generateTestVectors = module.exports = function() {
                 var testName = namespaceDescriptor_.label + " | " + namespaceKey_.label + " | " + propertyAssignmentObject_.label;
                 var propertyAssignmentObject = (namespaceDescriptor_.data.namespaceType !== 'extensionPoint') && onm.util.clone(propertyAssignmentObject_.data) || {};
                 var options = {
+                    strategy: 'create',
                     parentDataReference: {},
                     targetNamespaceDescriptor: namespaceDescriptor_.data,
                     targetNamespaceKey: namespaceKey_.data,

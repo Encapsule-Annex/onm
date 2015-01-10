@@ -36,10 +36,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-
-
-
-namespaceDescriptorResolver = require('./onm-namespace-resolver')
+resolveNamedObject = require('./onm-named-object-resolver')
 
 # ==============================================================================
 class AddressTokenResolver
@@ -53,7 +50,6 @@ class AddressTokenResolver
                 tokenResolveOptions_.mode? and tokenResolveOptions_.mode and
                 tokenResolveOptions_.propertyAssignmentObject? and tokenResolveOptions_.propertyAssignmentObject)
                     throw new Error("Invalid resolve options object.")
-
             switch (tokenResolveOptions_.mode)
                 when 'open'
                     break
@@ -61,7 +57,6 @@ class AddressTokenResolver
                     break
                 else
                     throw new Error("Unrecognized mode value '#{tokenResolveOptions_.mode}'")
-
         catch exception_
             throw new Error("AddressTokenResolver2 construction failure: #{exception_.message}")
 

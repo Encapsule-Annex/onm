@@ -137,7 +137,7 @@ resolveNamedObjectReference = (context_) ->
         true
 
     catch exception_
-        message = "Failed to resolve named object."
+        message = "resolveNamedObjectReference failure: #{exception_.message}."
         throw new Error message
 
 

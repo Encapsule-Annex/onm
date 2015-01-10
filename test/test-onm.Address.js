@@ -5,9 +5,6 @@ var assert = require('chai').assert;
 module.exports = describe("onm.Address object method tests", function() {
 
     before(function(done_) {
-        // Internal white box tests.
-        require('./test-onm-namespace-resolver');
-        require('./test-impl-onm-token-resolve');
         // Public API level functional tests.
         require('./test-onm.Address.createSubpathAddress');
         require('./test-onm.Address.isParent');

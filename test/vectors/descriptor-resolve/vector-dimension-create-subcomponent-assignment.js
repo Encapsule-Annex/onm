@@ -71,6 +71,7 @@ var generateTestVectors = module.exports = function() {
         var testName = testDimensionDescriptor.testDimension + " " + dimensionValue_.label;
         testVectors[testName] = [ { 
             options: {
+                strategy: 'create',
                 parentDataReference: {},
                 targetNamespaceDescriptor: dimensionValue_.namespaceDescriptor,
                 targetNamespaceKey: "",
