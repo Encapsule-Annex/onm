@@ -36,8 +36,6 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-policyCommon = require('./onm-namespace-resolver-policy-common')
-
 module.exports =
 
     ### create new namespace policy implementation
@@ -51,7 +49,7 @@ module.exports =
     ###
 
     # ----------------------------------------------------------------------------
-    policyName: 'create new namespace'
+    policyName: 'initialize namespace properties'
 
     # ----------------------------------------------------------------------------
     processNamespaceProperty: (context_, name_, declaration_) ->

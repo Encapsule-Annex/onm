@@ -50,11 +50,10 @@ namespaceResolverContext.initializeContextObject = (context_) ->
         targetNamespaceDescriptor: context_.input.targetNamespaceDescriptor
         targetNamespaceKey: context_.input.targetNamespaceKey
         semanticBindingsReference: context_.input.semanticBindingsReference
-        propertyAssignmentObject: context_.input.propertyAssignmentObject? and context_.input.propertyAssignmentObject and
-            jslib.clone(context_.input.propertyAssignmentObject) or {}
+        propertyAssignmentObject: context_.input.propertyAssignmentObject? and context_.input.propertyAssignmentObject and jslib.clone(context_.input.propertyAssignmentObject) or {}
 
     context_.output =
-        resolutionStrategy: 'error'
+        strategyFollowed: 'error'
         namespaceEffectiveKey: null
         namespaceDataReference: null
         dataChangeEventJournal: []
@@ -120,5 +119,17 @@ namespaceResolverContext.checkValidDescriptorResolveResults = (results_) ->
     if not (results_.pendingNamespaceDescriptors? and results_.pendingNamespaceDescriptors and Array.isArray(results_.pendingNamespaceDescriptors))
         console.log "Invalid pendingNamespaceDescriptors"
         return false
+    if not (results_.strategyFollowed? and results_.strategyFollowed)
+        console.log "Invalid strategyFollowed"
+        return false
+    switch results_.strategyFollowed
+        when 'open'
+            break
+        when 'create'
+            break
+        else
+            console.log "Invalid strategyFollowed value '#{results_.strategyFollowed}'."
+            return false
+
     return true
 

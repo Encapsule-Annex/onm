@@ -36,6 +36,33 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+module.exports =
+
+    ### open existing namespace policy implementation
+    - open existing namespace
+    - throw if namespace does not exist
+    - write declared property values specified in caller-provided data
+    - visit declared child namespaces and queue deferred resolves based on caller-provided data only
+    - overlay namespace data with remaining, caller-provided properties
+    ###
+
+    policyName: 'update exisiting namespace properties'
+
+    # ----------------------------------------------------------------------------
+    processNamespaceProperty: (context_, name_, declaration_) ->
+        true
+
+    # ----------------------------------------------------------------------------
+    processSubnamespace: (context_, descriptor_) ->
+        true
+
+    # ----------------------------------------------------------------------------
+    processPropertyOptions: (context_) ->
+        true
+
+    # ----------------------------------------------------------------------------
+    finalizeContext: (context_) ->
+        true
 
 
-        
+

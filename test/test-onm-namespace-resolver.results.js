@@ -37,8 +37,29 @@ var testVector = {
         validConfig: false
     }],
 
+    'Bad descriptor resolve results: Malformed result object 5': [{
+        testData: { results: {
+            strategyFollowed: 'error',
+            namespaceEffectiveKey: 'test',
+            namespaceDataReference: {},
+            pendingNamespaceDescriptors: 'should be an array, not a string'
+        } },
+        validConfig: false
+    }],
+
     'Good descriptor resolve results: Correct result object 1': [{
         testData: { results: {
+            strategyFollowed: 'open',
+            namespaceEffectiveKey: 'test',
+            namespaceDataReference: {},
+            pendingNamespaceDescriptors: []
+        } },
+        validConfig: true
+    }],
+    
+    'Good descriptor resolve results: Correct result object 2': [{
+        testData: { results: {
+            strategyFollowed: 'create',
             namespaceEffectiveKey: 'test',
             namespaceDataReference: {},
             pendingNamespaceDescriptors: []

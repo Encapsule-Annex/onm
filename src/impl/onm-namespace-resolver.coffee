@@ -60,10 +60,12 @@ namedObjectResolver = require('./onm-named-object-resolver')
 namedObjectPropertyResolver = require('./onm-named-object-property-resolver')
 namespaceResolverContext = require('./onm-namespace-resolver-context')
 
-# Look-up table
+# Look-up table keyed by the name of the named object resolution strategy
+# used to resolve the named object reference.
+
 propertyResolutionPolicyInterfaces =
-    open: require('./onm-namespace-resolver-policy-open')
-    create: require('./onm-namespace-resolver-policy-create')
+    open: require('./onm-named-object-property-policy-update')
+    create: require('./onm-named-object-property-policy-initialize')
 
 
 # ==============================================================================
@@ -81,7 +83,7 @@ resolveNamespaceDescriptor = (options_) ->
         result = namedObjectResolver.resolve context
 
         # Dynamically select named object property resolution policy.
-        propertyResolutionPolicyInterface = propertyResolutionPolicyInterfaces[context.output.resolutionStrategy]
+        propertyResolutionPolicyInterface = propertyResolutionPolicyInterfaces[context.output.strategyFollowed]
 
         # Visit the namespace's declared properties.
         state = 'visitNamespaceProperties'

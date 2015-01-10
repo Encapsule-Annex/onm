@@ -63,7 +63,7 @@ namedObjectResolver.resolve = (context_) ->
                             message = "Cannot open named object for #{descriptor.namespaceType} namespace '#{descriptor.jsonTag}'. Object does not exist."
                             break
                     throw new Error message
-                output.resolutionStrategy = 'open'
+                output.strategyFollowed = 'open'
                 break
             when 'create'
                 if output.namespaceDataReference? and output.namespaceDataReference
@@ -75,15 +75,15 @@ namedObjectResolver.resolve = (context_) ->
                             message = "Cannot create named object for #{descriptor.namespaceType} namespace '#{descriptor.jsonTag}'. Object already exists."
                             break
                     throw new Error message
-                output.resolutionStrategy = 'create'
+                output.strategyFollowed = 'create'
                 break
             when 'negotiate'
-                output.resolutionStrategy = output.namespaceDataReference? and output.namespaceDataReference and 'open' or 'create'
+                output.strategyFollowed = output.namespaceDataReference? and output.namespaceDataReference and 'update' or 'initialize'
                 break
             else
                 throw new Error "Unrecognized named object dereference strategy '#{input.strategy}'."
 
-        if output.resolutionStrategy == 'create'
+        if output.strategyFollowed == 'create'
             if not (effectiveKey? and effectiveKey and effectiveKey.length > 0)
                 # FIX THIS (function call semantic should be simplified to 'create key' only)
                 output.namespaceEffectiveKey = effectiveKey = input.semanticBindingsReference.setUniqueKey({}); 
