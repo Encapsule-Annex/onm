@@ -75,7 +75,7 @@ module.exports = resolveNamedObject = (options_) ->
 
     catch exception_
         policyName = propertyResolutionPolicyInterface? and propertyResolutionPolicyInterface and propertyResolutionPropertyInterface.policyName or 'not yet determined'
-        message = "resolveNamespaceDescriptor failure '#{exception_.message}' while executing policy '#{policyName}'."
+        message = "resolveNamedObject exception '#{exception_.message}' during execution of policy '#{policyName}'."
         throw new Error message
 
 
@@ -86,58 +86,56 @@ resolveNamedObjectReference = (context_) ->
         output = context_.output
         descriptor = input.targetNamespaceDescriptor
 
+        # FUNCTION PROLOGUE
+
         # Deduce and cache the named object's effective object name, or key.
         output.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or input.targetNamespaceKey
+
         # Attempt to dereference an existing object of the same name in the context of the parent object.
         output.namespaceDataReference = input.parentDataReference[effectiveKey]
-        # Policy implementation based on existence and resolution strategy.
+
+        # Select a strategy to follow based on the results of our attempted named object dereference.
         switch input.strategy
             when 'open'
                 if not (output.namespaceDataReference? and output.namespaceDataReference)
-                    switch descriptor.namespaceType
-                        when 'component'
-                            message = "Cannot open named object '#{effectiveKey}' for component namespace '#{descriptor.jsonTag}'. Object does not exist."
-                            break
-                        else
-                            message = "Cannot open named object for #{descriptor.namespaceType} namespace '#{descriptor.jsonTag}'. Object does not exist."
-                            break
-                    throw new Error message
+                    throw new Error "Cannot open named object for #{descriptor.namespaceType} namespace '#{descriptor.jsonTag}'. Object does not exist."
                 output.strategyFollowed = 'open'
                 break
             when 'create'
                 if output.namespaceDataReference? and output.namespaceDataReference
-                    switch descriptor.namespaceType
-                        when 'component'
-                            message = "Cannot create named object '#{effectiveKey}' for component namespace '#{descriptor.jsonTag}'. Object already exists."
-                            break
-                        else
-                            message = "Cannot create named object for #{descriptor.namespaceType} namespace '#{descriptor.jsonTag}'. Object already exists."
-                            break
-                    throw new Error message
+                    throw new Error "Cannot create named object for #{descriptor.namespaceType} namespace '#{descriptor.jsonTag}'. Object already exists."
                 output.strategyFollowed = 'create'
                 break
             when 'negotiate'
-                output.strategyFollowed = output.namespaceDataReference? and output.namespaceDataReference and 'update' or 'initialize'
+                output.strategyFollowed = output.namespaceDataReference? and output.namespaceDataReference and 'open' or 'create'
                 break
             else
                 throw new Error "Unrecognized named object dereference strategy '#{input.strategy}'."
 
-        if output.strategyFollowed == 'create'
-            if not (effectiveKey? and effectiveKey and effectiveKey.length > 0)
-                # TODO: FIX THIS: function call semantic should be simplified to 'create key' only
-                output.namespaceEffectiveKey = effectiveKey = input.semanticBindingsReference.setUniqueKey({}); 
-            output.namespaceDataReference = input.parentDataReference[effectiveKey] = {}
-            output.dataChangeEventJournal.push
-                layer: 'namespace'
-                event: 'namespaceCreated'
-                eventData:
-                    namespaceType: descriptor.namespaceType
-                    jsonTag: descriptor.jsonTag
-                    key: effectiveKey
+        # FUNCTION EPILOGUE        
+
+        # Exit if following 'open', or instantiate a new named object if following 'create' strategy.
+        switch output.strategyFollowed
+            when 'open'
+                # The requested named object reference has been resolved.
+                break
+            when 'create'
+                if not (effectiveKey? and effectiveKey and effectiveKey.length > 0)
+                    # TODO: FIX THIS: function call semantic should be simplified to 'create key' only
+                    output.namespaceEffectiveKey = effectiveKey = input.semanticBindingsReference.setUniqueKey({}); 
+                output.namespaceDataReference = input.parentDataReference[effectiveKey] = {}
+                output.dataChangeEventJournal.push
+                    layer: 'namespace'
+                    event: 'namespaceCreated'
+                    eventData:
+                        namespaceType: descriptor.namespaceType
+                        jsonTag: descriptor.jsonTag
+                        key: effectiveKey
+                break
         true
 
     catch exception_
-        message = "resolveNamedObjectReference failure: #{exception_.message}."
+        message = "resolveNamedObjectReference failed with exception '#{exception_.message}'."
         throw new Error message
 
 
