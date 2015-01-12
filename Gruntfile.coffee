@@ -22,6 +22,8 @@ module.exports = (grunt) ->
 
                     # v0.3 implementation
                     'lib/impl/onm-component-resolver.js': 'src/impl/onm-component-resolver.coffee'
+                    'lib/impl/onm-component-context.js': 'src/impl/onm-component-context.coffee'
+
                     'lib/impl/onm-named-object-resolver.js': 'src/impl/onm-named-object-resolver.coffee'
                     'lib/impl/onm-named-object-context.js': 'src/impl/onm-named-object-context.coffee'
                     'lib/impl/onm-named-object-property-visitor.js': 'src/impl/onm-named-object-property-visitor.coffee'

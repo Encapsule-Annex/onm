@@ -38,11 +38,11 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 helperFunctions = require('./onm-util-functions')
 
-module.exports = namespaceResolverContext = {}
+module.exports = namedObjectResolverContext = {}
 
 
 # ==============================================================================
-namespaceResolverContext.initializeContextObject = (context_) ->
+namedObjectResolverContext.initializeContextObject = (context_) ->
 
     context_.input =
         strategy: context_.input.strategy? and context_.input.strategy or 'error'
@@ -62,17 +62,18 @@ namespaceResolverContext.initializeContextObject = (context_) ->
     context_
 
 # ==============================================================================
-namespaceResolverContext.getNamespaceDescriptorFromContext = (context_) ->
+namedObjectResolverContext.getNamespaceDescriptorFromContext = (context_) ->
     context_.input.targetNamespaceDescriptor
 
 # ==============================================================================
-namespaceResolverContext.checkValidContextInput = (options_, isOpenResolve_) ->
+namedObjectResolverContext.checkValidContextInput = (options_) ->
 
     results = { valid: true, reason: 'because, good' }
 
     setInvalid = (reason_) ->
         results.valid = false
         results.reason = reason_
+        results
 
     while true
 
@@ -92,7 +93,7 @@ namespaceResolverContext.checkValidContextInput = (options_, isOpenResolve_) ->
             setInvalid "Specified target namespace descriptor object appears invalid."
             break
 
-        if not (options_.strategy? and options_.strategy)
+        if not (options_.strategy? and options_.strategy and options_.strategy.length? and options_.strategy.length)
             setInvalid "Missing resolution strategy specification."
             break
 
@@ -112,29 +113,28 @@ namespaceResolverContext.checkValidContextInput = (options_, isOpenResolve_) ->
             setInvalid "Unrecognized resolution strategy specified."
             break
 
-        keyValid = true
         if options_.targetNamespaceKey? and options_.targetNamespaceKey
-            keyValid = options_.targetNamespaceKey.length > 0 or false
-
-        if not keyValid
-            setInvalid "Invalid target namespace ket specified."
-            break
+            if not (options_.targetNamespaceKey.length? and options_.targetNamespaceKey.length)
+                setInvalid "Invalid target namespace key specified."
 
         if not (options_.semanticBindingsReference? and options_.semanticBindingsReference)
             setInvalid "Missing semantic bindings reference."
             break
 
+        # TODO: I don't think this makes sense. It should be okay to pass an undefined or null propertyAssignmentObject reference around no?
         if not (options_.propertyAssignmentObject? and options_.propertyAssignmentObject)
             setInvalid "Missing property assignment object."
             break
 
         break
 
-    console.log JSON.stringify results
+    if not results.valid
+        console.warn "Invalid named object input context object: '#{results.reason}'."
+
     results.valid
 
 # ==============================================================================
-namespaceResolverContext.checkValidContextOutput = (results_) ->
+namedObjectResolverContext.checkValidContextOutput = (results_) ->
     if not (results_? and results_)
         console.log "Missing results"
         return false

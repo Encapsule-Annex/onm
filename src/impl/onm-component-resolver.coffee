@@ -36,20 +36,24 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+# New stuff started on top of the latest onm-named-object-resolver work...
+
+resolveNamedObject = require('./onm-named-object-resolver')
+
+componentContextHelpers = require('./onm-component-context')
+
 resolveComponentReference = (options_) ->
 
     try
-
-
-
-
     catch exception_
         throw new Error "resolveComponentReference failed with exception '#{exception_.message}'."
 
 
 
 
-resolveNamedObject = require('./onm-named-object-resolver')
+
+
+# Going to re-write this but keep for reference for now...
 
 # ==============================================================================
 class AddressTokenResolver
