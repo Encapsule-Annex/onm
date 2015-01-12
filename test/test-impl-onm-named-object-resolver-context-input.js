@@ -42,13 +42,59 @@ var testVector = {
         testData: { options: { parentDataReference: {}, targetNamespaceDescriptor: {} }, isOpenResolve: true },
         validConfig: false
     }],
-    'Good descriptor resolve options: valid open options': [{
-        testData: { options: { parentDataReference: {}, targetNamespaceDescriptor: testDataRootDescriptor }, isOpenResolve: true },
-        validConfig: true
+    'Bad descriptor resolve options: malformed open 6': [{
+        // This test fails because it's missing resolution strategy
+        testData: { options: { parentDataReference: {}, targetNamespaceDescriptor: testDataRootDescriptor } },
+        validConfig: false
     }],
-    'Good descriptor resolve options: valid create options': [{
+    'Bad descriptor resolve options: malformed open 7': [{
+        // This test fails because the specified resolution strategy is invalid
+        testData: { options: { parentDataReference: {}, targetNamespaceDescriptor: testDataRootDescriptor, strategy: 'error' } },
+        validConfig: false
+    }],
+
+    'Good descriptor resolve options: valid create options 1': [{
         testData: {
             options: {
+                parentDataReference: {},
+                targetNamespaceDescriptor: testDataRootDescriptor,
+                targetNamespaceKey: '',
+                semanticBindingsReference: testDataModel.getSemanticBindings(),
+                propertyAssignmentObject: {}
+            }
+        },
+        validConfig: true
+    }],
+    'Good descriptor resolve options: valid create options 1': [{
+        testData: {
+            options: {
+                strategy: 'open',
+                parentDataReference: {},
+                targetNamespaceDescriptor: testDataRootDescriptor,
+                targetNamespaceKey: '',
+                semanticBindingsReference: testDataModel.getSemanticBindings(),
+                propertyAssignmentObject: {}
+            }
+        },
+        validConfig: true
+    }],
+    'Good descriptor resolve options: valid create options 1': [{
+        testData: {
+            options: {
+                strategy: 'create',
+                parentDataReference: {},
+                targetNamespaceDescriptor: testDataRootDescriptor,
+                targetNamespaceKey: '',
+                semanticBindingsReference: testDataModel.getSemanticBindings(),
+                propertyAssignmentObject: {}
+            }
+        },
+        validConfig: true
+    }],
+    'Good descriptor resolve options: valid create options 1': [{
+        testData: {
+            options: {
+                strategy: 'negotiate',
                 parentDataReference: {},
                 targetNamespaceDescriptor: testDataRootDescriptor,
                 targetNamespaceKey: '',
@@ -60,14 +106,14 @@ var testVector = {
     }]
 };
 
-module.exports = describe("'checkValidDescriptorResolveOptions' function export test suite.", function() {
+module.exports = describe("'checkValidContextInput' function export test suite.", function() {
  
     before(function(done_) {
         withData(testVector, function(inputData_) {
             var result = null;
             before(function(done_) {
                 var functionUnderTest = function() {
-                    result = moduleUnderTest.checkValidDescriptorResolveOptions(inputData_.testData.options, inputData_.testData.isOpenResolve);
+                    result = moduleUnderTest.checkValidContextInput(inputData_.testData.options, inputData_.testData.isOpenResolve);
                 };
                 assert.doesNotThrow(functionUnderTest);
                 done_();

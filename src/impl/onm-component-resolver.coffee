@@ -36,6 +36,19 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+resolveComponentReference = (options_) ->
+
+    try
+
+
+
+
+    catch exception_
+        throw new Error "resolveComponentReference failed with exception '#{exception_.message}'."
+
+
+
+
 resolveNamedObject = require('./onm-named-object-resolver')
 
 # ==============================================================================

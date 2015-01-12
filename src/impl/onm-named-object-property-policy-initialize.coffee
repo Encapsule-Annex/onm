@@ -82,6 +82,7 @@ module.exports =
     # ----------------------------------------------------------------------------
     processSubnamespace: (context_, descriptor_) ->
         propertyAssignmentObject = context_.input.propertyAssignmentObject
+        # TODO: This could stand a little reduction via refactor to eliminate common code
         switch descriptor_.namespaceType
             when 'component'
                 deleteKeyNames = []
@@ -93,7 +94,7 @@ module.exports =
                         targetNamespaceKey: keyName
                         semanticBindingsReference: context_.input.semanticBindingsReference
                         propertyAssignmentObject: subcomponentPropertyAssignmentObject? and subcomponentPropertyAssignmentObject or {}
-                        policyBinding: 'create'
+                        strategy: 'create'
                     }
                 while deleteKeyNames.length
                     delete context_.input.propertyAssignmentObject[deleteKeyNames.pop()]
@@ -110,7 +111,7 @@ module.exports =
                     targetNamespaceKey: ''
                     semanticBindingsReference: context_.input.semanticBindingsReference
                     propertyAssignmentObject: subcomponentPropertyAssignmentObject
-                    policyBinding: 'create'
+                    strategy: 'create'
                 }
                 break
         true

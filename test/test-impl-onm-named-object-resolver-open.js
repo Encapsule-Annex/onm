@@ -22,7 +22,9 @@ module.exports = describe("'resolveNamespaceDescriptorOpen' function export test
     var descriptorResolveOptions = {
         strategy: 'open',
         parentDataReference: { 'addressBook': {} },
-        targetNamespaceDescriptor: testDataRootDescriptor
+        targetNamespaceDescriptor: testDataRootDescriptor,
+        semanticBindingsReference: testDataModel.getSemanticBindings(),
+        propertyAssignmentObject: {}
     };
 
     before(function(done_) {
@@ -41,7 +43,7 @@ module.exports = describe("'resolveNamespaceDescriptorOpen' function export test
     });
 
     it("The returned object should be a valid descriptor resolve results object.", function() {
-        assert.isTrue(moduleUnderTestImpl.checkValidDescriptorResolveResults(resolveResults));
+        assert.isTrue(moduleUnderTestImpl.checkValidContextOutput(resolveResults));
     });
 
 });

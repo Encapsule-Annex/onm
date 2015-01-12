@@ -43,7 +43,7 @@ describe("resolveNamespaceDescriptorCreate internal function whitebox test matri
                 assert.isObject(resolveResults);
             });
             it("The returned object should be a valid descriptor resolve results object.", function() {
-                assert.isTrue(moduleUnderTestImpl.checkValidDescriptorResolveResults(resolveResults));
+                assert.isTrue(moduleUnderTestImpl.checkValidContextOutput(resolveResults));
             });
             switch (testData.options.targetNamespaceDescriptor.namespaceType) {
             case 'root':
@@ -191,7 +191,7 @@ describe("resolveNamespaceDescriptorCreate internal function whitebox test matri
                     var optionsValid = false;
                     it("Attempt to validate the pending namespace descriptor should not throw.", function() {
                         var functionUnderTest = function() {
-                            optionsValid = moduleUnderTestImpl.checkValidDescriptorResolveOptions(options_);
+                            optionsValid = moduleUnderTestImpl.checkValidContextInput(options_);
                         };
                         assert.doesNotThrow(functionUnderTest);
                     });

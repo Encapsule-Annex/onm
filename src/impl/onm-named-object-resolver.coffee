@@ -48,6 +48,10 @@ namedObjectPropertyVisitorInterfaces =
 # ==============================================================================
 module.exports = resolveNamedObject = (options_) ->
     try
+        # DEBUG: Verify the base-level semantics of options_ in-paramaeter
+        if not namedObjectContextHelpers.checkValidContextInput options_
+            throw new Error "Internal test case failure: invalid options object in-parameter."
+
         # Initialize the data I/O context object shared by all stages of the named object resolver.
         context = input: options_, output: {}
         namedObjectContextHelpers.initializeContextObject context
@@ -70,12 +74,16 @@ module.exports = resolveNamedObject = (options_) ->
         # Finalize the context object prior to returning results.
         result = result and namedObjectPropertyVisitor.finalizeContext propertyResolutionPolicyInterface, context
 
+        # DEBUG: Verify the base-level semantics of the result.
+        if not namedObjectContextHelpers.checkValidContextOutput context.output
+            throw new Error "Internal test case failure: context.output object validation failed."
+
         # Return the results.
         context.output
 
     catch exception_
-        policyName = propertyResolutionPolicyInterface? and propertyResolutionPolicyInterface and propertyResolutionPropertyInterface.policyName or 'not yet determined'
-        message = "resolveNamedObject exception '#{exception_.message}' during execution of policy '#{policyName}'."
+        policyName = propertyResolutionPolicyInterface? and propertyResolutionPolicyInterface and propertyResolutionPropertyInterface.policyName or 'prologue'
+        message = "resolveNamedObject exception occurred during execution of policy '#{policyName}': '#{exception_.message}'."
         throw new Error message
 
 

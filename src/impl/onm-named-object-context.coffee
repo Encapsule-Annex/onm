@@ -66,47 +66,75 @@ namespaceResolverContext.getNamespaceDescriptorFromContext = (context_) ->
     context_.input.targetNamespaceDescriptor
 
 # ==============================================================================
-namespaceResolverContext.checkValidDescriptorResolveOptions = (options_, isOpenResolve_) ->
+namespaceResolverContext.checkValidContextInput = (options_, isOpenResolve_) ->
 
-    if not (options_? and options_)
-        console.log("Missing options.")
-        return false
+    results = { valid: true, reason: 'because, good' }
 
-    if not (options_.parentDataReference? and options_.parentDataReference)
-        console.log("Invalid parentDataReference.")
-        return false
+    setInvalid = (reason_) ->
+        results.valid = false
+        results.reason = reason_
 
-    if not (options_.targetNamespaceDescriptor? and options_.targetNamespaceDescriptor)
-        console.log("Invalid targetNamespaceDescriptor.")
-        return false
+    while true
 
-    if not (options_.targetNamespaceDescriptor.jsonTag? and options_.targetNamespaceDescriptor.jsonTag)
-        console.log("Invalid targetNamespaceDescriptor.")
-        return false
+        if not (options_? and options_)
+            setInvalid "Missing options in-parameter."
+            break
 
-    if isOpenResolve_? and isOpenResolve_
-        return true
+        if not (options_.parentDataReference? and options_.parentDataReference)
+            setInvalid "Missing parent data object reference."
+            break
 
-    keyValid = true
-    if options_.targetNamespaceKey? and options_.targetNamespaceKey
-        keyValid = options_.targetNamespaceKey.length > 0 or false
+        if not (options_.targetNamespaceDescriptor? and options_.targetNamespaceDescriptor)
+            setInvalid "Missing target namespace descriptor object reference."
+            break
 
-    if not keyValid
-        console.log("Invalid targetNamespaceKey.")
-        return false
+        if not (options_.targetNamespaceDescriptor.jsonTag? and options_.targetNamespaceDescriptor.jsonTag)
+            setInvalid "Specified target namespace descriptor object appears invalid."
+            break
 
-    if not (options_.semanticBindingsReference? and options_.semanticBindingsReference)
-        console.log("Invalid semanticBindingsReference.")
-        return false
+        if not (options_.strategy? and options_.strategy)
+            setInvalid "Missing resolution strategy specification."
+            break
 
-    if not (options_.propertyAssignmentObject? and options_.propertyAssignmentObject)
-        console.log("Invalid propertyAsssignmentObject.")
-        return false
+        strategyValid = true
+        switch options_.strategy
+            when 'open'
+                break
+            when 'create'
+                break
+            when 'negotiate'
+                break
+            else
+                strategyValid = false
+                break
+      
+        if not strategyValid
+            setInvalid "Unrecognized resolution strategy specified."
+            break
 
-    true
+        keyValid = true
+        if options_.targetNamespaceKey? and options_.targetNamespaceKey
+            keyValid = options_.targetNamespaceKey.length > 0 or false
+
+        if not keyValid
+            setInvalid "Invalid target namespace ket specified."
+            break
+
+        if not (options_.semanticBindingsReference? and options_.semanticBindingsReference)
+            setInvalid "Missing semantic bindings reference."
+            break
+
+        if not (options_.propertyAssignmentObject? and options_.propertyAssignmentObject)
+            setInvalid "Missing property assignment object."
+            break
+
+        break
+
+    console.log JSON.stringify results
+    results.valid
 
 # ==============================================================================
-namespaceResolverContext.checkValidDescriptorResolveResults = (results_) ->
+namespaceResolverContext.checkValidContextOutput = (results_) ->
     if not (results_? and results_)
         console.log "Missing results"
         return false

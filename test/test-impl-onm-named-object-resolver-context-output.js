@@ -68,14 +68,14 @@ var testVector = {
     }]
 };
 
-module.exports = describe("'checkValidDescriptorResolveResults' function export test suite.", function() {
+module.exports = describe("'checkValidContextOutput' function export test suite.", function() {
  
     before(function(done_) {
         withData(testVector, function(inputData_) {
             var result = null;
             before(function(done_) {
                 var functionUnderTest = function() {
-                    result = moduleUnderTest.checkValidDescriptorResolveResults(inputData_.testData.results);
+                    result = moduleUnderTest.checkValidContextOutput(inputData_.testData.results);
                 };
                 assert.doesNotThrow(functionUnderTest);
                 done_();
