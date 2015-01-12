@@ -36,7 +36,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-namedObjectContextHelpers =  require('./onm-named-object-context')
+namedObjectContextHelpers = require('./onm-named-object-context')
 
 namedObjectPropertyVisitor = require('./onm-named-object-property-visitor')
 
@@ -128,16 +128,17 @@ resolveNamedObjectReference = (context_) ->
                 # The requested named object reference has been resolved.
                 break
             when 'create'
-                if not (effectiveKey? and effectiveKey and effectiveKey.length > 0)
+                if not (effectiveKey? and effectiveKey and effectiveKey.length? and effectiveKey.length)
                     # TODO: FIX THIS: function call semantic should be simplified to 'create key' only
                     output.namespaceEffectiveKey = effectiveKey = input.semanticBindingsReference.setUniqueKey({}); 
                 output.namespaceDataReference = input.parentDataReference[effectiveKey] = {}
                 output.dataChangeEventJournal.push
-                    layer: 'namespace'
-                    event: 'namespaceCreated'
+                    layer: 'namedObject'
+                    event: 'namedObjectCreated'
                     eventData:
                         namespaceType: descriptor.namespaceType
-                        jsonTag: descriptor.jsonTag
+                        namespaceModelPath: descriptor.path
+                        namespaceModelId: descriptor.id
                         key: effectiveKey
                 break
         true
