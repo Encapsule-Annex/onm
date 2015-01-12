@@ -36,7 +36,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-jslib = require('../lib-javascript')
+helperFunctions = require('./onm-util-functions')
 
 module.exports = namespaceResolverContext = {}
 
@@ -50,7 +50,7 @@ namespaceResolverContext.initializeContextObject = (context_) ->
         targetNamespaceDescriptor: context_.input.targetNamespaceDescriptor
         targetNamespaceKey: context_.input.targetNamespaceKey
         semanticBindingsReference: context_.input.semanticBindingsReference
-        propertyAssignmentObject: context_.input.propertyAssignmentObject? and context_.input.propertyAssignmentObject and jslib.clone(context_.input.propertyAssignmentObject) or {}
+        propertyAssignmentObject: context_.input.propertyAssignmentObject? and context_.input.propertyAssignmentObject and helperFunctions.clone(context_.input.propertyAssignmentObject) or {}
 
     context_.output =
         strategyFollowed: 'error'

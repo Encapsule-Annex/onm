@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-jslib = require('./lib-javascript')
+helperFunctions = require('./impl/onm-util-functions')
 StoreReifier = require('./impl/onm-store-reifier')
 AddressToken = require('./impl/onm-address-token')
 AddressTokenResolver = require('./impl/onm-address-token-resolver-legacy')
@@ -98,7 +98,7 @@ module.exports = class Store
 
                 propertyAssignmentObject = undefined
                 if @implementation.dataReference? and @implementation.dataReference
-                    propertyAssignmentObject = jslib.clone(@implementation.dataReference)
+                    propertyAssignmentObject = helperFunctions.clone(@implementation.dataReference)
                     @implementation.objectStoreSource = "json"
 
             @implementation.dataReference = @implementation.dataReference? and @implementation.dataReference or {}
@@ -197,7 +197,7 @@ module.exports = class Store
                     if dataExtensionPoint[sourceComponentKey]?
                         throw new Error("The specified component already exists in the target store.")
 
-                    dataExtensionPoint[sourceComponentKey] = jslib.clone(namespaceSource_.data())
+                    dataExtensionPoint[sourceComponentKey] = helperFunctions.clone(namespaceSource_.data())
                     @implementation.reifier.reifyStoreComponent(addressSource);
 
                     @openNamespace(addressSource);
@@ -393,7 +393,7 @@ module.exports = class Store
                     return @
                 namespaceHash = namespaceSelector_.getHashString()
                 delete pathRecord[namespaceHash]
-                if jslib.dictionaryLength(pathRecord) == 0
+                if helperFunctions.dictionaryLength(pathRecord) == 0
                     delete observerState[namespaceSelector_.pathId]
                 return @
 

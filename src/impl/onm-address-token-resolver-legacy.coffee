@@ -37,7 +37,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 
-jslib = require('../lib-javascript')
+helperFunctions = require('./onm-util-functions')
 
 #
 # ****************************************************************************
@@ -208,7 +208,7 @@ ResolveNamespaceDescriptor = (resolveActions_, store_, data_, descriptor_, key_,
                     break
                 ###
 
-                # think this is evil: newData = resolveResults.dataReference? and resolveResults.dataReference and jslib.clone(resolveResults.dataReference) or {}
+                # think this is evil: newData = resolveResults.dataReference? and resolveResults.dataReference and helperFunctions.clone(resolveResults.dataReference) or {}
                 newData = resolveResults.dataReference? and resolveResults.dataReference or {}
 
                 if descriptor_.namespaceType == "component"
@@ -334,7 +334,7 @@ module.exports = class AddressTokenResolver
             }
 
             # Clone the incoming propertyAssignmentObject parameter. Or, default to an empty propertyAssignmentObject
-            propertyAssignmentObject = propertyAssignmentObject_? and propertyAssignmentObject_ and jslib.clone(propertyAssignmentObject_) or {}
+            propertyAssignmentObject = propertyAssignmentObject_? and propertyAssignmentObject_ and helperFunctions.clone(propertyAssignmentObject_) or {}
 
             console.log("AddressTokenResolver enter: '" + token_.namespaceDescriptor.jsonTag + "'.")
             

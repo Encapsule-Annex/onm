@@ -7,31 +7,29 @@ module.exports = (grunt) ->
         coffee:
             compile:
                 files:
+                    # onm API modules
                     'lib/onm-model.js': 'src/onm-model.coffee'
                     'lib/onm-address.js': 'src/onm-address.coffee'
                     'lib/onm-store.js': 'src/onm-store.coffee'
                     'lib/onm-namespace.js': 'src/onm-namespace.coffee'
                     'lib/onm-address-store.js': 'src/onm-address-store.coffee'
+
+                    # onm implementation modules
                     'lib/impl/onm-address-token.js': 'src/impl/onm-address-token.coffee'
 
                     # legacy
                     'lib/impl/onm-address-token-resolver-legacy.js': 'src/impl/onm-address-token-resolver-legacy.coffee'
 
+                    # v0.3 implementation
                     'lib/impl/onm-component-resolver.js': 'src/impl/onm-component-resolver.coffee'
-
-
-
                     'lib/impl/onm-named-object-resolver.js': 'src/impl/onm-named-object-resolver.coffee'
                     'lib/impl/onm-named-object-context.js': 'src/impl/onm-named-object-context.coffee'
                     'lib/impl/onm-named-object-property-visitor.js': 'src/impl/onm-named-object-property-visitor.coffee'
-
                     'lib/impl/onm-named-object-property-policy-initialize.js': 'src/impl/onm-named-object-property-policy-initialize.coffee'
                     'lib/impl/onm-named-object-property-policy-update.js': 'src/impl/onm-named-object-property-policy-update.coffee'
 
-
                     'lib/impl/onm-store-reifier.js': 'src/impl/onm-store-reifier.coffee'
-
-                    'lib/lib-javascript.js': 'src/lib-javascript.coffee'
+                    'lib/impl/onm-util-functions.js': 'src/impl/onm-util-functions.coffee'
 
         jshint:
             options: {}

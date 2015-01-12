@@ -44,7 +44,7 @@ module.exports.Namespace = require('./lib/onm-namespace');
 
 ////
 // UTILITY EXPORTS
-module.exports.util = require('./lib/lib-javascript');
+module.exports.util = require('./lib/impl/onm-util-functions');
 
 ////
 // DEPRECATED in onm v0.3+

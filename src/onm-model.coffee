@@ -37,7 +37,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-jslib = require('./lib-javascript')
+helperFunctions = require('./impl/onm-util-functions')
 Address = require('./onm-address')
 AddressToken = require('./impl/onm-address-token')
 uuid = require('node-uuid')
@@ -72,7 +72,7 @@ class ModelDetails
                     namespaceType = (ONMD_.namespaceType? and ONMD_.namespaceType) or (not id and (ONMD_.namespaceType = "root")) or throw new Error("Internal error unable to determine namespace type.");
                     parentPathExtensionPoints = undefined
                     if parentPathExtensionPointIdVector_? and parentPathExtensionPointIdVector_
-                        parentPathExtensionPoints = jslib.clone parentPathExtensionPointIdVector_
+                        parentPathExtensionPoints = helperFunctions.clone parentPathExtensionPointIdVector_
                     else
                         parentPathExtensionPoints = []
 
@@ -109,7 +109,7 @@ class ModelDetails
                     if parentDescriptor_? and parentDescriptor_
                         parentDescriptor_.children.push thisDescriptor
                         # Clone the parent's parentPathIdVector and add ourselves to it.
-                        thisDescriptor.parentPathIdVector = jslib.clone parentDescriptor_.parentPathIdVector
+                        thisDescriptor.parentPathIdVector = helperFunctions.clone parentDescriptor_.parentPathIdVector
                         thisDescriptor.parentPathIdVector.push parentDescriptor_.id
 
                     if @rankMax < thisDescriptor.parentPathIdVector.length
@@ -149,7 +149,7 @@ class ModelDetails
                             else
                                 throw new Error("Cannot process extension point declaration because its corresponding extension archetype is missing from the object model declaration.");
 
-                            updatedParentPathExtensionPointIdVector = jslib.clone parentPathExtensionPoints
+                            updatedParentPathExtensionPointIdVector = helperFunctions.clone parentPathExtensionPoints
                             updatedParentPathExtensionPointIdVector.push id
                             @countExtensionPoints++
 
@@ -263,7 +263,7 @@ class ModelDetails
                     targetDescriptor = @getNamespaceDescriptorFromPathId(pathId_)
                     newAddress = new Address(@model)
                     token = undefined
-                    pathIds = jslib.clone(targetDescriptor.parentPathIdVector)
+                    pathIds = helperFunctions.clone(targetDescriptor.parentPathIdVector)
                     pathIds.push(targetDescriptor.id)
                     for parentPathId in pathIds
                         descriptor = @getNamespaceDescriptorFromPathId(parentPathId)
@@ -408,7 +408,7 @@ class ModelDetails
             @model.description = objectModelDeclaration_.____description? and objectModelDeclaration_.____description or "<no description provided>"
 
             # Deep copy the specified object model declaration object.
-            @objectModelDeclaration = jslib.clone objectModelDeclaration_
+            @objectModelDeclaration = helperFunctions.clone objectModelDeclaration_
             Object.freeze @objectModelDeclaration
 
             if not (@objectModelDeclaration? and @objectModelDeclaration)
@@ -524,7 +524,7 @@ class ModelDetails
                         if data_.uuidRevision?
                             data_.uuidRevision = uuid.v4()
                         if data_.revisionTime?
-                            data_.revisionTime = jslib.getEpochTime()
+                            data_.revisionTime = helperFunctions.getEpochTime()
                     break
                 when "external"
                     break
