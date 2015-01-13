@@ -53,7 +53,33 @@ module.exports = resolveComponentReference = (options_) ->
         context = input: options_, output: {}
         componentContextHelpers.initializeContextObject context
 
-        # The actual component resolver implementation will go here...
+        # Determine if the specified address token refers to the root or subnamespace of the data component.
+
+
+
+
+
+
+
+
+
+
+        # Resolve the component's root named object via the requested strategy.
+
+
+        switch context.input.strategy
+
+            when 'open'
+                break
+
+            when 'create'
+                break
+
+            when 'negotiate'
+                break
+
+            else
+                throw new Error "Unrecognized component resolution strategy '#{context.input.strategy}'."
 
         # Ensure that the the output portion of the shared context object is valid.
         if not componentContextHelpers.checkValidContextOutput context.output

@@ -46,71 +46,50 @@ componentResolverContext.initializeContextObject = (context_) ->
 
 # ==============================================================================
 componentResolverContext.checkValidContextInput = (options_) ->
-
     results = { valid: true, reason: 'okay' }
-
     setInvalid = (reason_) ->
         results.valid = false
         results.reason = reason_
         results
-
     while true
-
         if not (options_? and options_)
             setInvalid "Missing options in-parameter."
             break
-
         if not (options_.parentDataReference? and options_.parentDataReference)
             setInvalid "Missing parent data object reference."
             break
-
         if not (options_.addressToken? and options_.addressToken)
             setInvalid "Missing address token object reference."
             break
-
         if not (options_.strategy? and options_.strategy and options_.strategy.length? and options_.strategy.length)
             setInvalid "Missing resolution strategy specification."
             break
-
         if not (options_.semanticBindingsReference? and options_.semanticBindingsReference)
             setInvalid "Missing semantic bindings reference."
             break
-
         break
-
     # TODO: remove console logging before releasing v0.3
     if not results.valid
         console.warn "Invalid named object input context object: '#{results.reason}'."
-
     results.valid
-
-
 
 # ==============================================================================
 componentResolverContext.checkValidContextOutput = (results_) ->
-
     results = { valid: true, reason: 'okay' }
-
     setInvalid = (reason_) ->
         results.valid = false
         results.reason = reason_
         results
-
     while true
-
         if not (results_? and results)
             setInvalid "Missing results in-parameter."
             break
-
         if not (results_.resolvedNamedObject? and results_.resolvedNamedObject)
             setInvalid "Missing resolved named object resolution results structure."
             break
-
         break
-
     # TODO: remove console logging before releasing v0.3
     if not results.valid
         console.warn "Invalid named object input context object: '#{results.reason}'."
-
     results.valid
-    
+
