@@ -68,7 +68,7 @@ namedObjectResolverContext.getNamespaceDescriptorFromContext = (context_) ->
 # ==============================================================================
 namedObjectResolverContext.checkValidContextInput = (options_) ->
 
-    results = { valid: true, reason: 'because, good' }
+    results = { valid: true, reason: 'okay' }
 
     setInvalid = (reason_) ->
         results.valid = false
@@ -129,35 +129,58 @@ namedObjectResolverContext.checkValidContextInput = (options_) ->
         break
 
     if not results.valid
+        # TODO: remove console logging before releasing v0.3
         console.warn "Invalid named object input context object: '#{results.reason}'."
 
     results.valid
 
 # ==============================================================================
 namedObjectResolverContext.checkValidContextOutput = (results_) ->
-    if not (results_? and results_)
-        console.log "Missing results"
-        return false
-    if not (results_.namespaceEffectiveKey? and results_.namespaceEffectiveKey)
-        console.log "Invalid namespaceEffectiveKey"
-        return false
-    if not (results_.namespaceDataReference? and results_.namespaceDataReference)
-        console.log "Invalid namespaceDataReference"
-        return false
-    if not (results_.pendingNamespaceDescriptors? and results_.pendingNamespaceDescriptors and Array.isArray(results_.pendingNamespaceDescriptors))
-        console.log "Invalid pendingNamespaceDescriptors"
-        return false
-    if not (results_.strategyFollowed? and results_.strategyFollowed)
-        console.log "Invalid strategyFollowed"
-        return false
-    switch results_.strategyFollowed
-        when 'open'
-            break
-        when 'create'
-            break
-        else
-            console.log "Invalid strategyFollowed value '#{results_.strategyFollowed}'."
-            return false
 
-    return true
+    results = { valid: true, reason: 'okay' }
+
+    setInvalid = (reason_) ->
+        results.valid = false
+        results.reason = reason_
+        results
+
+    while true
+
+        if not (results_? and results_)
+            setInvalid "Missing results"
+            break
+
+        if not (results_.namespaceEffectiveKey? and results_.namespaceEffectiveKey and results_.namespaceEffectiveKey.length? and results_.namespaceEffectiveKey.length)
+            setInvalid "Invalid namespaceEffectiveKey"
+            break
+
+        if not (results_.namespaceDataReference? and results_.namespaceDataReference)
+            setInvalid "Invalid namespaceDataReference"
+            break
+
+        if not (results_.pendingNamespaceDescriptors? and results_.pendingNamespaceDescriptors and Array.isArray(results_.pendingNamespaceDescriptors))
+            setInvalid "Invalid pendingNamespaceDescriptors"
+            break
+
+        if not (results_.strategyFollowed? and results_.strategyFollowed)
+            setInvalid "Invalid strategyFollowed"
+            break
+
+        switch results_.strategyFollowed
+            when 'open'
+                break
+            when 'create'
+                break
+            else
+                setInvalid "Invalid strategyFollowed value '#{results_.strategyFollowed}'."
+                break
+
+        break
+
+    if not results.valid
+        # TODO: remove console logging before releasing v0.3
+        console.warn "Invalid named object input context object: '#{results.reason}'."
+
+    results.valid
+
 

@@ -39,7 +39,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 module.exports = componentResolverContext = {}
 
 # ==============================================================================
-componentResolverContext.checkValidContextInput = (context_) ->
+componentResolverContext.checkValidContextInput = (options_) ->
 
     results = { valid: true, reason: 'because, good' }
 
@@ -72,7 +72,9 @@ componentResolverContext.checkValidContextInput = (context_) ->
 
         break
 
+
     if not results.valid
+        # TODO: remove console logging before releasing v0.3
         console.warn "Invalid named object input context object: '#{results.reason}'."
 
     results.valid
