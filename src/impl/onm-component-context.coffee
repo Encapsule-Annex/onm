@@ -38,10 +38,16 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 module.exports = componentResolverContext = {}
 
+
+# ==============================================================================
+componentResolverContext.initializeContextObject = (context_) ->
+    context_
+
+
 # ==============================================================================
 componentResolverContext.checkValidContextInput = (options_) ->
 
-    results = { valid: true, reason: 'because, good' }
+    results = { valid: true, reason: 'okay' }
 
     setInvalid = (reason_) ->
         results.valid = false
@@ -72,9 +78,8 @@ componentResolverContext.checkValidContextInput = (options_) ->
 
         break
 
-
+    # TODO: remove console logging before releasing v0.3
     if not results.valid
-        # TODO: remove console logging before releasing v0.3
         console.warn "Invalid named object input context object: '#{results.reason}'."
 
     results.valid
@@ -82,6 +87,30 @@ componentResolverContext.checkValidContextInput = (options_) ->
 
 
 # ==============================================================================
-componentResolverContext.checkValidContextOutput = (context_) ->
+componentResolverContext.checkValidContextOutput = (results_) ->
 
-    true
+    results = { valid: true, reason: 'okay' }
+
+    setInvalid = (reason_) ->
+        results.valid = false
+        results.reason = reason_
+        results
+
+    while true
+
+        if not (results_? and results)
+            setInvalid "Missing results in-parameter."
+            break
+
+        if not (results_.resolvedNamedObject? and results_.resolvedNamedObject)
+            setInvalid "Missing resolved named object resolution results structure."
+            break
+
+        break
+
+    # TODO: remove console logging before releasing v0.3
+    if not results.valid
+        console.warn "Invalid named object input context object: '#{results.reason}'."
+
+    results.valid
+    

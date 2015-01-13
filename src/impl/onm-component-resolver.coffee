@@ -42,9 +42,26 @@ resolveNamedObject = require('./onm-named-object-resolver')
 
 componentContextHelpers = require('./onm-component-context')
 
-resolveComponentReference = (options_) ->
+module.exports = resolveComponentReference = (options_) ->
 
     try
+        # DEBUG: Verify the base-level semantics of options_ in-paramaeter
+        if not componentContextHelpers.checkValidContextInput options_
+            throw new Error "Invalid options in-parameter."
+
+        # Initialize the data I/O context object shared by subroutines of the component resolver.
+        context = input: options_, output: {}
+        componentContextHelpers.initializeContextObject context
+
+        # The actual component resolver implementation will go here...
+
+        # Ensure that the the output portion of the shared context object is valid.
+        if not componentContextHelpers.checkValidContextOutput context.output
+            throw new Error "Internal test case failure: context.output object validation failed."
+
+        # Return the result
+        context.output
+
     catch exception_
         throw new Error "resolveComponentReference failed with exception '#{exception_.message}'."
 
@@ -53,53 +70,3 @@ resolveComponentReference = (options_) ->
 
 
 
-# Going to re-write this but keep for reference for now...
-
-# ==============================================================================
-class AddressTokenResolver
-
-    constructor: (tokenResolveOptions_) ->
-        try
-            if not (tokenResolveOptions_? and tokenResolveOptions_ and 
-                tokenResolveOptions_.model? and tokenResolveOptions_.model and
-                tokenResolveOptions_.parentDataReference? and tokenResolveOptions_.parentDataReference and
-                tokenResolveOptions_.token? and tokenResolveOptions_.token and
-                tokenResolveOptions_.mode? and tokenResolveOptions_.mode and
-                tokenResolveOptions_.propertyAssignmentObject? and tokenResolveOptions_.propertyAssignmentObject)
-                    throw new Error("Invalid resolve options object.")
-            switch (tokenResolveOptions_.mode)
-                when 'open'
-                    break
-                when 'create'
-                    break
-                else
-                    throw new Error("Unrecognized mode value '#{tokenResolveOptions_.mode}'")
-        catch exception_
-            throw new Error("AddressTokenResolver2 construction failure: #{exception_.message}")
-
-
-# ==============================================================================
-openTokenNamespace = (tokenResolveOptions_) ->
-    try
-
-    catch exception_
-        throw new Error("openTokenNamespace failure: #{exception_.message}")
-
-
-# ==============================================================================
-createTokenNamespace = (tokenResolveOptions_) ->
-    try
-
-    catch exception_
-        throw new Error("createTokenNamespace failure: #{exception_.message}")
-
-# ==============================================================================
-
-
-module.exports = {
-    # exports for client(s)
-    AddressTokenResolver: AddressTokenResolver,
-    # exports for tests
-    openTokenNamespace: openTokenNamespace,
-    createTokenNamespace: createTokenNamespace
-}

@@ -52,7 +52,7 @@ module.exports = resolveNamedObject = (options_) ->
         if not namedObjectContextHelpers.checkValidContextInput options_
             throw new Error "Internal test case failure: invalid options object in-parameter."
 
-        # Initialize the data I/O context object shared by all stages of the named object resolver.
+        # Initialize the data I/O context object shared by subroutines of the named object resolver.
         context = input: options_, output: {}
         namedObjectContextHelpers.initializeContextObject context
 
