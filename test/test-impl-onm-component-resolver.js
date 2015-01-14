@@ -17,12 +17,12 @@ var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 
 module.exports = describe("onm.AddressTokenResolver whitebox tests.", function() {
 
-    var moduleUnderTest = null;
+    var functionUnderTest  = null;
 
     before(function(done_) {
 
         var loadModuleUnderTest = function() {
-            moduleUnderTest = require('../lib/impl/onm-component-resolver');
+            functionUnderTest = require('../lib/impl/onm-component-resolver');
         };
 
         assert.doesNotThrow(loadModuleUnderTest);
@@ -31,12 +31,12 @@ module.exports = describe("onm.AddressTokenResolver whitebox tests.", function()
     });
 
     it("The 'onm-token-resolver' module should have loaded.", function() {
-        assert.isDefined(moduleUnderTest);
-        assert.isNotNull(moduleUnderTest);
+        assert.isDefined(functionUnderTest);
+        assert.isNotNull(functionUnderTest);
     });
 
-    it("Module should export function (constructor) 'AddressTokenResolver'.", function() {
-        assert.isFunction(moduleUnderTest);
+    it("Module should export function (resolveComponent).", function() {
+        assert.isFunction(functionUnderTest);
     });
 
 });
