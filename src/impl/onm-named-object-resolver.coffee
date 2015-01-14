@@ -136,6 +136,7 @@ resolveNamedObjectReference = (context_) ->
                         namespaceModelId: descriptor.id
                         key: effectiveKey
                 break
+        output.resolvedId = input.targetNamespaceDescriptor.id
         true
 
     catch exception_

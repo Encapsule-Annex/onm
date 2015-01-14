@@ -57,6 +57,8 @@ namedObjectResolverContext.initializeContextObject = (options_) ->
             namespaceDataReference: null
             dataChangeEventJournal: []
             pendingNamespaceDescriptors: [] # TODO: pick a better name for this
+            resolvedId: -1
+
 
 # ==============================================================================
 namedObjectResolverContext.checkValidContextInput = (options_) ->
