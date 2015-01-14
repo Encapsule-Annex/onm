@@ -143,6 +143,10 @@ namedObjectResolverContext.checkValidContextOutput = (results_) ->
             setInvalid "Missing results"
             break
 
+        if not (results_.resolvedId? and (results_.resolvedId >= 0))
+            setInvalid "Invalid resolved namespace model ID."
+            break
+
         if not (results_.namespaceEffectiveKey? and results_.namespaceEffectiveKey and results_.namespaceEffectiveKey.length? and results_.namespaceEffectiveKey.length)
             setInvalid "Invalid namespaceEffectiveKey"
             break

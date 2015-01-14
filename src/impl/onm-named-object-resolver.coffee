@@ -56,22 +56,22 @@ module.exports = resolveNamedObject = (options_) ->
         context = namedObjectContextHelpers.initializeContextObject options_
 
         # Obtain a reference to the specified named object.
-        result = resolveNamedObjectReference context
+        continueEval = resolveNamedObjectReference context
 
         # Dynamically select named object property resolution policy.
         propertyResolutionPolicyInterface = namedObjectPropertyVisitorInterfaces[context.output.strategyFollowed]
 
         # Visit the namespace's declared properties.
-        result = result and namedObjectPropertyVisitor.visitNamespaceProperties propertyResolutionPolicyInterface, context
+        continueEval = continueEval and namedObjectPropertyVisitor.visitNamespaceProperties propertyResolutionPolicyInterface, context
 
         # Visit the namespace's declared subnamespaces.
-        result = result and namedObjectPropertyVisitor.visitNamespaceChildren propertyResolutionPolicyInterface, context
+        continueEval = continueEval and namedObjectPropertyVisitor.visitNamespaceChildren propertyResolutionPolicyInterface, context
 
         # Process remaining caller-supplied data not consumed by the previous stages.
-        result = result and namedObjectPropertyVisitor.processPropertyOptions propertyResolutionPolicyInterface, context
+        continueEval = continueEval and namedObjectPropertyVisitor.processPropertyOptions propertyResolutionPolicyInterface, context
 
         # Finalize the context object prior to returning results.
-        result = result and namedObjectPropertyVisitor.finalizeContext propertyResolutionPolicyInterface, context
+        continueEval = continueEval and namedObjectPropertyVisitor.finalizeContext propertyResolutionPolicyInterface, context
 
         # DEBUG: Verify the base-level semantics of the result.
         if not namedObjectContextHelpers.checkValidContextOutput context.output
@@ -91,8 +91,6 @@ resolveNamedObjectReference = (context_) ->
         input = context_.input
         output = context_.output
         descriptor = input.targetNamespaceDescriptor
-
-        # FUNCTION PROLOGUE
 
         # Deduce and cache the named object's effective object name, or key.
         output.namespaceEffectiveKey = effectiveKey = (descriptor.namespaceType != 'component') and descriptor.jsonTag or input.targetNamespaceKey
@@ -118,9 +116,8 @@ resolveNamedObjectReference = (context_) ->
             else
                 throw new Error "Unrecognized named object dereference strategy '#{input.strategy}'."
 
-        # FUNCTION EPILOGUE        
-
-        # Exit if following 'open', or instantiate a new named object if following 'create' strategy.
+        # If we have selected 'open' as the resolution strategy, exit; the named object has been dereferenced.
+        # If we have selected 'create' as the resolution strategy, create a new, empty, object and save its reference.
         switch output.strategyFollowed
             when 'open'
                 # The requested named object reference has been resolved.

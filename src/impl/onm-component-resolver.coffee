@@ -52,8 +52,30 @@ module.exports = resolveComponent = (options_) ->
         # Initialize the data I/O context object shared by subroutines of the component resolver.
         context = componentContextHelpers.initializeContextObject options_
 
+        namedObjectResolutionQueue = []
+        targetNamedObjectResolutionResult = null
+
         # Resolve the data component's root named object using the requested resolution strategy.
-        resolveComponentRootNamedObject context
+
+        namedObjectResolutionQueue.push resolveNamedObject {
+            strategy: context.input.strategy
+            parentDataReference: context.input.parentDataReference
+            targetNamespaceDescriptor: context.input.addressToken.componentDescriptor
+            targetNamespaceKey: context.input.addressToken.key
+            semanticBindingsReference: context.input.semanticBindingsReference
+            propertyAssignmentObject: (context.input.addressToken.idComponent == context.input.addressToken.idNamespace) and context.input.propertyAssignmentObject or {}
+            }
+
+        while namedObjectResolutionQueue.length
+            namedObjectResolution = namedObjectResolutionQueue.pop()
+
+
+
+            
+
+
+
+
 
         # DEBUG: Verify the base-level semantics of the result.
         if not componentContextHelpers.checkValidContextOutput context.output
@@ -72,7 +94,7 @@ module.exports = resolveComponent = (options_) ->
 resolveComponentRootNamedObject = (context_) ->
     try
 
-        namedObjectResolveOptions =
+        options =
             strategy: context.input.strategy
             parentDataReference: context.input.parentDataReference
             targetNamespaceDescriptor: context.input.addressToken.componentDescriptor

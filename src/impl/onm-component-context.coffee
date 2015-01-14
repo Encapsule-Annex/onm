@@ -44,7 +44,8 @@ componentResolverContext.initializeContextObject = (options_) ->
     context =
         input: options_
         output:
-            resolvedNamedObject: null
+            namedObjectResolutions:
+                componentRoot: null
 
 
 # ==============================================================================
