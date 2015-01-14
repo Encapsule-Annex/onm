@@ -36,13 +36,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-# New stuff started on top of the latest onm-named-object-resolver work...
 
 resolveNamedObject = require('./onm-named-object-resolver')
 
 componentContextHelpers = require('./onm-component-context')
 
-module.exports = resolveComponentReference = (options_) ->
+# ==============================================================================
+module.exports = resolveComponent = (options_) ->
 
     try
         # DEBUG: Verify the base-level semantics of options_ in-paramaeter
@@ -50,46 +50,45 @@ module.exports = resolveComponentReference = (options_) ->
             throw new Error "Invalid options in-parameter."
 
         # Initialize the data I/O context object shared by subroutines of the component resolver.
-        context = input: options_, output: {}
-        componentContextHelpers.initializeContextObject context
+        context = componentContextHelpers.initializeContextObject options_
 
-        # Determine if the specified address token refers to the root or subnamespace of the data component.
+        # Resolve the data component's root named object using the requested resolution strategy.
+        resolveComponentRootNamedObject context
 
-
-
-
-
-
-
-
-
-
-        # Resolve the component's root named object via the requested strategy.
-
-
-        switch context.input.strategy
-
-            when 'open'
-                break
-
-            when 'create'
-                break
-
-            when 'negotiate'
-                break
-
-            else
-                throw new Error "Unrecognized component resolution strategy '#{context.input.strategy}'."
-
-        # Ensure that the the output portion of the shared context object is valid.
+        # DEBUG: Verify the base-level semantics of the result.
         if not componentContextHelpers.checkValidContextOutput context.output
             throw new Error "Internal test case failure: context.output object validation failed."
 
-        # Return the result
-        context.output
+        # Return the results.
+        return context.output
 
     catch exception_
-        throw new Error "resolveComponentReference failed with exception '#{exception_.message}'."
+        message = "resolveComponent exception occurred during execution of strategy '#{options_.input.strategy}': '#{exception_.message}'."
+        throw new Error message
+
+
+
+# ==============================================================================
+resolveComponentRootNamedObject = (context_) ->
+    try
+
+        namedObjectResolveOptions =
+            strategy: context.input.strategy
+            parentDataReference: context.input.parentDataReference
+            targetNamespaceDescriptor: context.input.addressToken.componentDescriptor
+            targetNamespaceKey: context.input.addressToken.key
+            semanticBindingsReference: context.input.semanticBindingsReference
+            propertyAssignmentObject: (context.input.addressToken.idComponent == context.input.addressToken.idNamespace) and context.input.propertyAssignmentObject or {}
+
+
+
+
+
+    catch exception_
+        throw new Error "resolveComponentRooNamedObject failed with exception '#{excpetion_.message}'."
+
+
+
 
 
 

@@ -40,8 +40,11 @@ module.exports = componentResolverContext = {}
 
 
 # ==============================================================================
-componentResolverContext.initializeContextObject = (context_) ->
-    context_
+componentResolverContext.initializeContextObject = (options_) ->
+    context =
+        input: options_
+        output:
+            resolvedNamedObject: null
 
 
 # ==============================================================================

@@ -53,8 +53,7 @@ module.exports = resolveNamedObject = (options_) ->
             throw new Error "Internal test case failure: invalid options object in-parameter."
 
         # Initialize the data I/O context object shared by subroutines of the named object resolver.
-        context = input: options_, output: {}
-        namedObjectContextHelpers.initializeContextObject context
+        context = namedObjectContextHelpers.initializeContextObject options_
 
         # Obtain a reference to the specified named object.
         result = resolveNamedObjectReference context
@@ -82,8 +81,7 @@ module.exports = resolveNamedObject = (options_) ->
         context.output
 
     catch exception_
-        policyName = propertyResolutionPolicyInterface? and propertyResolutionPolicyInterface and propertyResolutionPropertyInterface.policyName or 'prologue'
-        message = "resolveNamedObject exception occurred during execution of policy '#{policyName}': '#{exception_.message}'."
+        message = "resolveNamedObject exception occurred during execution of strategy '#{options_.input.strategy}': '#{exception_.message}'."
         throw new Error message
 
 
@@ -144,7 +142,6 @@ resolveNamedObjectReference = (context_) ->
         true
 
     catch exception_
-        message = "resolveNamedObjectReference failed with exception '#{exception_.message}'."
-        throw new Error message
+        throw new Error "resolveNamedObjectReference failed with exception '#{exception_.message}'."
 
 

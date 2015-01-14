@@ -43,7 +43,7 @@ module.exports = namedObjectPropertyResolver = {}
 # ==============================================================================
 namedObjectPropertyResolver.visitNamespaceProperties = (resolutionPolicyInterface_, context_) ->
     if not (resolutionPolicyInterface_.processNamespaceProperty? and resolutionPolicyInterface_.processNamespaceProperty) then return true
-    namespaceDescriptor = namespaceResolverContext.getNamespaceDescriptorFromContext context_
+    namespaceDescriptor = context_.input.targetNamespaceDescriptor
     if (namespaceDescriptor.namespaceType == 'extensionPoint') then return true
     result = true
     propertiesDeclaration = namespaceDescriptor.namespaceModelPropertiesDeclaration
@@ -61,7 +61,7 @@ namedObjectPropertyResolver.visitNamespaceProperties = (resolutionPolicyInterfac
 namedObjectPropertyResolver.visitNamespaceChildren = (resolutionPolicyInterface_, context_) ->
     if not (resolutionPolicyInterface_.processSubnamespace? and resolutionPolicyInterface_.processSubnamespace) then return true
     result = true
-    namespaceDescriptor = namespaceResolverContext.getNamespaceDescriptorFromContext context_
+    namespaceDescriptor = context_.input.targetNamespaceDescriptor
     for childNamespaceDescriptor in namespaceDescriptor.children
         if not result then break
         result = resolutionPolicyInterface_.processSubnamespace context_, childNamespaceDescriptor

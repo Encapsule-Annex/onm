@@ -42,28 +42,21 @@ module.exports = namedObjectResolverContext = {}
 
 
 # ==============================================================================
-namedObjectResolverContext.initializeContextObject = (context_) ->
-
-    context_.input =
-        strategy: context_.input.strategy? and context_.input.strategy or 'error'
-        parentDataReference: context_.input.parentDataReference
-        targetNamespaceDescriptor: context_.input.targetNamespaceDescriptor
-        targetNamespaceKey: context_.input.targetNamespaceKey
-        semanticBindingsReference: context_.input.semanticBindingsReference
-        propertyAssignmentObject: context_.input.propertyAssignmentObject? and context_.input.propertyAssignmentObject and helperFunctions.clone(context_.input.propertyAssignmentObject) or {}
-
-    context_.output =
-        strategyFollowed: 'error'
-        namespaceEffectiveKey: null
-        namespaceDataReference: null
-        dataChangeEventJournal: []
-        pendingNamespaceDescriptors: [] # TODO: pick a better name for this
-
-    context_
-
-# ==============================================================================
-namedObjectResolverContext.getNamespaceDescriptorFromContext = (context_) ->
-    context_.input.targetNamespaceDescriptor
+namedObjectResolverContext.initializeContextObject = (options_) ->
+    context =
+        input:
+            strategy: options_.strategy? and options_.strategy or 'error'
+            parentDataReference: options_.parentDataReference
+            targetNamespaceDescriptor: options_.targetNamespaceDescriptor
+            targetNamespaceKey: options_.targetNamespaceKey
+            semanticBindingsReference: options_.semanticBindingsReference
+            propertyAssignmentObject: options_.propertyAssignmentObject? and options_.propertyAssignmentObject and helperFunctions.clone(options_.propertyAssignmentObject) or {}
+        output:
+            strategyFollowed: 'error'
+            namespaceEffectiveKey: null
+            namespaceDataReference: null
+            dataChangeEventJournal: []
+            pendingNamespaceDescriptors: [] # TODO: pick a better name for this
 
 # ==============================================================================
 namedObjectResolverContext.checkValidContextInput = (options_) ->

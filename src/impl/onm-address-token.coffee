@@ -43,6 +43,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 # ****************************************************************************
 #
 #
+
+# ==============================================================================
 module.exports = class AddressToken
     constructor: (model_, idExtensionPoint_, key_, idNamespace_) ->
         try
