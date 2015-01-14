@@ -2,7 +2,7 @@
 //
 
 var onm = require('../../../index');
-var testDataModelDeclaration = require('../../fixture/descriptor-resolve-test-data-model');
+var testDataModelDeclaration = require('../../fixture/named-object-resolve-test-data-model');
 var testDataModel = new onm.Model(testDataModelDeclaration);
 var rootAddress = testDataModel.createRootAddress();
 var extensionPointDescriptor = rootAddress.implementation.getModelDescriptorFromSubpath('namespaceExtensionPointA');

@@ -1,6 +1,6 @@
 {
   "name": "onm",
-  "version": "0.3.13",
+  "version": "0.3.14",
   "description": "Object Namespace Manager (onm) in-memory data modeling, storage, addressing, traversal, introspection, normalization, serialization, and abstraction framework for Node.js and HTML 5.",
   "scripts": {
     "test": "mocha -R spec ./test/test-onm.js"

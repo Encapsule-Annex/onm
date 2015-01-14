@@ -12,8 +12,8 @@ var onm = require('../index');
 var functionUnderTest = require('../lib/impl/onm-named-object-resolver');
 var moduleUnderTestImpl = require('../lib/impl/onm-named-object-context')
 
-var namespaceDescriptorResolveCreateVectors = require('./vectors/descriptor-resolve-create-vectors')();
-var subcomponentCreationTestVectors = require('./vectors/descriptor-resolve/vector-dimension-create-subcomponent-assignment')();
+var namespaceDescriptorResolveCreateVectors = require('./vectors/generate-named-object-create-strategy-vectors')();
+var subcomponentCreationTestVectors = require('./vectors/named-object-resolve/vector-dimension-create-subcomponent-assignment')();
 
 describe("resolveNamespaceDescriptorCreate internal function whitebox test matrix:", function () {
     withData(namespaceDescriptorResolveCreateVectors, function(testData) {

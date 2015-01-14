@@ -45,18 +45,8 @@ describe("onm v" + packageMeta.version + " test fixture regression test suite.",
                 addDataModelToTestSuite("Data model declaration '" + semanticBindingsDataModelDeclaration.jsonTag + "'.", semanticBindingsDataModelDeclaration);
             };
 
-            /*
-            var loadSemanticBindingsDataModelDeclarationVariants = function() {
-                var dataModelDeclarationVariants = require('./fixture/semantic-binding-variants');
-                for (var testName in dataModelDeclarationVariants) {
-                    var testDescriptor = dataModelDeclarationVariants[testName][0];
-                    addDataModelToTestSuite(testDescriptor.testName, testDescriptor.dataModelDeclaration);
-                }
-            };
-            */
-
             var loadDescriptorResolveDataModelDeclaration = function() {
-                var descriptorResolveTestDataModelDeclaration = require('./fixture/descriptor-resolve-test-data-model');
+                var descriptorResolveTestDataModelDeclaration = require('./fixture/named-object-resolve-test-data-model');
                 addDataModelToTestSuite("Data model declaration '" + descriptorResolveTestDataModelDeclaration.jsonTag + "'.", descriptorResolveTestDataModelDeclaration);
             };
 
