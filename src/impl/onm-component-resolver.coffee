@@ -71,12 +71,6 @@ module.exports = resolveComponent = (options_) ->
 
 
 
-            
-
-
-
-
-
         # DEBUG: Verify the base-level semantics of the result.
         if not componentContextHelpers.checkValidContextOutput context.output
             throw new Error "Internal test case failure: context.output object validation failed."
