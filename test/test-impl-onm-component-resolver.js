@@ -16,27 +16,48 @@ var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 
 
 module.exports = describe("onm.AddressTokenResolver whitebox tests.", function() {
-
-    var functionUnderTest  = null;
-
+    var resolveComponent  = null;
     before(function(done_) {
-
         var loadModuleUnderTest = function() {
-            functionUnderTest = require('../lib/impl/onm-component-resolver');
+            resolveComponent = require('../lib/impl/onm-component-resolver');
         };
-
         assert.doesNotThrow(loadModuleUnderTest);
         done_();
-
     });
-
     it("The 'onm-token-resolver' module should have loaded.", function() {
-        assert.isDefined(functionUnderTest);
-        assert.isNotNull(functionUnderTest);
+        assert.isDefined(resolveComponent);
+        assert.isNotNull(resolveComponent);
+    });
+    it("Module should export function (resolveComponent).", function() {
+        assert.isFunction(resolveComponent);
     });
 
-    it("Module should export function (resolveComponent).", function() {
-        assert.isFunction(functionUnderTest);
+    describe("Component open test #1.", function() {
+
+        input = {
+            strategy: 'open',
+            semanticBindingsReference: testDataModel.getSemanticBindings(),
+            addressToken: testDataRootToken,
+            parentDataReference: { addressBook: {} },
+            propertyOptionsObject: {}
+        };
+        output = null;
+        before(function() {
+            var functionUnderTest = function() {
+                outout = resolveComponent(input);
+            };
+            assert.doesNotThrow(functionUnderTest);
+        });
+
+        it("Execute the test suite.", function() {
+            assert.isTrue(true);
+        });
+    });
+
+    describe("Component open test #2.", function() {
+    });
+
+    describe("Component open test #3.", function() {
     });
 
 });
