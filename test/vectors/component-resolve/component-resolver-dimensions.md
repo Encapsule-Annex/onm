@@ -25,9 +25,20 @@ values predicated on valid(value(dimension(strategy))):
 - A7: RCCE: level-1 child | level-2 child | level-3 extension point
 
 
+## target namespace data initial state dimension
+
+Note that the existing data (i.e. the store data) at the target namespace is a function of the parent data object reference passed to resolveComponent, and a function of the address token value.
+
+- T1: empty parent object
+- T2: parent data object contains target named object
+- T3: 
+
+
 ## parent data
 
-The parent data object is a reference directly into onm.Store data. It may or may not be initialized. It may or may not contain properties. If it contains properties, they will _generally_ correspond with declared entities in the onm data model. However, they do not have to. In the context of component resolution, the parent data object reference corresponds to the data object associated with a named extention point (the component's parent namespace by definition). What the parent dimension represents is then the registration (or framing if you prefer) of the parent namespace data, against the component's declared data model structure of which there are strategy*token (21) permutations.
+
+
+
 
 
 C:R :: N -- empty parent data object
