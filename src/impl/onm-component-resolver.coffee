@@ -56,7 +56,6 @@ module.exports = resolveComponent = (options_) ->
         targetNamedObjectResolutionResult = null
 
         # Resolve the data component's root named object using the requested resolution strategy.
-
         namedObjectResolutionQueue.push resolveNamedObject {
             strategy: context.input.strategy
             parentDataReference: context.input.parentDataReference
@@ -67,7 +66,18 @@ module.exports = resolveComponent = (options_) ->
             }
 
         while namedObjectResolutionQueue.length
+
             namedObjectResolution = namedObjectResolutionQueue.pop()
+
+            # Have we resolved the target namespace?
+            if namedObjectResolution.resolvedId == context.input.addressToken.idNamespace
+                targetNamedObjectResolutionResult = namedObjectResolution
+
+
+            
+
+
+
 
 
 
