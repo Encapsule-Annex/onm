@@ -81,7 +81,7 @@ module.exports = resolveNamedObject = (options_) ->
         context.output
 
     catch exception_
-        message = "resolveNamedObject exception occurred during execution of strategy '#{options_.input.strategy}': '#{exception_.message}'."
+        message = "resolveNamedObject exception occurred during execution of strategy '#{options_.strategy}': '#{exception_.message}'."
         throw new Error message
 
 

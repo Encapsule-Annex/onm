@@ -36,6 +36,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+propertyCommonLib = require('./onm-named-object-property-policy-common')
+
+
 module.exports =
 
     ### create new namespace policy implementation
@@ -53,17 +56,17 @@ module.exports =
 
     # ----------------------------------------------------------------------------
     processNamespaceProperty: (context_, name_, declaration_) ->
-        value = context_.input.propertyAssignmentObject[name_]
         valueFromCallerData = false
-        if value? and value
+        value = context_.input.propertyAssignmentObject[name_]
+        if propertyCommonLib.checkValidPropertyValue value
             delete context_.input.propertyAssignmentObject[name_]
             valueFromCallerData = true
         else
             value = declaration_.defaultValue
-            if not (value? and value)
+            if not propertyCommonLib.checkValidPropertyValue value
                 value = declaration_.fnCreate? and declaration_.fnCreate and declaration_.fnCreate()
-                if not (value? and value)
-                    throw new Error "Cannot deduce property value for assignment for name '#{name_}'"
+                if not propertyCommonLib.checkValidPropertyValue value
+                    throw new Error "Internal data model consistency check error: Cannot deduce value to assign to property name '#{name_}'."
 
         output = context_.output
         output.namespaceDataReference[name_] = value
@@ -122,6 +125,8 @@ module.exports =
         input = context_.input
         output = context_.output
         for propertyName, subObject of input.propertyAssignmentObject
+            if not propertyCommonLib.checkValidPropertyValue subObject
+                throw new Error "Invalid value for assignment to property name '#{propertyName}'."
             output.namespaceDataReference[propertyName] = subObject
             deleteKeyNames.push propertyName
             output.dataChangeEventJournal.push

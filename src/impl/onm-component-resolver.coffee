@@ -52,6 +52,10 @@ module.exports = resolveComponent = (options_) ->
         # Initialize the data I/O context object shared by subroutines of the component resolver.
         context = componentContextHelpers.initializeContextObject options_
 
+        # Deduce a vector of namespace descriptor ID's corresponding to the named object resolution
+        # sequence that must be satisfied in order to complete the requested component resolution.
+        namedObjectResolutionVector = initializeNamedObjectResolutionVectorFromToken context.input.addressToken
+
         namedObjectResolutionQueue = []
         targetNamedObjectResolutionResult = null
 
@@ -69,13 +73,14 @@ module.exports = resolveComponent = (options_) ->
 
             namedObjectResolution = namedObjectResolutionQueue.pop()
 
-            # Have we resolved the target namespace?
-            if namedObjectResolution.resolvedId == context.input.addressToken.idNamespace
-                targetNamedObjectResolutionResult = namedObjectResolution
+            # Pick out the results as they go by and plug them in.
+            resolvedOnVector = namedObjectResolutionVector[namedObjectResolution.resolvedId]
+            if resolvedOnVector? and resolvedOnVector
+                namedObjectResolutionVector[namedObjectResolution.resolvedId] = namedObjectResolution
 
 
-            
 
+                
 
 
 
@@ -89,31 +94,20 @@ module.exports = resolveComponent = (options_) ->
         return context.output
 
     catch exception_
-        message = "resolveComponent exception occurred during execution of strategy '#{options_.input.strategy}': '#{exception_.message}'."
+        message = "resolveComponent exception occurred during execution of strategy '#{options_.strategy}': '#{exception_.message}'."
         throw new Error message
 
 
 
 # ==============================================================================
-resolveComponentRootNamedObject = (context_) ->
-    try
-
-        options =
-            strategy: context.input.strategy
-            parentDataReference: context.input.parentDataReference
-            targetNamespaceDescriptor: context.input.addressToken.componentDescriptor
-            targetNamespaceKey: context.input.addressToken.key
-            semanticBindingsReference: context.input.semanticBindingsReference
-            propertyAssignmentObject: (context.input.addressToken.idComponent == context.input.addressToken.idNamespace) and context.input.propertyAssignmentObject or {}
-
-
-
-
-
-    catch exception_
-        throw new Error "resolveComponentRooNamedObject failed with exception '#{excpetion_.message}'."
-
-
+initializeNamedObjectResolutionVectorFromToken = (addressToken_) ->
+    targetDepth = addressToken_.namespaceDescriptor.parentPathIdVector.length - addressToken_.componentDescriptor.parentPathIdVector.length
+    idVector = addressToken_.namespaceDescriptor.parentPathIdVector.slice -targetDepth
+    idVector.push addressToken_.namespaceDescriptor.id
+    resolutionVector = [];
+    for id in idVector
+        resolutionVector[id] = {}
+    resolutionVector
 
 
 

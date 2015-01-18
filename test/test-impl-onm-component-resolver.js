@@ -14,6 +14,9 @@ var testDataModel = testData.createModel();
 var testDataRootAddress = testDataModel.createRootAddress();
 var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 
+var testExtensionPointAddress = testDataRootAddress.createSubpathAddress("properties.subproperties.collection");
+var testExtensionPointToken = testExtensionPointAddress.implementation.getLastToken();
+
 
 module.exports = describe("onm.AddressTokenResolver whitebox tests.", function() {
     var resolveComponent  = null;
@@ -35,16 +38,16 @@ module.exports = describe("onm.AddressTokenResolver whitebox tests.", function()
     describe("Component open test #1.", function() {
 
         input = {
-            strategy: 'open',
+            strategy: 'create',
             semanticBindingsReference: testDataModel.getSemanticBindings(),
             addressToken: testDataRootToken,
-            parentDataReference: { addressBook: {} },
+            parentDataReference: {},
             propertyOptionsObject: {}
         };
         output = null;
         before(function() {
             var functionUnderTest = function() {
-                outout = resolveComponent(input);
+                output = resolveComponent(input);
             };
             assert.doesNotThrow(functionUnderTest);
         });
