@@ -57,40 +57,60 @@ module.exports = resolveComponent = (options_) ->
         namedObjectResolutionVector = initializeNamedObjectResolutionVectorFromToken context.input.addressToken
 
         namedObjectResolutionQueue = []
+        namedObjectPendingQueue = []
+        dataChangeEventJournal = []
+
         targetNamedObjectResolutionResult = null
 
         # Resolve the data component's root named object using the requested resolution strategy.
-        namedObjectResolutionQueue.push resolveNamedObject {
+        namedObjectResolveOptions =
             strategy: context.input.strategy
             parentDataReference: context.input.parentDataReference
             targetNamespaceDescriptor: context.input.addressToken.componentDescriptor
             targetNamespaceKey: context.input.addressToken.key
             semanticBindingsReference: context.input.semanticBindingsReference
             propertyAssignmentObject: (context.input.addressToken.idComponent == context.input.addressToken.idNamespace) and context.input.propertyAssignmentObject or {}
-            }
+
+        namedObjectResolutionQueue.push
+            input: namedObjectResolveOptions
+            output: resolveNamedObject namedObjectResolveOptions
 
         while namedObjectResolutionQueue.length
 
             namedObjectResolution = namedObjectResolutionQueue.pop()
 
             # Pick out the results as they go by and plug them in.
-            resolvedOnVector = namedObjectResolutionVector[namedObjectResolution.resolvedId]
+            resolvedOnVector = namedObjectResolutionVector[namedObjectResolution.output.resolvedId]
             if resolvedOnVector? and resolvedOnVector
-                namedObjectResolutionVector[namedObjectResolution.resolvedId] = namedObjectResolution
+                namedObjectResolutionVector[namedObjectResolution.output.resolvedId] = namedObjectResolution
+
+            # Aggregate data change event journal entries.
+            dataChangeEventJournal.push namedObjectResolution.output.dataChangeEventJournal # TODO: Get this unpacked correctly
+
+            if namedObjectResolution.output.pendingNamespaceDescriptors.length
+                if namedObjectResolution.input.targetNamespaceDescriptor.namespaceType != 'extensionPoint'
+                    # Permissively resolve sub-named objects within this data component.
+                    while namedObjectResolution.output.pendingNamespaceDescriptors.length
+                        namedObjectResolveOptions = namedObjectResolution.output.pendingNamespaceDescriptors.pop()
+                        namedObjectResolutionQueue.push
+                            input: namedObjectResolveOptions
+                            output: resolveNamedObject namedObjectResolveOptions
+                else
+                    # Do not resolve sub-named objects that are the root(s) of subcomponents. This job is the purview
+                    # of onm.Namespace that frames component resolves just as the component resolver frames named object
+                    # resolves.
+                    while namedObjectResolution.output.pendingNamespaceDescriptors.length
+                        namedObjectPendingQueue.push namedObjectResolution.output.pendingNamespaceDescriptors.pop()
 
 
-
-                
-
-
-
-
+        console.log JSON.stringify dataChangeEventJournal
 
         # DEBUG: Verify the base-level semantics of the result.
         if not componentContextHelpers.checkValidContextOutput context.output
             throw new Error "Internal test case failure: context.output object validation failed."
 
         # Return the results.
+
         return context.output
 
     catch exception_

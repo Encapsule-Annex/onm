@@ -71,7 +71,7 @@ componentResolverContext.checkValidContextInput = (options_) ->
         if not (options_.semanticBindingsReference? and options_.semanticBindingsReference)
             setInvalid "Missing semantic bindings reference."
             break
-        # options_.propertyOptionsObject property is optional.
+        # options_.propertyAssignmentObject property is optional.
 
         break
     # TODO: remove console logging before releasing v0.3

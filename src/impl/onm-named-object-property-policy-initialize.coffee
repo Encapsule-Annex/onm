@@ -72,7 +72,7 @@ module.exports =
         output.namespaceDataReference[name_] = value
 
         output.dataChangeEventJournal.push
-            layer: 'namespace'
+            layer: 'namedObject'
             event: 'propertyInitialized'
             eventData:
                 name: name_
@@ -105,7 +105,7 @@ module.exports =
             else
                 subcomponentPropertyAssignmentObject = propertyAssignmentObject[descriptor_.jsonTag]
                 if subcomponentPropertyAssignmentObject? and subcomponentPropertyAssignmentObject
-                    delete context_.input.propertyAssignmentObject[childNamespaceDescriptor.jsonTag]
+                    delete context_.input.propertyAssignmentObject[descriptor_.jsonTag]
                 else
                     subcomponentPropertyAssignmentObject = {}
                 context_.output.pendingNamespaceDescriptors.push {
@@ -130,7 +130,7 @@ module.exports =
             output.namespaceDataReference[propertyName] = subObject
             deleteKeyNames.push propertyName
             output.dataChangeEventJournal.push
-                layer: 'namespace'
+                layer: 'namedObject'
                 event: 'propertyInitialized'
                 eventData:
                     name: propertyName
