@@ -36,7 +36,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-
+helperFunctions = require('./onm-util-functions')
 resolveNamedObject = require('./onm-named-object-resolver')
 
 componentContextHelpers = require('./onm-component-context')
@@ -54,7 +54,7 @@ module.exports = resolveComponent = (options_) ->
 
         # Deduce a vector of namespace descriptor ID's corresponding to the named object resolution
         # sequence that must be satisfied in order to complete the requested component resolution.
-        namedObjectResolutionVector = initializeNamedObjectResolutionVectorFromToken context.input.addressToken
+        namedObjectResolutionContext = createNamedObjectResolutionContext context.input.addressToken
 
         namedObjectResolutionQueue = []
         namedObjectPendingQueue = []
@@ -75,20 +75,22 @@ module.exports = resolveComponent = (options_) ->
             input: namedObjectResolveOptions
             output: resolveNamedObject namedObjectResolveOptions
 
-        while namedObjectResolutionQueue.length
+        while namedObjectResolutionQueue.length or namedObjectResolutionContext.workQueue.length
 
             namedObjectResolution = namedObjectResolutionQueue.pop()
 
             # Pick out the results as they go by and plug them in.
-            resolvedOnVector = namedObjectResolutionVector[namedObjectResolution.output.resolvedId]
+            resolvedOnVector = namedObjectResolutionContext.resultVector[namedObjectResolution.output.resolvedId]
             if resolvedOnVector != undefined
-                namedObjectResolutionVector[namedObjectResolution.output.resolvedId] = namedObjectResolution
+                namedObjectResolutionContext.resultVector[namedObjectResolution.output.resolvedId] = namedObjectResolutionContext.lastResolutionResult = namedObjectResolution
+                namedObjectResolutionContext.workQueue.shift()
 
             # Aggregate data change event journal entries.
             for changeEvent in namedObjectResolution.output.dataChangeEventJournal
                 dataChangeEventJournal.push changeEvent
 
             if namedObjectResolution.output.pendingNamespaceDescriptors.length
+
                 switch namedObjectResolution.input.targetNamespaceDescriptor.namespaceType
                     when 'extensionPoint'
                         # Permissively resolve sub-named objects within this data component.
@@ -100,7 +102,7 @@ module.exports = resolveComponent = (options_) ->
                                     throw new Error "Internal consistency check error: We do not expect property assignment data to be propogating below the target namespace during a component resolution."
                                 namedObjectResolveOptions.propertyAssignmentObject = context.input.propertyAssignmentObject
                             namedObjectResolutionQueue.push
-                               input: namedObjectResolveOptions
+                                input: namedObjectResolveOptions
                                 output: resolveNamedObject namedObjectResolveOptions
                         break
                     else
@@ -110,6 +112,21 @@ module.exports = resolveComponent = (options_) ->
                         while namedObjectResolution.output.pendingNamespaceDescriptors.length
                             namedObjectPendingQueue.push namedObjectResolution.output.pendingNamespaceDescriptors.pop()
                         break
+
+            if (not namedObjectResolutionQueue.length) and namedObjectResolutionContext.workQueue.length
+
+                namedObjectResolveOptions =
+                    strategy: namedObjectResolutionContext.lastResolutionResult.output.strategyFollowed
+                    parentDataReference: namedObjectResolutionContext.lastResolutionResult.output.namespaceDataReference
+                    targetNamespaceDescriptor: namedObjectResolutionContext.workQueue[0]
+                    targetNamespaceKey: null
+                    semanticBindingsReference: context.input.semanticBindingsReference
+                    propertyAssignmentObject: {}
+
+                namedObjectResolutionQueue.push
+                    input: namedObjectResolveOptions
+                    output: resolveNamedObject namedObjectResolveOptions
+
 
         # TODO: remove this debug telemetry
         console.log JSON.stringify dataChangeEventJournal, undefined, 4
@@ -129,18 +146,25 @@ module.exports = resolveComponent = (options_) ->
 
 
 # ==============================================================================
-initializeNamedObjectResolutionVectorFromToken = (addressToken_) ->
+createNamedObjectResolutionContext = (addressToken_) ->
+
+    # Determine the sequence of namespace ID's that must be resolved to satisfy the request.
     targetDepth = addressToken_.namespaceDescriptor.parentPathIdVector.length - addressToken_.componentDescriptor.parentPathIdVector.length
     idVector = addressToken_.namespaceDescriptor.parentPathIdVector.slice -targetDepth
     idVector.push addressToken_.namespaceDescriptor.id
-    resolutionVector = [];
+
+    # Default construct the named object resolution context object.
+    namedObjectResolutionContext =
+        resultVector: []
+        workQueue: []
+        lastResolutionResult: null
+
+    # Populate the context object.
     for id in idVector
-        resolutionVector[id] = null
-    resolutionVector
+        namedObjectResolutionContext.resultVector[id] = null
+        namedObjectResolutionContext.workQueue.push addressToken_.model.implementation.getNamespaceDescriptorFromPathId id
 
-
-
-
-
+    # Return the result
+    namedObjectResolutionContext
 
 

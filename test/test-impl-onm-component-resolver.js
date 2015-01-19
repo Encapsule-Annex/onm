@@ -38,23 +38,11 @@ module.exports = describe("onm.AddressTokenResolver whitebox tests.", function()
     describe("Component open test #1.", function() {
 
         input = {
-            strategy: 'create',
+            strategy: 'open',
             semanticBindingsReference: testDataModel.getSemanticBindings(),
-            addressToken: testDataRootToken,
-            parentDataReference: {},
-            propertyAssignmentObject: {
-                name: "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ",
-                someotherbullshit: "What does Marsallus Wallace look like?",
-                child: {
-                    whatever: "Does he look like a bitch?"
-                },
-                contacts: {
-                    chris: {
-                        firstName: "chris",
-                        lastName: "russell"
-                    }
-                }
-            }
+            addressToken: testExtensionPointToken,
+            parentDataReference: { addressBook: { properties: { subproperties: { collection: {} } } } },
+            propertyAssignmentObject: {}
         };
         output = null;
         before(function() {
