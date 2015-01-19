@@ -56,11 +56,9 @@ module.exports = resolveComponent = (options_) ->
         # sequence that must be satisfied in order to complete the requested component resolution.
         namedObjectResolutionContext = createNamedObjectResolutionContext context.input.addressToken
 
-        namedObjectResolutionQueue = []
-        namedObjectPendingQueue = []
-        dataChangeEventJournal = []
-
-        targetNamedObjectResolutionResult = null
+        namedObjectResolutionStack = []
+        namedObjectPendingStack = []
+        dataChangeEventJournal = [] # This is a queue
 
         # Resolve the data component's root named object using the requested resolution strategy.
         namedObjectResolveOptions =
@@ -71,13 +69,13 @@ module.exports = resolveComponent = (options_) ->
             semanticBindingsReference: context.input.semanticBindingsReference
             propertyAssignmentObject: (context.input.addressToken.idComponent == context.input.addressToken.idNamespace) and context.input.propertyAssignmentObject or {}
 
-        namedObjectResolutionQueue.push
+        namedObjectResolutionStack.push
             input: namedObjectResolveOptions
             output: resolveNamedObject namedObjectResolveOptions
 
-        while namedObjectResolutionQueue.length or namedObjectResolutionContext.workQueue.length
+        while namedObjectResolutionStack.length or namedObjectResolutionContext.workQueue.length
 
-            namedObjectResolution = namedObjectResolutionQueue.pop()
+            namedObjectResolution = namedObjectResolutionStack.pop()
 
             # Pick out the results as they go by and plug them in.
             resolvedOnVector = namedObjectResolutionContext.resultVector[namedObjectResolution.output.resolvedId]
@@ -101,7 +99,7 @@ module.exports = resolveComponent = (options_) ->
                                 if Object.keys(namedObjectResolveOptions.propertyAssignmentObject).length > 0
                                     throw new Error "Internal consistency check error: We do not expect property assignment data to be propogating below the target namespace during a component resolution."
                                 namedObjectResolveOptions.propertyAssignmentObject = context.input.propertyAssignmentObject
-                            namedObjectResolutionQueue.push
+                            namedObjectResolutionStack.push
                                 input: namedObjectResolveOptions
                                 output: resolveNamedObject namedObjectResolveOptions
                         break
@@ -110,10 +108,15 @@ module.exports = resolveComponent = (options_) ->
                         # of onm.Namespace that frames component resolves just as the component resolver frames named object
                         # resolves.
                         while namedObjectResolution.output.pendingNamespaceDescriptors.length
-                            namedObjectPendingQueue.push namedObjectResolution.output.pendingNamespaceDescriptors.pop()
+                            namedObjectPendingStack.push namedObjectResolution.output.pendingNamespaceDescriptors.pop()
                         break
 
-            if (not namedObjectResolutionQueue.length) and namedObjectResolutionContext.workQueue.length
+            # If the main stack is empty but the work queue is not, then this means that the ascending wave of named
+            # object resolutions has propogated through all the namespaces required to satisfy the request. Grab the
+            # next namespace descriptor in line from the work queue, and initiate another wave of named object resolves
+            # on the main resolution stack.
+
+            if (not namedObjectResolutionStack.length) and namedObjectResolutionContext.workQueue.length
 
                 namedObjectResolveOptions =
                     strategy: namedObjectResolutionContext.lastResolutionResult.output.strategyFollowed
@@ -123,7 +126,7 @@ module.exports = resolveComponent = (options_) ->
                     semanticBindingsReference: context.input.semanticBindingsReference
                     propertyAssignmentObject: {}
 
-                namedObjectResolutionQueue.push
+                namedObjectResolutionStack.push
                     input: namedObjectResolveOptions
                     output: resolveNamedObject namedObjectResolveOptions
 
