@@ -81,29 +81,38 @@ module.exports = resolveComponent = (options_) ->
 
             # Pick out the results as they go by and plug them in.
             resolvedOnVector = namedObjectResolutionVector[namedObjectResolution.output.resolvedId]
-            if resolvedOnVector? and resolvedOnVector
+            if resolvedOnVector != undefined
                 namedObjectResolutionVector[namedObjectResolution.output.resolvedId] = namedObjectResolution
 
             # Aggregate data change event journal entries.
-            dataChangeEventJournal.push namedObjectResolution.output.dataChangeEventJournal # TODO: Get this unpacked correctly
+            for changeEvent in namedObjectResolution.output.dataChangeEventJournal
+                dataChangeEventJournal.push changeEvent
 
             if namedObjectResolution.output.pendingNamespaceDescriptors.length
-                if namedObjectResolution.input.targetNamespaceDescriptor.namespaceType != 'extensionPoint'
-                    # Permissively resolve sub-named objects within this data component.
-                    while namedObjectResolution.output.pendingNamespaceDescriptors.length
-                        namedObjectResolveOptions = namedObjectResolution.output.pendingNamespaceDescriptors.pop()
-                        namedObjectResolutionQueue.push
-                            input: namedObjectResolveOptions
-                            output: resolveNamedObject namedObjectResolveOptions
-                else
-                    # Do not resolve sub-named objects that are the root(s) of subcomponents. This job is the purview
-                    # of onm.Namespace that frames component resolves just as the component resolver frames named object
-                    # resolves.
-                    while namedObjectResolution.output.pendingNamespaceDescriptors.length
-                        namedObjectPendingQueue.push namedObjectResolution.output.pendingNamespaceDescriptors.pop()
+                switch namedObjectResolution.input.targetNamespaceDescriptor.namespaceType
+                    when 'extensionPoint'
+                        # Permissively resolve sub-named objects within this data component.
+                        while namedObjectResolution.output.pendingNamespaceDescriptors.length
+                            namedObjectResolveOptions = namedObjectResolution.output.pendingNamespaceDescriptors.pop()
+                            # If the pending named object resolution corresponds to the target namespace, inject the propertyAssignmentObject.
+                            if namedObjectResolveOptions.targetNamespaceDescriptor.id == context.input.addressToken.idNamespace
+                                if Object.keys(namedObjectResolveOptions.propertyAssignmentObject).length > 0
+                                    throw new Error "Internal consistency check error: We do not expect property assignment data to be propogating below the target namespace during a component resolution."
+                                namedObjectResolveOptions.propertyAssignmentObject = context.input.propertyAssignmentObject
+                            namedObjectResolutionQueue.push
+                               input: namedObjectResolveOptions
+                                output: resolveNamedObject namedObjectResolveOptions
+                        break
+                    else
+                        # Do not resolve sub-named objects that are the root(s) of subcomponents. This job is the purview
+                        # of onm.Namespace that frames component resolves just as the component resolver frames named object
+                        # resolves.
+                        while namedObjectResolution.output.pendingNamespaceDescriptors.length
+                            namedObjectPendingQueue.push namedObjectResolution.output.pendingNamespaceDescriptors.pop()
+                        break
 
-
-        console.log JSON.stringify dataChangeEventJournal
+        # TODO: remove this debug telemetry
+        console.log JSON.stringify dataChangeEventJournal, undefined, 4
 
         # DEBUG: Verify the base-level semantics of the result.
         if not componentContextHelpers.checkValidContextOutput context.output
@@ -126,7 +135,7 @@ initializeNamedObjectResolutionVectorFromToken = (addressToken_) ->
     idVector.push addressToken_.namespaceDescriptor.id
     resolutionVector = [];
     for id in idVector
-        resolutionVector[id] = {}
+        resolutionVector[id] = null
     resolutionVector
 
 
