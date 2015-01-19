@@ -56,7 +56,7 @@ namedObjectResolverContext.initializeContextObject = (options_) ->
             namespaceEffectiveKey: null
             namespaceDataReference: null
             dataChangeEventJournal: []
-            pendingNamespaceDescriptors: [] # TODO: pick a better name for this
+            pendingResolutionStack: []
             resolvedId: -1
 
 
@@ -157,8 +157,8 @@ namedObjectResolverContext.checkValidContextOutput = (results_) ->
             setInvalid "Invalid namespaceDataReference"
             break
 
-        if not (results_.pendingNamespaceDescriptors? and results_.pendingNamespaceDescriptors and Array.isArray(results_.pendingNamespaceDescriptors))
-            setInvalid "Invalid pendingNamespaceDescriptors"
+        if not (results_.pendingResolutionStack? and results_.pendingResolutionStack and Array.isArray(results_.pendingResolutionStack))
+            setInvalid "Invalid pendingResolutionStack"
             break
 
         if not (results_.strategyFollowed? and results_.strategyFollowed)

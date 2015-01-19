@@ -91,7 +91,7 @@ module.exports =
                 deleteKeyNames = []
                 for keyName, subcomponentPropertyAssignmentObject of propertyAssignmentObject
                     deleteKeyNames.push keyName
-                    context_.output.pendingNamespaceDescriptors.push {
+                    context_.output.pendingResolutionStack.push {
                         parentDataReference: context_.output.namespaceDataReference
                         targetNamespaceDescriptor: descriptor_
                         targetNamespaceKey: keyName
@@ -108,7 +108,7 @@ module.exports =
                     delete context_.input.propertyAssignmentObject[descriptor_.jsonTag]
                 else
                     subcomponentPropertyAssignmentObject = {}
-                context_.output.pendingNamespaceDescriptors.push {
+                context_.output.pendingResolutionStack.push {
                     parentDataReference: context_.output.namespaceDataReference
                     targetNamespaceDescriptor: descriptor_
                     targetNamespaceKey: ''

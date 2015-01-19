@@ -141,7 +141,7 @@ describe("resolveNamespaceDescriptorCreate internal function whitebox test matri
                 var testMessage = null;
 
                 before(function() {
-                    actualCount = resolveResults.pendingNamespaceDescriptors.length;
+                    actualCount = resolveResults.pendingResolutionStack.length;
                     switch (testData.options.targetNamespaceDescriptor.namespaceType) {
                     case 'extensionPoint':
                         expectedCount = (testData.expectedPendingCount !== null) && testData.expectedPendingCount || 0;
@@ -176,15 +176,15 @@ describe("resolveNamespaceDescriptorCreate internal function whitebox test matri
                 console.log("----------------------------------------------------------------------------");
                 console.log("NAMESPACE RESOSUTION RESULTS");
                 console.log("Parent data namespace JSON: " + JSON.stringify(testData.options.parentDataReference));
-                console.log("Pending: " + resolveResults.pendingNamespaceDescriptors.length);
+                console.log("Pending: " + resolveResults.pendingResolutionStack.length);
             };
             assert.doesNotThrow(functionUnderTestWrapper);
             it("There should be a pending namespace descriptor resolve for each property defined in the property assignment object.", function() {
-                assert.equal(resolveResults.pendingNamespaceDescriptors.length, Object.keys(testData.options.propertyAssignmentObject).length);
+                assert.equal(resolveResults.pendingResolutionStack.length, Object.keys(testData.options.propertyAssignmentObject).length);
             });
             describe("Each pending namespace descriptor should be valid.", function() {
                 var testVectors = {};
-                resolveResults.pendingNamespaceDescriptors.forEach( function(options_) {
+                resolveResults.pendingResolutionStack.forEach( function(options_) {
                     testVectors[options_.targetNamespaceDescriptor.jsonTag] = [ options_ ];
                 });
                 withData(testVectors, function(options_) {

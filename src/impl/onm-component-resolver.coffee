@@ -36,9 +36,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
-helperFunctions = require('./onm-util-functions')
 resolveNamedObject = require('./onm-named-object-resolver')
-
 componentContextHelpers = require('./onm-component-context')
 
 # ==============================================================================
@@ -87,13 +85,13 @@ module.exports = resolveComponent = (options_) ->
             for changeEvent in namedObjectResolution.output.dataChangeEventJournal
                 dataChangeEventJournal.push changeEvent
 
-            if namedObjectResolution.output.pendingNamespaceDescriptors.length
+            if namedObjectResolution.output.pendingResolutionStack.length
 
                 switch namedObjectResolution.input.targetNamespaceDescriptor.namespaceType
                     when 'extensionPoint'
                         # Permissively resolve sub-named objects within this data component.
-                        while namedObjectResolution.output.pendingNamespaceDescriptors.length
-                            namedObjectResolveOptions = namedObjectResolution.output.pendingNamespaceDescriptors.pop()
+                        while namedObjectResolution.output.pendingResolutionStack.length
+                            namedObjectResolveOptions = namedObjectResolution.output.pendingResolutionStack.pop()
                             # If the pending named object resolution corresponds to the target namespace, inject the propertyAssignmentObject.
                             if namedObjectResolveOptions.targetNamespaceDescriptor.id == context.input.addressToken.idNamespace
                                 if Object.keys(namedObjectResolveOptions.propertyAssignmentObject).length > 0
@@ -107,8 +105,8 @@ module.exports = resolveComponent = (options_) ->
                         # Do not resolve sub-named objects that are the root(s) of subcomponents. This job is the purview
                         # of onm.Namespace that frames component resolves just as the component resolver frames named object
                         # resolves.
-                        while namedObjectResolution.output.pendingNamespaceDescriptors.length
-                            namedObjectPendingStack.push namedObjectResolution.output.pendingNamespaceDescriptors.pop()
+                        while namedObjectResolution.output.pendingResolutionStack.length
+                            namedObjectPendingStack.push namedObjectResolution.output.pendingResolutionStack.pop()
                         break
 
             # If the main stack is empty but the work queue is not, then this means that the ascending wave of named

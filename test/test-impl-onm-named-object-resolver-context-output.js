@@ -32,7 +32,7 @@ var testVector = {
         testData: { results: {
             namespaceEffectiveKey: 'test',
             namespaceDataReference: {},
-            pendingNamespaceDescriptors: 'should be an array, not a string'
+            pendingResolutionStack: 'should be an array, not a string'
         } },
         validConfig: false
     }],
@@ -42,7 +42,7 @@ var testVector = {
             strategyFollowed: 'error',
             namespaceEffectiveKey: 'test',
             namespaceDataReference: {},
-            pendingNamespaceDescriptors: 'should be an array, not a string'
+            pendingResolutionStack: 'should be an array, not a string'
         } },
         validConfig: false
     }],
@@ -52,7 +52,7 @@ var testVector = {
             strategyFollowed: 'error',
             namespaceEffectiveKey: 'test',
             namespaceDataReference: {},
-            pendingNamespaceDescriptors: 'should be an array, not a string',
+            pendingResolutionStack: 'should be an array, not a string',
             resolvedId: -1
 
         } },
@@ -64,7 +64,7 @@ var testVector = {
             strategyFollowed: 'open',
             namespaceEffectiveKey: 'test',
             namespaceDataReference: {},
-            pendingNamespaceDescriptors: [],
+            pendingResolutionStack: [],
             resolvedId: 0
         } },
         validConfig: true
@@ -74,7 +74,7 @@ var testVector = {
             strategyFollowed: 'create',
             namespaceEffectiveKey: 'test',
             namespaceDataReference: {},
-            pendingNamespaceDescriptors: [],
+            pendingResolutionStack: [],
             resolvedId: 1
         } },
         validConfig: true
