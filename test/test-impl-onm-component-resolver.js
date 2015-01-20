@@ -1,4 +1,4 @@
-// test-impl-onm.AddressTokenResolver.js
+// test-impl-onm-component-resolver.js
 //
 
 var assert = require('chai').assert;

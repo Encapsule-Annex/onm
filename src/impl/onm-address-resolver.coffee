@@ -59,19 +59,26 @@ module.exports = resolveAddress = (options_) ->
         for token in options_.address.implementation.tokenVector
             sourceTokenQueue.push token.clone()
 
-        currentToken = sourceTokenQueue[0]
-
         componentResolveOptions = 
             strategy: options_.strategy
             parentDataReference: options_.parentDataReference
-            addressToken: currentToken
-            semanticBindingsReference: options_.addressToken.model
+            addressToken: sourceTokenQueue[0]
+            semanticBindingsReference: options_.address.model
             propertyAssignmentObject: options_.propertyAssignmentObject
-
 
         componentResolutionStack.push resolveComponent componentResolveOptions
 
-        # while componentResolutionStack.length or sourceTokenQueue.length
+        while componentResolutionStack.length
+
+            currentComponentResolution = componentResolutionStack.pop()
+            lookingForComponentId = sourceTokenQueue[0].idComponent
+            evaluatingComponentId = currentComponentResolution.output.namedObjectResolutionVector[0].resolvedId
+
+            if currentComponentResolution.output.namedObjectResolutionVector[0].resolvedId == lookingForComponentId
+                sourceTokenQueue.shift()
+                componentResolutionQueue.push currentComponentResolution
+
+
 
 
 
