@@ -44,9 +44,9 @@ componentResolverContext.initializeContextObject = (options_) ->
     context =
         input: options_
         output:
-            namedObjectResolutions:
-                componentRoot: null
-
+            namedObjectResolutionVector: null
+            pendingSubcomponentStack: null
+            dataChangeEventJournal: null
 
 # ==============================================================================
 componentResolverContext.checkValidContextInput = (options_) ->
@@ -90,9 +90,10 @@ componentResolverContext.checkValidContextOutput = (results_) ->
         if not (results_? and results)
             setInvalid "Missing results in-parameter."
             break
-        if not (results_.resolvedNamedObject? and results_.resolvedNamedObject)
-            setInvalid "Missing resolved named object resolution results structure."
+        if not (results_.namedObjectResolutionVector? and results_.namedObjectResolutionVector and results_.namedObjectResolutionVector.length)
+            setInvalid "Missing or empty named object resolution vector."
             break
+
         break
     # TODO: remove console logging before releasing v0.3
     if not results.valid

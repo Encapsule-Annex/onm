@@ -55,7 +55,7 @@ module.exports = resolveComponent = (options_) ->
         namedObjectResolutionContext = createNamedObjectResolutionContext context.input.addressToken
 
         namedObjectResolutionStack = []
-        namedObjectPendingStack = []
+        pendingSubcomponentStack = []
         dataChangeEventJournal = [] # This is a queue
 
         # Resolve the data component's root named object using the requested resolution strategy.
@@ -106,7 +106,7 @@ module.exports = resolveComponent = (options_) ->
                         # of onm.Namespace that frames component resolves just as the component resolver frames named object
                         # resolves.
                         while namedObjectResolution.output.pendingResolutionStack.length
-                            namedObjectPendingStack.push namedObjectResolution.output.pendingResolutionStack.pop()
+                            pendingSubcomponentStack.push namedObjectResolution.output.pendingResolutionStack.pop()
                         break
 
             # If the main stack is empty but the work queue is not, then this means that the ascending wave of named
@@ -128,23 +128,23 @@ module.exports = resolveComponent = (options_) ->
                     input: namedObjectResolveOptions
                     output: resolveNamedObject namedObjectResolveOptions
 
-
         # TODO: remove this debug telemetry
         console.log JSON.stringify dataChangeEventJournal, undefined, 4
+
+        context.output.namedObjectResolutionVector = namedObjectResolutionContext.resultVector
+        context.output.pendingSubcomponentStack = pendingSubcomponentStack
+        context.output.dataChangeEventJournal = dataChangeEventJournal
 
         # DEBUG: Verify the base-level semantics of the result.
         if not componentContextHelpers.checkValidContextOutput context.output
             throw new Error "Internal test case failure: context.output object validation failed."
 
         # Return the results.
-
         return context.output
 
     catch exception_
         message = "resolveComponent exception occurred during execution of strategy '#{options_.strategy}': '#{exception_.message}'."
         throw new Error message
-
-
 
 # ==============================================================================
 createNamedObjectResolutionContext = (addressToken_) ->
