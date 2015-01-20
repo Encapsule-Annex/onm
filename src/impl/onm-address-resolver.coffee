@@ -52,23 +52,30 @@ module.exports = resolveAddress = (options_) ->
             throw new Error "Unrecognized options.strategy value."
         # options_.propertyAssignmentObject is optional
 
-        tokenVector = []
+        sourceTokenQueue = []
+        componentResolutionStack = []
+        componentResolutionQueue = []
+
         for token in options_.address.implementation.tokenVector
-            tokenVector.push token.clone()
+            sourceTokenQueue.push token.clone()
 
-        tokenResolutionVector = []
-
-        token = tokenVector.shift()
+        currentToken = sourceTokenQueue[0]
 
         componentResolveOptions = 
             strategy: options_.strategy
             parentDataReference: options_.parentDataReference
-            addressToken: token
+            addressToken: currentToken
             semanticBindingsReference: options_.addressToken.model
             propertyAssignmentObject: options_.propertyAssignmentObject
 
 
-            
+        componentResolutionStack.push resolveComponent componentResolveOptions
+
+        # while componentResolutionStack.length or sourceTokenQueue.length
+
+
+
+
 
         
 

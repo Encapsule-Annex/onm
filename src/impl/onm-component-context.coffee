@@ -38,7 +38,6 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 module.exports = componentResolverContext = {}
 
-
 # ==============================================================================
 componentResolverContext.initializeContextObject = (options_) ->
     context =
@@ -72,7 +71,6 @@ componentResolverContext.checkValidContextInput = (options_) ->
             setInvalid "Missing semantic bindings reference."
             break
         # options_.propertyAssignmentObject property is optional.
-
         break
     # TODO: remove console logging before releasing v0.3
     if not results.valid
@@ -93,7 +91,6 @@ componentResolverContext.checkValidContextOutput = (results_) ->
         if not (results_.namedObjectResolutionVector? and results_.namedObjectResolutionVector and results_.namedObjectResolutionVector.length)
             setInvalid "Missing or empty named object resolution vector."
             break
-
         break
     # TODO: remove console logging before releasing v0.3
     if not results.valid

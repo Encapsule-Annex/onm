@@ -70,7 +70,7 @@ module.exports = resolveComponent = (options_) ->
             input: namedObjectResolveOptions
             output: resolveNamedObject namedObjectResolveOptions
 
-        while namedObjectResolutionStack.length or namedObjectResolutionContext.workQueue.length
+        while namedObjectResolutionStack.length
 
             namedObjectResolution = namedObjectResolutionStack.pop()
 
