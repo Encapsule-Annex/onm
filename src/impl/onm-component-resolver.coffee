@@ -41,7 +41,6 @@ componentContextHelpers = require('./onm-component-context')
 
 # ==============================================================================
 module.exports = resolveComponent = (options_) ->
-
     try
         # DEBUG: Verify the base-level semantics of options_ in-paramaeter
         if not componentContextHelpers.checkValidContextInput options_
