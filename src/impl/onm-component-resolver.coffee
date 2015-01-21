@@ -85,17 +85,18 @@ module.exports = resolveComponent = (options_) ->
                 dataChangeEventJournal.push changeEvent
 
             if namedObjectResolution.output.pendingResolutionStack.length
-
                 switch namedObjectResolution.input.targetNamespaceDescriptor.namespaceType
                     when 'extensionPoint'
-                        # Do not resolve sub-named objects that are the root(s) of subcomponents. This job is the purview
-                        # of onm.Namespace that frames component resolves just as the component resolver frames named object
-                        # resolves.
+                        # Pending named object resolution(s) fall outside the scope of this data component.
                         while namedObjectResolution.output.pendingResolutionStack.length
-                            pendingSubcomponentStack.push namedObjectResolution.output.pendingResolutionStack.pop()
+                            namedObjectResolveOptions = namedObjectResolution.output.pendingResolutionStack.pop()
+                            # Propogate 'negotiate' strategy forward if the current component negotiated to 'open' strategy.
+                            if (namedObjectResolveOptions.strategy == 'open') and (context.input.strategy == 'negotiate')
+                                namedObjectResolveOptions.strategy = 'negotiate'
+                            pendingSubcomponentStack.push namedObjectResolutionOptions
                         break
                     else
-                        # Permissively resolve sub-named objects within this data component.
+                        # Pending named object resolution(s) fall within the scope of this data component.
                         while namedObjectResolution.output.pendingResolutionStack.length
                             namedObjectResolveOptions = namedObjectResolution.output.pendingResolutionStack.pop()
                             # If the pending named object resolution corresponds to the target namespace, inject the propertyAssignmentObject.

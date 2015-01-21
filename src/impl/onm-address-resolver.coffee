@@ -71,10 +71,8 @@ module.exports = resolveAddress = (options_) ->
         while componentResolutionStack.length
 
             currentComponentResolution = componentResolutionStack.pop()
-            lookingForComponentId = sourceTokenQueue[0].idComponent
-            evaluatingComponentId = currentComponentResolution.output.namedObjectResolutionVector[0].resolvedId
 
-            if currentComponentResolution.output.namedObjectResolutionVector[0].resolvedId == lookingForComponentId
+            if currentComponentResolution.output.namedObjectResolutionVector[0].resolvedId ==  sourceTokenQueue[0].idComponent
                 sourceTokenQueue.shift()
                 componentResolutionQueue.push currentComponentResolution
 
