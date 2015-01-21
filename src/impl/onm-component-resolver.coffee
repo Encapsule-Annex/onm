@@ -88,6 +88,13 @@ module.exports = resolveComponent = (options_) ->
 
                 switch namedObjectResolution.input.targetNamespaceDescriptor.namespaceType
                     when 'extensionPoint'
+                        # Do not resolve sub-named objects that are the root(s) of subcomponents. This job is the purview
+                        # of onm.Namespace that frames component resolves just as the component resolver frames named object
+                        # resolves.
+                        while namedObjectResolution.output.pendingResolutionStack.length
+                            pendingSubcomponentStack.push namedObjectResolution.output.pendingResolutionStack.pop()
+                        break
+                    else
                         # Permissively resolve sub-named objects within this data component.
                         while namedObjectResolution.output.pendingResolutionStack.length
                             namedObjectResolveOptions = namedObjectResolution.output.pendingResolutionStack.pop()
@@ -99,13 +106,6 @@ module.exports = resolveComponent = (options_) ->
                             namedObjectResolutionStack.push
                                 input: namedObjectResolveOptions
                                 output: resolveNamedObject namedObjectResolveOptions
-                        break
-                    else
-                        # Do not resolve sub-named objects that are the root(s) of subcomponents. This job is the purview
-                        # of onm.Namespace that frames component resolves just as the component resolver frames named object
-                        # resolves.
-                        while namedObjectResolution.output.pendingResolutionStack.length
-                            pendingSubcomponentStack.push namedObjectResolution.output.pendingResolutionStack.pop()
                         break
 
             # If the main stack is empty but the work queue is not, then this means that the ascending wave of named

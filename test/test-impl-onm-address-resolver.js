@@ -49,7 +49,8 @@ describe("Validate the behavior of the onm address resolver.", function() {
         });
 
         it("Execute the test suite.", function() {
-           assert.isTrue(true);
+            assert.isTrue(true);
+            console.log(JSON.stringify(resolvedAddress));
         });
 
     });
