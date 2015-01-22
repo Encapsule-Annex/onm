@@ -12,6 +12,7 @@ var testData = require('./fixture/address-book-data-model');
 
 var testDataModel = testData.createModel();
 var testDataRootAddress = testDataModel.createRootAddress();
+var testSomeObjectAddress = testDataRootAddress.createSubpathAddress("properties.subproperties.collection.someObject");
 
 describe("Validate the behavior of the onm address resolver.", function() {
 
@@ -38,7 +39,7 @@ describe("Validate the behavior of the onm address resolver.", function() {
             addressResolveOptions = {
                 strategy: 'create',
                 parentDataReference: {},
-                address: testDataRootAddress,
+                address: testSomeObjectAddress,
                 semanticBindingsReference: testDataModel.getSemanticBindings(),
                 propertyAssignmentObject: { fuckyea: true, contacts: { joesmith: { firstName: 'Joe', lastName: 'Smith' } } }
             };

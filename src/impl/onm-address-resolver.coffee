@@ -86,9 +86,16 @@ module.exports = resolveAddress = (options_) ->
             if not sourceTokenQueue.length
 
                 # Resolve any pending subcomponents of the resolved component under evaluation off vector
-                for pendingSubcomponent in componentResolutionContext.output.pendingSubcomponentStack
-                    console.log 'hi'
+                while componentResolutionContext.output.pendingSubcomponentStack.length
+                    pendingSubcomponent = componentResolutionContext.output.pendingSubcomponentStack.pop()
+                    componentResolutionContext =
+                        input: pendingSubcomponent
+                        output: resolveComponent pendingSubcomponent
+                    resolvedComponentWorkQueue.push componentResolutionContext
 
+                continue
+
+            console.log "Hit the case I'm interested in."
 
 
         true            
