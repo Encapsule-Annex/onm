@@ -41,7 +41,8 @@ describe("Validate the behavior of the onm address resolver.", function() {
                 parentDataReference: {},
                 address: testSomeObjectAddress,
                 semanticBindingsReference: testDataModel.getSemanticBindings(),
-                propertyAssignmentObject: { fuckyea: true, contacts: { joesmith: { firstName: 'Joe', lastName: 'Smith' } } }
+                //# propertyAssignmentObject: { fuckyea: true, contacts: { joesmith: { firstName: 'Joe', lastName: 'Smith' } } }
+                propertyAssignmentObject: {}
             };
             var resolveAddress = function() {
                 resolvedAddress = functionUnderTest(addressResolveOptions);

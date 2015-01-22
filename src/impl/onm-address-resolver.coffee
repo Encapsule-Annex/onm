@@ -83,7 +83,44 @@ module.exports = resolveAddress = (options_) ->
             if onResultVector
                 resolvedComponentVector.push componentResolutionContext
 
-            if not sourceTokenQueue.length
+            # If the resolved component under evaluation is "off vector", then its pending subcomponents
+            # will also be off vector. If the source token queue is empty, then we've completed the vector
+            # and are by definition "off vector". Complete "off vector" pending subcomponent resolutions
+            # for the resolved component under evaluation.
+
+            if (not onResultVector) or (sourceTokenQueue.length == 0)
+
+                # Resolve any pending subcomponents of the resolved component under evaluation off vector
+                while componentResolutionContext.output.pendingSubcomponentStack.length
+
+                    pendingSubcomponent = componentResolutionContext.output.pendingSubcomponentStack.pop()
+
+                    componentResolutionContext =
+                        input: pendingSubcomponent
+                        output: resolveComponent pendingSubcomponent
+                    resolvedComponentWorkQueue.push componentResolutionContext
+
+                continue
+
+            # The resolved component under evaluation is itself "on vector". And, there's at least
+            # one unresolved address token in the source queue. So, we need to examine the pending
+            # subcomponet resolution request, determine if it's on or off the component resolution
+            # vector by peeking at the source token queue, and if it is "on vector", we need to shift
+            # the source token queue, modify the target namespace of the pending component resolutions
+            # address token to coincide with the token target namespace, and complete the pendind
+            # component resolution "on vector". Otherwise, complete the pending component resolution
+            # "off vector".
+
+            console.log "Hit the case I'm interested in."
+
+            # At this point the component under evaluation has to be an extension point namespace.
+
+            descriptorID = componentResolutionContext.input.addressToken.idNamespace
+
+            headExtensionPointId = componentResolutionContext.input.addressToken.idNamespace
+            nextOnVectorComponentUnderExtensionPointId = sourceTokenQueue[0].idExtensionPoint
+            
+            if headExtensionPointId != nextOnVectorComponentUnderExtensionPointId
 
                 # Resolve any pending subcomponents of the resolved component under evaluation off vector
                 while componentResolutionContext.output.pendingSubcomponentStack.length
@@ -92,10 +129,11 @@ module.exports = resolveAddress = (options_) ->
                         input: pendingSubcomponent
                         output: resolveComponent pendingSubcomponent
                     resolvedComponentWorkQueue.push componentResolutionContext
-
                 continue
 
-            console.log "Hit the case I'm interested in."
+            while componentResolutionContext.output.pendingSubcomponentStack.length
+                pendingSubcomponent = componentResolutionContext.output.pendingSubcomponentStack.pop()
+
 
 
         true            
