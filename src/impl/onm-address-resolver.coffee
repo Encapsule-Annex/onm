@@ -52,10 +52,9 @@ module.exports = resolveAddress = (options_) ->
             throw new Error "Unrecognized options.strategy value."
         # options_.propertyAssignmentObject is optional
 
-        sourceTokenQueue = []
-        componentResolutionStack = []
-        componentResolutionQueue = []
+        resolvedAddressComponents = [] # The result
 
+        sourceTokenQueue = []
         for token in options_.address.implementation.tokenVector
             sourceTokenQueue.push token.clone()
 
@@ -63,18 +62,38 @@ module.exports = resolveAddress = (options_) ->
             strategy: options_.strategy
             parentDataReference: options_.parentDataReference
             addressToken: sourceTokenQueue[0]
-            semanticBindingsReference: options_.address.model
+            semanticBindingsReference: options_.address.model.getSemanticBindings()
             propertyAssignmentObject: options_.propertyAssignmentObject
 
-        componentResolutionStack.push resolveComponent componentResolveOptions
+        componentResolutionContext =
+            input: componentResolveOptions
+            output: resolveComponent componentResolveOptions
+            
+        resolvedComponentWorkQueue = [] 
+        resolvedComponentWorkQueue.push componentResolutionContext
 
-        while componentResolutionStack.length
+        while resolvedComponentWorkQueue.length
 
-            currentComponentResolution = componentResolutionStack.pop()
+            componentResolutionContext = resolvedComponentWorkQueue.shift()
 
-            if currentComponentResolution.output.namedObjectResolutionVector[0].resolvedId ==  sourceTokenQueue[0].idComponent
+
+            
+
+
+
+            # Peek the sourceTokenQueue and see if the next address token
+            if resolvedComponent.namedObjectResolutionVector[0].resolvedId == sourceTokenQueue[0].idComponent
+
                 sourceTokenQueue.shift()
-                componentResolutionQueue.push currentComponentResolution
+                resolvedAddressComponents.push currentComponentResolution
+
+            
+
+
+
+
+
+
 
 
 

@@ -93,7 +93,7 @@ module.exports = resolveComponent = (options_) ->
                             # Propogate 'negotiate' strategy forward if the current component negotiated to 'open' strategy.
                             if (namedObjectResolveOptions.strategy == 'open') and (context.input.strategy == 'negotiate')
                                 namedObjectResolveOptions.strategy = 'negotiate'
-                            pendingSubcomponentStack.push namedObjectResolutionOptions
+                            pendingSubcomponentStack.push namedObjectResolveOptions
                         break
                     else
                         # Pending named object resolution(s) fall within the scope of this data component.
