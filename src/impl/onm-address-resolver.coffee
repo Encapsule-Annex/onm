@@ -52,18 +52,20 @@ module.exports = resolveAddress = (options_) ->
             throw new Error "Unrecognized options.strategy value."
         # options_.propertyAssignmentObject is optional
 
-        resolvedAddressComponents = [] # The result
+        resolvedComponentVector = [] # The result
 
         sourceTokenQueue = []
         for token in options_.address.implementation.tokenVector
             sourceTokenQueue.push token.clone()
+        lastSourceTokenResolved = undefined
 
         componentResolveOptions = 
             strategy: options_.strategy
             parentDataReference: options_.parentDataReference
-            addressToken: sourceTokenQueue[0]
+            addressToken: sourceTokenQueue.shift()
             semanticBindingsReference: options_.address.model.getSemanticBindings()
             propertyAssignmentObject: options_.propertyAssignmentObject
+            onVector: true
 
         componentResolutionContext =
             input: componentResolveOptions
@@ -76,18 +78,20 @@ module.exports = resolveAddress = (options_) ->
 
             componentResolutionContext = resolvedComponentWorkQueue.shift()
 
+            onResultVector = componentResolutionContext.input.onVector? and componentResolutionContext.input.onVector or false
 
-            
+            if onResultVector
+                resolvedComponentVector.push componentResolutionContext
+
+            if not sourceTokenQueue.length
+
+                # Resolve any pending subcomponents of the resolved component under evaluation off vector
+                for pendingSubcomponent in componentResolutionContext.output.pendingSubcomponentStack
+                    console.log 'hi'
 
 
 
-            # Peek the sourceTokenQueue and see if the next address token
-            if resolvedComponent.namedObjectResolutionVector[0].resolvedId == sourceTokenQueue[0].idComponent
-
-                sourceTokenQueue.shift()
-                resolvedAddressComponents.push currentComponentResolution
-
-            
+        true            
 
 
 

@@ -36,6 +36,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+AddressToken = require('./onm-address-token')
 resolveNamedObject = require('./onm-named-object-resolver')
 componentContextHelpers = require('./onm-component-context')
 
@@ -93,7 +94,18 @@ module.exports = resolveComponent = (options_) ->
                             # Propogate 'negotiate' strategy forward if the current component negotiated to 'open' strategy.
                             if (namedObjectResolveOptions.strategy == 'open') and (context.input.strategy == 'negotiate')
                                 namedObjectResolveOptions.strategy = 'negotiate'
-                            pendingSubcomponentStack.push namedObjectResolveOptions
+                            pendingAddressToken = new AddressToken(
+                                context.input.addressToken.model
+                                namedObjectResolution.output.resolvedId
+                                namedObjectResolveOptions.targetNamespaceKey
+                                namedObjectResolveOptions.targetNamespaceDescriptor.id)
+                            componentResolveOptions = 
+                                strategy: namedObjectResolveOptions.strategy
+                                parentDataReference: namedObjectResolveOptions.parentDataReference
+                                addressToken: pendingAddressToken
+                                semanticBindingsReference: namedObjectResolveOptions.semanticBindingsReference
+                                propertyAssignmentObject: namedObjectResolveOptions.propertyAssignmentObject
+                            pendingSubcomponentStack.push componentResolveOptions
                         break
                     else
                         # Pending named object resolution(s) fall within the scope of this data component.
