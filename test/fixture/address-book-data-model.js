@@ -68,7 +68,6 @@ var onm = require('../../index');
                                     jsonTag: "someObject",
                                     namespaceProperties: {
                                         userImmutable: {
-                                            key: {}
                                         }
                                     }
                                 }
@@ -85,7 +84,6 @@ var onm = require('../../index');
                     jsonTag: "contact",
                     namespaceProperties: {
                         userImmutable: {
-                            key: {}
                         },
                         userMutable: {
                             firstName: {
@@ -105,7 +103,6 @@ var onm = require('../../index');
                                 jsonTag: "email",
                                 namespaceProperties: {
                                     userImmutable: {
-                                        key: {}
                                     },
                                     userImmutable: {
                                         emailAddress: {
@@ -123,7 +120,6 @@ var onm = require('../../index');
                                 jsonTag: "address",
                                 namespaceProperties: {
                                     userImmutable: {
-                                        key: {}
                                     },
                                     userMutable: {
                                         streetAddress: {
@@ -140,7 +136,6 @@ var onm = require('../../index');
                                             jsonTag: "note",
                                             namespaceProperties: {
                                                 userImmutable: {
-                                                    key: {}
                                                 },
                                                 userMutable: {
                                                     text: {
@@ -161,7 +156,6 @@ var onm = require('../../index');
                                 jsonTag: "phoneNumber",
                                 namespaceProperties: {
                                     userImmutable: {
-                                        key: {}
                                     },
                                     userMutable: {
                                         areaCode: {

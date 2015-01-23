@@ -59,6 +59,8 @@ module.exports = resolveAddress = (options_) ->
             sourceTokenQueue.push token.clone()
         lastSourceTokenResolved = undefined
 
+        resolvedComponentWorkQueue = [] 
+
         componentResolveOptions = 
             strategy: options_.strategy
             parentDataReference: options_.parentDataReference
@@ -66,15 +68,17 @@ module.exports = resolveAddress = (options_) ->
             semanticBindingsReference: options_.address.model.getSemanticBindings()
             propertyAssignmentObject: options_.propertyAssignmentObject
             onVector: true
-
         componentResolutionContext =
             input: componentResolveOptions
             output: resolveComponent componentResolveOptions
-            
-        resolvedComponentWorkQueue = [] 
         resolvedComponentWorkQueue.push componentResolutionContext
 
+        componentsEvaluated = 0
         while resolvedComponentWorkQueue.length
+
+            console.log "----------------------------------------------------------------------------"
+            console.log "ADDRESS RESOLVE COMPONENT #{++componentsEvaluated}:"
+            console.log JSON.stringify options_.parentDataReference, undefined, 4
 
             componentResolutionContext = resolvedComponentWorkQueue.shift()
 
@@ -112,8 +116,33 @@ module.exports = resolveAddress = (options_) ->
                 throw new Error "Internal consistency check error: unexpected pending subcomponent stack size. should be empty."
             # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+            addressToken = sourceTokenQueue.shift()
+            norv = componentResolutionContext.output.namedObjectResolutionVector
+            parentDataReference = norv[norv.length-1].output.namespaceDataReference
+
+            if not componentResolutionContext.output.pendingSubcomponentStack.length
+
+                componentResolveOptions = 
+                    strategy: options_.strategy # Needs some more thought
+                    parentDataReference: parentDataReference
+                    addressToken: addressToken
+                    semanticBindingsReference: options_.address.model.getSemanticBindings()
+                    propertyAssignmentObject: {}
+                    onVector: true
+
+                componentResolutionContextInner =
+                    input: componentResolveOptions
+                    output: resolveComponent componentResolveOptions
+
+                resolvedComponentWorkQueue.push componentResolutionContextInner
+
+            else
+
+                # Complete the pending subcomponent resolutions using the next address token from the source queue off vector
+                console.log "Hit the case I'm interested in."
 
 
+        console.log "----------------------------------------------------------------------------"
 
        
         # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -121,9 +150,13 @@ module.exports = resolveAddress = (options_) ->
             throw new Error "Internal consistency check error: unexpected address resolver exit with non-empty source token queue."
         if resolvedComponentVector.length != options_.address.implementation.tokenVector.length
             throw new Error "Internal consistency check error: unexpected address resolver exit with too few resolved components."
-
         # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+        console.log "----------------------------------------------------------------------------"
+        console.log "FINAL:"
+        console.log JSON.stringify options_.parentDataReference, undefined, 4
+
+        console.log "----------------------------------------------------------------------------"
 
         true            
 

@@ -64,7 +64,7 @@ module.exports =
         else
             value = declaration_.defaultValue
             if not propertyCommonLib.checkValidPropertyValue value
-                value = declaration_.fnCreate? and declaration_.fnCreate and declaration_.fnCreate()
+                value = declaration_.fnCreate? and declaration_.fnCreate and declaration_.fnCreate() or undefined
                 if not propertyCommonLib.checkValidPropertyValue value
                     throw new Error "Internal data model consistency check error: Cannot deduce value to assign to property name '#{name_}'."
 
