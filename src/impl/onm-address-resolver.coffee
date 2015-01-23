@@ -83,79 +83,49 @@ module.exports = resolveAddress = (options_) ->
             if onResultVector
                 resolvedComponentVector.push componentResolutionContext
 
-            # If the resolved component under evaluation is "off vector", then its pending subcomponents
-            # will also be off vector. If the source token queue is empty, then we've completed the vector
-            # and are by definition "off vector". Complete "off vector" pending subcomponent resolutions
-            # for the resolved component under evaluation.
+            # If the resolved component under evaluation was resolved off vector, complete the resolution
+            # of its pending subcomponents off vector as well. Also, if the source token queue is empty
+            # then we're by definition completing pending work above the requested namespace (i.e. the
+            # address has been resolved but the strategy has not yet completed).
 
             if (not onResultVector) or (sourceTokenQueue.length == 0)
-
-                # Resolve any pending subcomponents of the resolved component under evaluation off vector
+                # Resolve any pending subcomponents of the resolved component under evaluation off-vector
                 while componentResolutionContext.output.pendingSubcomponentStack.length
-
                     pendingSubcomponent = componentResolutionContext.output.pendingSubcomponentStack.pop()
-
+                    pendingSubcomponent.onVector = false
                     componentResolutionContext =
                         input: pendingSubcomponent
                         output: resolveComponent pendingSubcomponent
                     resolvedComponentWorkQueue.push componentResolutionContext
-
                 continue
-
-            # The resolved component under evaluation is "on vector".
-            # It may or may not have pending subcomponents stacked up awaiting evaluation.
-
-
 
             console.log "Hit the case I'm interested in."
 
-            # At this point the component under evaluation has to be an extension point namespace.
+            # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+            if componentResolutionContext.input.addressToken.namespaceDescriptor.namespaceType != 'extensionPoint'
+                throw new Error "Internal consistency check error: expected the most-recently resolved component namespace type to be an extension point."
 
-            headExtensionPointId = componentResolutionContext.input.addressToken.idNamespace
-            nextOnVectorComponentUnderExtensionPointId = sourceTokenQueue[0].idExtensionPoint
+            if componentResolutionContext.input.addressToken.idNamespace != sourceTokenQueue[0].idExtensionPoint
+                throw new Error "Internal consistency check error: unexpected component found at the head of the source token queue."
             
-            if headExtensionPointId != nextOnVectorComponentUnderExtensionPointId
+            if componentResolutionContext.output.pendingSubcomponentStack.length and (sourceTokenQueue.length != 1)
+                throw new Error "Internal consistency check error: unexpected pending subcomponent stack size. should be empty."
+            # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-                # Resolve any pending subcomponents of the resolved component under evaluation off vector
-                while componentResolutionContext.output.pendingSubcomponentStack.length
-                    pendingSubcomponent = componentResolutionContext.output.pendingSubcomponentStack.pop()
-                    componentResolutionContext =
-                        input: pendingSubcomponent
-                        output: resolveComponent pendingSubcomponent
-                    resolvedComponentWorkQueue.push componentResolutionContext
-                continue
 
-            while componentResolutionContext.output.pendingSubcomponentStack.length
 
-                pendingSubcomponent = componentResolutionContext.output.pendingSubcomponentStack.pop()
 
+       
+        # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        if sourceTokenQueue.length
+            throw new Error "Internal consistency check error: unexpected address resolver exit with non-empty source token queue."
+        if resolvedComponentVector.length != options_.address.implementation.tokenVector.length
+            throw new Error "Internal consistency check error: unexpected address resolver exit with too few resolved components."
+
+        # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
         true            
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-        
-
-
-
-
-        
-
-
-
 
     catch exception_
         throw new Error "resolveAddress failed: #{exception_.message}"
