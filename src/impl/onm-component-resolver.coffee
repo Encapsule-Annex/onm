@@ -141,7 +141,7 @@ module.exports = resolveComponent = (options_) ->
                     output: resolveNamedObject namedObjectResolveOptions
 
         # TODO: remove this debug telemetry
-        console.log JSON.stringify dataChangeEventJournal, undefined, 4
+        # console.log JSON.stringify dataChangeEventJournal, undefined, 4
 
         context.output.namedObjectResolutionVector = namedObjectResolutionContext.resultVector
         context.output.pendingSubcomponentStack = pendingSubcomponentStack
@@ -163,7 +163,8 @@ createNamedObjectResolutionContext = (addressToken_) ->
 
     # Determine the sequence of namespace ID's that must be resolved to satisfy the request.
     targetDepth = addressToken_.namespaceDescriptor.parentPathIdVector.length - addressToken_.componentDescriptor.parentPathIdVector.length
-    idVector = addressToken_.namespaceDescriptor.parentPathIdVector.slice -targetDepth
+
+    idVector = addressToken_.namespaceDescriptor.parentPathIdVector.slice addressToken_.componentDescriptor.parentPathIdVector.length, addressToken_.namespaceDescriptor.parentPathIdVector.length
     idVector.push addressToken_.namespaceDescriptor.id
 
     # Default construct the named object resolution context object.

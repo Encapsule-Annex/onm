@@ -17,6 +17,9 @@ var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 var testExtensionPointAddress = testDataRootAddress.createSubpathAddress("properties.subproperties.collection");
 var testExtensionPointToken = testExtensionPointAddress.implementation.getLastToken();
 
+var embeddedComponentAddress = testDataRootAddress.createSubpathAddress("properties.subproperties.collection.someObject");
+var embeddedComponentToken = embeddedComponentAddress.implementation.getLastToken();
+
 
 module.exports = describe("onm.AddressTokenResolver whitebox tests.", function() {
     var resolveComponent  = null;
@@ -40,8 +43,9 @@ module.exports = describe("onm.AddressTokenResolver whitebox tests.", function()
         input = {
             strategy: 'open',
             semanticBindingsReference: testDataModel.getSemanticBindings(),
-            addressToken: testExtensionPointToken,
-            parentDataReference: { addressBook: { properties: { subproperties: { collection: {} } } } },
+            addressToken: embeddedComponentToken, // testExtensionPointToken,
+            // parentDataReference: { addressBook: { properties: { subproperties: { collection: {} } } } },
+            parentDataReference: { xxx: {} },
             propertyAssignmentObject: {}
         };
         output = null;
