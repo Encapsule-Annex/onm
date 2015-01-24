@@ -52,6 +52,8 @@ module.exports = resolveAddress = (options_) ->
             throw new Error "Unrecognized options.strategy value."
         # options_.propertyAssignmentObject is optional
 
+        dataChangeEventJournal = []
+
         resolvedComponentVector = [] # The result
 
         sourceTokenQueue = []
@@ -81,6 +83,9 @@ module.exports = resolveAddress = (options_) ->
             console.log JSON.stringify options_.parentDataReference, undefined, 4
 
             componentResolutionContext = resolvedComponentWorkQueue.shift()
+
+            for changeEvent in componentResolutionContext.output.dataChangeEventJournal
+                dataChangeEventJournal.push changeEvent
 
             onResultVector = componentResolutionContext.input.onVector? and componentResolutionContext.input.onVector or false
 
@@ -153,9 +158,11 @@ module.exports = resolveAddress = (options_) ->
         # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
         console.log "----------------------------------------------------------------------------"
-        console.log "FINAL:"
+        console.log "FINAL JSON:"
         console.log JSON.stringify options_.parentDataReference, undefined, 4
-
+        console.log "----------------------------------------------------------------------------"
+        console.log "CHANGE LOG:"
+        console.log JSON.stringify dataChangeEventJournal, undefined, 4
         console.log "----------------------------------------------------------------------------"
 
         true            

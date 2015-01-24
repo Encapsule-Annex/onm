@@ -39,10 +39,9 @@ describe("Validate the behavior of the onm address resolver.", function() {
             addressResolveOptions = {
                 strategy: 'create',
                 parentDataReference: {},
-                address: testObjectAddress,
+                address: rootAddress,
                 semanticBindingsReference: testDataModel.getSemanticBindings(),
-                //# propertyAssignmentObject: { fuckyea: true, contacts: { joesmith: { firstName: 'Joe', lastName: 'Smith' } } }
-                propertyAssignmentObject: {}
+                propertyAssignmentObject: { fuckyea: true, contacts: { joesmith: { firstName: 'Joe', lastName: 'Smith' } } }
             };
             var resolveAddress = function() {
                 resolvedAddress = functionUnderTest(addressResolveOptions);

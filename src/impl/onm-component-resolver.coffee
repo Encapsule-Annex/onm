@@ -56,7 +56,7 @@ module.exports = resolveComponent = (options_) ->
 
         namedObjectResolutionStack = []
         pendingSubcomponentStack = []
-        dataChangeEventJournal = [] # This is a queue
+        dataChangeEventJournal = []
 
         # Resolve the data component's root named object using the requested resolution strategy.
         namedObjectResolveOptions =
