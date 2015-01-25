@@ -19,17 +19,20 @@ describe("Component resolver use case: open strategy/no operation on root namesp
 
     var outputResults = null;
 
+    var inputOptions = {
+        strategy: 'open',
+        addressToken: rootToken,
+        parentDataReference: { addressBook: { cairn: true } },
+        propertyOptionsObject: {},
+        semanticBindingsReference: dataModel.getSemanticBindings()
+    };
+
     var functionUnderTestWrapper = function() {
-        outputResults = componentResolver.resolve({
-            strategy: 'open',
-            addressToken: rootToken,
-            parentDataReference: { addressBook: { cairn: true } },
-            propertyOptionsObject: {},
-            semanticBindingsReference: dataModel.getSemanticBindings()
-        });
+        outputResults = componentResolver.resolve(inputOptions);
     };
 
     before(function() {
+        testDataFixture.resetLuid();
         assert.doesNotThrow(functionUnderTestWrapper);
     });
 
@@ -54,9 +57,33 @@ describe("Component resolver use case: open strategy/no operation on root namesp
         assert.isArray(outputResults.dataChangeEventJournal);
     });
 
+    it("namedObjectResolutionVector is expected to contain 1 resoved named object.", function() {
+        assert.equal(outputResults.namedObjectResolutionVector.length, 1);
+    });
 
+    it("pendingSubcomponentStack is expected to contain 0 pending component resolution requests.", function() {
+        assert.equal(outputResults.pendingSubcomponentStack.length, 0);
+    });
 
+    it("dataChangeEventJournal is expected to contain 0 change event descriptors.", function() {
+        assert.equal(outputResults.dataChangeEventJournal.length, 0);
+    });
 
+    it("Resolved component data JSON should match verification data.", function() {
+        var rnoi = outputResults.namedObjectResolutionVector.length - 1;
+        var actualResult = JSON.stringify(outputResults.namedObjectResolutionVector[rnoi].output.namespaceDataReference);
+        assert.equal(actualResult, '{"cairn":true}' );
+    });
+
+    it("Reference parent namespace data JSON should match verifcation data.", function() {
+        var actualResult = JSON.stringify(inputOptions.parentDataReference);
+        assert.equal(actualResult, '{"addressBook":{"cairn":true}}');
+    });
+
+    it("The resolved component's change journal should match verification data.", function() {
+        var actualResult = JSON.stringify(outputResults.dataChangeEventJournal);
+        assert.equal(actualResult, '[]');
+    });
 
 });
 
