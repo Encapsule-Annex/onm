@@ -4,8 +4,7 @@ var assert = require('chai').assert;
 var expect = require('chai').expect;
 var should = require('chai').should;
 
-// Function under test.
-var resolveComponent = require('../../../lib/impl/onm-component-resolver');
+var componentResolver = require('../../../lib/impl/onm-component-resolver');
 
 var testDataFixture = require('../../fixture/address-book-data-model');
 
@@ -21,10 +20,10 @@ describe("Component resolver use case: open strategy/no operation on root namesp
     var outputResults = null;
 
     var functionUnderTestWrapper = function() {
-        outputResults = resolveComponent({
+        outputResults = componentResolver.resolve({
             strategy: 'open',
             addressToken: rootToken,
-            parentDataReference: { addressBook: {} },
+            parentDataReference: { addressBook: { cairn: true } },
             propertyOptionsObject: {},
             semanticBindingsReference: dataModel.getSemanticBindings()
         });
@@ -34,9 +33,30 @@ describe("Component resolver use case: open strategy/no operation on root namesp
         assert.doesNotThrow(functionUnderTestWrapper);
     });
 
-    it("Execute the test suite.", function() {
-        assert.isTrue(true);
+    it("resolveComponent call should have returned an results object.", function() {
+        assert.isNotNull(outputResults, "outputResults should not be null.");
+        assert.isDefined(outputResults, "outputResults should be defined.");
+        assert.isObject(outputResults, "outputResults should be an object.");
     });
+
+    it("resolveComponent call results should define property 'namedObjectResolutionVector' of type array.", function() {
+        assert.property(outputResults, 'namedObjectResolutionVector');
+        assert.isArray(outputResults.namedObjectResolutionVector);
+    });
+
+    it("resolveComponent call results should define property 'pendingSubcomponentStack' of type array.", function() {
+        assert.property(outputResults, 'pendingSubcomponentStack');
+        assert.isArray(outputResults.pendingSubcomponentStack);
+    });
+
+    it("resolveComponent call results should define property 'dataChangeEventJournal' of type array.", function() {
+        assert.property(outputResults, 'dataChangeEventJournal');
+        assert.isArray(outputResults.dataChangeEventJournal);
+    });
+
+
+
+
 
 });
 

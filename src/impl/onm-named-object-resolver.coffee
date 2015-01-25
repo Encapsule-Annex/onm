@@ -44,9 +44,10 @@ namedObjectPropertyVisitorInterfaces =
     open: require('./onm-named-object-property-policy-update')
     create: require('./onm-named-object-property-policy-initialize')
     
+module.exports = namedObjectResolver = {}
 
 # ==============================================================================
-module.exports = resolveNamedObject = (options_) ->
+namedObjectResolver.resolve = (options_) ->
     try
         # DEBUG: Verify the base-level semantics of options_ in-paramaeter
         if not namedObjectContextHelpers.checkValidContextInput options_

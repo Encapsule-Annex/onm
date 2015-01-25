@@ -7,13 +7,14 @@ var should = require('chai').should;
 var withData = require('leche').withData;
 
 var uuid = require('node-uuid');
-var onm = require('../index');
+var onm = require('../../../index');
 
-var functionUnderTest = require('../lib/impl/onm-named-object-resolver');
-var moduleUnderTestImpl = require('../lib/impl/onm-named-object-context')
+var namedObjectResolver = require('../../../lib/impl/onm-named-object-resolver');
+var namedObjectContext = require('../../../lib/impl/onm-named-object-context');
 
-var namespaceDescriptorResolveCreateVectors = require('./vectors/named-object-create-strategy-vectors')();
-var subcomponentCreationTestVectors = require('./vectors/named-object-resolve/vector-dimension-create-subcomponent-assignment')();
+
+var namespaceDescriptorResolveCreateVectors = require('../../vectors/named-object-create-strategy-vectors')();
+var subcomponentCreationTestVectors = require('../../vectors/named-object-resolve/vector-dimension-create-subcomponent-assignment')();
 
 describe("resolveNamespaceDescriptorCreate internal function whitebox test matrix:", function () {
     withData(namespaceDescriptorResolveCreateVectors, function(testData) {
@@ -23,7 +24,7 @@ describe("resolveNamespaceDescriptorCreate internal function whitebox test matri
         var resolveResults = null;
         it(testName, function() {
             var functionUnderTestWrapper = function() {
-                resolveResults = functionUnderTest(testData.options);
+                resolveResults = namedObjectResolver.resolve(testData.options);
                 console.log("RESOLVE RESULTS::" + JSON.stringify(testData.options.parentDataReference));
             };
             if (testData.validConfig) {
@@ -43,7 +44,7 @@ describe("resolveNamespaceDescriptorCreate internal function whitebox test matri
                 assert.isObject(resolveResults);
             });
             it("The returned object should be a valid descriptor resolve results object.", function() {
-                assert.isTrue(moduleUnderTestImpl.checkValidContextOutput(resolveResults));
+                assert.isTrue(namedObjectContext.checkValidContextOutput(resolveResults));
             });
             switch (testData.options.targetNamespaceDescriptor.namespaceType) {
             case 'root':
@@ -172,7 +173,7 @@ describe("resolveNamespaceDescriptorCreate internal function whitebox test matri
         withData(subcomponentCreationTestVectors, function(testData) {
             var resolveResults = null;
             var functionUnderTestWrapper = function() {
-                resolveResults = functionUnderTest(testData.options);
+                resolveResults = namedObjectResolver.resolve(testData.options);
                 console.log("----------------------------------------------------------------------------");
                 console.log("NAMESPACE RESOSUTION RESULTS");
                 console.log("Parent data namespace JSON: " + JSON.stringify(testData.options.parentDataReference));
@@ -191,7 +192,7 @@ describe("resolveNamespaceDescriptorCreate internal function whitebox test matri
                     var optionsValid = false;
                     it("Attempt to validate the pending namespace descriptor should not throw.", function() {
                         var functionUnderTest = function() {
-                            optionsValid = moduleUnderTestImpl.checkValidContextInput(options_);
+                            optionsValid = namedObjectContext.checkValidContextInput(options_);
                         };
                         assert.doesNotThrow(functionUnderTest);
                     });

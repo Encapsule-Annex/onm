@@ -5,15 +5,15 @@ var assert = require('chai').assert;
 var withData = require('leche').withData;
 
 var uuid = require('node-uuid');
-var onm = require('../index');
-var testData = require('./fixture/address-book-data-model');
+var onm = require('../../../index');
+var testData = require('../../fixture/address-book-data-model');
 
 var testDataModel = testData.createModel();
 var testDataRootAddress = testDataModel.createRootAddress();
 var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
 
-var moduleUnderTest = require('../lib/impl/onm-named-object-context')
+var moduleUnderTest = require('../../../lib/impl/onm-named-object-context')
 
 var testVector = {
 

@@ -37,11 +37,13 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 helperFunctions = require './onm-util-functions'
-resolveNamedObject = require './onm-named-object-resolver'
-resolveComponent = require './onm-component-resolver'
+
+componentResolver = require './onm-component-resolver'
+
+module.exports = addressResolver = {}
 
 # ==============================================================================
-module.exports = resolveAddress = (options_) ->
+addressResolver.resolve = (options_) ->
     try
         # options_ validation
         if not (options_? and options_) then throw new Error "Missing options input parameter."
@@ -72,7 +74,7 @@ module.exports = resolveAddress = (options_) ->
             onVector: true
         componentResolutionContext =
             input: componentResolveOptions
-            output: resolveComponent componentResolveOptions
+            output: componentResolver.resolve componentResolveOptions
         resolvedComponentWorkQueue.push componentResolutionContext
 
         componentsEvaluated = 0
@@ -104,7 +106,7 @@ module.exports = resolveAddress = (options_) ->
                     pendingSubcomponent.onVector = false
                     componentResolutionContext =
                         input: pendingSubcomponent
-                        output: resolveComponent pendingSubcomponent
+                        output: componentResolver.resolve pendingSubcomponent
                     resolvedComponentWorkQueue.push componentResolutionContext
                 continue
 
@@ -137,7 +139,7 @@ module.exports = resolveAddress = (options_) ->
 
                 componentResolutionContextInner =
                     input: componentResolveOptions
-                    output: resolveComponent componentResolveOptions
+                    output: componentResolver.resolve componentResolveOptions
 
                 resolvedComponentWorkQueue.push componentResolutionContextInner
 

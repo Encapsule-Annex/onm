@@ -5,21 +5,24 @@ var assert = require('chai').assert;
 var withData = require('leche').withData;
 
 var uuid = require('node-uuid');
-var onm = require('../index');
-var testData = require('./fixture/address-book-data-model');
+var onm = require('../../../index');
+var testData = require('../../fixture/address-book-data-model');
 
 var testDataModel = testData.createModel();
 var testDataRootAddress = testDataModel.createRootAddress();
 var testDataRootToken = testDataRootAddress.implementation.getLastToken();
 var testDataRootDescriptor = testDataRootToken.namespaceDescriptor;
 
-var functionUnderTest = require('../lib/impl/onm-named-object-resolver');
-var moduleUnderTestImpl = require('../lib/impl/onm-named-object-context')
+var functionUnderTest = require('../../../lib/impl/onm-named-object-resolver');
+var moduleUnderTestImpl = require('../../../lib/impl/onm-named-object-context')
 
-module.exports = describe("'resolveNamespaceDescriptorOpen' function export tests.", function() {
+var namedObjectResolver = require('../../../lib/impl/onm-named-object-resolver');
+var namedObjectContext = require('../../../lib/impl/onm-named-object-context');
+
+module.exports = describe("namedObjectResolver.resolve base 'open' strategy w/no data operation test.", function() {
 
     var resolveResults = null;
-    var descriptorResolveOptions = {
+    var namedObjectResolveOptions = {
         strategy: 'open',
         parentDataReference: { 'addressBook': {} },
         targetNamespaceDescriptor: testDataRootDescriptor,
@@ -30,7 +33,7 @@ module.exports = describe("'resolveNamespaceDescriptorOpen' function export test
     before(function(done_) {
         testData.resetLuid();
         var functionUnderTestWrapper = function() {
-            resolveResults = functionUnderTest(descriptorResolveOptions);
+            resolveResults = namedObjectResolver.resolve(namedObjectResolveOptions);
         };
         assert.doesNotThrow(functionUnderTestWrapper);
         done_();
@@ -43,7 +46,7 @@ module.exports = describe("'resolveNamespaceDescriptorOpen' function export test
     });
 
     it("The returned object should be a valid descriptor resolve results object.", function() {
-        assert.isTrue(moduleUnderTestImpl.checkValidContextOutput(resolveResults));
+        assert.isTrue(namedObjectContext.checkValidContextOutput(resolveResults));
     });
 
 });

@@ -21,50 +21,75 @@ var embeddedComponentAddress = testDataRootAddress.createSubpathAddress("propert
 var embeddedComponentToken = embeddedComponentAddress.implementation.getLastToken();
 
 
-module.exports = describe("onm.AddressTokenResolver whitebox tests.", function() {
-    var resolveComponent  = null;
+module.exports = describe("Component resolver module test suite.", function() {
+
+    componentResolver = null;
+
     before(function(done_) {
         var loadModuleUnderTest = function() {
-            resolveComponent = require('../lib/impl/onm-component-resolver');
+            componentResolver = require('../lib/impl/onm-component-resolver');
         };
         assert.doesNotThrow(loadModuleUnderTest);
         done_();
     });
-    it("The 'onm-token-resolver' module should have loaded.", function() {
-        assert.isDefined(resolveComponent);
-        assert.isNotNull(resolveComponent);
+
+    it("componentResolver module should export an object.", function() {
+        assert.isNotNull(componentResolver);
+        assert.isDefined(componentResolver);
+        assert.isObject(componentResolver);
     });
-    it("Module should export function (resolveComponent).", function() {
-        assert.isFunction(resolveComponent);
-    });
 
-    describe("Component open test #1.", function() {
-
-        input = {
-            strategy: 'open',
-            semanticBindingsReference: testDataModel.getSemanticBindings(),
-            addressToken: embeddedComponentToken, // testExtensionPointToken,
-            // parentDataReference: { addressBook: { properties: { subproperties: { collection: {} } } } },
-            parentDataReference: { xxx: {} },
-            propertyAssignmentObject: {}
-        };
-        output = null;
-        before(function() {
-            var functionUnderTest = function() {
-                output = resolveComponent(input);
-            };
-            assert.doesNotThrow(functionUnderTest);
-        });
-
-        it("Execute the test suite.", function() {
-            assert.isTrue(true);
+    describe("Verify the export signature of the component resolver module.", function() {
+        it("componentResolver module export object should define property 'resolve' of type function.", function() {
+            assert.property(componentResolver, 'resolve');
+            assert.isFunction(componentResolver.resolve);
         });
     });
 
-    describe("Component open test #2.", function() {
-    });
+    describe("Component resolver implementation tests.", function() {
 
-    describe("Component open test #3.", function() {
+        describe("Open strategy with no data operation tests.", function() {
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-noop-root.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-noop-subnamespace-1.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-noop-subnamespace-2.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-noop-subnamespace-N.js');
+        });
+
+        describe("Open strategy with data-over operation tests.", function() {
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-apply-root-data-0.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-apply-root-data-1.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-apply-root-data-2.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-apply-root-data-N.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-apply-subnamespace-1-data-0.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-apply-subnamespace-1-data-1.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-apply-subnamespace-1-data-2.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-apply-subnamespace-2-data-0.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-apply-subnamespace-2-data-1.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-apply-subnamespace-2-data-2.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-open-apply-subnamespace-N-data-0.js');
+        });
+
+        describe("Create strategy with no data operation tests.", function() {
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-noop-root.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-noop-subnamespace-1.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-noop-subnamespace-2.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-noop-subnamespace-N.js');
+        });
+
+        describe("Create strategy with data-over operation tests.", function() {
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-root-data-0.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-root-data-1.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-root-data-2.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-root-data-N.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-subnamespace-1-data-0.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-subnamespace-1-data-1.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-subnamespace-1-data-2.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-subnamespace-2-data-0.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-subnamespace-2-data-1.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-subnamespace-2-data-2.js');
+            require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-subnamespace-N-data-0.js');
+        });
+
     });
 
 });

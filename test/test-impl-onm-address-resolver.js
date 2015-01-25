@@ -16,27 +16,34 @@ var testObjectAddress = rootAddress.createSubpathAddress("properties.subproperti
 
 describe("Validate the behavior of the onm address resolver.", function() {
 
-    var functionUnderTest = null;
+    var addressResolver = null;
+
     before(function() {
         var loadModule = function() {
-            functionUnderTest = require('../lib/impl/onm-address-resolver');
+            addressResolver = require('../lib/impl/onm-address-resolver');
         };
         assert.doesNotThrow(loadModule);
     });
-    it("The onm-address-resolver module should have loaded.", function() {
-        assert.isDefined(functionUnderTest);
-        assert.isNotNull(functionUnderTest);
-        assert.isFunction(functionUnderTest);
+
+    it("addressResolver module should export an object.", function() {
+        assert.isNotNull(addressResolver);
+        assert.isDefined(addressResolver);
+        assert.isObject(addressResolver);
     });
 
+    describe("Verify the export signature of the address resolver module.", function() {
+        it("addressResolver module export object should define property 'resolve' of type function.", function() {
+            assert.property(addressResolver, 'resolve');
+            assert.isFunction(addressResolver.resolve);
+        });
+    });
+
+    // ****************************************************************************
+    // SCRAP
     describe("Attempt to resolve the root address of an onm.Store using the 'create' strategy.", function() {
-
-        var addressResolveOptions = null;
-        var resolvedAddress = null;
-
+        var resolveResults = null;
         before(function() {
-
-            addressResolveOptions = {
+            var resolveOptions = {
                 strategy: 'create',
                 parentDataReference: {},
                 address: rootAddress,
@@ -44,17 +51,57 @@ describe("Validate the behavior of the onm address resolver.", function() {
                 propertyAssignmentObject: { fuckyea: true, contacts: { joesmith: { firstName: 'Joe', lastName: 'Smith' } } }
             };
             var resolveAddress = function() {
-                resolvedAddress = functionUnderTest(addressResolveOptions);
+                resolveResults = addressResolver.resolve(resolveOptions);
             };
             assert.doesNotThrow(resolveAddress);
         });
-
         it("Execute the test suite.", function() {
             assert.isTrue(true);
-            console.log(JSON.stringify(resolvedAddress));
+            console.log(JSON.stringify(resolveResults));
+        });
+    });
+    // ****************************************************************************
+
+    describe("Address resolver implementation tests.", function() {
+
+        describe("Open strategy with no data operation tests.", function() {
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-root.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-subcomponent.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-nested-subcomponent.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-deep-nested-subcomponent.js');
+        });
+
+        describe("Open strategy with data-over operation tests.", function() {
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-root-apply-component.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-root-apply-component-tree.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-subcomponent-apply-component.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-subcomponent-apply-component-tree.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-nested-subcomponent-apply-component.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-nested-subcomponent-apply-component-tree.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-recursively-declared-subcomponent-apply-component.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-recursively-declared-subcomponent-apply-component-tree.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-recursively-declared-subcomponent.js');
+        });
+
+        describe("Create strategy with no data operation tests.", function() {
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-root.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-subcomponent.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-nested-subcomponent.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-deep-nested-subcomponent.js');
+        });
+
+        describe("Create strategy with data-over operation tests.", function() {
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-root-apply-component.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-root-apply-component-tree.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-subcomponent-apply-component.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-subcomponent-apply-compoonent-tree.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-nested-subcomponent-apply-component.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-nested-subcomponent-apply-component-tree.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-recursively-declared-subcomponent-apply-component.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-recursively-declared-subcomponent-apply-component-tree.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-recursively-declared-subcomponent.js');
         });
 
     });
-
 
 });

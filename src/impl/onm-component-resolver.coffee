@@ -37,11 +37,14 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 AddressToken = require('./onm-address-token')
-resolveNamedObject = require('./onm-named-object-resolver')
+namedObjectResolver = require('./onm-named-object-resolver')
+
 componentContextHelpers = require('./onm-component-context')
 
+module.exports = componentResolver = {}
+
 # ==============================================================================
-module.exports = resolveComponent = (options_) ->
+componentResolver.resolve = (options_) ->
     try
         # DEBUG: Verify the base-level semantics of options_ in-paramaeter
         if not componentContextHelpers.checkValidContextInput options_
@@ -69,7 +72,7 @@ module.exports = resolveComponent = (options_) ->
 
         namedObjectResolutionStack.push
             input: namedObjectResolveOptions
-            output: resolveNamedObject namedObjectResolveOptions
+            output: namedObjectResolver.resolve namedObjectResolveOptions
 
         while namedObjectResolutionStack.length
 
@@ -118,7 +121,7 @@ module.exports = resolveComponent = (options_) ->
                                 namedObjectResolveOptions.propertyAssignmentObject = context.input.propertyAssignmentObject
                             namedObjectResolutionStack.push
                                 input: namedObjectResolveOptions
-                                output: resolveNamedObject namedObjectResolveOptions
+                                output: namedObjectResolver.resolve namedObjectResolveOptions
                         break
 
             # If the main stack is empty but the work queue is not, then this means that the ascending wave of named
@@ -138,7 +141,7 @@ module.exports = resolveComponent = (options_) ->
 
                 namedObjectResolutionStack.push
                     input: namedObjectResolveOptions
-                    output: resolveNamedObject namedObjectResolveOptions
+                    output: namedObjectResolver.resolve namedObjectResolveOptions
 
         # TODO: remove this debug telemetry
         # console.log JSON.stringify dataChangeEventJournal, undefined, 4
