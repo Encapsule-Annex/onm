@@ -14,7 +14,7 @@ var componentResolver = require('../../../lib/impl/onm-component-resolver');
       operationName: ''
       targetNamespace: ''
       inputOptions: {}
-      validOptions: true
+      expectCallToThrow: false
       resultExpectations: {
           resolvedNamedObjectCount: 1
           pendingSubcomponentCount: 0
@@ -28,7 +28,16 @@ var componentResolver = require('../../../lib/impl/onm-component-resolver');
   }
 */
 
-
+var countSparseArray = function(array_) {
+    var index = array_.length;
+    var count = 0
+    while (--index >= -0) {
+        if (array_[index] !== undefined) {
+            count++;
+        }
+    }
+    return count;
+};
 
 module.exports = function (testOptions_) {
 
@@ -46,57 +55,81 @@ module.exports = function (testOptions_) {
 
         before(function() {
             testDataFixture.resetLuid();
-            assert.doesNotThrow(functionUnderTestWrapper);
+            if (!testOptions_.expectCallToThrow) {
+                assert.doesNotThrow(functionUnderTestWrapper);
+            } else {
+                assert.throws(functionUnderTestWrapper);
+            }
         });
 
-        it("resolveComponent call should have returned an results object.", function() {
-            assert.isNotNull(outputResults, "outputResults should not be null.");
-            assert.isDefined(outputResults, "outputResults should be defined.");
-            assert.isObject(outputResults, "outputResults should be an object.");
-        });
+        if (!testOptions_.expectCallToThrow) {
 
-        it("resolveComponent call results should define property 'namedObjectResolutionVector' of type array.", function() {
-            assert.property(outputResults, 'namedObjectResolutionVector');
-            assert.isArray(outputResults.namedObjectResolutionVector);
-        });
+            describe("Verify the outer signature of the resolveComponent function call result.", function() {
 
-        it("resolveComponent call results should define property 'pendingSubcomponentStack' of type array.", function() {
-            assert.property(outputResults, 'pendingSubcomponentStack');
-            assert.isArray(outputResults.pendingSubcomponentStack);
-        });
+                it("resolveComponent call should have returned an results object.", function() {
+                    assert.isNotNull(outputResults, "outputResults should not be null.");
+                    assert.isDefined(outputResults, "outputResults should be defined.");
+                    assert.isObject(outputResults, "outputResults should be an object.");
+                });
 
-        it("resolveComponent call results should define property 'dataChangeEventJournal' of type array.", function() {
-            assert.property(outputResults, 'dataChangeEventJournal');
-            assert.isArray(outputResults.dataChangeEventJournal);
-        });
+                it("resolveComponent call results should define property 'namedObjectResolutionVector' of type array.", function() {
+                    assert.property(outputResults, 'namedObjectResolutionVector');
+                    assert.isArray(outputResults.namedObjectResolutionVector);
+                });
 
-        it("namedObjectResolutionVector is expected to contain " + testOptions_.resultExpectations.resolvedNamedObjectCount + " resoved named object(s).", function() {
-            assert.equal(outputResults.namedObjectResolutionVector.length, testOptions_.resultExpectations.resolvedNamedObjectCount);
-        });
+                it("resolveComponent call results should define property 'pendingSubcomponentStack' of type array.", function() {
+                    assert.property(outputResults, 'pendingSubcomponentStack');
+                    assert.isArray(outputResults.pendingSubcomponentStack);
+                });
 
-        it("pendingSubcomponentStack is expected to contain " + testOptions_.resultExpectations.pendingSubcomponentResolutionCount + " pending component resolution requests.", function() {
-            assert.equal(outputResults.pendingSubcomponentStack.length, testOptions_.resultExpectations.pendingSubcomponentCount);
-        });
+                it("resolveComponent call results should define property 'dataChangeEventJournal' of type array.", function() {
+                    assert.property(outputResults, 'dataChangeEventJournal');
+                    assert.isArray(outputResults.dataChangeEventJournal);
+                });
 
-        it("dataChangeEventJournal is expected to contain " + testOptions_.resultExpectations.dataChangeEventJournalCount + " change event descriptors.", function() {
-            assert.equal(outputResults.dataChangeEventJournal.length, testOptions_.resultExpectations.dataChangeEventJournalCount);
-        });
+                describe("Verify the resoveComponent function call result object against control values for this use case.", function() {
 
-        it("Resolved component data JSON should match verification data.", function() {
-            var rnoi = outputResults.namedObjectResolutionVector.length - 1;
-            var actualResult = JSON.stringify(outputResults.namedObjectResolutionVector[rnoi].output.namespaceDataReference);
-            assert.equal(actualResult, testOptions_.resultExpectations.JSON.namespace);
-        });
+                    it("namedObjectResolutionVector is expected to contain " + testOptions_.resultExpectations.resolvedNamedObjectCount + " resoved named object(s).", function() {
+                        assert.equal(countSparseArray(outputResults.namedObjectResolutionVector), testOptions_.resultExpectations.resolvedNamedObjectCount);
+                    });
 
-        it("Reference parent namespace data JSON should match verifcation data.", function() {
-            var actualResult = JSON.stringify(testOptions_.inputOptions.parentDataReference);
-            assert.equal(actualResult,testOptions_.resultExpectations.JSON.parent);
-        });
+                    it("pendingSubcomponentStack is expected to contain " + testOptions_.resultExpectations.pendingSubcomponentCount + " pending component resolution request(s).", function() {
+                        assert.equal(outputResults.pendingSubcomponentStack.length, testOptions_.resultExpectations.pendingSubcomponentCount);
+                    });
 
-        it("The resolved component's change journal should match verification data.", function() {
-            var actualResult = JSON.stringify(outputResults.dataChangeEventJournal);
-            assert.equal(actualResult, testOptions_.resultExpectations.JSON.journal);
-        });
+                    it("dataChangeEventJournal is expected to contain " + testOptions_.resultExpectations.dataChangeEventJournalCount + " change event descriptor(s).", function() {
+                        assert.equal(outputResults.dataChangeEventJournal.length, testOptions_.resultExpectations.dataChangeEventJournalCount);
+                    });
+
+                    it("Resolved component data JSON should match verification data.", function() {
+                        var rnoi = outputResults.namedObjectResolutionVector.length - 1;
+                        var actualResult = JSON.stringify(outputResults.namedObjectResolutionVector[rnoi].output.namespaceDataReference);
+                        assert.equal(actualResult, testOptions_.resultExpectations.JSON.namespace);
+                    });
+
+                    it("Reference parent namespace data JSON should match verifcation data.", function() {
+                        var actualResult = JSON.stringify(testOptions_.inputOptions.parentDataReference);
+                        assert.equal(actualResult,testOptions_.resultExpectations.JSON.parent);
+                    });
+
+                    it("The resolved component's change journal should match verification data.", function() {
+                        var actualResult = JSON.stringify(outputResults.dataChangeEventJournal);
+                        assert.equal(actualResult, testOptions_.resultExpectations.JSON.journal);
+                    });
+
+                });
+
+            });
+
+        } else {
+            it("Call threw an exception as expected.", function() {
+                assert.isTrue(true);
+            });
+
+            it("The results object is expected to be null.", function() {
+                assert.isNull(outputResults);
+            });
+        }
 
     });
 

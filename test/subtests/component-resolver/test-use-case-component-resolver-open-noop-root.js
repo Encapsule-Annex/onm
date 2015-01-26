@@ -8,7 +8,7 @@ var dataModel = testDataFixture.createModel();
 var rootAddress = dataModel.createRootAddress();
 var rootToken = rootAddress.implementation.getLastToken();
 
-var testOptions = {
+testComponentResolverUseCase({
     strategyName: "open",
     operationName: "noop",
     targetNamespace: "root",
@@ -19,6 +19,7 @@ var testOptions = {
         propertyOptionsObject: {},
         semanticBindingsReference: dataModel.getSemanticBindings()
     },
+    expectCallToThrow: false,
     resultExpectations: {
         resolvedNamedObjectCount: 1,
         pendingSubcomponentCount: 0,
@@ -29,7 +30,20 @@ var testOptions = {
             journal: '[]'
         }
     }
-};
+});
 
-testComponentResolverUseCase(testOptions);
+
+testComponentResolverUseCase({
+    strategyName: "open",
+    operationName: "noop",
+    targetNamespace: "root (missing)",
+    inputOptions: {
+        strategy: 'open',
+        addressToken: rootToken,
+        parentDataReference: {},
+        propertyOptionsObject: {},
+        semanticBindingsReference: dataModel.getSemanticBindings()
+    },
+    expectCallToThrow: true
+});
 
