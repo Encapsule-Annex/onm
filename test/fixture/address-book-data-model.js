@@ -3,13 +3,7 @@
 // shared test fixture routines leveraged by onm mocha tests
 //
 
-var assert = require('chai').assert;
-var expect = require('chai').expect;
-var should = require('chai').should;
-
 var onm = require('../../index');
-
-
 
 (function() {
 

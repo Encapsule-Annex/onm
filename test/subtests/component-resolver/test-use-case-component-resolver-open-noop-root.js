@@ -1,12 +1,12 @@
 // test-use-case-component-resolver-open-noop-root.js
 
+var onm = require('../../../index');
 var testComponentResolverUseCase = require('./test-core-component-resolver');
+var dataModelDeclaration = require('../../fixture/named-object-resolve-test-data-model');
+var dataModel = new onm.Model(dataModelDeclaration).implementation.resetKeyGenerator();
+var rootToken = dataModel.createRootAddress().implementation.getLastToken();
 
-var testDataFixture = require('../../fixture/address-book-data-model');
-
-var dataModel = testDataFixture.createModel();
-var rootAddress = dataModel.createRootAddress();
-var rootToken = rootAddress.implementation.getLastToken();
+var testComponentResolverUseCase = require('./test-core-component-resolver');
 
 testComponentResolverUseCase({
     strategyName: "open",
@@ -15,7 +15,7 @@ testComponentResolverUseCase({
     inputOptions: {
         strategy: 'open',
         addressToken: rootToken,
-        parentDataReference: { addressBook: { cairn: true } },
+        parentDataReference: { namespaceRoot: { cairn: true } },
         propertyOptionsObject: {},
         semanticBindingsReference: dataModel.getSemanticBindings()
     },
@@ -26,12 +26,11 @@ testComponentResolverUseCase({
         dataChangeEventJournalCount: 0,
         JSON: {
             namespace: '{"cairn":true}',
-            parent: '{"addressBook":{"cairn":true}}',
+            parent: '{"namespaceRoot":{"cairn":true}}',
             journal: '[]'
         }
     }
 });
-
 
 testComponentResolverUseCase({
     strategyName: "open",

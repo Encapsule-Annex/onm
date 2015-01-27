@@ -393,6 +393,10 @@ class ModelDetails
                     throw new Error("parseAddressHumanReadableString failure: #{exception.message}")
 
 
+            # --------------------------------------------------------------------------
+            @resetKeyGenerator = ->
+                LUID = 1
+                @model
 
             # --------------------------------------------------------------------------
             # ModelDetails CONSTRUCTOR

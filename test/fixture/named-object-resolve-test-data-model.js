@@ -27,7 +27,7 @@ var testProperties = {
     }
 };
 
-var descriptorResolveModelDeclaration = module.exports = {
+var resolverTestDataModel = module.exports = {
     semanticBindings: {
         componentKeyGenerator: 'internalLuid'
     },
@@ -43,7 +43,37 @@ var descriptorResolveModelDeclaration = module.exports = {
                 {
                     namespaceType: 'child',
                     jsonTag: 'namespaceChildB',
-                    namespaceProperties: testProperties
+                    namespaceProperties: testProperties,
+                    subNamespaces: [
+                        {
+                            namespaceType: "child",
+                            jsonTag: "namespaceChildC",
+                            namespaceProperties: testProperties,
+                            subNamespaces: [
+                                {
+                                    namespaceType: "child",
+                                    jsonTag: "namespaceChildD",
+                                    namespaceProperties: testProperties,
+                                    subNamespaces: [
+                                        {
+                                            namespaceType: "child",
+                                            jsonTag: "namespaceChildE",
+                                            namespaceProperties: testProperties
+                                        },
+                                        {
+                                            namespaceType: "extensionPoint",
+                                            jsonTag: "namespaceExtensionPointE",
+                                            componentArchetype: {
+                                                namespaceType: "component",
+                                                jsonTag: "namespaceChildF",
+                                                namespaceProperties: testProperties
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     namespaceType: 'extensionPoint',
