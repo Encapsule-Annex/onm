@@ -50,19 +50,3 @@ testComponentResolverUseCase({
     },
     expectCallToThrow: true
 });
-
-testComponentResolverUseCase({
-    strategyName: "create",
-    operationName: "noop",
-    targetNamespace: "root (child 1 already exists)",
-    inputOptions: {
-        strategy: 'create',
-        addressToken: rootToken,
-        parentDataReference: { namespaceRoot: { namespaceChildA: { cairn: true } } },
-        propertyOptionsObject: {},
-        semanticBindingsReference: dataModel.getSemanticBindings()
-    },
-    expectCallToThrow: true
-});
-
-

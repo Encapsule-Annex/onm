@@ -118,7 +118,7 @@ componentResolver.resolve = (options_) ->
                             if namedObjectResolveOptions.targetNamespaceDescriptor.id == context.input.addressToken.idNamespace
                                 if Object.keys(namedObjectResolveOptions.propertyAssignmentObject).length > 0
                                     throw new Error "Internal consistency check error: We do not expect property assignment data to be propogating below the target namespace during a component resolution."
-                                namedObjectResolveOptions.propertyAssignmentObject = context.input.propertyAssignmentObject
+                                namedObjectResolveOptions.propertyAssignmentObject = context.input.propertyAssignmentObject? and context.input.propertyAssignmentObject or {}
                             namedObjectResolutionStack.push
                                 input: namedObjectResolveOptions
                                 output: namedObjectResolver.resolve namedObjectResolveOptions
