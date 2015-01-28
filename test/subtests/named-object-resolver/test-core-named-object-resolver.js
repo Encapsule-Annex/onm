@@ -19,7 +19,7 @@ module.exports = function (testOptions_) {
 
     describe(testName, function() {
 
-        resolveResult = null;
+        var resolveResults = null;
 
         var resolveNamedObjectWrapper = function() {
             resolveResults = namedObjectResolver.resolve(testOptions_.inputOptions);
@@ -39,7 +39,7 @@ module.exports = function (testOptions_) {
                 assert.isTrue(true);
             });
             it("The resolve result object is exepcted to be null.", function() {
-                assert.isNull(resolveResult);
+                assert.isNull(resolveResults);
             });
         } else {
             it("Call to namedObjectResolver.resolve function is expected not to throw an exception.", function() {
@@ -47,14 +47,14 @@ module.exports = function (testOptions_) {
             });
 
             it("Call is expected to have returned a non-null result of type object.", function() {
-                assert.isNotNull(resolveResult);
-                assert.isObject(resolveResult);
+                assert.isNotNull(resolveResults);
+                assert.isObject(resolveResults);
             });
 
             describe("Verify the named object resolver results object against control values for this use case.", function() {
 
                 it("Strategy followed by the resolver is expected to be '" + testOptions_.resultExpectations.strategyFollowed + "'.", function() {
-                    assert.equal(resolveResult.strategyFollowed, testOptions_.resultExpectations.strategyFollowed);
+                    assert.equal(resolveResults.strategyFollowed, testOptions_.resultExpectations.strategyFollowed);
                 });
 
                 it("The resolved named object is expected to be named '" + testOptions_.resultExpectations.namespaceEffectiveKey + "'.", function() {
