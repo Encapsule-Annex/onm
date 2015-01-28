@@ -108,6 +108,8 @@ namedObjectResolverContext.checkValidContextInput = (options_) ->
             setInvalid "Unrecognized resolution strategy specified."
             break
 
+        # TODO: This needs a closer look. Now string. Later integer? There's a matrix in there that's not currently accounted for...
+
         if options_.targetNamespaceKey? and options_.targetNamespaceKey
             if not (options_.targetNamespaceKey.length? and options_.targetNamespaceKey.length)
                 setInvalid "Invalid target namespace key specified."
@@ -163,6 +165,10 @@ namedObjectResolverContext.checkValidContextOutput = (results_) ->
 
         if not (results_.strategyFollowed? and results_.strategyFollowed)
             setInvalid "Invalid strategyFollowed"
+            break
+
+        if not (results_.dataChangeEventJournal? and results_.dataChangeEventJournal and Array.isArray(results_.dataChangeEventJournal))
+            setInvalid "Invalid dataChangeEventJournal"
             break
 
         switch results_.strategyFollowed

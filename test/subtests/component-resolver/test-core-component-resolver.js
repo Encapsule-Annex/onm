@@ -1,11 +1,9 @@
 // test-core-component-resolver.js
 
-var Mocha = require('mocha');
 var assert = require('chai').assert;
 var expect = require('chai').expect;
 var should = require('chai').should;
 
-var testDataFixture = require('../../fixture/address-book-data-model');
 var componentResolver = require('../../../lib/impl/onm-component-resolver');
 
 /*
@@ -57,18 +55,27 @@ module.exports = function (testOptions_) {
             outputResults = componentResolver.resolve(testOptions_.inputOptions);
         };
 
-        before(function(done_) {
-
-            testDataFixture.resetLuid();
+        before(function() {
             if (!testOptions_.expectCallToThrow) {
                 assert.doesNotThrow(functionUnderTestWrapper);
             } else {
                 assert.throws(functionUnderTestWrapper);
             }
-            done_();
         });
 
-        if (!testOptions_.expectCallToThrow) {
+        if (testOptions_.expectCallToThrow) {
+            it("Call to componentResolver.resolve threw an exception as expected.", function() {
+                assert.isTrue(true);
+            });
+
+            it("The results object is expected to be null.", function() {
+                assert.isNull(outputResults);
+            });
+        } else {
+
+            it("Call to componentResolver.resolve is expected not to throw an exception.", function() {
+                assert.isTrue(true);
+            });
 
             describe("Verify the outer signature of the resolveComponent function call result.", function() {
 
@@ -127,14 +134,6 @@ module.exports = function (testOptions_) {
 
             });
 
-        } else {
-            it("Call threw an exception as expected.", function() {
-                assert.isTrue(true);
-            });
-
-            it("The results object is expected to be null.", function() {
-                assert.isNull(outputResults);
-            });
         }
 
     });

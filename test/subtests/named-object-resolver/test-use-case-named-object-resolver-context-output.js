@@ -65,6 +65,7 @@ var testVector = {
             namespaceEffectiveKey: 'test',
             namespaceDataReference: {},
             pendingResolutionStack: [],
+            dataChangeEventJournal: [],
             resolvedId: 0
         } },
         validConfig: true
@@ -75,6 +76,7 @@ var testVector = {
             namespaceEffectiveKey: 'test',
             namespaceDataReference: {},
             pendingResolutionStack: [],
+            dataChangeEventJournal: [],
             resolvedId: 1
         } },
         validConfig: true
