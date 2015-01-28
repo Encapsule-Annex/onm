@@ -53,3 +53,41 @@ testComponentResolverUseCase({
     expectCallToThrow: true
 });
 
+testComponentResolverUseCase({
+    strategyName: "create",
+    operationName: "noop",
+    targetNamespace: "subnamespace extension point",
+    inputOptions: {
+        strategy: 'create',
+        addressToken: testToken2,
+        parentDataReference: {},
+        propertyOptionsObject: {},
+        semanticBindingsReference: dataModel.getSemanticBindings()
+    },
+    expectCallToThrow: false,
+    resultExpectations: {
+        resolvedNamedObjectCount: 2,
+        pendingSubcomponentCount: 0,
+        dataChangeEventJournalCount: 45,
+        JSON: {
+            namespace: '{}',
+            parent: expectedResults.rootNamespaceDefaultConstructionData,
+            journal: expectedResults.rootNamespaceDefaultConstructionEvents
+        }
+    }
+});
+
+testComponentResolverUseCase({
+    strategyName: "create",
+    operationName: "noop",
+    targetNamespace: "subnamespace extension point (root already exists)",
+    inputOptions: {
+        strategy: 'create',
+        addressToken: testToken2,
+        parentDataReference: { namespaceRoot: { cairn: true } },
+        propertyOptionsObject: {},
+        semanticBindingsReference: dataModel.getSemanticBindings()
+    },
+    expectCallToThrow: true
+});
+
