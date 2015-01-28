@@ -41,6 +41,10 @@ var countSparseArray = function(array_) {
 
 module.exports = function (testOptions_) {
 
+    if (!testOptions_.expectCallToThrow && !testOptions_.resultExpectations) {
+        throw new Error("Test options are invalid. If the function call is expected to succeed, you must define the expected results object.");
+    }
+
     var testName = "Component resolver use case: strategy=" + 
         testOptions_.strategyName + " operation=" + testOptions_.operationName +
         " on " + testOptions_.targetNamespace + " namespace.";
@@ -53,13 +57,15 @@ module.exports = function (testOptions_) {
             outputResults = componentResolver.resolve(testOptions_.inputOptions);
         };
 
-        before(function() {
+        before(function(done_) {
+
             testDataFixture.resetLuid();
             if (!testOptions_.expectCallToThrow) {
                 assert.doesNotThrow(functionUnderTestWrapper);
             } else {
                 assert.throws(functionUnderTestWrapper);
             }
+            done_();
         });
 
         if (!testOptions_.expectCallToThrow) {
