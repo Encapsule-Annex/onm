@@ -36,6 +36,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+propertyCommonLib = require './onm-named-object-property-policy-common'
+
 module.exports =
 
     ### open existing namespace policy implementation
@@ -50,6 +52,24 @@ module.exports =
 
     # ----------------------------------------------------------------------------
     processNamespaceProperty: (context_, name_, declaration_) ->
+        input = context_.input
+        output = context_.output
+        if not (input.propertyAssignmentObject? and input.propertyAssignmentObject)
+            return true
+        value = input.propertyAssignmentObject[name_]
+        if not propertyCommonLib.checkValidPropertyValue value
+            return true
+        delete context_.input.propertyAssignmentObject[name_]
+        output = context_.output
+        output.namespaceDataReference[name_] = value
+        output.dataChangeEventJournal.push
+            layer: 'namedObject'
+            event: 'propertyUpdated'
+            eventData:
+                name: name_
+                model: true
+                value: JSON.stringify(value)
+                source: 'data'
         true
 
     # ----------------------------------------------------------------------------
