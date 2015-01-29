@@ -66,10 +66,8 @@ module.exports =
                 value = declaration_.fnCreate? and declaration_.fnCreate and declaration_.fnCreate() or undefined
                 if not propertyCommonLib.checkValidPropertyValue value
                     throw new Error "Internal data model consistency check error: Cannot deduce value to assign to property name '#{name_}'."
-
         output = context_.output
         output.namespaceDataReference[name_] = value
-
         output.dataChangeEventJournal.push
             layer: 'namedObject'
             event: 'propertyInitialized'
@@ -78,7 +76,6 @@ module.exports =
                 model: true
                 value: JSON.stringify(value)
                 source: valueFromCallerData and 'data' or 'model'
-
         true
 
     # ----------------------------------------------------------------------------
