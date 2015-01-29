@@ -11,7 +11,7 @@ var testComponentResolverUseCase = require('./test-core-component-resolver');
 testComponentResolverUseCase({
     strategyName: "create",
     operationName: "apply",
-    targetNamespace: "root data-0",
+    targetNamespace: "root data-1",
     inputOptions: {
         strategy: 'create',
         addressToken: rootToken,
@@ -46,7 +46,7 @@ testComponentResolverUseCase({
 testComponentResolverUseCase({
     strategyName: "create",
     operationName: "apply",
-    targetNamespace: "root data-0",
+    targetNamespace: "root data-1",
     inputOptions: {
         strategy: 'create',
         addressToken: rootToken,
