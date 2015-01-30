@@ -74,10 +74,57 @@ module.exports =
 
     # ----------------------------------------------------------------------------
     processSubnamespace: (context_, descriptor_) ->
+
+        propertyAssignmentObject = context_.input.propertyAssignmentObject
+        switch descriptor_.namespaceType
+            when 'component'
+                deleteKeyNames = []
+                for keyName, subcomponentPropertyAssignmentObject of propertyAssignmentObject
+                    deleteKeyNames.push keyName
+                    context_.output.pendingResolutionStack.push
+                        parentDataReference: context_.output.namespaceDataReference
+                        targetNamespaceDescriptor: descriptor_
+                        targetNamespaceKey: keyName
+                        semanticBindingsReference: context_.input.semanticBindingsReference
+                        propertyAssignmentObject: subcomponentPropertyAssignmentObject? and subcomponentPropertyAssignmentObject or {}
+                        strategy: 'negotiate'
+                while deleteKeyNames.length
+                    delete context_.input.propertyAssignmentObject[deleteKeyNames.pop()]
+                break
+            else
+                subcomponentPropertyAssignmentObject = propertyAssignmentObject[descriptor_.jsonTag]
+                if subcomponentPropertyAssignmentObject? and subcomponentPropertyAssignmentObject
+                    context_.output.pendingResolutionStack.push
+                        parentDataReference: context_.output.namespaceDataReference
+                        targetNamespaceDescriptor: descriptor_
+                        targetNamespaceKey: keyName
+                        semanticBindingsReference: context_.input.semanticBindingsReference
+                        propertyAssignmentObject: subcomponentPropertyAssignmentObject
+                        strategy: context_.output.strategyFollowed
+                    delete context_.input.propertyAssignmentObject[descriptor_.jsonTag]
+                break
         true
 
     # ----------------------------------------------------------------------------
     processPropertyOptions: (context_) ->
+        deleteKeyNames = []
+        input = context_.input
+        output = context_.output
+        for propertyName, subObject of input.propertyAssignmentObject
+            if not propertyCommonLib.checkValidPropertyValue subObject
+                throw new Error "Invalid value for assignment to property name '#{propertyName}'."
+            output.namespaceDataReference[propertyName] = subObject
+            deleteKeyNames.push propertyName
+            output.dataChangeEventJournal.push
+                layer: 'namedObject'
+                event: 'propertyInitialized'
+                eventData:
+                    name: propertyName
+                    model: false
+                    value: JSON.stringify(subObject)
+                    source: 'data'
+        while deleteKeyNames.length
+            delete input.propertyAssignmentObject[deleteKeyNames.pop()]
         true
 
     # ----------------------------------------------------------------------------

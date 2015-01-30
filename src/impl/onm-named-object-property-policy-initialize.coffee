@@ -87,14 +87,14 @@ module.exports =
                 deleteKeyNames = []
                 for keyName, subcomponentPropertyAssignmentObject of propertyAssignmentObject
                     deleteKeyNames.push keyName
-                    context_.output.pendingResolutionStack.push {
+                    context_.output.pendingResolutionStack.push
                         parentDataReference: context_.output.namespaceDataReference
                         targetNamespaceDescriptor: descriptor_
                         targetNamespaceKey: keyName
                         semanticBindingsReference: context_.input.semanticBindingsReference
                         propertyAssignmentObject: subcomponentPropertyAssignmentObject? and subcomponentPropertyAssignmentObject or {}
                         strategy: 'create'
-                    }
+
                 while deleteKeyNames.length
                     delete context_.input.propertyAssignmentObject[deleteKeyNames.pop()]
                 break
@@ -133,10 +133,8 @@ module.exports =
                     model: false
                     value: JSON.stringify(subObject)
                     source: 'data'
-
         while deleteKeyNames.length
             delete input.propertyAssignmentObject[deleteKeyNames.pop()]
-
         true
 
     # ----------------------------------------------------------------------------
