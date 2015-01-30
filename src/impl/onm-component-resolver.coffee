@@ -131,13 +131,16 @@ componentResolver.resolve = (options_) ->
 
             if (not namedObjectResolutionStack.length) and namedObjectResolutionContext.workQueue.length
 
+                nextDescriptor = namedObjectResolutionContext.workQueue[0]
+                nextPropertyAssignmentObject = (nextDescriptor.id == options_.addressToken.idNamespace) and options_.propertyAssignmentObject or {}
+
                 namedObjectResolveOptions =
                     strategy: namedObjectResolutionContext.lastResolutionResult.output.strategyFollowed
                     parentDataReference: namedObjectResolutionContext.lastResolutionResult.output.namespaceDataReference
-                    targetNamespaceDescriptor: namedObjectResolutionContext.workQueue[0]
+                    targetNamespaceDescriptor: nextDescriptor
                     targetNamespaceKey: null
                     semanticBindingsReference: context.input.semanticBindingsReference
-                    propertyAssignmentObject: {}
+                    propertyAssignmentObject: nextPropertyAssignmentObject
 
                 namedObjectResolutionStack.push
                     input: namedObjectResolveOptions
