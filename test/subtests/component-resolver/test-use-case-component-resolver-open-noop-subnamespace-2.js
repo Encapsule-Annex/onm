@@ -16,7 +16,7 @@ testComponentResolverUseCase({
         strategy: 'open',
         addressToken: testToken1,
         parentDataReference: { namespaceRoot: { namespaceChildA: { namespaceChildB: { cairn: true } } } },
-        propertyOptionsObject: {},
+        propertyAssignmentObject: {},
         semanticBindingsReference: dataModel.getSemanticBindings()
     },
     expectCallToThrow: false,
@@ -40,7 +40,7 @@ testComponentResolverUseCase({
         strategy: 'open',
         addressToken: testToken1,
         parentDataReference: {},
-        propertyOptionsObject: {},
+        propertyAssignmentObject: {},
         semanticBindingsReference: dataModel.getSemanticBindings()
     },
     expectCallToThrow: true
@@ -54,7 +54,7 @@ testComponentResolverUseCase({
         strategy: 'open',
         addressToken: testToken2,
         parentDataReference: { namespaceRoot: { namespaceChildA: { namespaceExtensionPointB: { cairn: true } } } },
-        propertyOptionsObject: {},
+        propertyAssignmentObject: {},
         semanticBindingsReference: dataModel.getSemanticBindings()
     },
     expectCallToThrow: false,
@@ -78,7 +78,7 @@ testComponentResolverUseCase({
         strategy: 'open',
         addressToken: testToken2,
         parentDataReference: {},
-        propertyOptionsObject: {},
+        propertyAssignmentObject: {},
         semanticBindingsReference: dataModel.getSemanticBindings()
     },
     expectCallToThrow: true

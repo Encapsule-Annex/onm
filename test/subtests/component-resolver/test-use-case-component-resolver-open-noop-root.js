@@ -16,7 +16,7 @@ testComponentResolverUseCase({
         strategy: 'open',
         addressToken: rootToken,
         parentDataReference: { namespaceRoot: { cairn: true } },
-        propertyOptionsObject: {},
+        propertyAssignmentObject: {},
         semanticBindingsReference: dataModel.getSemanticBindings()
     },
     expectCallToThrow: false,
@@ -40,7 +40,7 @@ testComponentResolverUseCase({
         strategy: 'open',
         addressToken: rootToken,
         parentDataReference: {},
-        propertyOptionsObject: {},
+        propertyAssignmentObject: {},
         semanticBindingsReference: dataModel.getSemanticBindings()
     },
     expectCallToThrow: true
