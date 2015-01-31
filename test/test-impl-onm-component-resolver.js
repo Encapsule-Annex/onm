@@ -91,6 +91,8 @@ module.exports = describe("Component resolver module test suite.", function() {
         describe("Negotiate strategy tests.", function() {
             require('./subtests/component-resolver/test-use-case-component-resolver-negotiate-noop-root-exist');
             require('./subtests/component-resolver/test-use-case-component-resolver-negotiate-noop-root-notexist');
+            require('./subtests/component-resolver/test-use-case-component-resolver-negotiate-apply-root-exist');
+            require('./subtests/component-resolver/test-use-case-component-resolver-negotiate-apply-root-notexist');
         });
 
         describe("Bad options tests.", function() {
