@@ -39,8 +39,17 @@ var countSparseArray = function(array_) {
 
 module.exports = function (testOptions_) {
 
+    var outputResults = null;
+    var callError = null;
+
     if (!testOptions_.expectCallToThrow && !testOptions_.resultExpectations) {
         throw new Error("Test options are invalid. If the function call is expected to succeed, you must define the expected results object.");
+    }
+
+    try {
+        outputResults = componentResolver.resolve(testOptions_.inputOptions);
+    } catch (exception_) {
+        callError = exception_
     }
 
     var testName = "Component resolver use case: strategy=" + 
@@ -49,23 +58,14 @@ module.exports = function (testOptions_) {
 
     describe(testName, function() {
 
-        var outputResults = null;
-
-        var functionUnderTestWrapper = function() {
-            outputResults = componentResolver.resolve(testOptions_.inputOptions);
-        };
-
-        before(function() {
-            if (!testOptions_.expectCallToThrow) {
-                assert.doesNotThrow(functionUnderTestWrapper);
-            } else {
-                assert.throws(functionUnderTestWrapper);
-            }
+        before(function(done_) {
+            done_();
         });
 
         if (testOptions_.expectCallToThrow) {
             it("Call to componentResolver.resolve threw an exception as expected.", function() {
-                assert.isTrue(true);
+                assert.isNotNull(callError);
+                assert.instanceOf(callError, Error);
             });
 
             it("The results object is expected to be null.", function() {
@@ -74,7 +74,7 @@ module.exports = function (testOptions_) {
         } else {
 
             it("Call to componentResolver.resolve is expected not to throw an exception.", function() {
-                assert.isTrue(true);
+                assert.isNull(callError);
             });
 
             describe("Verify the outer signature of the resolveComponent function call result.", function() {
@@ -137,6 +137,11 @@ module.exports = function (testOptions_) {
         }
 
     });
+
+    return {
+        outputResults: outputResults,
+        callError: callError
+    };
 
 };
 
