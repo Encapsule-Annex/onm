@@ -86,8 +86,6 @@ module.exports = describe("Component resolver module test suite.", function() {
             require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-subnamespace-1-data-2.js');
             require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-subnamespace-2-data-0.js');
             require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-subnamespace-2-data-1.js');
-            require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-subnamespace-2-data-2.js');
-            require('./subtests/component-resolver/test-use-case-component-resolver-create-apply-subnamespace-N-data-0.js');
         });
 
     });

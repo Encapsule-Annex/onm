@@ -1,4 +1,4 @@
-// test-use-case-component-resolver-create-apply-subnamespace-1-data-2.js
+// test-use-case-component-resolver-create-apply-subnamespace-2-data-0.js
 
 var onm = require('../../../index');
 var testComponentResolverUseCase = require('./test-core-component-resolver');
