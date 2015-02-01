@@ -43,19 +43,14 @@ describe("Validate the behavior of the onm address resolver.", function() {
             require('./subtests/address-resolver/test-use-case-address-resolver-open-noop-RN.js');
         });
 
-        /*
         describe("Open strategy with data-over operation tests.", function() {
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-root-apply-component.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-root-apply-component-tree.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-subcomponent-apply-component.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-subcomponent-apply-component-tree.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-nested-subcomponent-apply-component.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-nested-subcomponent-apply-component-tree.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-recursively-declared-subcomponent-apply-component.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-recursively-declared-subcomponent-apply-component-tree.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-recursively-declared-subcomponent.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-0-1.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-0-N.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-1-1.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-1-N.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-2-1.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-2-N.js');
         });
-        */
 
         describe("Create strategy with no data operation tests.", function() {
             require('./subtests/address-resolver/test-use-case-address-resolver-create-noop-0.js');
@@ -65,19 +60,14 @@ describe("Validate the behavior of the onm address resolver.", function() {
             require('./subtests/address-resolver/test-use-case-address-resolver-create-noop-RN.js');
         });
 
-        /*
         describe("Create strategy with data-over operation tests.", function() {
-            require('./subtests/address-resolver/test-use-case-address-resolver-create-root-apply-component.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-create-root-apply-component-tree.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-create-subcomponent-apply-component.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-create-subcomponent-apply-compoonent-tree.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-create-nested-subcomponent-apply-component.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-create-nested-subcomponent-apply-component-tree.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-create-recursively-declared-subcomponent-apply-component.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-create-recursively-declared-subcomponent-apply-component-tree.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-create-recursively-declared-subcomponent.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-apply-0-1.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-apply-0-N.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-apply-1-1.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-apply-1-N.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-apply-2-1.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-apply-2-N.js');
         });
-        */
 
     });
 
