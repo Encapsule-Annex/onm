@@ -1,4 +1,4 @@
-// test-use-case-address-resolver-create-root.js
+// test-use-case-address-resolver-create-noop-0.js
 //
 
 var onm = require('../../../index');
