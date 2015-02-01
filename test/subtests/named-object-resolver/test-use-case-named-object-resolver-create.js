@@ -25,7 +25,7 @@ describe("resolveNamespaceDescriptorCreate internal function whitebox test matri
         it(testName, function() {
             var functionUnderTestWrapper = function() {
                 resolveResults = namedObjectResolver.resolve(testData.options);
-                console.log("RESOLVE RESULTS::" + JSON.stringify(testData.options.parentDataReference));
+                //console.log("RESOLVE RESULTS::" + JSON.stringify(testData.options.parentDataReference));
             };
             if (testData.validConfig) {
                 assert.doesNotThrow(functionUnderTestWrapper, testName);
@@ -174,10 +174,12 @@ describe("resolveNamespaceDescriptorCreate internal function whitebox test matri
             var resolveResults = null;
             var functionUnderTestWrapper = function() {
                 resolveResults = namedObjectResolver.resolve(testData.options);
+                /*
                 console.log("----------------------------------------------------------------------------");
                 console.log("NAMESPACE RESOSUTION RESULTS");
                 console.log("Parent data namespace JSON: " + JSON.stringify(testData.options.parentDataReference));
                 console.log("Pending: " + resolveResults.pendingResolutionStack.length);
+                */
             };
             assert.doesNotThrow(functionUnderTestWrapper);
             it("There should be a pending namespace descriptor resolve for each property defined in the property assignment object.", function() {
