@@ -87,6 +87,19 @@ namedObjectResolver.resolve = (options_) ->
 
 
 # ==============================================================================
+namedObjectResolver.getResolvedNamedObjectReference = (resolvedNamedObjectContext_) ->
+    try
+        if not (resolvedNamedObjectContext_? and resolvedNamedObjectContext_)
+            throw new Error "Missing resolved named object context object in-parameter."
+        namespaceDataReference = resolvedNamedObjectContext_.output.namespaceDataReference
+        if not (namespaceDataReference? and namespaceDataReference and (typeof namespaceDataReference == 'object'))
+            throw new Error "Resolved named object reference is undefined, null, or not an object as expected!"
+        namespaceDataReference
+
+    catch exception_
+        throw new Error "namedObjectResolver failure: #{exception_.message}"
+
+# ==============================================================================
 resolveNamedObjectReference = (context_) ->
     try
         input = context_.input

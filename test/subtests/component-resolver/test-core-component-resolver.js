@@ -1,4 +1,5 @@
 // test-core-component-resolver.js
+//
 
 var assert = require('chai').assert;
 var expect = require('chai').expect;
@@ -58,10 +59,6 @@ module.exports = function (testOptions_) {
 
     describe(testName, function() {
 
-        before(function(done_) {
-            done_();
-        });
-
         if (testOptions_.expectCallToThrow) {
             it("Call to componentResolver.resolve threw an exception as expected.", function() {
                 assert.isNotNull(callError);
@@ -77,25 +74,25 @@ module.exports = function (testOptions_) {
                 assert.isNull(callError);
             });
 
-            describe("Verify the outer signature of the resolveComponent function call result.", function() {
+            describe("Verify the outer signature of the componentResolver.resolve function call result.", function() {
 
-                it("resolveComponent call should have returned an results object.", function() {
+                it("Call should have returned an results object.", function() {
                     assert.isNotNull(outputResults, "outputResults should not be null.");
                     assert.isDefined(outputResults, "outputResults should be defined.");
                     assert.isObject(outputResults, "outputResults should be an object.");
                 });
 
-                it("resolveComponent call results should define property 'namedObjectResolutionVector' of type array.", function() {
+                it("Call results should define property 'namedObjectResolutionVector' of type array.", function() {
                     assert.property(outputResults, 'namedObjectResolutionVector');
                     assert.isArray(outputResults.namedObjectResolutionVector);
                 });
 
-                it("resolveComponent call results should define property 'pendingSubcomponentStack' of type array.", function() {
+                it("Call results should define property 'pendingSubcomponentStack' of type array.", function() {
                     assert.property(outputResults, 'pendingSubcomponentStack');
                     assert.isArray(outputResults.pendingSubcomponentStack);
                 });
 
-                it("resolveComponent call results should define property 'dataChangeEventJournal' of type array.", function() {
+                it("Call results should define property 'dataChangeEventJournal' of type array.", function() {
                     assert.property(outputResults, 'dataChangeEventJournal');
                     assert.isArray(outputResults.dataChangeEventJournal);
                 });

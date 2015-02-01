@@ -54,9 +54,9 @@ addressResolver.resolve = (options_) ->
             throw new Error "Unrecognized options.strategy value."
         # options_.propertyAssignmentObject is optional
 
+         # The result is an object containing named references to the resolved component vector and change event journal.
+        resolvedComponentVector = []
         dataChangeEventJournal = []
-
-        resolvedComponentVector = [] # The result
 
         sourceTokenQueue = []
         for token in options_.address.implementation.tokenVector
@@ -110,8 +110,6 @@ addressResolver.resolve = (options_) ->
                     resolvedComponentWorkQueue.push componentResolutionContext
                 continue
 
-            console.log "Hit the case I'm interested in."
-
             # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
             if componentResolutionContext.input.addressToken.namespaceDescriptor.namespaceType != 'extensionPoint'
                 throw new Error "Internal consistency check error: expected the most-recently resolved component namespace type to be an extension point."
@@ -144,9 +142,8 @@ addressResolver.resolve = (options_) ->
                 resolvedComponentWorkQueue.push componentResolutionContextInner
 
             else
-
                 # Complete the pending subcomponent resolutions using the next address token from the source queue off vector
-                console.log "Hit the case I'm interested in."
+                throw new Error "I think this might be logically impossible to reach at this point. Tests will tell."
 
 
         console.log "----------------------------------------------------------------------------"
@@ -167,7 +164,23 @@ addressResolver.resolve = (options_) ->
         console.log JSON.stringify dataChangeEventJournal, undefined, 4
         console.log "----------------------------------------------------------------------------"
 
-        true            
+        return resolvedComponentVector: resolvedComponentVector, dataChangeEventJournal: dataChangeEventJournal
+
 
     catch exception_
-        throw new Error "resolveAddress failed: #{exception_.message}"
+        throw new Error "addressResolver.resolve failure: #{exception_.message}"
+
+# ==============================================================================
+addressResolver.getResolvedNamedObjectReference = (resolvedAddressObject_) ->
+    try
+        if not (resolvedAddressObject_? and resolvedAddressObject_)
+            throw new Error "Missing resolved address context object in-parameter."
+        resolvedComponentCount = resolvedAddressObject_.resolvedComponentVector.length
+        if not resolvedComponentCount
+            throw new Error "Cannot extract a named object reference from resolved address context object because it contains no resolved components."
+        resolvedComponentContext = resolvedAddressObject_.resolvedComponentVector[resolvedComponentCount - 1]
+        componentResolver.getResolvedNamedObjectReference resolvedComponentContext
+    catch exception_
+        throw new Error "addressResolver.getResolvedNamedObjectReference failure: #{exception_.message}"
+
+

@@ -188,3 +188,17 @@ createNamedObjectResolutionContext = (addressToken_) ->
     namedObjectResolutionContext
 
 
+# ==============================================================================
+componentResolver.getResolvedNamedObjectReference = (resolvedComponentContext_) ->
+    try
+        if not (resolvedComponentContext_? or resolvedComponentContext_)
+            throw new Error "Missing resolved component context object in-parameter."
+        # Note that this is a sparse array but we don't care because we're after the top-of-stack.
+        resolvedNamedObjectCount = resolvedComponentContext_.output.namedObjectResolutionVector.length
+        if not resolvedNamedObjectCount
+            throw new Error "Cannot extract named object reference from resolved component context object because it contains no resolved named objects."
+        resolvedNamedObjectContext = resolvedComponentContext_.output.namedObjectResolutionVector[resolvedNamedObjectCount - 1]
+        namedObjectResolver.getResolvedNamedObjectReference resolvedNamedObjectContext
+
+    catch exception_
+        throw new Error "componentResolver.getResolvedNamedObjectReference failure: #{exception_.message}"
