@@ -35,28 +35,10 @@ describe("Validate the behavior of the onm address resolver.", function() {
 
     describe("Address resolver implementation tests.", function() {
 
-        describe("Open strategy with no data operation tests.", function() {
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-noop-0.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-noop-1.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-noop-2.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-noop-N.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-noop-RN.js');
-        });
-
-        describe("Open strategy with data-over operation tests.", function() {
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-0-1.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-0-N.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-1-1.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-1-N.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-2-1.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-2-N.js');
-        });
-
         describe("Create strategy with no data operation tests.", function() {
             require('./subtests/address-resolver/test-use-case-address-resolver-create-noop-0.js');
             require('./subtests/address-resolver/test-use-case-address-resolver-create-noop-1.js');
             require('./subtests/address-resolver/test-use-case-address-resolver-create-noop-2.js');
-            require('./subtests/address-resolver/test-use-case-address-resolver-create-noop-N.js');
             require('./subtests/address-resolver/test-use-case-address-resolver-create-noop-RN.js');
         });
 
@@ -67,6 +49,22 @@ describe("Validate the behavior of the onm address resolver.", function() {
             require('./subtests/address-resolver/test-use-case-address-resolver-create-apply-1-N.js');
             require('./subtests/address-resolver/test-use-case-address-resolver-create-apply-2-1.js');
             require('./subtests/address-resolver/test-use-case-address-resolver-create-apply-2-N.js');
+        });
+
+        describe("Open strategy with no data operation tests.", function() {
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-noop-0.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-noop-1.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-noop-2.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-noop-RN.js');
+        });
+
+        describe("Open strategy with data-over operation tests.", function() {
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-0-1.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-0-N.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-1-1.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-1-N.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-2-1.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-open-apply-2-N.js');
         });
 
     });
