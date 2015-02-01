@@ -80,9 +80,9 @@ addressResolver.resolve = (options_) ->
         componentsEvaluated = 0
         while resolvedComponentWorkQueue.length
 
-            console.log "----------------------------------------------------------------------------"
-            console.log "ADDRESS RESOLVE COMPONENT #{++componentsEvaluated}:"
-            console.log JSON.stringify options_.parentDataReference, undefined, 4
+            #console.log "----------------------------------------------------------------------------"
+            #console.log "ADDRESS RESOLVE COMPONENT #{++componentsEvaluated}:"
+            #console.log JSON.stringify options_.parentDataReference, undefined, 4
 
             componentResolutionContext = resolvedComponentWorkQueue.shift()
 
@@ -146,7 +146,7 @@ addressResolver.resolve = (options_) ->
                 throw new Error "I think this might be logically impossible to reach at this point. Tests will tell."
 
 
-        console.log "----------------------------------------------------------------------------"
+        #console.log "----------------------------------------------------------------------------"
 
        
         # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -156,13 +156,13 @@ addressResolver.resolve = (options_) ->
             throw new Error "Internal consistency check error: unexpected address resolver exit with too few resolved components."
         # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-        console.log "----------------------------------------------------------------------------"
-        console.log "FINAL JSON:"
-        console.log JSON.stringify options_.parentDataReference, undefined, 4
-        console.log "----------------------------------------------------------------------------"
-        console.log "CHANGE LOG:"
-        console.log JSON.stringify dataChangeEventJournal, undefined, 4
-        console.log "----------------------------------------------------------------------------"
+        #console.log "----------------------------------------------------------------------------"
+        #console.log "FINAL JSON:"
+        #console.log JSON.stringify options_.parentDataReference, undefined, 4
+        #console.log "----------------------------------------------------------------------------"
+        #console.log "CHANGE LOG:"
+        #console.log JSON.stringify dataChangeEventJournal, undefined, 4
+        #console.log "----------------------------------------------------------------------------"
 
         return resolvedComponentVector: resolvedComponentVector, dataChangeEventJournal: dataChangeEventJournal
 
