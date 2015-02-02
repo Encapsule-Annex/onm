@@ -121,10 +121,16 @@ addressResolver.resolve = (options_) ->
                 throw new Error "Internal consistency check error: unexpected pending subcomponent stack size. should be empty."
             # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+            # The next address token to resolve
             addressToken = sourceTokenQueue.shift()
+
+            # The vector of resolved named objects that comprise the resolved component under evaluation.
             norv = componentResolutionContext.output.namedObjectResolutionVector
+
+            # The head resolved named object data reference the component under evaluation.
             parentDataReference = norv[norv.length-1].output.namespaceDataReference
 
+            # If the component under evaluation has no pending unresolved subcomponent(s), manually initiate the resolution of the next address token.
             if not componentResolutionContext.output.pendingSubcomponentStack.length
 
                 componentResolveOptions = 
@@ -135,15 +141,20 @@ addressResolver.resolve = (options_) ->
                     propertyAssignmentObject: {}
                     onVector: true
 
-                componentResolutionContextInner =
+                resolvedComponentWorkQueue.push {
                     input: componentResolveOptions
                     output: componentResolver.resolve componentResolveOptions
-
-                resolvedComponentWorkQueue.push componentResolutionContextInner
+                    }
 
             else
                 # Complete the pending subcomponent resolutions using the next address token from the source queue off vector
-                throw new Error "I think this might be logically impossible to reach at this point. Tests will tell."
+                while componentResolutionContext.output.pendingSubcomponentStack.length
+                    pendingComponentResolutionOptions = componentResolutionContext.output.pendingSubcomponentStack.pop()
+                    pendingComponentResolutionOptions.onVector = true
+                    resolvedComponentWorkQueue.push {
+                        input: pendingComponentResolutionOptions
+                        output: componentResolver.resolve pendingComponentResolutionOptions
+                        }
 
 
         #console.log "----------------------------------------------------------------------------"
