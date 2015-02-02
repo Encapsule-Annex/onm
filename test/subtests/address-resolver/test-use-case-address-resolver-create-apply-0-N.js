@@ -1,4 +1,4 @@
-// test-use-case-address-resolver-open-apply-0-N.js
+// test-use-case-address-resolver-create-apply-0-N.js
 //
 
 var onm = require('../../../index');
