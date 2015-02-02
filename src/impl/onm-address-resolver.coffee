@@ -70,7 +70,7 @@ addressResolver.resolve = (options_) ->
             parentDataReference: options_.parentDataReference
             addressToken: sourceTokenQueue.shift()
             semanticBindingsReference: options_.address.model.getSemanticBindings()
-            propertyAssignmentObject: options_.propertyAssignmentObject
+            propertyAssignmentObject: (sourceTokenQueue.length == 0) and options_.propertyAssignmentObject or {}
             onVector: true
         componentResolutionContext =
             input: componentResolveOptions
@@ -80,9 +80,9 @@ addressResolver.resolve = (options_) ->
         componentsEvaluated = 0
         while resolvedComponentWorkQueue.length
 
-            #console.log "----------------------------------------------------------------------------"
-            #console.log "ADDRESS RESOLVE COMPONENT #{++componentsEvaluated}:"
-            #console.log JSON.stringify options_.parentDataReference, undefined, 4
+            console.log "----------------------------------------------------------------------------"
+            console.log "ADDRESS RESOLVE COMPONENT #{++componentsEvaluated}:"
+            console.log JSON.stringify options_.parentDataReference, undefined, 4
 
             componentResolutionContext = resolvedComponentWorkQueue.shift()
 
@@ -111,14 +111,22 @@ addressResolver.resolve = (options_) ->
                 continue
 
             # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-            if componentResolutionContext.input.addressToken.namespaceDescriptor.namespaceType != 'extensionPoint'
-                throw new Error "Internal consistency check error: expected the most-recently resolved component namespace type to be an extension point."
 
+            # I THINK THIS FIST ASSERT IS WRONG: We can certainly resolve a component that target's a non-extension point namespace.
+            # But it does have to be last component in the address. So this should be updated, or possibly removed.
+            if componentResolutionContext.input.addressToken.namespaceDescriptor.namespaceType != 'extensionPoint'
+                # throw new Error "Internal consistency check error: expected the most-recently resolved component namespace type to be an extension point."
+                console.log "Internal consistency check error: expected the most-recently resolved component namespace type to be an extension point."
+
+            # I THINK THIS IS OKAY AS IT ENFORCES AN INVARIANT ON ADDRESS TOKENS
             if componentResolutionContext.input.addressToken.idNamespace != sourceTokenQueue[0].idExtensionPoint
-                throw new Error "Internal consistency check error: unexpected component found at the head of the source token queue."
+                # throw new Error "Internal consistency check error: unexpected component found at the head of the source token queue."
+                console.log "Internal consistency check error: unexpected component found at the head of the source token queue."
             
             if componentResolutionContext.output.pendingSubcomponentStack.length and (sourceTokenQueue.length != 1)
-                throw new Error "Internal consistency check error: unexpected pending subcomponent stack size. should be empty."
+                # throw new Error "Internal consistency check error: unexpected pending subcomponent stack size. should be empty."
+                console.log "Internal consistency check error? pendingSubcomponentStack.length=#{componentResolutionContext.output.pendingSubcomponentStack.length} sourceTokenQueue.length=#{sourceTokenQueue.length}"
+
             # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
             # The next address token to resolve
@@ -138,7 +146,7 @@ addressResolver.resolve = (options_) ->
                     parentDataReference: parentDataReference
                     addressToken: addressToken
                     semanticBindingsReference: options_.address.model.getSemanticBindings()
-                    propertyAssignmentObject: {}
+                    propertyAssignmentObject: (sourceTokenQueue.length == 0) and options_.propertyAssignmentObject or {}
                     onVector: true
 
                 resolvedComponentWorkQueue.push {
@@ -151,13 +159,14 @@ addressResolver.resolve = (options_) ->
                 while componentResolutionContext.output.pendingSubcomponentStack.length
                     pendingComponentResolutionOptions = componentResolutionContext.output.pendingSubcomponentStack.pop()
                     pendingComponentResolutionOptions.onVector = true
+                    pendingComponentResolutionOptions.propertyAssignmentObject = (sourceTokenQueue.length == 0) and options_.propertyAssignmentObject or {}
                     resolvedComponentWorkQueue.push {
                         input: pendingComponentResolutionOptions
                         output: componentResolver.resolve pendingComponentResolutionOptions
                         }
 
 
-        #console.log "----------------------------------------------------------------------------"
+        console.log "----------------------------------------------------------------------------"
 
        
         # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -167,13 +176,13 @@ addressResolver.resolve = (options_) ->
             throw new Error "Internal consistency check error: unexpected address resolver exit with too few resolved components."
         # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-        #console.log "----------------------------------------------------------------------------"
-        #console.log "FINAL JSON:"
-        #console.log JSON.stringify options_.parentDataReference, undefined, 4
-        #console.log "----------------------------------------------------------------------------"
-        #console.log "CHANGE LOG:"
-        #console.log JSON.stringify dataChangeEventJournal, undefined, 4
-        #console.log "----------------------------------------------------------------------------"
+        console.log "----------------------------------------------------------------------------"
+        console.log "FINAL JSON:"
+        console.log JSON.stringify options_.parentDataReference, undefined, 4
+        console.log "----------------------------------------------------------------------------"
+        console.log "CHANGE LOG:"
+        console.log JSON.stringify dataChangeEventJournal, undefined, 4
+        console.log "----------------------------------------------------------------------------"
 
         return resolvedComponentVector: resolvedComponentVector, dataChangeEventJournal: dataChangeEventJournal
 

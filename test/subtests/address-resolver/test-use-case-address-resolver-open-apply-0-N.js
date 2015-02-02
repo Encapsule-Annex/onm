@@ -40,7 +40,7 @@ testResult = testAddressResolverUseCase({
     operationName: "apply data-N",
     targetNamespace: "root",
     inputOptions: {
-        strategy: "create",
+        strategy: "open",
         address: rootAddress,
         parentDataReference: {},
         semanticBindingsReference: dataModel.getSemanticBindings(),
