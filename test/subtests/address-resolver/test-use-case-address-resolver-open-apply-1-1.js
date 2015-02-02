@@ -45,17 +45,17 @@ testResult = testAddressResolverUseCase({
         parentDataReference: {},
         semanticBindingsReference: dataModel.getSemanticBindings(),
         propertyAssignmentObject: {
-            cairn: "test data value in root namespace"
+            testKeyValue: { test: "test data value in root namespace" }
         }
     },
     expectCallToThrow: false,
     resultExpectations: {
-        resolvedComponentCount: 1,
-        dataChangeEventJournalCount: 3,
+        resolvedComponentCount: 2,
+        dataChangeEventJournalCount: 5,
         JSON: {
-            namespace: '',
-            parent: '',
-            journal: ''
+            namespace: '{"test":"test data value in root namespace","hashtable":{}}',
+            parent: '{"testData":{"hashtable":{"testKeyValue":{"test":"test data value in root namespace","hashtable":{}}}}}',
+            journal: '[{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"root","namespaceModelPath":"testData","namespaceModelId":0,"key":"testData"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"extensionPoint","namespaceModelPath":"testData.hashtable","namespaceModelId":1,"key":"hashtable"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"component","namespaceModelPath":"testData.hashtable.testRecord","namespaceModelId":2,"key":"testKeyValue"}},{"layer":"namedObject","event":"propertyInitialized","eventData":{"name":"test","model":false,"value":"\\"test data value in root namespace\\"","source":"data"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"extensionPoint","namespaceModelPath":"testData.hashtable.testRecord.hashtable","namespaceModelId":3,"key":"hashtable"}}]'
         }
     }
 });
