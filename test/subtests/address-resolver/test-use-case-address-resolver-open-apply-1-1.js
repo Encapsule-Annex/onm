@@ -42,20 +42,20 @@ testResult = testAddressResolverUseCase({
     inputOptions: {
         strategy: "open",
         address: testAddress,
-        parentDataReference: {},
+        parentDataReference: { testData: { hashtable: { test: {} } } },
         semanticBindingsReference: dataModel.getSemanticBindings(),
         propertyAssignmentObject: {
-            testKeyValue: { test: "test data value in root namespace" }
+            cairn: "This should land in the target namespace 1a46eb57185c8c308f9803d454d04ec5"
         }
     },
     expectCallToThrow: false,
     resultExpectations: {
         resolvedComponentCount: 2,
-        dataChangeEventJournalCount: 5,
+        dataChangeEventJournalCount: 1,
         JSON: {
-            namespace: '{"test":"test data value in root namespace","hashtable":{}}',
-            parent: '{"testData":{"hashtable":{"testKeyValue":{"test":"test data value in root namespace","hashtable":{}}}}}',
-            journal: '[{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"root","namespaceModelPath":"testData","namespaceModelId":0,"key":"testData"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"extensionPoint","namespaceModelPath":"testData.hashtable","namespaceModelId":1,"key":"hashtable"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"component","namespaceModelPath":"testData.hashtable.testRecord","namespaceModelId":2,"key":"testKeyValue"}},{"layer":"namedObject","event":"propertyInitialized","eventData":{"name":"test","model":false,"value":"\\"test data value in root namespace\\"","source":"data"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"extensionPoint","namespaceModelPath":"testData.hashtable.testRecord.hashtable","namespaceModelId":3,"key":"hashtable"}}]'
+            namespace: '{"cairn":"This should land in the target namespace 1a46eb57185c8c308f9803d454d04ec5"}',
+            parent: '{"testData":{"hashtable":{"test":{"cairn":"This should land in the target namespace 1a46eb57185c8c308f9803d454d04ec5"}}}}',
+            journal: '[{"layer":"namedObject","event":"propertyInitialized","eventData":{"name":"cairn","model":false,"value":"\\"This should land in the target namespace 1a46eb57185c8c308f9803d454d04ec5\\"","source":"data"}}]'
         }
     }
 });

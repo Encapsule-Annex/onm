@@ -30,19 +30,15 @@ var dataModelDeclaration = {
 
 var dataModel = new onm.Model(dataModelDeclaration).implementation.resetKeyGenerator();
 var rootAddress = dataModel.createRootAddress();
-var testAddress = rootAddress.createSubpathAddress('hashtable.testRecord.hashtable.testRecord.hashtable.testRecord.hashtable.testRecord.hashtable.testRecord.hashtable.testRecord.hashtable.testRecord.hashtable.testRecord');
-for (var token in testAddress.implementation.tokenVector) {
-    testAddress.implementation.tokenVector[token].key = 'test';
-}
 
 testResult = testAddressResolverUseCase({
-    strategyName: "create",
+    strategyName: "open",
     operationName: "apply data-1",
     targetNamespace: "root",
     inputOptions: {
         strategy: "open",
         address: rootAddress,
-        parentDataReference: {},
+        parentDataReference: { testData: {} },
         semanticBindingsReference: dataModel.getSemanticBindings(),
         propertyAssignmentObject: {
             cairn: "test data value in root namespace"
@@ -51,11 +47,11 @@ testResult = testAddressResolverUseCase({
     expectCallToThrow: false,
     resultExpectations: {
         resolvedComponentCount: 1,
-        dataChangeEventJournalCount: 3,
+        dataChangeEventJournalCount: 1,
         JSON: {
-            namespace: '{"cairn":"test data value in root namespace","hashtable":{}}',
-            parent: '{"testData":{"cairn":"test data value in root namespace","hashtable":{}}}',
-            journal: '[{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"root","namespaceModelPath":"testData","namespaceModelId":0,"key":"testData"}},{"layer":"namedObject","event":"propertyInitialized","eventData":{"name":"cairn","model":false,"value":"\\"test data value in root namespace\\"","source":"data"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"extensionPoint","namespaceModelPath":"testData.hashtable","namespaceModelId":1,"key":"hashtable"}}]'
+            namespace: '{"cairn":"test data value in root namespace"}',
+            parent: '{"testData":{"cairn":"test data value in root namespace"}}',
+            journal: '[{"layer":"namedObject","event":"propertyInitialized","eventData":{"name":"cairn","model":false,"value":"\\"test data value in root namespace\\"","source":"data"}}]'
         }
     }
 });

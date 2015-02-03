@@ -49,4 +49,6 @@ typeLUT =
 propertyPolicyCommon.checkValidPropertyValue = (value_) ->
     check = typeLUT[Object.prototype.toString.call(value_)]
     check? and check or false
-    
+
+propertyPolicyCommon.checkValidNamedObject = (object_) ->
+    (Object.prototype.toString.call(object_) == '[object Object]') or false

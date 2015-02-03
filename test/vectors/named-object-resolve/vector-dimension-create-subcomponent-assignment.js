@@ -17,6 +17,8 @@ var testDimensionDescriptor = {
             namespaceDescriptor: extensionPointDescriptor,
             propertyAssignmentObject: {}
         },
+        /*
+          THESE ARE ALL CALLER DATA FRAMING ERRORS AS THEY ARE NOT NAMED OBJECTS AS EXPECTED.
         {
             label: 'Extension point namespace descriptor | single property x w/undefined value',
             namespaceDescriptor: extensionPointDescriptor,
@@ -38,6 +40,7 @@ var testDimensionDescriptor = {
                 x: []
             }
         },
+        */
         {
             label: 'Extension point namespace descriptor | single property x w/empty object value',
             namespaceDescriptor: extensionPointDescriptor,

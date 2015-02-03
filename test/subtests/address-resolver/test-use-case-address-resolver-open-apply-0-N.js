@@ -30,24 +30,22 @@ var dataModelDeclaration = {
 
 var dataModel = new onm.Model(dataModelDeclaration).implementation.resetKeyGenerator();
 var rootAddress = dataModel.createRootAddress();
-var testAddress = rootAddress.createSubpathAddress('hashtable.testRecord.hashtable.testRecord.hashtable.testRecord.hashtable.testRecord.hashtable.testRecord.hashtable.testRecord.hashtable.testRecord.hashtable.testRecord');
-for (var token in testAddress.implementation.tokenVector) {
-    testAddress.implementation.tokenVector[token].key = 'test';
-}
 
 testResult = testAddressResolverUseCase({
-    strategyName: "create",
+    strategyName: "open",
     operationName: "apply data-N",
     targetNamespace: "root",
     inputOptions: {
         strategy: "open",
         address: rootAddress,
-        parentDataReference: {},
+        parentDataReference: {
+            testData: {
+                hashtable: {}
+            }
+        },
         semanticBindingsReference: dataModel.getSemanticBindings(),
         propertyAssignmentObject: {
-            cairn: "a4abfc1c9985a8ab503ad0c354cdc28d",
-            namespaceChildA: {
-                cairn: "e11132db80e57b34b7176efb54cdc284",
+            hashtable: {
                 hashtable: {
                     "1839ab9a132979d5373bd24954cdc275": {
                         hashtable: {
@@ -73,13 +71,54 @@ testResult = testAddressResolverUseCase({
     expectCallToThrow: false,
     resultExpectations: {
         resolvedComponentCount: 1,
-        dataChangeEventJournalCount: 5,
+        dataChangeEventJournalCount: 4,
         JSON: {
-            namespace: '{"cairn":"a4abfc1c9985a8ab503ad0c354cdc28d","namespaceChildA":{"cairn":"e11132db80e57b34b7176efb54cdc284","hashtable":{"1839ab9a132979d5373bd24954cdc275":{"hashtable":{"0f7a35978f6953a5ff711ebb54cdc26e":{"hashtable":{"f9dfa630103cb21ed81ee60454cdc2a4":{"cairn":"2323b10f971bf2538cc8ceab54cdc2b3"}}}}}}},"bolton":{"cairn":"22c7ab61c5c1d923fee20a9054cdc22e"},"hashtable":{}}',
-            parent: '{"testData":{"cairn":"a4abfc1c9985a8ab503ad0c354cdc28d","namespaceChildA":{"cairn":"e11132db80e57b34b7176efb54cdc284","hashtable":{"1839ab9a132979d5373bd24954cdc275":{"hashtable":{"0f7a35978f6953a5ff711ebb54cdc26e":{"hashtable":{"f9dfa630103cb21ed81ee60454cdc2a4":{"cairn":"2323b10f971bf2538cc8ceab54cdc2b3"}}}}}}},"bolton":{"cairn":"22c7ab61c5c1d923fee20a9054cdc22e"},"hashtable":{}}}',
-            journal: '[{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"root","namespaceModelPath":"testData","namespaceModelId":0,"key":"testData"}},{"layer":"namedObject","event":"propertyInitialized","eventData":{"name":"cairn","model":false,"value":"\\"a4abfc1c9985a8ab503ad0c354cdc28d\\"","source":"data"}},{"layer":"namedObject","event":"propertyInitialized","eventData":{"name":"namespaceChildA","model":false,"value":"{\\"cairn\\":\\"e11132db80e57b34b7176efb54cdc284\\",\\"hashtable\\":{\\"1839ab9a132979d5373bd24954cdc275\\":{\\"hashtable\\":{\\"0f7a35978f6953a5ff711ebb54cdc26e\\":{\\"hashtable\\":{\\"f9dfa630103cb21ed81ee60454cdc2a4\\":{\\"cairn\\":\\"2323b10f971bf2538cc8ceab54cdc2b3\\"}}}}}}}","source":"data"}},{"layer":"namedObject","event":"propertyInitialized","eventData":{"name":"bolton","model":false,"value":"{\\"cairn\\":\\"22c7ab61c5c1d923fee20a9054cdc22e\\"}","source":"data"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"extensionPoint","namespaceModelPath":"testData.hashtable","namespaceModelId":1,"key":"hashtable"}}]'
+            namespace: '{"hashtable":{"hashtable":{"1839ab9a132979d5373bd24954cdc275":{"hashtable":{"0f7a35978f6953a5ff711ebb54cdc26e":{"hashtable":{"f9dfa630103cb21ed81ee60454cdc2a4":{"cairn":"2323b10f971bf2538cc8ceab54cdc2b3"}}}}},"hashtable":{}}},"bolton":{"cairn":"22c7ab61c5c1d923fee20a9054cdc22e"}}',
+            parent: '{"testData":{"hashtable":{"hashtable":{"1839ab9a132979d5373bd24954cdc275":{"hashtable":{"0f7a35978f6953a5ff711ebb54cdc26e":{"hashtable":{"f9dfa630103cb21ed81ee60454cdc2a4":{"cairn":"2323b10f971bf2538cc8ceab54cdc2b3"}}}}},"hashtable":{}}},"bolton":{"cairn":"22c7ab61c5c1d923fee20a9054cdc22e"}}}',
+            journal: '[{"layer":"namedObject","event":"propertyInitialized","eventData":{"name":"bolton","model":false,"value":"{\\"cairn\\":\\"22c7ab61c5c1d923fee20a9054cdc22e\\"}","source":"data"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"component","namespaceModelPath":"testData.hashtable.testRecord","namespaceModelId":2,"key":"hashtable"}},{"layer":"namedObject","event":"propertyInitialized","eventData":{"name":"1839ab9a132979d5373bd24954cdc275","model":false,"value":"{\\"hashtable\\":{\\"0f7a35978f6953a5ff711ebb54cdc26e\\":{\\"hashtable\\":{\\"f9dfa630103cb21ed81ee60454cdc2a4\\":{\\"cairn\\":\\"2323b10f971bf2538cc8ceab54cdc2b3\\"}}}}}","source":"data"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"extensionPoint","namespaceModelPath":"testData.hashtable.testRecord.hashtable","namespaceModelId":3,"key":"hashtable"}}]'
         }
     }
+});
+
+testResult = testAddressResolverUseCase({
+    strategyName: "open",
+    operationName: "apply data-N (w/framing error)",
+    targetNamespace: "root",
+    inputOptions: {
+        strategy: "open",
+        address: rootAddress,
+        parentDataReference: {
+            testData: {
+                hashtable: {}
+            }
+        },
+        semanticBindingsReference: dataModel.getSemanticBindings(),
+        propertyAssignmentObject: {
+            hashtable: {
+                cairn: "CALLER DATA FRAMING ERROR BECAUSE STRING, NOT NAMED OBJECT::e11132db80e57b34b7176efb54cdc284",
+                hashtable: {
+                    "1839ab9a132979d5373bd24954cdc275": {
+                        hashtable: {
+                            "0f7a35978f6953a5ff711ebb54cdc26e": {
+                                hashtable: {
+                                    "f9dfa630103cb21ed81ee60454cdc2a4": {
+                                        cairn: "2323b10f971bf2538cc8ceab54cdc2b3"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            bolton: {
+                cairn: "101e28e0be798667599be16e54cdc21"
+            },
+            bolton: {
+                cairn: "22c7ab61c5c1d923fee20a9054cdc22e"
+            }
+        }
+    },
+    expectCallToThrow: true
 });
 
 

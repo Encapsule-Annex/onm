@@ -80,6 +80,8 @@ module.exports =
             when 'component'
                 deleteKeyNames = []
                 for keyName, subcomponentPropertyAssignmentObject of propertyAssignmentObject
+                    if not propertyCommonLib.checkValidNamedObject subcomponentPropertyAssignmentObject
+                        throw new Error "Caller data framing error: Expected '#{keyName}' to be a named object but instead found type '#{Object.prototype.toString.call(subcomponentPropertyAssignmentObject)}'."
                     deleteKeyNames.push keyName
                     context_.output.pendingResolutionStack.push
                         parentDataReference: context_.output.namespaceDataReference
@@ -94,6 +96,8 @@ module.exports =
             else
                 subcomponentPropertyAssignmentObject = propertyAssignmentObject[descriptor_.jsonTag]
                 if subcomponentPropertyAssignmentObject? and subcomponentPropertyAssignmentObject
+                    if not propertyCommonLib.checkValidNamedObject subcomponentPropertyAssignmentObject
+                        throw new Error "Caller data framing error: Expected '#{keyName}' to be a named object but instead found type '#{Object.prototype.toString.call(subcomponentPropertyAssignmentObject)}'."
                     context_.output.pendingResolutionStack.push
                         parentDataReference: context_.output.namespaceDataReference
                         targetNamespaceDescriptor: descriptor_
