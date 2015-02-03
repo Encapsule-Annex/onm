@@ -71,17 +71,21 @@ module.exports = function (testOptions_) {
                     });
 
                     it("Resolved address data JSON should match verification data.", function() {
-                        var actualResult = JSON.stringify(addressResolver.getResolvedNamedObjectReference(outputResults));
+                        var dataReference = addressResolver.getResolvedNamedObjectReference(outputResults);
+                        var actualResult = JSON.stringify(dataReference);
+                        console.log(JSON.stringify(dataReference, undefined, 4));
                         assert.equal(actualResult, testOptions_.resultExpectations.JSON.namespace);
                     });
 
                     it("Reference parent namespace data JSON should match verifcation data.", function() {
                         var actualResult = JSON.stringify(testOptions_.inputOptions.parentDataReference);
+                        console.log(JSON.stringify(testOptions_.inputOptions.parentDataReference, undefined, 4));
                         assert.equal(actualResult,testOptions_.resultExpectations.JSON.parent);
                     });
 
                     it("The resolved component's change journal should match verification data.", function() {
                         var actualResult = JSON.stringify(outputResults.dataChangeEventJournal);
+                        console.log(JSON.stringify(outputResults.dataChangeEventJournal, undefined, 4));
                         assert.equal(actualResult, testOptions_.resultExpectations.JSON.journal);
                     });
 

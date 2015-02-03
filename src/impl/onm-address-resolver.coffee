@@ -108,10 +108,7 @@ addressResolver.resolve = (options_) ->
                 while componentResolutionContext.output.pendingSubcomponentStack.length
                     pendingSubcomponent = componentResolutionContext.output.pendingSubcomponentStack.pop()
                     pendingSubcomponent.onVector = false
-                    componentResolutionContext =
-                        input: pendingSubcomponent
-                        output: componentResolver.resolve pendingSubcomponent
-                    resolvedComponentWorkQueue.push componentResolutionContext
+                    resolvedComponentWorkQueue.push input: pendingSubcomponent, output: componentResolver.resolve pendingSubcomponent
                 continue
 
             # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

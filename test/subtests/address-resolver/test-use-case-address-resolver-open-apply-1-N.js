@@ -55,7 +55,8 @@ testResult = testAddressResolverUseCase({
                             hashtable: {
                                 "573e1d724c820c0c7b2d3cc154d05041": {
                                     cairn: "Marker e3d87166fdbf713b56bed4e054d05058"
-                                }
+                                },
+                                "sdfsdf": {}
                             }
                         },
                         "4f58f6ebfbbcd804878eeab854d05093": {
