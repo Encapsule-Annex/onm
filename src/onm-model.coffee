@@ -141,6 +141,7 @@ class ModelDetails
                                 # Add the extension point ID to the archetype's list of extension points
                                 # that specify it by reference.
                                 objectModelDescriptorReference.extensionPointReferenceIds.push thisDescriptor.id
+                                thisDescriptor.children.push objectModelDescriptorReference
 
                                 # Add the archetype's ID to this extension point's descriptor.
                                 thisDescriptor.archetypePathId = objectModelDescriptorReference.id
