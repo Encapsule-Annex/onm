@@ -44,6 +44,7 @@ module.exports = addressResolver = {}
 
 # ==============================================================================
 addressResolver.resolve = (options_) ->
+    inputOptionsValid = false                        
     try
         # options_ validation
         if not (options_? and options_) then throw new Error "Missing options input parameter."
@@ -53,6 +54,8 @@ addressResolver.resolve = (options_) ->
         if not ((options_.strategy == 'open') or (options_.strategy == 'create') or (options_.strategy == 'negotiate')) 
             throw new Error "Unrecognized options.strategy value."
         # options_.propertyAssignmentObject is optional
+
+        inputOptionsValid = true
 
          # The result is an object containing named references to the resolved component vector and change event journal.
         resolvedComponentVector = []
@@ -189,7 +192,11 @@ addressResolver.resolve = (options_) ->
 
 
     catch exception_
-        throw new Error "addressResolver.resolve failure: #{exception_.message}"
+        if not inputOptionsValid
+            message = "addressResolver failed in function prologue: #{exception_.message}"
+        else
+            message = "addressResolver failed to resolve '#{options_.address.getHumanReadableString()}': #{exception_.message}"
+        throw new Error message
 
 # ==============================================================================
 addressResolver.getResolvedNamedObjectReference = (resolvedAddressObject_) ->

@@ -44,6 +44,7 @@ AddressToken = require('./impl/onm-address-token')
 #
 #
 # ****************************************************************************
+# TODO: This is stupid: onm.Address is bound to an onm.Model
 class AddressDetails
     constructor: (address_, model_, tokenVector_) ->
         try
