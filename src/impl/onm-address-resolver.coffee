@@ -37,8 +37,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 
 helperFunctions = require './onm-util-functions'
-
 componentResolver = require './onm-component-resolver'
+Address = require '../onm-address'
 
 module.exports = addressResolver = {}
 
@@ -62,16 +62,19 @@ addressResolver.resolve = (options_) ->
         dataChangeEventJournal = []
 
         sourceTokenQueue = []
+        evaluatedTokenQueue = [] # For error reporting currently.
+
         for token in options_.address.implementation.tokenVector
             sourceTokenQueue.push token.clone()
-        lastSourceTokenResolved = undefined
 
         resolvedComponentWorkQueue = [] 
+
+        currentToken = sourceTokenQueue.shift()
 
         componentResolveOptions = 
             strategy: options_.strategy
             parentDataReference: options_.parentDataReference
-            addressToken: sourceTokenQueue.shift()
+            addressToken: currentToken
             semanticBindingsReference: options_.address.model.getSemanticBindings()
             propertyAssignmentObject: (sourceTokenQueue.length == 0) and options_.propertyAssignmentObject or {}
             onVector: true
@@ -99,7 +102,9 @@ addressResolver.resolve = (options_) ->
 
             # Stash the resolved component context in the results vector iff the component under evaluation is on the resolution vector.
             if onResultVector
+                # This is where we need to bag-n-tag.
                 resolvedComponentVector.push componentResolutionContext
+                evaluatedTokenQueue.push componentResolutionContext.input.addressToken
 
             # If the component under evaluation was resolved off vector, complete the resolution
             # of its pending subcomponents off vector as well. Also, if the source token queue is empty
@@ -134,7 +139,7 @@ addressResolver.resolve = (options_) ->
             # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
             # The next address token to resolve
-            addressToken = sourceTokenQueue.shift()
+            currentToken = sourceTokenQueue.shift();
 
             # The vector of resolved named objects that comprise the resolved component under evaluation.
             norv = componentResolutionContext.output.namedObjectResolutionVector
@@ -148,7 +153,7 @@ addressResolver.resolve = (options_) ->
                 componentResolveOptions = 
                     strategy: options_.strategy # Needs some more thought
                     parentDataReference: parentDataReference
-                    addressToken: addressToken
+                    addressToken: currentToken
                     semanticBindingsReference: options_.address.model.getSemanticBindings()
                     propertyAssignmentObject: (sourceTokenQueue.length == 0) and options_.propertyAssignmentObject or {}
                     onVector: true
@@ -190,12 +195,14 @@ addressResolver.resolve = (options_) ->
 
         return resolvedComponentVector: resolvedComponentVector, dataChangeEventJournal: dataChangeEventJournal
 
-
     catch exception_
         if not inputOptionsValid
             message = "addressResolver failed in function prologue: #{exception_.message}"
         else
-            message = "addressResolver failed to resolve '#{options_.address.getHumanReadableString()}': #{exception_.message}"
+            targetAddressString = options_.address.getHumanReadableString()
+            resolvedAddressString = new Address(options_.address.model, evaluatedTokenQueue).getHumanReadableString()
+            unresolvedAddressString = targetAddressString.substring(resolvedAddressString.length, targetAddressString.length)
+            message = "addressResolver failed to resolve '#{resolvedAddressString}>>#{unresolvedAddressString}<<' :: #{exception_.message}"
         throw new Error message
 
 # ==============================================================================
