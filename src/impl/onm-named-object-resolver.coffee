@@ -82,7 +82,7 @@ namedObjectResolver.resolve = (options_) ->
         context.output
 
     catch exception_
-        message = "resolveNamedObject exception occurred during execution of strategy '#{options_.strategy}': '#{exception_.message}'."
+        message = "namedObjectResolver.resolve failed :: " + exception_.message
         throw new Error message
 
 
@@ -116,12 +116,12 @@ resolveNamedObjectReference = (context_) ->
         switch input.strategy
             when 'open'
                 if not (output.namespaceDataReference? and output.namespaceDataReference)
-                    throw new Error "Cannot open named object for #{descriptor.namespaceType} namespace '#{descriptor.jsonTag}'. Object does not exist."
+                    throw new Error "Named object at key '#{effectiveKey}' does not exist."
                 output.strategyFollowed = 'open'
                 break
             when 'create'
                 if output.namespaceDataReference? and output.namespaceDataReference
-                    throw new Error "Cannot create named object for #{descriptor.namespaceType} namespace '#{descriptor.jsonTag}'. Object already exists."
+                    throw new Error "Named object at key '#{effectiveKey}' already exists."
                 output.strategyFollowed = 'create'
                 break
             when 'negotiate'
@@ -154,6 +154,6 @@ resolveNamedObjectReference = (context_) ->
         true
 
     catch exception_
-        throw new Error "resolveNamedObjectReference failed with exception '#{exception_.message}'."
+        throw new Error exception_.message + " ('#{descriptor.namespaceType}' namespace '#{descriptor.jsonTag}')."
 
 

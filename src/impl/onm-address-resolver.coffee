@@ -78,12 +78,13 @@ addressResolver.resolve = (options_) ->
             semanticBindingsReference: options_.address.model.getSemanticBindings()
             propertyAssignmentObject: (sourceTokenQueue.length == 0) and options_.propertyAssignmentObject or {}
             onVector: true
+
         componentResolutionContext =
             input: componentResolveOptions
             output: componentResolver.resolve componentResolveOptions
         resolvedComponentWorkQueue.push componentResolutionContext
 
-        componentsEvaluated = 0
+        componentsEvaluated = 0 # debug spew
         while resolvedComponentWorkQueue.length
 
             console.log "----------------------------------------------------------------------------"
@@ -138,9 +139,6 @@ addressResolver.resolve = (options_) ->
 
             # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-            # The next address token to resolve
-            currentToken = sourceTokenQueue.shift();
-
             # The vector of resolved named objects that comprise the resolved component under evaluation.
             norv = componentResolutionContext.output.namedObjectResolutionVector
 
@@ -153,7 +151,7 @@ addressResolver.resolve = (options_) ->
                 componentResolveOptions = 
                     strategy: options_.strategy # Needs some more thought
                     parentDataReference: parentDataReference
-                    addressToken: currentToken
+                    addressToken: sourceTokenQueue.shift()
                     semanticBindingsReference: options_.address.model.getSemanticBindings()
                     propertyAssignmentObject: (sourceTokenQueue.length == 0) and options_.propertyAssignmentObject or {}
                     onVector: true
@@ -202,7 +200,7 @@ addressResolver.resolve = (options_) ->
             targetAddressString = options_.address.getHumanReadableString()
             resolvedAddressString = new Address(options_.address.model, evaluatedTokenQueue).getHumanReadableString()
             unresolvedAddressString = targetAddressString.substring(resolvedAddressString.length, targetAddressString.length)
-            message = "addressResolver failed to resolve '#{resolvedAddressString}>>#{unresolvedAddressString}<<' :: #{exception_.message}"
+            message = "addressResolver.resolve failed to resolve '#{resolvedAddressString}>>#{unresolvedAddressString}<<' via strategy '#{options_.strategy}':: #{exception_.message}"
         throw new Error message
 
 # ==============================================================================

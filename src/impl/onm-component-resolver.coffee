@@ -38,7 +38,6 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 
 AddressToken = require('./onm-address-token')
 namedObjectResolver = require('./onm-named-object-resolver')
-
 componentContextHelpers = require('./onm-component-context')
 
 module.exports = componentResolver = {}
@@ -161,7 +160,16 @@ componentResolver.resolve = (options_) ->
         return context.output
 
     catch exception_
-        message = "resolveComponent exception occurred during execution of strategy '#{options_.strategy}': '#{exception_.message}'."
+        addressToken = options_.addressToken
+        message = "componentResolver.resolve failed to resolve token " +
+                "{" +
+                (addressToken.extensionPointDescriptor? and addressToken.extensionPointDescriptor and addressToken.extensionPointDescriptor.jsonTag or "anonymous") + "," +
+                (addressToken.key? and addressToken.key or "*") + "," +
+                addressToken.componentDescriptor.jsonTag + "," +
+                addressToken.namespaceDescriptor.jsonTag + 
+                "} :: " +
+                exception_.message
+
         throw new Error message
 
 # ==============================================================================
