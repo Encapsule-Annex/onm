@@ -84,17 +84,21 @@ addressResolver.resolve = (options_) ->
             console.log "ADDRESS RESOLVE COMPONENT #{++componentsEvaluated}:"
             console.log JSON.stringify options_.parentDataReference, undefined, 4
 
+            # Retrieve the last resolved component context object off the work queue and evaluate.
             componentResolutionContext = resolvedComponentWorkQueue.shift()
 
+            # Consolidate change event journal entries.
             for changeEvent in componentResolutionContext.output.dataChangeEventJournal
                 dataChangeEventJournal.push changeEvent
 
+            # Determine if the resolved component under evaluation is on or off the resolution vector.
             onResultVector = componentResolutionContext.input.onVector? and componentResolutionContext.input.onVector or false
 
+            # Stash the resolved component context in the results vector iff the component under evaluation is on the resolution vector.
             if onResultVector
                 resolvedComponentVector.push componentResolutionContext
 
-            # If the resolved component under evaluation was resolved off vector, complete the resolution
+            # If the component under evaluation was resolved off vector, complete the resolution
             # of its pending subcomponents off vector as well. Also, if the source token queue is empty
             # then we're by definition completing pending work above the requested namespace (i.e. the
             # address has been resolved but the strategy has not yet completed).

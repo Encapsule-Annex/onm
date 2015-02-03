@@ -49,6 +49,7 @@ describe("Validate the behavior of the onm address resolver.", function() {
             require('./subtests/address-resolver/test-use-case-address-resolver-create-apply-1-N.js');
             require('./subtests/address-resolver/test-use-case-address-resolver-create-apply-2-1.js');
             require('./subtests/address-resolver/test-use-case-address-resolver-create-apply-2-N.js');
+            require('./subtests/address-resolver/test-use-case-address-resolver-create-apply-N-N.js');
         });
 
         describe("Open strategy with no data operation tests.", function() {

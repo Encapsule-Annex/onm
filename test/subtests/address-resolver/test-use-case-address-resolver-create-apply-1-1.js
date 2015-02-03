@@ -53,9 +53,9 @@ testResult = testAddressResolverUseCase({
         resolvedComponentCount: 2,
         dataChangeEventJournalCount: 5,
         JSON: {
-            namespace: '{"test":"test data value in root namespace","hashtable":{}}',
-            parent: '{"testData":{"hashtable":{"testKeyValue":{"test":"test data value in root namespace","hashtable":{}}}}}',
-            journal: '[{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"root","namespaceModelPath":"testData","namespaceModelId":0,"key":"testData"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"extensionPoint","namespaceModelPath":"testData.hashtable","namespaceModelId":1,"key":"hashtable"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"component","namespaceModelPath":"testData.hashtable.testRecord","namespaceModelId":2,"key":"testKeyValue"}},{"layer":"namedObject","event":"propertyInitialized","eventData":{"name":"test","model":false,"value":"\\"test data value in root namespace\\"","source":"data"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"extensionPoint","namespaceModelPath":"testData.hashtable.testRecord.hashtable","namespaceModelId":3,"key":"hashtable"}}]'
+            namespace: '{"testKeyValue":{"test":"test data value in root namespace"},"hashtable":{}}',
+            parent: '{"testData":{"hashtable":{"test":{"testKeyValue":{"test":"test data value in root namespace"},"hashtable":{}}}}}',
+            journal: '[{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"root","namespaceModelPath":"testData","namespaceModelId":0,"key":"testData"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"extensionPoint","namespaceModelPath":"testData.hashtable","namespaceModelId":1,"key":"hashtable"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"component","namespaceModelPath":"testData.hashtable.testRecord","namespaceModelId":2,"key":"test"}},{"layer":"namedObject","event":"propertyInitialized","eventData":{"name":"testKeyValue","model":false,"value":"{\\"test\\":\\"test data value in root namespace\\"}","source":"data"}},{"layer":"namedObject","event":"namedObjectCreated","eventData":{"namespaceType":"extensionPoint","namespaceModelPath":"testData.hashtable.testRecord.hashtable","namespaceModelId":3,"key":"hashtable"}}]'
         }
     }
 });
