@@ -174,12 +174,17 @@ module.exports = class Namespace
 
     #
     # ============================================================================
-    getComponentKey: =>
+    # Renamed in v0.3
+    getName: =>
         try
             return @implementation.getResolvedToken().key
 
         catch exception
             throw new Error("getComponentKey failure: #{exception.message}")
+
+    # DEPRECATED in v0.3
+    getComponentKey: =>
+        @getName()
 
 
     #
