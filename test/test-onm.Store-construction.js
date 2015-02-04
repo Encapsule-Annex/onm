@@ -16,55 +16,50 @@ var inputTestDataVector = {
     'JSON parameter undefined.': [
         {
             inputObject: undefined,
-            expectedJSON: '{"addressBook":{"name":"","description":"","properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{}}}'
+            expectedJSON: '{"name":"","description":"","contacts":{},"properties":{"name":"","description":"","subproperties":{"collection":{}}}}'
         }
     ],
 
     'JSON parameter empty object.': [ 
         {
             inputObject: {},
-            expectedJSON: '{"addressBook":{"name":"","description":"","properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{}}}'
+            expectedJSON: '{"name":"","description":"","contacts":{},"properties":{"name":"","description":"","subproperties":{"collection":{}}}}'
         }
     ],
 
     'JSON parameter contains subset of address book root component properties.': [
         {
             inputObject: {
-                addressBook: {
-                    name: "Test Address Book",
-                    description: "This is some address book-bound onm.Store that we're constructing."
-                }
+                name: "Test Address Book",
+                description: "This is some address book-bound onm.Store that we're constructing."
             },
-            expectedJSON: '{"addressBook":{"name":"Test Address Book","description":"This is some address book-bound onm.Store that we\'re constructing.","properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{}}}'
+            expectedJSON: '{"name":"Test Address Book","description":"This is some address book-bound onm.Store that we\'re constructing.","contacts":{},"properties":{"name":"","description":"","subproperties":{"collection":{}}}}'
         }
     ],
 
     'JSON parameter contains a superset of the address book root component properties.': [
         {
             inputObject: {
-                addressBook: {
-                    name: "Another Address Book Test",
-                    somePropertyNotInTheModel: "This property is not in the address book data."
-                }
+                name: "Another Address Book Test",
+                somePropertyNotInTheModel: "This property is not in the address book data."
             },
-            expectedJSON: '{"addressBook":{"name":"Another Address Book Test","somePropertyNotInTheModel":"This property is not in the address book data.","description":"","properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{}}}'
+            expectedJSON: '{"name":"Another Address Book Test","description":"","somePropertyNotInTheModel":"This property is not in the address book data.","contacts":{},"properties":{"name":"","description":"","subproperties":{"collection":{}}}}'
         }
     ],
 
     'JSON parameter contains nested subcomponents.': [
         {
             inputObject: {
-                addressBook: {
-                    name: 'Nested Subcomponents Test 1',
-                    description: 'Some descriptive text.',
-                    contacts: {
-                        'testkey1': {
-                            name: "Joe"
-                        }
+                name: 'Nested Subcomponents Test 1',
+                description: 'Some descriptive text.',
+                contacts: {
+                    'testkey1': {
+                        firstName: "Joe",
+                        lastName: "Smith"
                     }
                 }
             },
-            expectedJSON: ''
+            expectedJSON: '{"name":"Nested Subcomponents Test 1","description":"Some descriptive text.","contacts":{"testkey1":{"firstName":"Joe","lastName":"Smith","phoneNumbers":{},"addresses":{},"emails":{}}},"properties":{"name":"","description":"","subproperties":{"collection":{}}}}'
         }
     ],
 
@@ -78,7 +73,7 @@ var inputTestDataVector = {
                     }
                 }
             },
-            expectedJSON: '{"addressBook":{"name":"","description":"","properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{}}}'
+            expectedJSON: '{"name":"","description":"","someOtherRandomObject":{"x":"marks the spot","randomSubnamespace":{"y":"whatever"}},"contacts":{},"properties":{"name":"","description":"","subproperties":{"collection":{}}}}'
         }
     ]
     

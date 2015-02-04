@@ -209,17 +209,13 @@ module.exports = class Namespace
     # ============================================================================
     toJSON: (replacer_, space_) =>
         try
-            namespaceDescriptor = @implementation.getResolvedToken().namespaceDescriptor
-            resultObject = {}
-            resultObject[namespaceDescriptor.jsonTag] = @data()
             space = space_? and space_ or 0
-            resultJSON = JSON.stringify(resultObject, replacer_, space)
+            resultJSON = JSON.stringify(@implementation.dataReference, replacer_, space)
             if not (resultJSON? and resultJSON)
-                throw new Error("Cannot serialize Javascript object to JSON!")
+                throw new Error "Named object data is corrupt and cannot be serialized to JSON."
             return resultJSON
-
         catch exception
-            throw new Error("toJSON failure: #{exception.message}")
+            throw new Error("onm.Namespace.toJSON serialization on address '#{@getResolvedAddress().getHumanReadableString()}' failed :: #{exception.message}")
 
 
     #

@@ -46,8 +46,10 @@ AddressTokenResolver = require('./impl/onm-address-token-resolver-legacy')
 Namespace = require('./onm-namespace')
 uuid = require('node-uuid')
 
+addressResolver = require './impl/onm-address-resolver'
+
 class StoreDetails
-    constructor: (store_, model_, initialStateJSON_) ->
+    constructor: (store_, model_, data_) ->
         try
             @store = store_
             @model = model_
@@ -57,9 +59,36 @@ class StoreDetails
             # registered by a store's observer(s).
             @reifier = new StoreReifier(@store)
 
-            @dataReference = {} # the new store actual
+            @dataReference = {}
 
-            @objectStoreSource = undefined # this is flag indicating if the store was created from a JSON string
+            @objectStoreSource = "new"
+
+            # Initialize the new data store.
+            ingress = (data_) =>
+                result = undefined
+                if data_? and data_
+                    dataType = Object.prototype.toString.call data_
+                    switch dataType
+                        when '[object Object]'
+                            result = data_
+                            @objectStoreSource = "json"
+                            break
+                        when '[object String]'
+                            result = ingress JSON.parse data_
+                            break
+                        else
+                            throw new Error "Invalid store construction data type '#{dataType}'. Expected '[object Object]' or JSON equivalent string serialization."
+                result? and result or {}
+
+            addressResolverOptions =
+                strategy: 'create'
+                address: @model.createRootAddress()
+                propertyAssignmentObject: ingress data_
+                parentDataReference: @dataReference
+                semanticBindingsReference: @model.getSemanticBindings()
+
+            # TODO: connect journal notifications
+            resolvedAddressContext = addressResolver.resolve addressResolverOptions
 
             # We use a map to store registered model view observers. 
             @observers = {}
@@ -72,6 +101,8 @@ class StoreDetails
 
 
 module.exports = class Store
+
+    # data_ is optional. If defined, data_ must be an object, or the JSON serialization of an object.
     constructor: (model_, initialStateJSON_) ->
         try
             @implementation = new StoreDetails(@, model_, initialStateJSON_)
@@ -89,25 +120,6 @@ module.exports = class Store
             @label = model_.label
             @description = model_.description
  
-            propertyAssignmentObject = undefined
-
-            if initialStateJSON_? and initialStateJSON_
-                @implementation.dataReference = JSON.parse(initialStateJSON_)
-                if not (@implementation.dataReference? and @implementation.dataReference)
-                    throw new Error("Cannot deserialize specified JSON string!")
-
-                propertyAssignmentObject = undefined
-                if @implementation.dataReference? and @implementation.dataReference
-                    propertyAssignmentObject = helperFunctions.clone(@implementation.dataReference)
-                    @implementation.objectStoreSource = "json"
-
-            @implementation.dataReference = @implementation.dataReference? and @implementation.dataReference or {}
-            @implementation.objectStoreSource = @implementation.objectStoreSource? and @implementation.objectStoreSource or "new"
-
-            # Low-level create of the root component.
-            token = new AddressToken(model_, undefined, undefined, 0)
-            tokenBinder = new AddressTokenResolver(@, @implementation.dataReference, token, "new", propertyAssignmentObject)
-
             #
             # ============================================================================
             # Returns true iff the specified Address and Store objects are both bound to the same Model.
@@ -118,7 +130,6 @@ module.exports = class Store
                     return @model.isEqual(address_.model)
                 catch exception
                     throw new Error("validateAddressModel failure: #{exception.message}");
-
 
             #
             # ============================================================================
