@@ -73,8 +73,10 @@ componentResolverContext.checkValidContextInput = (options_) ->
         # options_.propertyAssignmentObject property is optional.
         break
     # TODO: remove console logging before releasing v0.3
+    ####
     if not results.valid
         console.warn "Invalid named object input context object: '#{results.reason}'."
+    ####
     results.valid
 
 # ==============================================================================
@@ -93,7 +95,9 @@ componentResolverContext.checkValidContextOutput = (results_) ->
             break
         break
     # TODO: remove console logging before releasing v0.3
+    ####
     if not results.valid
         console.warn "Invalid named object input context object: '#{results.reason}'."
+    ####
     results.valid
 
