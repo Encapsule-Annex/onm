@@ -215,6 +215,9 @@ componentResolver.getResolvedNamedObjectReference = (resolvedComponentContext_) 
 # ==============================================================================
 componentResolver.getResolvedToken = (resolvedComponentContext_) ->
     try
-        resolvedComponentContext_.input.addressToken.clone()
+        resolvedToken = resolvedComponentContext_.input.addressToken.clone()
+        resolvedToken.key = resolvedComponentContext_.output.namedObjectResolutionVector[resolvedToken.idComponent].output.namespaceEffectiveKey
+        return resolvedToken
+
     catch exception_
         throw new Error "componentResolver.getResolvedToken failed: #{exception_.message}"

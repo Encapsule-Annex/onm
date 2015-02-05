@@ -72,7 +72,7 @@ addressResolver.resolve = (options_) ->
         currentToken = sourceTokenQueue.shift()
 
         componentResolveOptions = 
-            strategy: options_.strategy
+            strategy: (sourceTokenQueue.length == 0) and options_.strategy or 'negotiate'
             parentDataReference: options_.parentDataReference
             addressToken: currentToken
             semanticBindingsReference: options_.address.model.getSemanticBindings()
@@ -150,10 +150,12 @@ addressResolver.resolve = (options_) ->
             # If the component under evaluation has no pending unresolved subcomponent(s), manually initiate the resolution of the next address token.
             if not componentResolutionContext.output.pendingSubcomponentStack.length
 
+                currentToken = sourceTokenQueue.shift()
+
                 componentResolveOptions = 
-                    strategy: options_.strategy # Needs some more thought
+                    strategy: (sourceTokenQueue.length == 0) and options_.strategy or 'negotiate'
                     parentDataReference: parentDataReference
-                    addressToken: sourceTokenQueue.shift()
+                    addressToken: currentToken
                     semanticBindingsReference: options_.address.model.getSemanticBindings()
                     propertyAssignmentObject: (sourceTokenQueue.length == 0) and options_.propertyAssignmentObject or {}
                     onVector: true
