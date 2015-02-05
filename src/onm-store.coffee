@@ -88,6 +88,7 @@ class StoreDetails
                 semanticBindingsReference: @model.getSemanticBindings()
 
             # TODO: connect journal notifications
+            # resolved address context object == onm.Namespace construction in-parameter.
             resolvedAddressContext = addressResolver.resolve addressResolverOptions
 
             # We use a map to store registered model view observers. 
@@ -103,9 +104,9 @@ class StoreDetails
 module.exports = class Store
 
     # data_ is optional. If defined, data_ must be an object, or the JSON serialization of an object.
-    constructor: (model_, initialStateJSON_) ->
+    constructor: (model_, data_) ->
         try
-            @implementation = new StoreDetails(@, model_, initialStateJSON_)
+            @implementation = new StoreDetails(@, model_, data_)
 
             #
             # ============================================================================
@@ -141,50 +142,49 @@ module.exports = class Store
                     descriptor = address_.implementation.getDescriptor()
                     if not descriptor.isComponent then throw new Error("The specified address does not specify the root of a component.");
                     if descriptor.namespaceType == "root" then throw new Error("The specified address refers to the root namespace of the store which is created automatically.");
-                    console.log("onm.Store.createComponent: '" + address_.getHumanReadableString() + "'.")
 
-                    # Creating the root namespace of a component automatically creates all its sub-namespaces as well.
-                    resultNamespace = componentNamespace = new Namespace(@, address_, "new", keyArray_, propertyAssignmentObject_)
-
-                    unfinishedComponentNamespaces = []
-
-                    if componentNamespace.implementation.pendingSubcomponentDescriptors.length
-                        unfinishedComponentNamespaces.push(componentNamespace)
-
-                    while unfinishedComponentNamespaces.length
-
-                        workingComponentNamespace = unfinishedComponentNamespaces.pop()
-                        workingComponentAddress = workingComponentNamespace.getResolvedAddress()
-                        workingComponentPendingSubcomponentDescriptors = workingComponentNamespace.implementation.pendingSubcomponentDescriptors
-
-                        console.log("... onm.Store.createComponent resolving subcomponent(s) of '" + workingComponentAddress.getHumanReadableString() + "'.")
-
-                        while workingComponentPendingSubcomponentDescriptors.length
-
-                            pendingSubcomponentDescriptor = workingComponentNamespace.implementation.pendingSubcomponentDescriptors.pop()
-                            parentExtensionPointId = pendingSubcomponentDescriptor.parentExtensionPoint.namespaceDescriptor.id
-                            parentExtensionPointAddress = workingComponentAddress.implementation.createSubpathIdAddress(parentExtensionPointId)
-
-                            console.log("... ... onm.Store.createComponent working on extension point '" + parentExtensionPointAddress.getHumanReadableString() + "'.")
-
-                            newComponentAddress = parentExtensionPointAddress.createSubcomponentAddress()
-                            parentExtensionPointPropertyAssignmentObject = pendingSubcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject
-
-                            for key, value of parentExtensionPointPropertyAssignmentObject
-
-                                console.log("... ... ... onm.Store.createComponent('#{newComponentAddress.getHumanReadableString()}', [ '#{key}' ], '#{JSON.stringify(value)}'")
-                                componentNamespace = @createComponent(newComponentAddress, [ key ], value)
-
-                                if componentNamespace.implementation.pendingSubcomponentDescriptors.length
-                                    console.log("... ... ... +++ adding more unfinished work: '#{componentNamespace.getResolvedAddress().getHumanReadableString()}'");
-                                    unfinishedComponentNamespaces.push(componentNamespace)
-
-
-                    console.log("onm.Store.createComponent exit: '" + resultNamespace.getResolvedAddress().getHumanReadableString() + "'.")
-                    return resultNamespace
+                    # Complete the request using the new resolver infrastructure.
+                    addressResolveOptions = {
+                        strategy: 'create'
+                        address: address_
+                        propertyAssignmentObject: propertyAssignmentObject_
+                        parentDataReference: @implementation.dataReference
+                        semanticBindingsReference: @model.getSemanticBindings()
+                    }
+                    resolvedAddressContext = addressResolver.resolve addressResolveOptions
+                    namespace = new Namespace @, resolvedAddressContext
+                    return namespace
 
                 catch exception
                     throw new Error("createComponent failure: #{exception.message}");
+
+            #
+            # ============================================================================
+            @openNamespace = (address_) =>
+                try
+                    if not (address_ and address_)
+                        throw new Error("Missing address input parameter.");
+
+                    if not @validateAddressModel(address_)
+                        throw new Error("The specified address '#{address.getHumanReadableString()}' cannot be used to reference this store because it's not bound to the same model as this store.");
+
+                    # Complete the request using the new resolver infrastructure.
+                    addressResolveOptions = {
+                        strategy: 'open'
+                        address: address_
+                        propertyAssignmentObject: {}
+                        parentDataReference: @implementation.dataReference
+                        semanticBindingsReference: @model.getSemanticBindings()
+                    }
+                    resolvedAddressContext = addressResolver.resolve addressResolveOptions
+                    namespace = new Namespace @, resolvedAddressContext
+                    return namespace
+
+                        
+                catch exception
+                    throw new Error("openNamespace failure: #{exception.message}");
+                
+
 
 
             #
@@ -244,24 +244,6 @@ module.exports = class Store
                     throw new Error("removeComponent failure: #{exception.message}");
 
 
-            #
-            # ============================================================================
-            # Assumes the existence of the namespace indicated by the specified selector.
-            # Throwsnew Error( if the selector cannot be resolved against the contents of the store.);
-            #
-            @openNamespace = (address_) =>
-                try
-                    if not (address_ and address_) then throw new Error("Missing address input parameter.");
-                    if not @validateAddressModel(address_) then throw new Error("The specified address '#{address.getHumanReadableString()}' cannot be used to reference this store because it's not bound to the same model as this store.");
-                    try
-                        namespace = new Namespace(@, address_, "bypass")
-                        return namespace
-                    catch exception
-                        throw new Error("failed to construct onm.Namespace object for address '#{address_.getHumanReadableString()}': #{exception.message}")
-                        
-                catch exception
-                    throw new Error("openNamespace failure: #{exception.message}");
-                
 
             #
             # ============================================================================
@@ -407,7 +389,6 @@ module.exports = class Store
                 if helperFunctions.dictionaryLength(pathRecord) == 0
                     delete observerState[namespaceSelector_.pathId]
                 return @
-
 
         catch exception
             throw new Error("Store failure: #{exception.message}");

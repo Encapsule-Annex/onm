@@ -209,4 +209,12 @@ componentResolver.getResolvedNamedObjectReference = (resolvedComponentContext_) 
         namedObjectResolver.getResolvedNamedObjectReference resolvedNamedObjectContext
 
     catch exception_
-        throw new Error "componentResolver.getResolvedNamedObjectReference failure: #{exception_.message}"
+        throw new Error "componentResolver.getResolvedNamedObjectReference failed: #{exception_.message}"
+
+
+# ==============================================================================
+componentResolver.getResolvedToken = (resolvedComponentContext_) ->
+    try
+        resolvedComponentContext_.input.addressToken.clone()
+    catch exception_
+        throw new Error "componentResolver.getResolvedToken failed: #{exception_.message}"

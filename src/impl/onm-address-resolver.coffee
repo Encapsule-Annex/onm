@@ -216,6 +216,16 @@ addressResolver.getResolvedNamedObjectReference = (resolvedAddressObject_) ->
         resolvedComponentContext = resolvedAddressObject_.resolvedComponentVector[resolvedComponentCount - 1]
         componentResolver.getResolvedNamedObjectReference resolvedComponentContext
     catch exception_
-        throw new Error "addressResolver.getResolvedNamedObjectReference failure: #{exception_.message}"
+        throw new Error "addressResolver.getResolvedNamedObjectReference failed: #{exception_.message}"
 
-
+# ==============================================================================
+addressResolver.getResolvedTokenVector = (resolvedAddressObject_) ->
+    try
+        resolvedTokenVector = []
+        if not (resolvedAddressObject_? and resolvedAddressObject_)
+            throw new Error "Missing resolved address context object in-parameter."
+        for resolvedComponentContext in resolvedAddressObject_.resolvedComponentVector
+            resolvedTokenVector.push componentResolver.getResolvedToken resolvedComponentContext
+        resolvedTokenVector
+    catch exception_
+        throw new Error "addressResolver.getResolvedTokenVector failed: #{exception_.message}"

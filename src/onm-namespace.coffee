@@ -43,17 +43,21 @@ AddressToken = require('./impl/onm-address-token')
 AddressTokenResolver = require('./impl/onm-address-token-resolver-legacy')
 Address = require('./onm-address')
 
+addressResolver = require './impl/onm-address-resolver'
+
 #
 #
 # ****************************************************************************
 class NamespaceDetails
-    constructor: (namespace_, store_, address_, mode_) ->
+    constructor: (namespace_, store_, resolvedAddressContext_) ->
         try
-            @dataReference = store_.implementation.dataReference? and store_.implementation.dataReference or throw new Error("Cannot resolve object store's root data reference.")
-            @resolvedTokenArray = []
+            # Extract the context we need to retain from the resolved address context object.
+
+            @dataReference = addressResolver.getResolvedNamedObjectReference resolvedAddressContext_
+            @resolvedTokenArray = addressResolver.getResolvedTokenVector resolvedAddressContext_
             @getResolvedToken = => @resolvedTokenArray.length and @resolvedTokenArray[@resolvedTokenArray.length - 1] or undefined
             @resolvedAddress = undefined
-            @pendingSubcomponentDescriptors = []
+
 
         catch exception
             throw new Error("NamespaceDetails failure: #{exception.message}")
@@ -61,100 +65,13 @@ class NamespaceDetails
 #
 #
 # ****************************************************************************
-# optional parameters passed by onm.Store.createComponent (i.e. mode="new")
-# keyArray_ --- to be applied in order, tail-justified, to the component token vector key array
-# propertyAssignmentObject_ --- options object of property assignments to be cherry-picked and transcribed to newly-contructed components _prior_ to observer signal
-
 module.exports = class Namespace
-    constructor: (store_, address_, mode_, keyArray_, propertyAssignmentObject_) ->
+    constructor: (store_, resolvedAddressContext_) ->
         try
             if not (store_? and store_) then throw new Error("Missing object store input parameter.")
             @store = store_
 
-            @implementation = new NamespaceDetails(@, store_, address_, mode_)
-
-            # As a matter of policy, if no address is specified or if a zero-length address is specified, open the root namespace.
-            address = undefined
-            if not (address_? and address_ and address_.implementation.tokenVector.length)
-                objectModel = store_.model
-                address = new Address(objectModel, [ new AddressToken(objectModel, undefined, undefined, 0) ] )
-            else
-                address = address_
-            
-            # Ensure that address and store objects were both created using the same model.
-            objectModelNameStore = store_.model.jsonTag
-            objectModelNameKeys = address.model.jsonTag
-            if objectModelNameStore != objectModelNameKeys
-                throw new Error("You cannot access a '#{objectModelNameStore}' store namespace with a '#{objectModelNameKeys}' object model address!")
-
-            # Token in the address specifies a root component namespace?
-            if not address.isComplete() then throw new Error("Specified address is invalid because the first address token does not specify the object store's root component.")
-
-            mode = mode_? and mode_ or "bypass"
-
-            console.log("onm.Namespace constructor enter: '" + address_.getHumanReadableString() + "'.")
-
-            if (mode != "new") and not address.isResolvable()
-                throw new Error("'#{mode}' mode error: Unresolvable address '#{address.getHumanReadableString()}' invalid for this operation.")
-
-            # Let's try to do some address manipulation here based on the keyArray_ and propertyAssignmentObject_ params
-            keyArrayCount = keyArray_? and keyArray_.length or 0
-            tokenArrayCount = address.implementation.tokenVector.length
-
-            if keyArrayCount
-                if keyArrayCount > (tokenArrayCount - 1)
-                    throw new Error("Too many component keys specified in optional key array parameter for address '#{address_.getHumanReadableString()}'.")
-
-                # Clone the address
-                address = address.clone();
-
-                # Overwrite overlapping keys
-                keyIndex = 0
-                while keyIndex < keyArrayCount
-                    key = keyArray_[keyIndex]
-                    tokenIndex = tokenArrayCount - keyArrayCount + keyIndex
-                    address.implementation.tokenVector[tokenIndex].key = key
-                    keyIndex++
-
-            # The actual store data.
-            tokenCount = 0
-            for addressToken in address.implementation.tokenVector
-
-                workingOnLastToken = (tokenArrayCount - 1) == tokenCount
-                tokenCount++
-
-                # do not apply the propertyAssignmentObject_ until we're creating the target data component.
-                constructionOptions = workingOnLastToken and propertyAssignmentObject_ or undefined
-
-                # Resolve the next token. That is, use the meta-data in the token, and a parent namespace
-                # data reference and a bunch other information to resolve an existing, or create a new data
-                # component in the store, and ensure that it is constructed per the model and has any
-                # user-supplied construction options object namespaces and/or properties applied.
-                #
-                tokenBinder = new AddressTokenResolver(store_, @implementation.dataReference, addressToken, mode, constructionOptions)
-
-                @implementation.resolvedTokenArray.push tokenBinder.resolvedToken
-                @implementation.dataReference = tokenBinder.dataReference
-
-                if mode == "new"
-                    if addressToken.idComponent 
-                        if not (addressToken.key? and addressToken.key)
-                            resolvedAddress = new Address(@store.model, @implementation.resolvedTokenArray)
-                            componentAddress = resolvedAddress.createComponentAddress()
-                            @store.implementation.reifier.reifyStoreComponent(componentAddress)
-                            extensionPointAddress = componentAddress.createParentAddress()
-                            extensionPointNamespace = @store.openNamespace(extensionPointAddress)
-                            extensionPointNamespace.update()
-
-                true
-
-            if tokenBinder.subcomponentDescriptors.length > 0
-                console.log("onm.Namespace pending: '" + address_.getHumanReadableString() + "' " + tokenBinder.subcomponentDescriptors.length + " pending records.")
-                for subcomponentDescriptor in tokenBinder.subcomponentDescriptors
-                    console.log(".... ... record: '" + JSON.stringify(subcomponentDescriptor.parentExtensionPoint.propertyAssignmentObject) + "'")
-
-            @implementation.pendingSubcomponentDescriptors = tokenBinder.subcomponentDescriptors
-            console.log("onm.Namespace constructor exit: '" + address_.getHumanReadableString() + "'.")
+            @implementation = new NamespaceDetails(@, store_, resolvedAddressContext_)
 
 
         catch exception
