@@ -64,52 +64,12 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
             var dataContact = namespaceContact.data();
             expect(dataContact).to.have.property('firstName').equal('');
             expect(dataContact).to.have.property('lastName').equal('');
-            expect(dataContact).to.have.property('key');
             expect(dataContact).to.have.property('emails');
             expect(dataContact.emails).to.be.an('object');
             expect(dataContact).to.have.property('addresses');
             expect(dataContact.addresses).to.be.an('object');
             expect(dataContact).to.have.property('phoneNumbers');
             expect(dataContact.phoneNumbers).to.be.an('object');
-        });
-
-        describe("Call onm.Store.createComponent with a single-key key array parameter.", function() {
-            var keyArray = [ 'test' ];
-            before(function() {
-                namespaceContact = store.createComponent(addressNewContact, keyArray);
-            });
-            it("We should be able to create a contact component.", function() {
-                assert.isDefined(namespaceContact);
-                assert.isNotNull(namespaceContact);
-                assert.instanceOf(namespaceContact, onm.Namespace);
-            });
-            it("The component key of the newly-created component should be 'test'.", function() {
-                assert.equal(namespaceContact.getComponentKey(), "test");
-            });
-        });
-
-        describe("Call onm.Store.createComponent with too many optional component override keys.", function() {
-            var keyArray = [ 'test', 'error' ];
-            it("The key array should be rejected because it is too long.", function() {
-                assert.throws(function() { store.createComponent(addressNewContact, keyArray); }, Error);
-            });
-        });
-
-        describe("Call onm.Store.createComponent with two optional override component keys.", function() {
-            var keyArray = [ 'JoeSmith', 'primary' ];
-            var addressNewEmail = null;
-            before(function() {
-                addressNewEmail = addressRoot.createSubpathAddress("contacts.contact.emails.email");
-                namespaceContact = store.createComponent(addressNewEmail, keyArray);
-            });
-            it("A contact component should have been created.", function() {
-                assert.isDefined(namespaceContact);
-                assert.isNotNull(namespaceContact);
-                assert.instanceOf(namespaceContact, onm.Namespace);
-            });
-            it("The component key of the newly-created component should be 'primary'.", function() {
-                assert.equal(namespaceContact.getComponentKey(), "primary");
-            });
         });
 
         describe("Call onm.Store.createComponent with a simple construction options object.", function() {
@@ -130,7 +90,6 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                 var dataContact = namespace.data();
                 expect(dataContact).to.have.property('firstName').equal('Joe');
                 expect(dataContact).to.have.property('lastName').equal('Smith');
-                expect(dataContact).to.have.property('key');
                 expect(dataContact).to.have.property('emails');
                 expect(dataContact.emails).to.be.an('object');
                 expect(dataContact).to.have.property('addresses');
@@ -162,7 +121,6 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                     var dataContact = namespacePhoneNumber.data();
                     expect(dataContact).to.have.property('areaCode').equal('000');
                     expect(dataContact).to.have.property('number').equal('123-4567');
-                    expect(dataContact).to.have.property('key');
                 });
             });
 
@@ -253,15 +211,6 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                         assert.isString(dataContact.emails['marsellus@pulp.net'].emailAddress);
                     });
 
-                    it("'contact.emails.marsellus@pulp.net' object should have property 'key'.", function() {
-                        assert.property(dataContact.emails['marsellus@pulp.net'], 'key');
-                        assert.isString(dataContact.emails['marsellus@pulp.net'].key);
-                    });
-
-                    it("'contact.emails.marsellus@pulp.net.key' property value should be 'marsellus@pulp.net'.", function() {
-                        assert.equal(dataContact.emails['marsellus@pulp.net'].key, 'marsellus@pulp.net');
-                    });
-
                     it("'contact' should define sub-object 'addresses'.", function() {
                         assert.property(dataContact, 'addresses');
                         assert.isObject(dataContact.addresses);
@@ -296,12 +245,11 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
 
         describe("Serialize the test data store to JSON and compare the results against a known good snapshot.", function() {
 
-            var expectedJSON = '{"addressBook":{"name":"","description":"","properties":{"name":"","description":"","subproperties":{"collection":{}}},"contacts":{"1":{"key":"1","firstName":"","lastName":"","emails":{},"addresses":{},"phoneNumbers":{}},"2":{"key":"2","firstName":"Joe","lastName":"Smith","emails":{},"addresses":{},"phoneNumbers":{"3":{"key":"3","areaCode":"000","number":"123-4567","notes":{"text":"This is a note assigned via a hierarchical component construction options object."}}}},"4":{"key":"4","firstName":"Marsellus","lastName":"Wallace","emails":{"marsellus@pulp.net":{"key":"marsellus@pulp.net","emailAddress":"marsellus@pulp.net"}},"addresses":{"wallace":{"key":"wallace","streetAddress":"Vincent & Jules Blvd","notes":{"question":{"key":"question","text":"What does Marsellus Wallace look like?"},"answer":{"key":"answer","text":"He does not look like a bitch."}}}},"phoneNumbers":{}},"test":{"key":"test","firstName":"","lastName":"","emails":{},"addresses":{},"phoneNumbers":{}},"JoeSmith":{"key":"JoeSmith","firstName":"","lastName":"","emails":{"primary":{"key":"primary","emailAddress":""}},"addresses":{},"phoneNumbers":{}}}}}';
+            var expectedJSON = '{"name":"","description":"","contacts":{"1":{"firstName":"","lastName":"","phoneNumbers":{},"addresses":{},"emails":{}},"2":{"firstName":"Joe","lastName":"Smith","phoneNumbers":{"3":{"areaCode":"000","number":"123-4567","notes":{"text":"This is a note assigned via a hierarchical component construction options object."}}},"addresses":{},"emails":{}},"4":{"firstName":"Marsellus","lastName":"Wallace","notInTheDataModel":{"someProperty":"This is some property of a data namespace that is not declared in the data model.","someOtherProperty":"This is yet another property of the undeclared namespace.","subnamespaceOfUndeclared":{"becauseWeCan":"define a child namespace and and see that onm does with the construct."}},"phoneNumbers":{},"addresses":{"wallace":{"streetAddress":"Vincent & Jules Blvd","notes":{"question":{"text":"What does Marsellus Wallace look like?"},"answer":{"text":"He does not look like a bitch."}}}},"emails":{"marsellus@pulp.net":{"emailAddress":"marsellus@pulp.net"}}}},"properties":{"name":"","description":"","subproperties":{"collection":{}}}}'
 
             var actualJSON = null;
             before(function() {
                 actualJSON = store.toJSON();
-                // console.log(store.toJSON(undefined, 4));
             });
             it("The data store's JSON data should match the test's control JSON.", function() {
                 assert.equal(actualJSON, expectedJSON);
