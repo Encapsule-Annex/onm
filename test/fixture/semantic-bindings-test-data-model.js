@@ -1,4 +1,4 @@
-// sem-bind-test-data-model-decl.js
+// semantic-bindings-test-data-model.js
 //
 // Test onm data model declaration to support testing of onm.Model's
 // built-in semantic binding functions.
@@ -6,11 +6,14 @@
 
 var uuid = require('node-uuid');
 
+// This onm data model is used as a template to generate a number of test permutations.
+// See module ./fixture/semantic-binding-variants.js.
+//
+
 module.exports = {
 
     // see semantic-bindings-variants.js module
     semanticBindings: {
-        
         componentKeyGenerator: "internalLuid"
     },
 
@@ -37,11 +40,6 @@ module.exports = {
             componentArchetype: {
                 namespaceType: "component",
                 jsonTag: "componentA",
-                namespaceProperties: {
-                    userImmutable: {
-                        _cid: {}
-                    }
-                }
             }
         }
     ]

@@ -34,64 +34,50 @@ var validateDataModelDeclaration = require('onm-data-model-tests').validateDataM
 
 
 module.exports = describe("onm.Model intrinsic semantic bindings white box tests", function() {
-
     withData(testInputDataVector, function (testDescriptor_) {
-
         var model = null;
         var address = null;
         var store = null;
         var namespace = null;
-
         var keyPropertyName = null;
-
-
         before(function(done_) {
-
             if (testDescriptor_.validConfig) {
-
                 assert.doesNotThrow(function() {
                     model = new onm.Model(testDescriptor_.dataModelDeclaration);
                     assert.isNotNull(model);
                     assert.instanceOf(model, onm.Model);
                     keyPropertyName = model.getSemanticBindings().keyPropertyName;
                 });
-
                 assert.doesNotThrow(function() {
                     store = new onm.Store(model);
                     assert.isNotNull(store);
                     assert.instanceOf(store, onm.Store);
                 });
-
                 assert.doesNotThrow(function() {
                     address = model.createRootAddress().createSubpathAddress("collectionA.componentA");
                     assert.isNotNull(address);
                     assert.instanceOf(address, onm.Address);
                 });
-
                 assert.doesNotThrow(function() {
                     namespace = store.createComponent(address);
                     assert.isNotNull(namespace);
                     assert.instanceOf(namespace, onm.Namespace);
                 });
-
                 assert.doesNotThrow(function() {
                     namespace = store.createComponent(address, [ testKeys.key1 ]);
                     assert.isNotNull(namespace);
                     assert.instanceOf(namespace, onm.Namespace);
                 });
-
                 assert.doesNotThrow(function() {
                     namespace = store.createComponent(address, [ testKeys.key2 ], { key: testKeys.key2 } );
                     assert.isNotNull(namespace);
                     assert.instanceOf(namespace, onm.Namespace);
                 });
-
                 assert.doesNotThrow(function() {
                     namespace = store.createComponent(address, undefined, { key: testKeys.key3 } );
                     assert.isNotNull(namespace);
                     assert.instanceOf(namespace, onm.Namespace);
                 });
-
                 validateDataModelDeclaration(testDescriptor_.dataModelDeclaration, onm);
 
                 var suite = describe("Validate component key integrity.", function(done_) {

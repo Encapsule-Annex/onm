@@ -10,8 +10,8 @@ var onm = require('../../index');
 var testDataVector = [
 
     {
-        testName: "Null component key generator.",
-        validConfig: false,
+        testName: "Null component key generator (onm default behavior).",
+        validConfig: true,
         semanticBindings: {
         }
     },
