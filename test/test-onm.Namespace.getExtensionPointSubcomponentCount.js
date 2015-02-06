@@ -13,7 +13,6 @@ var testData = require('./fixture/address-book-data-model');
 module.exports = describe("onm.Namespace.getExtensionPointSubcomponentCount method tests", function() {
     var store, address, namespaceExtensionPoint;
     before(function() {
-        testData.resetLuid();
         store = testData.createStore();
     });
 

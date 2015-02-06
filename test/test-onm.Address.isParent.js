@@ -13,7 +13,6 @@ var testData = require('./fixture/address-book-data-model');
 module.exports = describe("onm.Address.isParent tests", function() {
     var store, address1, address2;
     before(function() {
-        testData.resetLuid();
         store = testData.createStore();
     });        
     describe("determine if the root address is a parent of the root address", function() {

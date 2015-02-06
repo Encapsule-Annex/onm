@@ -14,7 +14,6 @@ module.exports = describe("onm.Model.createAddressFromHumanReadableString tests"
 
     var model;
     before(function() {
-        testData.resetLuid();
         model = testData.createModel();
     });
 

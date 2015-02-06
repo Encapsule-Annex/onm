@@ -14,7 +14,6 @@ module.exports = describe("onm.Address.createSubpathAddress tests.", function() 
     var model, addressRoot;
 
     before(function() {
-        testData.resetLuid();
         model = testData.createModel();
         addressRoot = model.createRootAddress();
     });
@@ -62,7 +61,6 @@ module.exports = describe("onm.Address.createSubpathAddress tests.", function() 
         var addressContact, addressContactAddresses;
 
         before(function() {
-            testData.resetLuid();
             store = testData.createStore();
             var addressNewContact = addressRoot.createSubpathAddress("contacts.contact");
             var namespace = store.createComponent(addressNewContact);

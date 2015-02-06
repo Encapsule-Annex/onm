@@ -16,7 +16,6 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
     var badAddress = null;
 
     before(function() {
-        testData.resetLuid();
         store = testData.createStore();
         assert.isNotNull(store);
         assert.instanceOf(store, onm.Store);
@@ -79,7 +78,7 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
             };
             var namespace = null;
             before(function() {
-                namespace = store.createComponent(addressNewContact, null, constructionOptions);
+                namespace = store.createComponent(addressNewContact, constructionOptions);
             });
             it("A contact component should have been created.", function() {
                 assert.isDefined(namespace);
@@ -110,7 +109,7 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                 };
                 before(function() {
                     addressNewPhoneNumber = namespace.getResolvedAddress().createSubpathAddress("phoneNumbers.phoneNumber");
-                    namespacePhoneNumber = store.createComponent(addressNewPhoneNumber, null, constructionOptions);
+                    namespacePhoneNumber = store.createComponent(addressNewPhoneNumber, constructionOptions);
                 });
                 it("A contact component should have been created.", function() {
                     assert.isDefined(namespacePhoneNumber);
@@ -159,7 +158,7 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                 var namespaceContact = null;
 
                 before(function() {
-                    namespaceContact = store.createComponent(addressNewContact, [], contactConstructionData);
+                    namespaceContact = store.createComponent(addressNewContact, contactConstructionData);
                 });
 
                 it("A new contact component should have been created.", function() {

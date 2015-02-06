@@ -134,7 +134,7 @@ module.exports = class Store
 
             #
             # ============================================================================
-            @createComponent = (address_, keyArray_, propertyAssignmentObject_) =>
+            @createComponent = (address_, propertyAssignmentObject_) =>
                 try
                     if not (address_? and address_) then throw new Error("Missing address input parameter.");
                     if not @validateAddressModel(address_) then throw new Error("Address/store data model mismatch. Can't use the specified address to access this store.");

@@ -7,21 +7,10 @@ var onm = require('../../index');
 
 (function() {
 
-    var LUID = 1;
-
     var modelDeclaration = module.exports.modelDeclaration = {
         jsonTag: "addressBook",
         semanticBindings: {
-            keyPropertyName: 'key',
-
-            setUniqueKey: function(data_, keyValue_) {
-                var key = (keyValue_ != null) && keyValue_ || ("" + LUID++);
-                data_[modelDeclaration.semanticBindings.keyPropertyName] = key;
-                return key;
-            },
-            getUniqueKey: function(data_) {
-                return data_[modelDeclaration.semanticBindings.keyPropertyName];
-            }
+            componentKeyGenerator: 'internalLuid'
         },
         namespaceProperties: {
             userImmutable: {
@@ -184,7 +173,7 @@ var onm = require('../../index');
 
     var createModel = module.exports.createModel = function() {
         try {
-            var model = new onm.Model(modelDeclaration);
+            var model = new onm.Model(modelDeclaration).implementation.resetKeyGenerator();
             return model;
         } catch (exception_) {
             throw new Error("onm test data fixture failure in 'createModel': " + exception_.message);
@@ -198,10 +187,6 @@ var onm = require('../../index');
         } catch (exception_) {
             throw new Error("onm test data fixture failure in 'createStore': " + exception_.message);
         }
-    };
-
-    var resetLuid = module.exports.resetLuid = function() {
-        LUID = 1;
     };
 
 })();

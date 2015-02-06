@@ -19,7 +19,6 @@ module.exports = describe("Named object resolver module test suite.", function()
     var namedObjectContext = null;
 
     before(function(done_) {
-        testData.resetLuid();
         var loadModuleUnderTest = function() {
             namedObjectResolver = require('../lib/impl/onm-named-object-resolver');
             namedObjectContext = require('../lib/impl/onm-named-object-context');

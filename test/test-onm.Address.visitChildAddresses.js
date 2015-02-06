@@ -17,7 +17,6 @@ module.exports = describe("onm.Address.visitChildAddresses tests", function() {
         var actualResult;
         var expectedResult;
         before( function() {
-            testData.resetLuid();
             expectedResult = '["addressBook.properties","addressBook.contacts"]';
             store = testData.createStore();
             address = store.model.createRootAddress();

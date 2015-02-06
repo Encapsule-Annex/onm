@@ -17,15 +17,7 @@ var testDataVector = [
     },
 
     {
-        testName: "With 'keyPropertyName' declaration set to some random value.",
-        validConfig: false,
-        semanticBindings: {
-            keyPropertyName: 'error'
-        }
-    },
-
-    {
-        testName: "Internal LUID component key generator. 'keyPropertyName' === undefined.",
+        testName: "Internal LUID component key generator.",
         validConfig: true,
         semanticBindings: {
             componentKeyGenerator: 'internalLuid'
@@ -33,91 +25,12 @@ var testDataVector = [
     },
 
     {
-        testName: "Internal LUID component key generator. 'keyPropertyName' === 'key'.",
-        validConfig: true,
-        semanticBindings: {
-            keyPropertyName: 'key',
-            componentKeyGenerator: 'internalLuid'
-        }
-    },
-
-    {
-        testName: "Internal LUID component key generator. 'keyPropertyName' === 'error'.",
-        validConfig: true,
-        semanticBindings: {
-            keyPropertyName: 'error',
-            componentKeyGenerator: 'internalLuid'
-        }
-    },
-
-    {
-        testName: "Internal UUID component key generator. 'keyPropertyName' === undefined.",
+        testName: "Internal UUID component key generator.",
         validConfig: true,
         semanticBindings: {
             componentKeyGenerator: 'internalUuid'
         }
     },
-
-    {
-        testName: "Internal UUID component key generator. 'keyPropertyName' === 'key'.",
-        validConfig: true,
-        semanticBindings: {
-            keyPropertyName: 'key',
-            componentKeyGenerator: 'internalUuid'
-        }
-    },
-
-    {
-        testName: "Internal UUID component key generator. 'keyPropertyName' === 'error'.",
-        validConfig: true,
-        semanticBindings: {
-            keyPropertyName: 'error',
-            componentKeyGenerator: 'internalUuid'
-        }
-    },
-
-    // External key generator coverage.
-
-    /*
-
-    {
-        testName: "External key generator. 'keyPropertyName' === undefined.",
-        semanticBindings: {
-        }
-    },
-
-    {
-        testName: "External key generator. 'keyPropertyName' set, missing 'setUniqueKey'.",
-        semanticBindings: {
-        }
-    },
-
-    {
-        testName: "External key generator. 'keyPropertyName' set, missing 'getUniqueKey'.",
-        semanticBindings: {
-        }
-    },
-
-    {
-        testName: "External key generator. 'keyPropertyName' set, missing 'getUniqueKey'.",
-        semanticBindings: {
-        }
-    },
-
-    {
-        testName: "External key generator. 'keyPropertyName' set, missing 'getUniqueKey'.",
-        semanticBindings: {
-        }
-    },
-
-    {
-        testName: "External key generator. 'keyPropertyName' set, missing 'getUniqueKey'.",
-        semanticBindings: {
-        }
-    }
-
-
-    */
 
 ]; // 'semanticBindings' object variants array
 

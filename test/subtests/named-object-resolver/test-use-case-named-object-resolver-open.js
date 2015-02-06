@@ -31,7 +31,6 @@ module.exports = describe("namedObjectResolver.resolve base 'open' strategy w/no
     };
 
     before(function(done_) {
-        testData.resetLuid();
         var functionUnderTestWrapper = function() {
             resolveResults = namedObjectResolver.resolve(namedObjectResolveOptions);
         };

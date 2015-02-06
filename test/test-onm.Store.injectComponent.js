@@ -16,7 +16,6 @@ module.exports = describe("onm.Store.injectComponent method tests.", function() 
     var namespaceContact = null;
     var addressContacts = null;
     before(function() {
-        testData.resetLuid();
         model = testData.createModel();
         store1 = testData.createStore();
         store2 = testData.createStore();

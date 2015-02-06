@@ -139,7 +139,7 @@ resolveNamedObjectReference = (context_) ->
             when 'create'
                 if not (effectiveKey? and effectiveKey and effectiveKey.length? and effectiveKey.length)
                     # TODO: FIX THIS: function call semantic should be simplified to 'create key' only
-                    output.namespaceEffectiveKey = effectiveKey = input.semanticBindingsReference.setUniqueKey({}); 
+                    output.namespaceEffectiveKey = effectiveKey = input.semanticBindingsReference.getUniqueKey()
                 output.namespaceDataReference = input.parentDataReference[effectiveKey] = {}
                 output.dataChangeEventJournal.push
                     layer: 'namedObject'

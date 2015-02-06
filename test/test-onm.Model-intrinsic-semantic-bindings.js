@@ -39,14 +39,13 @@ module.exports = describe("onm.Model intrinsic semantic bindings white box tests
         var address = null;
         var store = null;
         var namespace = null;
-        var keyPropertyName = null;
+
         before(function(done_) {
             if (testDescriptor_.validConfig) {
                 assert.doesNotThrow(function() {
                     model = new onm.Model(testDescriptor_.dataModelDeclaration);
                     assert.isNotNull(model);
                     assert.instanceOf(model, onm.Model);
-                    keyPropertyName = model.getSemanticBindings().keyPropertyName;
                 });
                 assert.doesNotThrow(function() {
                     store = new onm.Store(model);
@@ -63,58 +62,9 @@ module.exports = describe("onm.Model intrinsic semantic bindings white box tests
                     assert.isNotNull(namespace);
                     assert.instanceOf(namespace, onm.Namespace);
                 });
-                assert.doesNotThrow(function() {
-                    namespace = store.createComponent(address, [ testKeys.key1 ]);
-                    assert.isNotNull(namespace);
-                    assert.instanceOf(namespace, onm.Namespace);
-                });
-                assert.doesNotThrow(function() {
-                    namespace = store.createComponent(address, [ testKeys.key2 ], { key: testKeys.key2 } );
-                    assert.isNotNull(namespace);
-                    assert.instanceOf(namespace, onm.Namespace);
-                });
-                assert.doesNotThrow(function() {
-                    namespace = store.createComponent(address, undefined, { key: testKeys.key3 } );
-                    assert.isNotNull(namespace);
-                    assert.instanceOf(namespace, onm.Namespace);
-                });
+
                 validateDataModelDeclaration(testDescriptor_.dataModelDeclaration, onm);
 
-                var suite = describe("Validate component key integrity.", function(done_) {
-
-                    var addressCollectionA, namespaceCollectionA;
-                    var subcomponentAddresses = [];
-                    var completeTestSuite = done_;
-
-                    before(function(done_) {
-                        addressCollectionA = model.createRootAddress().createSubpathAddress("collectionA");
-                        namespaceCollectionA = store.openNamespace(addressCollectionA);
-                        var componentAddresses = [];
-                        // This could be collapsed but is left expanded to make it simpler to copy and extend the pattern.
-                        // Cache the addresses of the extesion point's subcomponents. 
-                        namespaceCollectionA.visitExtensionPointSubcomponents(function(addressSubcomponent_) {
-                            componentAddresses.push(addressSubcomponent_.clone());
-                        });
-                        // Dynamically add a test for each subcomponent address to the parent test suite.
-                        for (var addressIndex in componentAddresses) {
-                            (function() {
-                                var componentAddress = componentAddresses[addressIndex];
-                                suite.addTest(new Test("Component '" + componentAddress.getHumanReadableString() + "' key integrity check.", function() {
-                                    var namespace = store.openNamespace(componentAddress);
-                                    // console.log("In test: " + componentAddress.getHumanReadableString());
-                                    // console.log("In test: " + JSON.stringify(namespace.data()));
-                                    assert.equal(namespace.getComponentKey(), namespace.data()[keyPropertyName]);
-                                }));
-                            })();
-                        }
-                        done_();
-                    });
-
-                    it("Run the dynamically generated test suite.", function() {
-                        assert.isTrue(true);
-                    });
-
-                });
 
             } else {
 

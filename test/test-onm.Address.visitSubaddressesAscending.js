@@ -17,7 +17,6 @@ module.exports = describe("onm.Address.visitSubaddressesAscending tests", functi
         var actualResult = null;
         var expectedResult = '["addressBook.properties","addressBook.contacts","addressBook.properties.subproperties","addressBook.properties.subproperties.collection"]';
         before(function() {
-            testData.resetLuid();
             store = testData.createStore();
             address = store.model.createRootAddress();
             address.visitSubaddressesAscending( function(subAddress_) {

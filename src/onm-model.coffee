@@ -44,7 +44,6 @@ uuid = require('node-uuid')
 
 LUID = 1
 
-
 #
 #
 # ****************************************************************************
@@ -457,60 +456,33 @@ class ModelDetails
             Object.freeze @objectModelDescriptorById
 
             defaultSemanticBindings = {
-                keyPropertyName: '_cid'
-                componentKeyGenerator: 'disabled'
+                componentKeyGenerator: 'internalUuid'
                 namespaceVersion: 'disabled'
             }
 
-            @semanticBindings = @objectModelDeclaration.semanticBindings? and @objectModelDeclaration.semanticBindings or defaultSemanticBindings
+            @semanticBindings = {}
 
-            # componentKeyGenerator | namespaceUpdateRevision | Notes
-            # disabled              | *                       | Single-component model w/finite address space.
-            # internalLuid          | *                       | Reserves 'key' property name in component-type namespaces. (locally unique integer keys)
-            # internalUuid          | *                       | Reserves 'key' property name in component-type namespaces (universally unique UUID string)
-            # external              | *                       | data model declaration object must supply an implementation of semanticBinding.getUniqueKey
-            # *                     | disabled                | Disable dispatch of Namespace.update signal-scope callbacks to semanticBinding.update callback.
-            # *                     | internalSimple          | Reserves 'revision' property name
-            # *                     | internalAdvanced        | Reserved 'revision', 'uuidRevision', 'epochRevision' property names
-            # *                     | external                | Enables dispatch of Namespace.update signal-scope callbacks to semanticBindings.update callback.
 
-            @componentKeyGenerator = @semanticBindings.componentKeyGenerator? and @semanticBindings.componentKeyGenerator or "external"
-            @namespaceVersioning = (@semanticBindings.update? and @semanticBindings.update and "external") or
-                (@semanticBindings.namespaceVersioning? and @semanticBindings.namespaceVersioning or "disabled")
+            @componentKeyGenerator = 'internalUuid' # default
+            @namespaceVersioning = 'disabled' # default
+
+            if @objectModelDeclaration.semanticBindings? and @objectModelDeclaration.semanticBindings
+                if @objectModelDeclaration.semanticBindings.componentKeyGenerator? and @objectModelDeclaration.semanticBindings.componentKeyGenerator
+                    @componentKeyGenerator = @objectModelDeclaration.semanticBindings.componentKeyGenerator
+                if @objectModelDeclaration.semanticBindings.namespaceVersioning? and @objectModelDeclaration.semanticBindings.namespaceVersioning
+                    @namespaceVersioning = @objectModelDeclaration.semanticBindings.namespaceVersioning
 
             switch @componentKeyGenerator
-                when "disabled"
-                    if @semanticBindings.keyPropertyName? and @semanticBindings.keyPropertyName
-                        delete @semanticBindings.keyPropertyName
-                    if @semanticBindings.getUniqueKey? and @semanticBindings.getUniqueKey
-                        delete @semanticBindings.getUniqueKey
-                    if @semanticBindings.setUniqueKey? and @semanticBindings.setUniqueKey
-                        delete @semanticBindings.setUniqueKey
-                    break
                 when "internalLuid"
-                    @semanticBindings.keyPropertyName = @semanticBindings.keyPropertyName? and @semanticBindings.keyPropertyName or defaultSemanticBindings.keyPropertyName
-                    @semanticBindings.getUniqueKey = (data_) => data_[@semanticBindings.keyPropertyName]
-                    @semanticBindings.setUniqueKey = (data_, key_) =>
-                        data_[@semanticBindings.keyPropertyName] = key_? and key_ or "#{LUID++}"
-                        data_[@semanticBindings.keyPropertyName]
+                    @semanticBindings.getUniqueKey = => 
+                        "#{LUID++}"
                     break
                 when "internalUuid"
-                    @semanticBindings.keyPropertyName = @semanticBindings.keyPropertyName? and @semanticBindings.keyPropertyName or defaultSemanticBindings.keyPropertyName
-                    @semanticBindings.getUniqueKey = (data_) => data_[@semanticBindings.keyPropertyName]
-                    @semanticBindings.setUniqueKey = (data_, key_) =>
-                        data_[@semanticBindings.keyPropertyName] = key_? and key_ or uuid.v4()
-                        data_[@semanticBindings.keyPropertyName]
-                    break
-                when "external"
-                    if @countExtensionPoints
-                        if not (@semanticBindings.keyPropertyName? and @semanticBindings.keyPropertyName)
-                            @semanticBindings.keyPropertyName = defaultSemanticBindings.keyPropertyName
-                        if not (@semanticBindings.getUniqueKey? and @semanticBindings.getUniqueKey and @semanticBindings.setUniqueKey? and @semanticBindings.setUniqueKey)
-                            throw new Error("Data model declares extension point(s) and an external component key generator but is missing get/setUniqueKey functions?")
+                    @semanticBindings.getUniqueKey = => 
+                        uuid.v4()
                     break
                 else
-                    throw new Error("Unrecognized componentKeyGenerator='#{@componentKeyGenerator}'");
-
+                    throw new Error("Unrecognized componentKeyGenerator='#{@componentKeyGenerator}.'");
 
             switch @namespaceVersioning
                 when "disabled"
@@ -536,10 +508,8 @@ class ModelDetails
                 else
                     throw new Error("Unrecognized namespaceVersionion=`#{@namespaceUpdateRevision}'");
 
-
         catch exception
-            throw new Error("ModelDetails failure: #{exception.message}");
-
+            throw new Error("onm.Model.implementation failed: #{exception.message}");
 
 
 #
