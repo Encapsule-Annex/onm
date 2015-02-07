@@ -263,11 +263,17 @@ module.exports = class Address
             addStringToken = (address_) =>
                 model = address_.getModel();
                 tokenString = null
-                # TODO: cleanup upon when namespaceType == 'root' gets deprecated
-                if (model.namespaceType == 'component') or (model.namespaceType == 'root')
-                    tokenString = address_.implementation.getLastToken().key or '-'
-                else
-                    tokenString = model.jsonTag
+
+                switch model.namespaceType
+                    when 'root'
+                        return true
+                    when 'component'
+                        key = address_.implementation.getLastToken().key
+                        tokenString = key? and key or '-'
+                        break
+                    else
+                        tokenString = model.jsonTag
+                        break
                 stringTokens.push tokenString
 
             @visitParentAddressesAscending( (addressParent_) =>
@@ -275,8 +281,11 @@ module.exports = class Address
             )
             addStringToken(@)
 
-            @implementation.humanReadableString = "onm-uri:#{@model.uuid}:#{@model.uuidVersion}:#{stringTokens.join(".")}"
-            return @implementation.humanReadableString
+            hashString = "onm-uri:#{@model.uuid}"
+            if stringTokens.length
+                hashString += ":#{stringTokens.join('.')}"
+            @implementation.humanReadableString = hashString
+            hashString
 
         catch exception
             throw new Error("getHumanReadableString failure: #{exception.message}");
