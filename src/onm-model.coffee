@@ -309,15 +309,21 @@ class ModelDetails
 
                         if not (nextAddressToken? and nextAddressToken)
                             nextAddressToken = new AddressToken @model, addressToken.idExtensionPoint, ((stringToken != '-') and stringToken or undefined), addressToken.namespaceDescriptor.archetypePathId
-                            addressTokenVector.push addressToken
                             continue
 
+                        addressTokenVector.push addressToken
                         addressToken = new AddressToken @model, nextAddressToken.idExtensionPoint, nextAddressToken.key, parseInt(stringToken)
                         nextAddressToken = undefined
 
-                    addressTokenVector.push(addressToken)
-                    newAddress = new Address(@model, addressTokenVector); 
+                    addressTokenVector.push addressToken
+
+                    if nextAddressToken? and nextAddressToken
+                        addressTokenVector.push nextAddressToken
+
+                    newAddress = new Address @model, addressTokenVector
+
                     return newAddress
+
                 catch exception
                     throw new Error("parseAddressHashString failure: #{exception.message}")
 
