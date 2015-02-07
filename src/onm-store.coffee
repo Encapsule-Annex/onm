@@ -42,10 +42,8 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 helperFunctions = require('./impl/onm-util-functions')
 StoreReifier = require('./impl/onm-store-reifier')
 AddressToken = require('./impl/onm-address-token')
-AddressTokenResolver = require('./impl/onm-address-token-resolver-legacy')
 Namespace = require('./onm-namespace')
 uuid = require('node-uuid')
-
 addressResolver = require './impl/onm-address-resolver'
 
 class StoreDetails
