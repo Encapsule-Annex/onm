@@ -1,6 +1,6 @@
 {
   "name": "onm",
-  "version": "0.3.17",
+  "version": "0.3.18",
   "description": "Object Namespace Manager (onm): data modeling, storage, URI addressing, type-introspection, CRUD normalization, serialization, and change observation framework for in-memory JSON data.",
   "scripts": {
     "test": "mocha -R spec ./test/test-onm.js"

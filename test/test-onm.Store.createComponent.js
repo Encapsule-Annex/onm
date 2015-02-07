@@ -22,7 +22,7 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
         addressRoot = store.model.createRootAddress();
         assert.isNotNull(addressRoot);
         assert.instanceOf(addressRoot, onm.Address);
-        badDataModel = new onm.Model({ jsonTag: 'bogus' });
+        badDataModel = new onm.Model({ jsonTag: 'bogus', uuid: 'bogus', uuidVersion: 'bogus' });
         badAddress = badDataModel.createRootAddress();
     });
 

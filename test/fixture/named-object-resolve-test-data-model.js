@@ -28,6 +28,8 @@ var testProperties = {
 };
 
 var resolverTestDataModel = module.exports = {
+    uuid: "52bb76e1197577937629c20b54d58c37",
+    uuidVersion: "a0313ef4b0ec449cad5dd13454d58c46",
     semanticBindings: {
         componentKeyGenerator: 'internalLuid'
     },

@@ -317,80 +317,63 @@ class ModelDetails
 
             # --------------------------------------------------------------------------
             @parseAddressHumanReadableString = (addressHumanReadableString_) ->
-                try
-                    addressTokenVector = []
-                    addressToken = undefined
-                    stringTokens = addressHumanReadableString_.split(".")
 
-                    for stringToken in stringTokens
-                    
-                        if not addressToken
+                addressTokenVector = []
+                currentAddressToken = null
+                currentNamespaceDescriptor = null
 
-                            # First string token
-                            if stringToken != @model.jsonTag
-                                throw new Error("Invalid data model name '" + stringToken + "' in hash string.")
-                            addressToken = new AddressToken(@model, undefined, undefined, 0)
+                uriTokens = addressHumanReadableString_.split ":"
+                if uriTokens.length != 4
+                    throw new Error "Unrecognized onm URI format. Expected three colon-delimited sections."
+                if uriTokens[0] != 'onm'
+                    throw new Error "Unrecognized onm URI format. First URI token is expected to be 'onm'."
+                if uriTokens[1] != @model.uuid
+                    throw new Error "Cannot parse an onm URI bound to data model ID '#{uriTokens[1]}' with an onm.Model instance bound to model ID '#{@model.uuid} v#{@model.uuidVersion}'."
+                if uriTokens[2] != @model.uuidVersion
+                    throw new Error "Cannot parse an onm URI bound to data model version ID '#{uriTokens[2]}' with an onm.Model instance bound to model ID '#{@model.uuid} v#{@model.uuidVersion}'."
 
-                        else
-                            # 2nd through N string token
+                stringTokens = uriTokens[3].split "."
+                stringTokenIndex = 0
 
-                            if addressToken.namespaceDescriptor.namespaceType != "extensionPoint"
+                for stringToken in stringTokens
 
-                                # The string token corresponds to the jsonTag value of a subnamespace
-                                # declaration of parent namespace referenced by the current addressToken.
-                                # Search the data model declaration and update the addressToken.
+                    # If we're evaluating the first string token, or if the last evaluated string token
+                    # corresponded to an extension point namespace, then create a new address token.
 
-                                descriptorFound = false
-                                for childDescriptor in addressToken.namespaceDescriptor.children
-                                    if childDescriptor.jsonTag == stringToken
-                                        descriptorFound = true
-                                        addressToken = new AddressToken(@model, addressToken.idExtensionPoint, addressToken.key, childDescriptor.id)
-                                        break
+                    if (not stringTokenIndex) or (currentNamespaceDescriptor? and currentNamespaceDescriptor and (currentNamespaceDescriptor.namespaceType == 'extensionPoint'))
 
-                                if not descriptorFound
-                                    throw new Error("Cannot resolve '#{stringToken}' token of human-readable onm.Address string '#{addressHumanReadableString_}'.")
+                        # If we're already working on an address token, save it.
+                        if currentAddressToken? and currentAddressToken
+                            addressTokenVector.push currentAddressToken
 
-                            else
+                        key = (stringToken != '-') and stringToken or undefined
+                        idExtensionPoint = currentNamespaceDescriptor? and currentNamespaceDescriptor and currentNamespaceDescriptor.id or -1
+                        idComponent = currentNamespaceDescriptor? and currentNamespaceDescriptor and currentNamespaceDescriptor.archetypePathId or 0
+                        currentAddressToken = new AddressToken @model, idExtensionPoint, key, idComponent, idComponent
+                        currentNamespaceDescriptor = currentAddressToken.componentDescriptor
+                        stringTokenIndex++
 
-                                # The current addressToken is references an extension point namespace declaration
-                                if not processNewComponent
+                    else
 
-                                    # Push the current token, and setup a new address token for the next
-                                    # iteration of the tokenString loop.
-                                    addressTokenVector.push(addressToken)
+                        # Attempt to locate a namespaceDescriptor corresponding to the non-component namespace string token.
+                        newNamespaceDescriptor = null
+                        for childDescriptor in currentNamespaceDescriptor.children
+                            if childDescriptor.jsonTag == stringToken
+                                newNamespaceDescriptor = childDescriptor
+                                break
 
-                                    # Setup for next string token.
-                                    addressToken = addressToken.clone()
-                                    if stringToken != "-"
-                                        key = stringToken
+                        if not (newNamespaceDescriptor? and newNamespaceDescriptor)
+                            validStringTokens = stringTokens.slice 0, stringTokenIndex
+                            unparsedStringTokens = stringTokens.slice (stringTokenIndex + 1), stringTokens.length
+                            message = "Invalid token '#{stringToken}' found in address string: '#{validStringTokens.join('.')}>#{stringToken}<#{unparsedStringTokens.join('.')}'"
+                            throw new Error message
 
-                                    processNewComponent = true
+                        stringTokenIndex++
+                        currentAddressToken.namespaceDescriptor = currentNamespaceDescriptor = newNamespaceDescriptor
 
-                                else
-                                    descriptorFound = false
-                                    for childDescriptor in addressToken.namespaceDescriptor.children
-                                        if childDescriptor.jsonTag == stringToken
-                                            descriptorFound = true
-                                            break
-
-                                    if not descriptorFound
-                                        throw new Error("Cannot resolve '#{stringToken}' token of human-readable onm.Address string '#{addressHumanReadableString_}'.")
-
-                                    addressToken = new AddressToken(@model, addressToken.idNamespace, key, childDescriptor.id)
-                                    key = undefined
-                                    processNewComponent = false
-
-                        # END: / for loop
-
-                    if processNewComponent
-                        throw new Error("Cannot deserialize incomplete human-readable onm.Address string '#{addressHumanReadableString_}'.")
-
-                    addressTokenVector.push(addressToken);
-                    newAddress = new Address(@model, addressTokenVector); 
-                    return newAddress
-
-                catch exception
-                    throw new Error("parseAddressHumanReadableString failure: #{exception.message}")
+                addressTokenVector.push currentAddressToken
+                newAddress = new Address @model, addressTokenVector
+                return newAddress
 
 
             # --------------------------------------------------------------------------
@@ -402,21 +385,24 @@ class ModelDetails
             # ModelDetails CONSTRUCTOR
 
             if not (objectModelDeclaration_? and objectModelDeclaration_)
-                throw new Error("Missing object model delcaration input parameter!");
+                throw new Error "Missing object model delcaration input parameter!"
 
             if not (objectModelDeclaration_.jsonTag? and objectModelDeclaration_.jsonTag)
-                throw new Error("Missing required root namespace property 'jsonTag'.");
+                throw new Error("Missing required root namespace property 'jsonTag'.")
 
             @model.jsonTag = objectModelDeclaration_.jsonTag
             @model.label = objectModelDeclaration_.____label? and objectModelDeclaration_.____label or objectModelDeclaration_.jsonTag
             @model.description = objectModelDeclaration_.____description? and objectModelDeclaration_.____description or "<no description provided>"
+
+            @model.uuid = objectModelDeclaration_.uuid? and objectModelDeclaration_.uuid or throw new Error "Data model declaration missing required root namespace property 'uuid'."
+            @model.uuidVersion = objectModelDeclaration_.uuidVersion? and objectModelDeclaration_.uuidVersion or throw new Error "Data model declaration missing required root namespace property 'uuidVersion'."
 
             # Deep copy the specified object model declaration object.
             @objectModelDeclaration = helperFunctions.clone objectModelDeclaration_
             Object.freeze @objectModelDeclaration
 
             if not (@objectModelDeclaration? and @objectModelDeclaration)
-                throw new Error("Failed to deep copy (clone) source object model declaration.");
+                throw new Error("Failed to deep copy (clone) source object model declaration.")
 
             #
             # objectModelDescriptor = (required) reference to OM layout declaration object
@@ -445,12 +431,12 @@ class ModelDetails
             # aren't foisted upon unsuspecting observers.
 
             if @countExtensionPoints != @countExtensions + @countExtensionReferences
-                throw new Error("Layout declaration error: extension point and extension descriptor counts do not match. countExtensionPoints=#{@countExtensionPoints} countExtensions=#{@countExtensions}");
+                throw new Error("Layout declaration error: extension point and extension descriptor counts do not match. countExtensionPoints=#{@countExtensionPoints} countExtensions=#{@countExtensions}")
 
             if @countComponents != @countExtensionPoints + 1 - @countExtensionReferences
                 throw new Error("Layout declaration error: component count should be " +
                      "extension count + 1 - extension references. componentCount=#{@countComponents} " +
-                     " countExtensions=#{@countExtensions} extensionReferences=#{@countExtensionReferences}");
+                     " countExtensions=#{@countExtensions} extensionReferences=#{@countExtensionReferences}")
 
             Object.freeze @objectModelPathMap
             Object.freeze @objectModelDescriptorById
@@ -461,7 +447,6 @@ class ModelDetails
             }
 
             @semanticBindings = {}
-
 
             @componentKeyGenerator = 'internalUuid' # default
             @namespaceVersioning = 'disabled' # default
@@ -482,7 +467,7 @@ class ModelDetails
                         uuid.v4()
                     break
                 else
-                    throw new Error("Unrecognized componentKeyGenerator='#{@componentKeyGenerator}.'");
+                    throw new Error("Unrecognized componentKeyGenerator='#{@componentKeyGenerator}.'")
 
             switch @namespaceVersioning
                 when "disabled"
@@ -506,10 +491,10 @@ class ModelDetails
                 when "external"
                     break
                 else
-                    throw new Error("Unrecognized namespaceVersionion=`#{@namespaceUpdateRevision}'");
+                    throw new Error("Unrecognized namespaceVersionion=`#{@namespaceUpdateRevision}'")
 
         catch exception
-            throw new Error("onm.Model.implementation failed: #{exception.message}");
+            throw new Error("onm.Model.implementation failed: #{exception.message}")
 
 
 #
@@ -525,7 +510,7 @@ module.exports = class Model
                 try
                     return new Address(@, [ new AddressToken(@, undefined, undefined, 0) ])
                 catch exception
-                    throw new Error("createRootAddress failure: #{exception.message}");
+                    throw new Error("createRootAddress failure: #{exception.message}")
             
 
             # --------------------------------------------------------------------------
@@ -535,7 +520,7 @@ module.exports = class Model
                     newAddress = @implementation.createAddressFromPathId(pathId)
                     return newAddress
                 catch exception
-                    throw new Error("createPathAddress failure: #{exception.message}");
+                    throw new Error("createPathAddress failure: #{exception.message}")
 
 
             # --------------------------------------------------------------------------
@@ -546,7 +531,7 @@ module.exports = class Model
                     newAddress = @implementation.parseAddressHumanReadableString(humanReadableString_)
                     return newAddress
                 catch exception
-                    throw new Error("createAddressFromHumanReadableString address space failure: #{exception.message}");
+                    throw new Error("createAddressFromHumanReadableString address space failure: #{exception.message}")
 
             # --------------------------------------------------------------------------
             @createAddressFromHashString = (hash_) =>
@@ -556,7 +541,7 @@ module.exports = class Model
                     newAddress = @implementation.parseAddressHashString(hash_)
                     return newAddress
                 catch exception
-                    throw new Error("createAddressFromHashString address space failure: #{exception.message}");
+                    throw new Error("createAddressFromHashString address space failure: #{exception.message}")
 
             # --------------------------------------------------------------------------
             @getSemanticBindings = =>
@@ -570,13 +555,12 @@ module.exports = class Model
             @isEqual = (model_) =>
                 try
                     if not (model_.jsonTag? and model_.jsonTag)
-                        throw new Error("Invalid model object passed as input parameter. Missing expectected property 'jsonTag'.");
+                        throw new Error("Invalid model object passed as input parameter. Missing expectected property 'jsonTag'.")
                     @jsonTag == model_.jsonTag
                 catch exception
-                    throw new Error("isEqual failure: #{exception.message}");
-
+                    throw new Error("isEqual failure: #{exception.message}")
 
 
         catch exception
-            throw new Error("Model construction fail: #{exception.message}");
+            throw new Error("Model construction fail: #{exception.message}")
 

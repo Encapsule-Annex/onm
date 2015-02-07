@@ -262,17 +262,20 @@ module.exports = class Address
 
             addStringToken = (address_) =>
                 model = address_.getModel();
-                if model.namespaceType == 'component'
-                    key = address_.implementation.getLastToken().key or "-"
-                    stringTokens.push("#{key}")
-                stringTokens.push("#{model.jsonTag}")
+                tokenString = null
+                # TODO: cleanup upon when namespaceType == 'root' gets deprecated
+                if (model.namespaceType == 'component') or (model.namespaceType == 'root')
+                    tokenString = address_.implementation.getLastToken().key or '-'
+                else
+                    tokenString = model.jsonTag
+                stringTokens.push tokenString
 
             @visitParentAddressesAscending( (addressParent_) =>
                 addStringToken(addressParent_)
             )
             addStringToken(@)
 
-            @implementation.humanReadableString = stringTokens.join(".")
+            @implementation.humanReadableString = "onm:#{@model.uuid}:#{@model.uuidVersion}:#{stringTokens.join(".")}"
             return @implementation.humanReadableString
 
         catch exception
@@ -291,16 +294,9 @@ module.exports = class Address
             stringTokens = []
 
             for token in @implementation.tokenVector
-                if not index
-                    stringTokens.push("#{token.model.jsonTag}")
-                if token.key? and token.key
-                    stringTokens.push("#{token.key}")
-                else
-                    if token.idExtensionPoint > 0
-                        stringTokens.push("-");
-                if token.idNamespace
-                    stringTokens.push("#{token.idNamespace}")
-                index++
+                stringTokens.push token.key? and "#{token.key} or '-'
+                if token.idComponent != token.idNamespace
+                    stringTokens.push "#{token.idNamespace}"token
 
             # Given that an ONM object model is a singly-rooted tree structure, the raw
             # hash strings of different addresses created for the same object model all share

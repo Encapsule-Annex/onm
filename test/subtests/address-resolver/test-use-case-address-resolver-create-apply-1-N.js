@@ -5,6 +5,8 @@ var onm = require('../../../index');
 var testAddressResolverUseCase = require('./test-core-address-resolver');
 
 var dataModelDeclaration = {
+    uuid: "f704213fcea52c033d36831354d58c70",
+    uuidVersion: "0ca21119213ceb664aec67de54d58c82",
     semanticBindings: {
         componentKeyGenerator: 'internalLuid'
     },

@@ -8,6 +8,9 @@ var onm = require('../../index');
 (function() {
 
     var modelDeclaration = module.exports.modelDeclaration = {
+        uuid: "431c97059a0240f9312f1b8854d58bfa",
+        uuidVersion: "585db532280f349b37bf31f654d58c10",
+
         jsonTag: "addressBook",
         semanticBindings: {
             componentKeyGenerator: 'internalLuid'

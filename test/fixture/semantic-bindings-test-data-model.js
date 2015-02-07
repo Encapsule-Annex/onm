@@ -12,6 +12,9 @@ var uuid = require('node-uuid');
 
 module.exports = {
 
+    uuid: "f704213fcea52c033d36831354d58c70",
+    uuidVersion: "0ca21119213ceb664aec67de54d58c82",
+
     // see semantic-bindings-variants.js module
     semanticBindings: {
         componentKeyGenerator: "internalLuid"
