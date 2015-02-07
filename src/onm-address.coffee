@@ -88,7 +88,7 @@ class AddressDetails
 
                         # end of loop
 
-                    console.log currentModelPath
+                    #console.log currentModelPath
                     return currentDescriptor
 
 
@@ -685,7 +685,6 @@ module.exports = class Address
             if not (callback_? and callback_) then return false
             namespaceDescriptor = @implementation.getDescriptor()
             if namespaceDescriptor.namespaceType == 'extensionPoint'
-                console.warn("onm.Address.visitChildAddresses on extension point namespace '#{@getHumanReadableString()}' doesn't make sense. Use onm.Namespace.visitExtensionPointSubcomponents API instead.")
                 return false
             for childDescriptor in namespaceDescriptor.children
                 childAddress = @implementation.createSubpathIdAddress(childDescriptor.id)

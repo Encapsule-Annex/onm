@@ -134,9 +134,9 @@ describe("onm.Store construction tests.", function() {
 
                 it("Serializing the second onm.Store should produce identical JSON.", function() {
                     var json1 = store.toJSON();
-                    console.log("json1 === '" + json1 + "'.");
+                    //console.log("json1 === '" + json1 + "'.");
                     var json2 = store2.toJSON();
-                    console.log("json2 === '" + json2 + "'.");
+                    //console.log("json2 === '" + json2 + "'.");
                     assert.equal(json1, json2);
                 });
 
@@ -145,7 +145,7 @@ describe("onm.Store construction tests.", function() {
                     before(function(done_) {
                         withData(inputTestDataVector, function(inputTestData_) {
 
-                            console.log(JSON.stringify(inputTestData_));
+                            //console.log(JSON.stringify(inputTestData_));
 
                             var store = null;
 
@@ -158,7 +158,7 @@ describe("onm.Store construction tests.", function() {
                             it("A new onm.Store instance should have been constructed.", function() {
                                 assert.isNotNull(store);
                                 assert.instanceOf(store, onm.Store);
-                                console.log("CREATED STORE JSON: " + store.toJSON());
+                                //console.log("CREATED STORE JSON: " + store.toJSON());
                             });
 
                             describe("Serialize the newly-created onm.Store to JSON test.", function() {

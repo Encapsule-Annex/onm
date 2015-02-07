@@ -50,7 +50,7 @@ module.exports = describe("onm.Store.openNamespace method tests", function() {
                     store.openNamespace(addressContact);
                 } catch (exception_) {
                     errorMessage = exception_.message;
-                    console.log(errorMessage);
+                    //console.log(errorMessage);
                 }
             });
             it("attempt to re-open the now-removed component should fail", function() {

@@ -15,7 +15,7 @@ module.exports = describe("onm.Address.visitSubaddressesAscending tests", functi
         var store, address;
         var subAddresses = [];
         var actualResult = null;
-        var expectedResult = '["addressBook.properties","addressBook.contacts","addressBook.properties.subproperties","addressBook.properties.subproperties.collection"]';
+        var expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:properties","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts","onm-uri:431c97059a0240f9312f1b8854d58bfa:properties.subproperties","onm-uri:431c97059a0240f9312f1b8854d58bfa:properties.subproperties.collection"]';
         before(function() {
             store = testData.createStore();
             address = store.model.createRootAddress();
@@ -23,7 +23,6 @@ module.exports = describe("onm.Address.visitSubaddressesAscending tests", functi
                 subAddresses.push(subAddress_.getHumanReadableString());
             });
             actualResult = JSON.stringify(subAddresses);
-            console.log(actualResult);
         });
         it("expecting two result address strings", function() {
             assert.equal(actualResult, expectedResult);
@@ -35,7 +34,7 @@ module.exports = describe("onm.Address.visitSubaddressesAscending tests", functi
         var store, address;
         var subAddresses = [];
         var actualResult = null;
-        var expectedResult = '["addressBook.properties.subproperties","addressBook.properties.subproperties.collection"]';
+        var expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:properties.subproperties","onm-uri:431c97059a0240f9312f1b8854d58bfa:properties.subproperties.collection"]';
         before(function() {
             store = testData.createStore();
             address = store.model.createPathAddress("addressBook.properties");
@@ -43,7 +42,6 @@ module.exports = describe("onm.Address.visitSubaddressesAscending tests", functi
                 subAddresses.push(subAddress_.getHumanReadableString());
             });
             actualResult = JSON.stringify(subAddresses);
-            console.log(actualResult);
         });
         it("expecting two result addresses hashs strings", function() {
             assert.equal(actualResult, expectedResult);
@@ -63,7 +61,6 @@ module.exports = describe("onm.Address.visitSubaddressesAscending tests", functi
                 subAddresses.push(subAddress_.getHumanReadableString());
             });
             actualResult = JSON.stringify(subAddresses);
-            console.log(actualResult);
         });
         it("expecting no result addresses hashs strings", function() {
             assert.equal(actualResult, expectedResult);

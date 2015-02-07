@@ -19,14 +19,13 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
     describe("enumerate extension point addresses of address 'addressBook'", function() {
         var extensionPointAddresses = [];
         var actualResult = [];
-        var expectedResult = '["addressBook.properties.subproperties.collection","addressBook.contacts"]';
+        var expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:properties.subproperties.collection","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts"]';
         before(function() {
             address = store.model.createRootAddress();
             address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
                 extensionPointAddresses.push(addressExtensionPoint_.getHumanReadableString());
             });
             actualResult = JSON.stringify(extensionPointAddresses);
-            console.log(actualResult);
         });
         it("expecting two result addreses strings", function() {
             assert.equal(actualResult, expectedResult);
@@ -37,14 +36,13 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
         var address;
         var extensionPointAddresses = [];
         var actualResult = [];
-        var expectedResult = '["addressBook.properties.subproperties.collection"]';
+        var expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:properties.subproperties.collection"]';
         before(function() {
             address = store.model.createPathAddress("addressBook.properties");
             address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
                 extensionPointAddresses.push(addressExtensionPoint_.getHumanReadableString());
             });
             actualResult = JSON.stringify(extensionPointAddresses);
-            console.log(actualResult);
         });
         it("expecting one result address string", function() {
             assert.equal(actualResult, expectedResult);
@@ -63,7 +61,6 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
                 extensionPointAddresses.push(addressExtensionPoint_.getHumanReadableString());
             });
             actualResult = JSON.stringify(extensionPointAddresses);
-            console.log(actualResult);
         });
         it("expecting no result address string", function() {
             assert.equal(actualResult, expectedResult);
@@ -74,7 +71,7 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
         var address;
         var extensionPointAddresses = [];
         var actualResult = "";
-        var expectedResult = '["addressBook.contacts.-.contact.emails","addressBook.contacts.-.contact.addresses","addressBook.contacts.-.contact.phoneNumbers"]';
+        var expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.-.emails","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.-.addresses","onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.-.phoneNumbers"]';
         before(function() {
             address = store.model.createPathAddress("addressBook.contacts.contact");
             address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
@@ -82,9 +79,8 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
                 extensionPointAddresses.push(addressExtensionPoint_.getHumanReadableString());
             });
             actualResult = JSON.stringify(extensionPointAddresses);
-            console.log(actualResult);
         });
-        it("expecting a single address string", function() {
+        it("expecting a three address strings", function() {
             assert.equal(actualResult, expectedResult);
         });
 
@@ -95,14 +91,13 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
                     extensionPointAddresses.pop();
                 }
                 actualResult = '';
-                expectedResult = '["addressBook.contacts.-.contact.addresses.-.address.notes"]';
+                expectedResult = '["onm-uri:431c97059a0240f9312f1b8854d58bfa:contacts.-.addresses.-.notes"]';
                 address = store.model.createPathAddress("addressBook.contacts.contact.addresses.address");
                 address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
                     assert.isFalse(addressExtensionPoint_.isResolvable());
                     extensionPointAddresses.push(addressExtensionPoint_.getHumanReadableString());
                 });
                 actualResult = JSON.stringify(extensionPointAddresses);
-                console.log(actualResult);
             });
 
             it("expecting a single address string", function() {

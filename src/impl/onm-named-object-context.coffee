@@ -125,9 +125,9 @@ namedObjectResolverContext.checkValidContextInput = (options_) ->
 
         break
 
-    if not results.valid
+    #if not results.valid
         # TODO: remove console logging before releasing v0.3
-        console.warn "Invalid named object input context object: '#{results.reason}'."
+        # console.warn "Invalid named object input context object: '#{results.reason}'."
 
     results.valid
 
@@ -182,9 +182,9 @@ namedObjectResolverContext.checkValidContextOutput = (results_) ->
 
         break
 
-    if not results.valid
+    #if not results.valid
         # TODO: remove console logging before releasing v0.3
-        console.warn "Invalid named object input context object: '#{results.reason}'."
+        # console.warn "Invalid named object input context object: '#{results.reason}'."
 
     results.valid
 
