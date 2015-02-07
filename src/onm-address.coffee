@@ -275,7 +275,7 @@ module.exports = class Address
             )
             addStringToken(@)
 
-            @implementation.humanReadableString = "onm:#{@model.uuid}:#{@model.uuidVersion}:#{stringTokens.join(".")}"
+            @implementation.humanReadableString = "onm-uri:#{@model.uuid}:#{@model.uuidVersion}:#{stringTokens.join(".")}"
             return @implementation.humanReadableString
 
         catch exception
@@ -294,9 +294,11 @@ module.exports = class Address
             stringTokens = []
 
             for token in @implementation.tokenVector
-                stringTokens.push token.key? and "#{token.key} or '-'
+               if index++
+                    stringTokens.push token.key? and "#{token.key}" or '-'
+
                 if token.idComponent != token.idNamespace
-                    stringTokens.push "#{token.idNamespace}"token
+                    stringTokens.push "#{token.idNamespace}"
 
             # Given that an ONM object model is a singly-rooted tree structure, the raw
             # hash strings of different addresses created for the same object model all share
@@ -311,12 +313,20 @@ module.exports = class Address
             # by reversing the process. https://github.com/mathiasbynens/esrever is a good
             # sample of how one should reverse a string if maintaining Unicode is important.
 
-            hashSource = stringTokens.join(".");
+            hashString = "onm-lri:#{@model.uuidVersion}"
+            if stringTokens.length
+                hashString += ":#{stringTokens.join('.')}"
 
-            @implementation.hashString = encodeURIComponent(hashSource).replace(/[!'()]/g, escape).replace(/\*/g, "%2A")
+            @implementation.hashString = hashString
+            return hashString
+
+            # TODO: Need to ensure all fragments are correctly URI-encoded
+            # here and in human-readable, and correctly decoded in corrollary model functions.
+            # SAVE FOR FUTURE INSPIRATION
+            #@implementation.hashString = encodeURIComponent(hashSource).replace(/[!'()]/g, escape).replace(/\*/g, "%2A")
             #reversedHashString = humanReadableString.split('').reverse().join('')
             #@implementation.hashString = window.btoa(reversedHashString)
-            return @implementation.hashString
+
             
         catch exception
             throw new Error("getHashString failure: #{exception.message}");

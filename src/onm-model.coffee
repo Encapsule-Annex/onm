@@ -37,6 +37,9 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 #
 #
 
+# TODO: Rewrite this atrocity of a module using jsgraph.
+
+
 helperFunctions = require('./impl/onm-util-functions')
 Address = require('./onm-address')
 AddressToken = require('./impl/onm-address-token')
@@ -283,31 +286,35 @@ class ModelDetails
                     addressTokenVector = []
                     addressToken = undefined
                     key = undefined
-                    processNewComponent = false
-                    stringTokens = addressHashString_.split(".")
-                    stringTokenCount = 0
-                    for stringToken in stringTokens
-                        if not stringTokenCount
-                            if stringToken != @model.jsonTag
-                                throw new Error("Invalid data model name '" + stringToken + "' in hash string.")
-                            addressToken = new AddressToken(@model, undefined, undefined, 0)
-                        else
-                            if addressToken.namespaceDescriptor.namespaceType != "extensionPoint"
-                                addressToken = new AddressToken(@model, addressToken.idExtenstionPoint, addressToken.key, stringToken);
-                            else
-                                if not processNewComponent
-                                    addressTokenVector.push(addressToken)
-                                    addressToken = addressToken.clone()
-                                    if stringToken != "-"
-                                        key = stringToken;
-                                    processNewComponent = true;
-                                else
-                                    addressToken = new AddressToken(@model, addressToken.namespaceDescriptor.id, key, stringToken)
-                                    key = undefined
-                                    processNewComponent = false;
 
-                        stringTokenCount++
-                        # END: / for loop
+                    lriTokens = addressHashString_.split ':'
+
+                    if (lriTokens.length < 2) or (lriTokens.length > 3)
+                        throw new Error "Unrecognized onm LRI format. Expected two, or three colon-delimited segments."
+                    if lriTokens[0] != 'onm-lri'
+                        throw new Error "Unrecognized onm LRI format. Frist LRI segment is expected to be 'onm-lri'."
+                    if lriTokens[1] != @model.uuidVersion
+                        throw new Error "Cannot parse onm LRI bound to data model version ID '#{lriTokens[1]}' with an onm.Model instance bound to model ID '#{@model.uuid} v#{@model.uuidVersion}'."
+
+                    addressToken = new AddressToken @model, undefined, undefined, 0
+                    pathSegment = lriTokens[2]? and lriTokens[2] or undefined
+                    stringTokens = pathSegment? and pathSegment and pathSegment.split(".") or []
+                    nextAddressToken = undefined
+                    index = 0
+                    for stringToken in stringTokens
+
+                        if not index++
+                            addressToken = new AddressToken @model, undefined, undefined, parseInt(stringToken)
+                            continue
+
+                        if not (nextAddressToken? and nextAddressToken)
+                            nextAddressToken = new AddressToken @model, addressToken.idExtensionPoint, ((stringToken != '-') and stringToken or undefined), addressToken.namespaceDescriptor.archetypePathId
+                            addressTokenVector.push addressToken
+                            continue
+
+                        addressToken = new AddressToken @model, nextAddressToken.idExtensionPoint, nextAddressToken.key, parseInt(stringToken)
+                        nextAddressToken = undefined
+
                     addressTokenVector.push(addressToken)
                     newAddress = new Address(@model, addressTokenVector); 
                     return newAddress
@@ -324,9 +331,9 @@ class ModelDetails
 
                 uriTokens = addressHumanReadableString_.split ":"
                 if uriTokens.length != 4
-                    throw new Error "Unrecognized onm URI format. Expected three colon-delimited sections."
-                if uriTokens[0] != 'onm'
-                    throw new Error "Unrecognized onm URI format. First URI token is expected to be 'onm'."
+                    throw new Error "Unrecognized onm URI format. Expected three colon-delimited segments."
+                if uriTokens[0] != 'onm-uri'
+                    throw new Error "Unrecognized onm URI format. First URI segment is expected to be 'onm-uri'."
                 if uriTokens[1] != @model.uuid
                     throw new Error "Cannot parse an onm URI bound to data model ID '#{uriTokens[1]}' with an onm.Model instance bound to model ID '#{@model.uuid} v#{@model.uuidVersion}'."
                 if uriTokens[2] != @model.uuidVersion
