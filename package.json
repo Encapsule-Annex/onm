@@ -1,15 +1,14 @@
 {
   "name": "onm",
-  "version": "0.3.20",
+  "version": "0.3.21",
   "description": "Object Namespace Manager (onm): data modeling, storage, URI addressing, type-introspection, CRUD normalization, serialization, and change observation framework for in-memory JSON data.",
   "scripts": {
     "test": "mocha -R spec ./test/test-onm.js"
   },
   "main": "index.js",
   "author": {
-    "name": "Christopher D. Russell",
-    "email": "chrisrus@encapsule.org",
-    "url": "https://github.com/ChrisRus"
+    "name": "Encapsule Project",
+    "url": "https://github.com/Encapsule"
   },
   "repository": {
     "type": "git",
