@@ -42,6 +42,7 @@ BLOG: http://blog.encapsule.org TWITTER: https://twitter.com/Encapsule
 helperFunctions = require('./impl/onm-util-functions')
 StoreReifier = require('./impl/onm-store-reifier')
 AddressToken = require('./impl/onm-address-token')
+Address = require('./onm-address')
 Namespace = require('./onm-namespace')
 uuid = require('node-uuid')
 addressResolver = require './impl/onm-address-resolver'
@@ -132,87 +133,108 @@ module.exports = class Store
 
             #
             # ============================================================================
-            @createComponent = (address_, propertyAssignmentObject_) =>
+            # request_ = {
+            #    // rls is an onm resource locator string: path, URI, or LRI
+            #    rls: string, onm-format path, URI, or LRI
+            # }
+            #
+            @address = (request_) =>
                 try
-                    if not (address_? and address_) then throw new Error("Missing address input parameter.");
-                    if not @validateAddressModel(address_) then throw new Error("Address/store data model mismatch. Can't use the specified address to access this store.");
-                    if address_.isQualified() then throw new Error("The specified address is qualified and may only be used to specify existing objects in the store.");
-                    descriptor = address_.implementation.getDescriptor()
-                    if not descriptor.isComponent then throw new Error("The specified address does not specify the root of a component.");
-                    if descriptor.namespaceType == "root" then throw new Error("The specified address refers to the root namespace of the store which is created automatically.");
+                    addressRoot = @model.createRootAddress()
+                    if not request_ and request_
+                        return addressRoot
+                    if not request_.rls? and request.rls
+                        throw new Error "Request missing required resource locator string property 'rls'."
+                    rlsType = Object.prototype.toString.call request_.rls
+                    if rlsType != '[object String]'
+                        throw new Error "Invalid resource locator type '#{rlsType}'. Expected '[object String]'."
 
-                    # Complete the request using the new resolver infrastructure.
-                    addressResolveOptions = {
-                        strategy: 'create'
-                        address: address_
-                        propertyAssignmentObject: propertyAssignmentObject_
-                        parentDataReference: @implementation.dataReference
-                        semanticBindingsReference: @model.getSemanticBindings()
-                    }
-                    resolvedAddressContext = addressResolver.resolve addressResolveOptions
-                    namespace = new Namespace @, resolvedAddressContext
-                    return namespace
+                    # TODO: When we get rid of exceptions, fix this crap.
+                    rls = request_.rls
+                    addressSubpath = null
+                    try
+                        addressSubpath = addressRoot.createSubpathAddress rls
+                    catch exception_
+                        try
+                            addressSubpath = @model.createAddressFromHumanReadableString rls
+                        catch exception_
+                            try
+                                addressSubpath = @model.createAddressFromHashString rls
+                            catch exception_
+                                throw new Error "Invalid resource locator string '#{rls}'."
 
-                catch exception
-                    throw new Error("createComponent failure: #{exception.message}");
+                    subpathAddress
+                        
+                catch exception_
+                    throw new Error "onm.Store.address failed: #{exception_.message}"
 
             #
             # ============================================================================
-            @openNamespace = (address_) =>
+            # request_ = {
+            #     op: string, one of "open", "create", or "negotiate" (default if ommitted)
+            #     rl: either an onm.Address, or onm-format resource locator string convertible to onm.Address (default to root address of model if ommitted)
+            #     data: either a JavaScript object or JSON string convertible to a JavaScript object
+            # }
+            #
+            @namespace = (request_) =>
                 try
-                    if not (address_ and address_)
-                        throw new Error("Missing address input parameter.");
+                    request =
+                        operation: 'negogiate'
+                        address: undefined
+                        data: request_.data? and request_.data or {}
+                        
+                    if not request_? and request_
+                        request.address = @address()
+                    else
+                        if not (request_.rl? and request_.rl)
+                            throw new Error "Request missing required resource locator property 'rl'."
+                        rlType = Object.prototype.toString.call request_.rl
+                        if rlType == '[object String]'
+                            request.address = @address request_.rl
+                        else
+                            if request_.rl instanceof Address
+                                request.address = request_.rl
+                            else
+                                throw new Error "Invalid resource locator type '#{rlType}' specified. Expecting either onm.Address or onm-format resource locator string."
+                        if request_.operation? and request_.operation
+                            request.operation = request_.operation
 
-                    if not @validateAddressModel(address_)
-                        throw new Error("The specified address '#{address.getHumanReadableString()}' cannot be used to reference this store because it's not bound to the same model as this store.");
-
-                    # Complete the request using the new resolver infrastructure.
-                    addressResolveOptions = {
-                        strategy: 'open'
-                        address: address_
-                        propertyAssignmentObject: {}
+                    addressResolverOptions =
+                        strategy: request.operation
+                        address: request.address
+                        propertyAssignmentObject: request.data
                         parentDataReference: @implementation.dataReference
                         semanticBindingsReference: @model.getSemanticBindings()
-                    }
-                    resolvedAddressContext = addressResolver.resolve addressResolveOptions
-                    namespace = new Namespace @, resolvedAddressContext
-                    return namespace
+
+                     resolvedAddressContext = addressResolver.resolve addressResolverOptions
+                     namespace = new Namespace @, resolvedAddressContext
+                     return namespace
+
+                 catch exception_
+                     throw new Error "onm.Store.namespace failed: #{exception_.message}"                     
+                     
+
+                        
+
+
+            #
+            # ============================================================================
+            @createComponent = (address_, data_) =>
+                try
+                    @namespace { operation: 'create', rl: address_, data: data_ }
+
+                catch exception
+                    throw new Error("onm.Store.createComponent failed: #{exception.message}");
+
+            #
+            # ============================================================================
+            @openNamespace = (address_, data_) =>
+                try
+                    @namespace { operation: 'open', rl: address_, data: data_ }
 
                         
                 catch exception
-                    throw new Error("openNamespace failure: #{exception.message}");
-                
-
-
-
-            #
-            # ============================================================================
-            @injectComponent = (addressExtensionPoint_, namespaceSource_) =>
-                try
-                    if not (addressExtensionPoint_? and addressExtensionPoint_) then throw new Error("Missing address input parameter.");
-                    if not @validateAddressModel(addressExtensionPoint_) then throw new Error("Address/store data model mismatch. Can't use the specified address to access this store.");
-                    if not addressExtensionPoint_.isQualified() then throw new Error("The specified address is not qualified and cannot be used to specify a component injection point.");
-                    descriptor = addressExtensionPoint_.implementation.getDescriptor()
-                    if not descriptor.namespaceType == "extensionPoint" then throw new Error("The specified address does not refer to an extension point namespace.");
-
-                    namespaceExtensionPoint = @openNamespace(addressExtensionPoint_)
-                    dataExtensionPoint = namespaceExtensionPoint.data()
-
-                    sourceComponentKey = namespaceSource_.getComponentKey()
-
-                    # Does the component already exist in the destination store?
-                    addressSource = namespaceSource_.getResolvedAddress()
-
-                    if dataExtensionPoint[sourceComponentKey]?
-                        throw new Error("The specified component already exists in the target store.")
-
-                    dataExtensionPoint[sourceComponentKey] = helperFunctions.clone(namespaceSource_.data())
-                    @implementation.reifier.reifyStoreComponent(addressSource);
-
-                    @openNamespace(addressSource);
-                    
-                catch exception
-                    throw new Error("injectComponent failure: #{exception.message}");
+                    throw new Error("onm.Store.openNamespace failed: #{exception.message}");
 
             #
             # ============================================================================
@@ -240,8 +262,6 @@ module.exports = class Store
 
                 catch exception
                     throw new Error("removeComponent failure: #{exception.message}");
-
-
 
             #
             # ============================================================================
