@@ -11,7 +11,7 @@ var onm = require('../index');
 var testData = require('./fixture/address-book-data-model');
 
 module.exports = describe("onm.Store.openNamespace method tests", function() {
-    var store, addressRoot, namespaceRoot, addressNewContact, namespaceContact = null
+    var store, addressRoot, namespaceRoot, addressNewContact, addressContact, namespaceContact = null
 
     before(function() {
 
@@ -46,8 +46,8 @@ module.exports = describe("onm.Store.openNamespace method tests", function() {
         assert.isNotNull(addressContact);
         assert.instanceOf(addressContact, onm.Address);
 
-        expectedStoreJSON = '{"name":"","description":"","contacts":{"1":{"firstName":"","lastName":"","phoneNumbers":{},"addresses":{},"emails":{}}},"properties":{"name":"","description":"","subproperties":{"collection":{}}}}';
-        actualStoreJSON = store.toJSON();
+        var expectedStoreJSON = '{"name":"","description":"","contacts":{"1":{"firstName":"","lastName":"","phoneNumbers":{},"addresses":{},"emails":{}}},"properties":{"name":"","description":"","subproperties":{"collection":{}}}}';
+        var actualStoreJSON = store.toJSON();
         assert.equal(actualStoreJSON, expectedStoreJSON);
 
     });
@@ -62,8 +62,8 @@ module.exports = describe("onm.Store.openNamespace method tests", function() {
             namespace = store.openNamespace(addressContact);
         };
         assert.doesNotThrow(functionWrapper);
-        expectedJSON = '{"firstName":"","lastName":"","phoneNumbers":{},"addresses":{},"emails":{}}';
-        actualJSON = namespace.toJSON();
+        var expectedJSON = '{"firstName":"","lastName":"","phoneNumbers":{},"addresses":{},"emails":{}}';
+        var actualJSON = namespace.toJSON();
         assert.equal(actualJSON, expectedJSON);
 
     });

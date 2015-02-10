@@ -90,7 +90,7 @@ module.exports = class Namespace
     #
     # ============================================================================
     # Renamed in v0.3
-    getName: =>
+    name: =>
         try
             return @implementation.getResolvedToken().key
 
@@ -99,26 +99,9 @@ module.exports = class Namespace
 
     # DEPRECATED in v0.3
     getComponentKey: =>
-        @getName()
+        console.log "onm v0.3: onm.Namespace.getComponentKey is deprecated. Use onm.Namespace.name API."
+        @name()
 
-
-    #
-    # ============================================================================
-    getResolvedLabel: =>
-        try
-            resolvedDescriptor = @implementation.getResolvedToken().namespaceDescriptor
-            semanticBindings = @store.model.getSemanticBindings()
-            getLabelBinding = semanticBindings? and semanticBindings and semanticBindings.getLabel? and semanticBindings.getLabel or undefined
-            resolvedLabel = undefined
-            if getLabelBinding? and getLabelBinding
-                resolvedLabel = getLabelBinding(@data(), @getResolvedAddress())
-            else
-                resolvedLabel = resolvedDescriptor.label
-
-            return resolvedLabel
-            
-        catch exception
-            throw new Error("getResolvedLabel failure: #{exception.message}")
 
     #
     # ============================================================================
@@ -132,79 +115,11 @@ module.exports = class Namespace
             space = space_? and space_ or 0
             resultJSON = JSON.stringify(@implementation.dataReference, replacer_, space)
             if not (resultJSON? and resultJSON)
-                throw new Error "Named object data is corrupt and cannot be serialized to JSON."
+                throw new Error "Namespace data is corrupt. Unable to serialize to JSON."
             return resultJSON
-        catch exception
-            throw new Error("onm.Namespace.toJSON serialization on address '#{@getResolvedAddress().getHumanReadableString()}' failed :: #{exception.message}")
+        catch exception_
+            throw new Error "onm.Namespace.toJSON serialization failed on address '#{@getResolvedAddress().getHumanReadableString()}' with detail: #{exception_.message}"
 
-
-    #
-    # ============================================================================
-    fromData: (data_) =>
-        try
-            address = @getResolvedAddress()
-            model = address.getModel()
-
-            # Validate request.
-            if not ((model.namespaceType == "root") or (model.namespaceType == "component"))
-                throw new Error("Data import only supported on its root and component namespaces. This namespace '#{model.namespaceType}'-type namespace.")
-
-            if (model.namespaceType == "component")
-                newComponentKey = @store.model.getSemanticBindings().getUniqueKey(data_)
-                namespaceComponentKey = address.implementation.getLastToken().key
-                if (newComponentKey != namespaceComponentKey)
-                    throw new Error("Unexpected input data missing or unexpected component key value.")
-
-            namespaceData = @implementation.dataReference
-
-            # Notify registered observers that we're about to remove the specified data component.
-            @store.implementation.reifier.unreifyStoreComponent(address)
-
-            # Remove the contents of the addressed component.
-            for property, value of @implementation.dataReference
-                delete namespaceData[property]
-
-            # Replace the contents of the new data object.
-            for property, value of data_
-                namespaceData[property] = value
-
-            # Notify registered observers that we're replaced the contents of the specified data component.
-            @store.implementation.reifier.reifyStoreComponent(address)
-
-            return address
-
-        catch exception
-            throw new Error("fromData failure: #{exception.message}")
-
-
-
-    #
-    # ============================================================================
-    fromJSON: (json_) =>
-        try
-            # Attempt to deserialize the specified JSON.
-            data = undefined
-            try
-                parsedData = JSON.parse(json_)
-            catch exception
-                throw new Error("Unable to deserialize the specified JSON data: #{exception.message}")
-
-            # Unwrap and verify the request before delegating to the fromData method.
-            resolvedAddress = @getResolvedAddress()
-            model = resolvedAddress.getModel()
-            dataPayload = parsedData[model.jsonTag]
-            if not (dataPayload? and dataPayload)
-                throw new Error("JSON data is missing expeced top-level object '#{model.jsonTag}'.")
-
-            # Delegate to the fromData method:
-            try
-                resolvedAddress = @fromData(dataPayload)
-            catch exception
-                throw new Error("After successful JSON parse, namespace data update failed: #{exception.message}")
-            return resolvedAddress
-            
-        catch exception
-            throw new Error("fromJSON failure: #{exception.message}")
 
 
     #
@@ -224,7 +139,7 @@ module.exports = class Namespace
 
             # Update all the parent namespaces. (may mutate store data depending on updateAction implementation)
             if updateAction? and updateAction
-                updateAction(@data())
+                updateAction(@implementation.dataReference)
                 address.visitParentAddressesDescending( (address__) =>
                     dataReference = @store.openNamespace(address__).data()
                     updateAction(dataReference))
@@ -263,11 +178,11 @@ module.exports = class Namespace
             if not (resolvedToken? and resolvedToken) then throw new Error("Internal error: unable to resolve token.")
             componentCount = 0
             if resolvedToken.namespaceDescriptor.namespaceType == "extensionPoint"
-                componentCount = Object.keys(@data()).length
+                componentCount = Object.keys(@implementation.dataReference).length
             return componentCount
 
-        catch exception
-            throw new Error("getExtensionPointSubcomponentCount failure: #{exception: message}")
+        catch exception_
+            throw new Error("onm.Namespace.getExtensionPointSubcomponentCount failed: #{exception_.message}")
 
 
 
@@ -281,7 +196,7 @@ module.exports = class Namespace
             if resolvedToken.namespaceDescriptor.namespaceType != "extensionPoint"
                 throw new Error("You may only visit the subcomponents of an extension point namespace.")
 
-            for key, object of @data()
+            for key, object of @implementation.dataReference
                 address = @getResolvedAddress().clone()
                 token = new AddressToken(@store.model, resolvedToken.idNamespace, key, resolvedToken.namespaceDescriptor.archetypePathId)
                 address.implementation.pushToken(token)
