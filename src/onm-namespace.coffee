@@ -50,13 +50,10 @@ class NamespaceDetails
     constructor: (namespace_, store_, resolvedAddressContext_) ->
         try
             # Extract the context we need to retain from the resolved address context object.
-
             @dataReference = addressResolver.getResolvedNamedObjectReference resolvedAddressContext_
             @resolvedTokenArray = addressResolver.getResolvedTokenVector resolvedAddressContext_
             @getResolvedToken = => @resolvedTokenArray.length and @resolvedTokenArray[@resolvedTokenArray.length - 1] or undefined
             @resolvedAddress = undefined
-
-
         catch exception
             throw new Error("NamespaceDetails failure: #{exception.message}")
 
@@ -64,13 +61,13 @@ class NamespaceDetails
 #
 # ****************************************************************************
 module.exports = class Namespace
+
     constructor: (store_, resolvedAddressContext_) ->
         try
             if not (store_? and store_) then throw new Error("Missing object store input parameter.")
             @store = store_
 
             @implementation = new NamespaceDetails(@, store_, resolvedAddressContext_)
-
 
         catch exception
             throw new Error("Namespace failure: #{exception.message}")
@@ -79,6 +76,7 @@ module.exports = class Namespace
     # ============================================================================
     getResolvedAddress: =>
         try
+            console.log "onm v0.3: onm.Namespace.getResolvedAddress has been deprecated. Use onm.Namespace.address API."
             if @implementation.resolvedAddress? and @implementation.resolvedAddress
                 return @implementation.resolvedAddress
             @implementation.resolvedAddress = new Address(@store.model, @implementation.resolvedTokenArray)
@@ -86,27 +84,24 @@ module.exports = class Namespace
         catch exception
             throw new Error("getResolvedAddress failure: #{exception.message}")
 
-
     #
     # ============================================================================
     # Renamed in v0.3
     name: =>
         try
             return @implementation.getResolvedToken().key
-
         catch exception
             throw new Error("getComponentKey failure: #{exception.message}")
 
-    # DEPRECATED in v0.3
+    #
+    # ============================================================================
     getComponentKey: =>
         console.log "onm v0.3: onm.Namespace.getComponentKey is deprecated. Use onm.Namespace.name API."
         @name()
 
-
     #
     # ============================================================================
     data: => @implementation.dataReference
-
 
     #
     # ============================================================================
@@ -119,9 +114,6 @@ module.exports = class Namespace
             return resultJSON
         catch exception_
             throw new Error "onm.Namespace.toJSON serialization failed on address '#{@getResolvedAddress().getHumanReadableString()}' with detail: #{exception_.message}"
-
-
-
     #
     # ============================================================================
     # Trigger data change callback notifications to observer routines registered

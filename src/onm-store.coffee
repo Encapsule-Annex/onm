@@ -48,6 +48,9 @@ uuid = require('node-uuid')
 addressResolver = require './impl/onm-address-resolver'
 
 class StoreDetails
+
+    # TODO: type check data and convert JSON as required
+
     constructor: (store_, model_, data_) ->
         try
             @store = store_
