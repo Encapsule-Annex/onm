@@ -196,27 +196,28 @@ module.exports = class Store
             @namespace = (request_) =>
                 try
                     request =
-                        operation: 'access'
+                        operation: request_? and request_ and request_.operation? and request_.operation or 'access'
                         address: undefined
                         data: request_? and request_ and request_.data? and request_.data or {}
                         
-                    if not (request_? and request_ and request_.rl? and request_.rl)
+                    if not (request_? and request_)
                         request.address = @address() # root address of the model bound to this store instance
                     else
-                        rlType = Object.prototype.toString.call request_.rl
-                        if rlType == '[object String]'
-                            # If different data model, rls parse will sort it out.
-                            request.address = @address request_.rl
+                        if not (request_.rl? and request_.rl)
+                            request.address = @address() # root address of the model bound to this store instance
                         else
-                            if request_.rl instanceof Address
-                                # We don't know that this address is in the right space.
-                                if not @model.isEqual request_.rl.model
-                                    throw new Error "Invalid resource locator is bound to model #{request_.rl.model.uuid}:#{request_.rl.model.uuidVersion} not #{@model.uuid}:#{@model.uuidVersion} as expected."
-                                request.address = request_.rl
+                            rlType = Object.prototype.toString.call request_.rl
+                            if rlType == '[object String]'
+                                # If different data model, rls parse will sort it out.
+                                request.address = @address request_.rl
                             else
-                                throw new Error "Invalid resource locator type '#{rlType}' specified. Expecting either onm.Address or onm-format resource locator string."
-                        if request_.operation? and request_.operation
-                            request.operation = request_.operation                                    
+                                if request_.rl instanceof Address
+                                    # We don't know that this address is in the right space.
+                                    if not @model.isEqual request_.rl.model
+                                        throw new Error "Invalid resource locator is bound to model #{request_.rl.model.uuid}:#{request_.rl.model.uuidVersion} not #{@model.uuid}:#{@model.uuidVersion} as expected."
+                                    request.address = request_.rl
+                                else
+                                    throw new Error "Invalid resource locator type '#{rlType}' specified. Expecting either onm.Address or onm-format resource locator string."
 
                     addressResolverOptions = {}
                     addressResolverOptions.strategy = (request.operation == 'access' and 'negotiate') or request.operation

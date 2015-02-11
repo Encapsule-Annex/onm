@@ -26,8 +26,27 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
         badAddress = badDataModel.createRootAddress();
     });
 
-    it("Attempt to call onm.Store.createComponent with a null onm.Address parameter should throw.", function() {
-        assert.throws(function () { store.createComponent(); }, Error);
+    describe("Attempt to call onm.Store.createComponent with a null onm.Address parameter should throw.", function() {
+
+        var namespace = null;
+
+        var functionWrapper = function() {
+            try {
+                store.createComponent();
+            } catch (exception_) {
+                console.log(exception_.message);
+                throw exception_
+            }
+        };
+
+        before(function() {
+            assert.throws(functionWrapper, Error);
+        });
+
+        it("The namespace result is expected to null.", function() {
+            assert.isNull(namespace);
+        });
+
     });
 
     it("Attempt to call onm.Store.createComponent with an address of a non 'addressBook' data model should throw.", function() {
