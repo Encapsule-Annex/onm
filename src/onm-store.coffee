@@ -198,7 +198,7 @@ module.exports = class Store
                     request =
                         operation: 'access'
                         address: undefined
-                        data: request_? and request and request_.data? and request_.data or {}
+                        data: request_? and request_ and request_.data? and request_.data or {}
                         
                     if not (request_? and request_ and request_.rl? and request_.rl)
                         request.address = @address() # root address of the model bound to this store instance
