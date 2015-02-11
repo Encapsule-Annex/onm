@@ -66,42 +66,97 @@ module.exports = class Namespace
         try
             if not (store_? and store_) then throw new Error("Missing object store input parameter.")
             @store = store_
-
             @implementation = new NamespaceDetails(@, store_, resolvedAddressContext_)
 
         catch exception
-            throw new Error("Namespace failure: #{exception.message}")
+            throw new Error("onm.Namespace constructor failed: #{exception.message}")
 
     #
     # ============================================================================
-    getResolvedAddress: =>
-        try
-            console.log "onm v0.3: onm.Namespace.getResolvedAddress has been deprecated. Use onm.Namespace.address API."
-            if @implementation.resolvedAddress? and @implementation.resolvedAddress
-                return @implementation.resolvedAddress
-            @implementation.resolvedAddress = new Address(@store.model, @implementation.resolvedTokenArray)
-            return @implementation.resolvedAddress
-        catch exception
-            throw new Error("getResolvedAddress failure: #{exception.message}")
-
-    #
-    # ============================================================================
-    # Renamed in v0.3
     name: =>
         try
-            return @implementation.getResolvedToken().key
+            @implementation.getResolvedToken().namespaceDescriptor.jsonTag
         catch exception
-            throw new Error("getComponentKey failure: #{exception.message}")
-
-    #
-    # ============================================================================
-    getComponentKey: =>
-        console.log "onm v0.3: onm.Namespace.getComponentKey is deprecated. Use onm.Namespace.name API."
-        @name()
+            throw new Error("onm.Namespace.name failed: #{exception.message}")
 
     #
     # ============================================================================
     data: => @implementation.dataReference
+
+    #
+    # ============================================================================
+    model: =>
+        try
+            @adress().getModel()
+        catch exception_
+            throw new Error "onm.Namespace.model failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    ckey: =>
+        try
+            @implementation.getResolvedToken().key
+        catch exception_
+            throw new Error "onm.Namespace.ckey failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    cname: =>
+        try
+            @implementation.getResolvedToken().componentDescriptor.jsonTag
+        catch exception_
+            throw new Error "onm.Namespace.cname faile: #{exception_.message}"
+
+    #
+    # ============================================================================
+    getComponentKey: =>
+        console.log "onm v0.3: onm.Namespace.getComponentKey is deprecated. Use v0.3 onm.Namespace.ckey API."
+        @key()
+
+
+    #
+    # ============================================================================
+    getResolvedAddress: =>
+        console.log "onm v0.3: onm.Namespace.getResolvedAddress has been deprecated. Use v0.3 onm.Namespace.address API."
+        @address()
+
+    #
+    # ============================================================================
+    # rprls = relative path resource locator string
+    # 
+    address: (rprls_) =>
+        try
+            targetAddress = @implementation.resolvedAddress
+            if not (targetAddress? and targetAddress)
+                targetAddress = @implementation.resolvedAddress = new Address @store.model, @implementation.resolvedTokenArray
+
+            if not (rprls_? and rprls_)
+                return targetAddress
+
+            rprlsType = Object.prototype.toString.call rprls_
+
+            if rprlsType != '[object String]'
+                throw new Error "Invalid type '#{rprsType}'. Expected '[object String]'."
+
+            rprlsTokens = rprls_.split '.'
+
+            generations = 0
+            for prlsToken in rprlsTokens
+                if prlsToken == '//'
+                    generations++
+                else
+                    break
+
+            rprlsAscend = rprlsTokens.join generations, rprplsTokens.length, '.'
+
+            if generations
+                targetAddress = targetAddress.createParentAddress descendCount
+
+            targetAddress.createSubpathAddress rprlsAscend
+
+        catch exception_
+            throw new Error("onm.Namespace address failed: #{exception_.message}")
+
 
     #
     # ============================================================================
