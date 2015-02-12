@@ -73,7 +73,7 @@ module.exports = class Namespace
 
     #
     # ============================================================================
-    # Returns the namespace's declared cannonical name 'jsonTag'.
+    # Returns the namespace model's 'jsonTag' value.
     name: =>
         try
             @implementation.getResolvedToken().namespaceDescriptor.jsonTag
@@ -96,20 +96,12 @@ module.exports = class Namespace
 
     #
     # ============================================================================
-    # 
+    # Returns this namespace component's assigned key value.
     ckey: =>
         try
             @implementation.getResolvedToken().key
         catch exception_
             throw new Error "onm.Namespace.ckey failed: #{exception_.message}"
-
-    #
-    # ============================================================================
-    cname: =>
-        try
-            @implementation.getResolvedToken().componentDescriptor.jsonTag
-        catch exception_
-            throw new Error "onm.Namespace.cname failed: #{exception_.message}"
 
     #
     # ============================================================================
@@ -168,10 +160,8 @@ module.exports = class Namespace
         catch exception_
             throw new Error "onm.Namespace.address failed: #{exception_.message}"
 
-
     #
     # ============================================================================
-    # rrl = relative resource locator
     # request_ = {
     #     operation: string one of "open", "create", or "access"
     #     rl: typically a relative path resource locator string, but may also
@@ -218,6 +208,37 @@ module.exports = class Namespace
         catch exception_
             throw new Error "onm.Namespace.namespace failed: #{exception_.message}"
 
+    #
+    # ============================================================================
+    nsa: (rl_, data_) =>
+        try
+            @namespace { operaton: 'access', rl: rl_, data: data_ }
+        catch exception_
+            throw new Error "onm.Namespace.nsa namespace access failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    nsc: (rl_, data_) =>
+        try
+            @namespace { operation: 'create', rl: rl_, data: data_ }
+        catch exception_
+            throw new Error "onm.Namespace.nsc namespace create failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    nso: (rl_, data_) =>
+        try
+            @namespace { operation: 'open', rl: rl_, data: data_ }
+        catch
+            throw new Error "onm.Namespace.nso namespace open failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    cns: =>
+        try
+            @namespace { operation: 'open', rl: @caddress() }
+        catch exception_
+            throw new Error "onm.Namespace.cns component namespace access failed: #{exception_.message}"
 
 
     #
@@ -310,7 +331,6 @@ module.exports = class Namespace
                     callback_(address)
                 catch exception
                     throw new Error("Failure occurred inside your callback function implementation: #{exception.message}")
-
             true
 
         catch exception

@@ -249,13 +249,22 @@ module.exports = class Address
         catch exception
             throw new Error("Address error: #{exception.message}");
 
+
     #
     # ============================================================================
     getHumanReadableString: =>
+        console.log "onm v0.3: onm.Address.getHumanReadableString is deprecated. Use v0.3 onm.Address.uri API."
+        @uri()
+
+    #
+    # ============================================================================
+    # Returns this address' onm-format universal resource locator string (URI).
+    # Note that an onm URI can be converted back to an onm.Address via method
+    # onm.Model.addressFromURI.
+    uri: =>
         try
             if @implementation.humanReadableString? and @implementation.humanReadableString
                 return @implementation.humanReadableString
-
             index = 0
             stringTokens = []
 
@@ -285,22 +294,25 @@ module.exports = class Address
                 hashString += ":#{stringTokens.join('.')}"
             @implementation.humanReadableString = hashString
             hashString
-
-        catch exception
-            throw new Error("getHumanReadableString failure: #{exception.message}");
+        catch exception_
+            throw new Error "onm.Address.uri generate failed: #{exception.message}"
 
 
 
     #
     # ============================================================================
     getHashString: =>
+        console.log "onm v0.3: onm.Address.getHashString is deprecated. Use v0.3 onm.Address.lri API."
+        @lri()
+
+    #
+    # ============================================================================
+    lri: =>
         try
             if @implementation.hashString? and @implementation.hashString
                 return @implementation.hashString
-
             index = 0
             stringTokens = []
-
             for token in @implementation.tokenVector
                if index++
                     stringTokens.push token.key? and "#{token.key}" or '-'
@@ -335,9 +347,8 @@ module.exports = class Address
             #reversedHashString = humanReadableString.split('').reverse().join('')
             #@implementation.hashString = window.btoa(reversedHashString)
 
-            
-        catch exception
-            throw new Error("getHashString failure: #{exception.message}");
+        catch exception_
+            throw new Error "onm.Address.lri generate failed: #{exception.message}"
 
 
     #
