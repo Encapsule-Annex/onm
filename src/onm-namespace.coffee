@@ -73,6 +73,7 @@ module.exports = class Namespace
 
     #
     # ============================================================================
+    # Returns the namespace's declared cannonical name 'jsonTag'.
     name: =>
         try
             @implementation.getResolvedToken().namespaceDescriptor.jsonTag
@@ -81,10 +82,12 @@ module.exports = class Namespace
 
     #
     # ============================================================================
+    # Returns a reference to the namespace's associated data object.
     data: => @implementation.dataReference
 
     #
     # ============================================================================
+    # Returns a reference to namespace's associated model descriptor object.
     model: =>
         try
             @adress().getModel()
@@ -93,6 +96,7 @@ module.exports = class Namespace
 
     #
     # ============================================================================
+    # 
     ckey: =>
         try
             @implementation.getResolvedToken().key
@@ -105,14 +109,30 @@ module.exports = class Namespace
         try
             @implementation.getResolvedToken().componentDescriptor.jsonTag
         catch exception_
-            throw new Error "onm.Namespace.cname faile: #{exception_.message}"
+            throw new Error "onm.Namespace.cname failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    caddress: =>
+        try
+            @address().createComponentAddress()
+        catch exception_
+            throw new Error "onm.Namespace.caddress failed: #{exception_.message}"
+
+    #
+    # ============================================================================
+    # Returns onm.Address of the store's root namespace.
+    raddress: =>
+        try
+            @store.address()
+        catch exception_
+            throw new Error "onm.Namespace.raddress faled: #{exception_.message}"
 
     #
     # ============================================================================
     getComponentKey: =>
         console.log "onm v0.3: onm.Namespace.getComponentKey is deprecated. Use v0.3 onm.Namespace.ckey API."
         @key()
-
 
     #
     # ============================================================================
@@ -123,39 +143,81 @@ module.exports = class Namespace
     #
     # ============================================================================
     # rprls = relative path resource locator string
-    # 
+    # If ommitted, address returns onm.Address of this namespace.
     address: (rprls_) =>
         try
             targetAddress = @implementation.resolvedAddress
             if not (targetAddress? and targetAddress)
                 targetAddress = @implementation.resolvedAddress = new Address @store.model, @implementation.resolvedTokenArray
-
             if not (rprls_? and rprls_)
                 return targetAddress
-
             rprlsType = Object.prototype.toString.call rprls_
-
             if rprlsType != '[object String]'
                 throw new Error "Invalid type '#{rprsType}'. Expected '[object String]'."
-
             rprlsTokens = rprls_.split '.'
-
             generations = 0
             for prlsToken in rprlsTokens
                 if prlsToken == '//'
                     generations++
                 else
                     break
-
             rprlsAscend = rprlsTokens.join generations, rprplsTokens.length, '.'
-
             if generations
                 targetAddress = targetAddress.createParentAddress descendCount
-
             targetAddress.createSubpathAddress rprlsAscend
+        catch exception_
+            throw new Error "onm.Namespace.address failed: #{exception_.message}"
+
+
+    #
+    # ============================================================================
+    # rrl = relative resource locator
+    # request_ = {
+    #     operation: string one of "open", "create", or "access"
+    #     rl: typically a relative path resource locator string, but may also
+    #         be an onm.Address, or onm-format URI or LRI string assessed
+    #         relative to the store container namespace, not the namespace.
+    #     data: optional JavaScript object or JSON convertible to a JavaScript object
+    # }
+    namespace: (request_) =>
+        try
+            if not (request_? and request_)
+                return @
+            request =
+                operation: request_.operation? and request_.operation or 'access'
+                address: undefined
+                data: request_.data? and request_.data
+
+            if not (request_.rl? and request_.rl)
+                request.address = @address()
+            else
+                if request_.rl instance of Address
+                    request.address = request_.rl
+                else
+                    try
+                        request.address = @address request_.rl
+                    catch exception_
+                        try
+                            request.address = @store.address request_.rl
+                        catch exception_
+                            rlType = Object.prototype.toString.call request_.rl
+                            switch rlType
+                                when '[object String]'
+                                    message = "Invalid resource locator '#{request_.rl}'. Not in model address space."
+                                    break
+                                else
+                                    message = "Unrecognized resource locator type '#{typeof request_.rl}'."
+                                    break
+                            throw new Error message
+            @store.namespace {
+                operation: request.operation
+                rl: request.rl
+                data: request.data
+            }
 
         catch exception_
-            throw new Error("onm.Namespace address failed: #{exception_.message}")
+            throw new Error "onm.Namespace.namespace failed: #{exception_.message}"
+
 
 
     #
@@ -169,6 +231,8 @@ module.exports = class Namespace
             return resultJSON
         catch exception_
             throw new Error "onm.Namespace.toJSON serialization failed on address '#{@getResolvedAddress().getHumanReadableString()}' with detail: #{exception_.message}"
+
+
     #
     # ============================================================================
     # Trigger data change callback notifications to observer routines registered
@@ -213,9 +277,7 @@ module.exports = class Namespace
                 count++
             
         catch exception
-            throw new Error("update failure: #{exception.message}")
-
-
+            throw new Error("onm.Namespace.update failed: #{exception.message}")
 
     #
     # ============================================================================
@@ -227,11 +289,8 @@ module.exports = class Namespace
             if resolvedToken.namespaceDescriptor.namespaceType == "extensionPoint"
                 componentCount = Object.keys(@implementation.dataReference).length
             return componentCount
-
         catch exception_
             throw new Error("onm.Namespace.getExtensionPointSubcomponentCount failed: #{exception_.message}")
-
-
 
     #
     # ============================================================================
@@ -255,6 +314,6 @@ module.exports = class Namespace
             true
 
         catch exception
-            throw new Error("visitExtensionPointSubcomponents failure: #{exception.message}")
+            throw new Error("onm.Namespace.visitExtensionPointSubcomponents failed: #{exception.message}")
 
 

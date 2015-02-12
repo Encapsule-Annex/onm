@@ -186,7 +186,7 @@ module.exports = class Store
             # request_ = {
             #     operation: string, one of "open", "create", or "access" (default if ommitted)
             #     rl: either an onm.Address, or onm-format resource locator string convertible to onm.Address (default to root address of model if ommitted)
-            #     data: either a JavaScript object or JSON string convertible to a JavaScript object
+            #     data: optional JavaScript object or JSON string convertible to a JavaScript object
             # }
             #
             # Note that the Store.namespace method serves a common code path for
@@ -239,6 +239,30 @@ module.exports = class Store
 
             #
             # ============================================================================
+            # New in v0.3.
+            # Resource locator semantics same as nscreate
+            # 'access' is an alias for open or create if not exist. Note that the resource
+            # locator is not constrained to component boundaries but will fault in new
+            # components as required to fullfill the request.
+            @nsa = (rl_, data_) =>
+                try
+                    @namespace { operation: 'access', rl: rl_, data: data_ }
+                catch exception_
+                    throw new Error "onm.Store.nsa namespace access failed: #{exception_.message}"
+
+            #
+            # ============================================================================
+            # New in v0.3. Signature is backwards compatible with onm v0.2 openNamespace.
+            # Resource locator semantics same as nscreate.
+            # Throws if target resource does not exist.
+            @nso = (rl_, data_) =>
+                try
+                    @namespace { operation: 'open', rl: rl_, data: data_ }
+                catch exception_
+                    throw new Error "onm.Store.nso namespace open failed: #{exception_.message}"
+
+            #
+            # ============================================================================
             # New in v0.3. Signature is backwards compatible with onm v0.2 createComponent.
             # Enhanced resource location semantics: rl_, as always, may be a reference
             # to an Address instance. Or, rl_ may now be an onm-format resource locator 
@@ -250,51 +274,24 @@ module.exports = class Store
             # This same operation in previous versions of onm would have required 6-10 discrete
             # onm API calls to accomplish the same.
             # Throws if target resource previously exists.
-            @nscreate = (rl_, data_) =>
+            @nsc = (rl_, data_) =>
                 try
                     @namespace { operation: 'create', rl: rl_, data: data_ }
                 catch exception_
-                    throw new Error "onm.Store.createComponent failed: #{exception_.message}"
-
-
-            #
-            # ============================================================================
-            # New in v0.3. Signature is backwards compatible with onm v0.2 openNamespace.
-            # Resource locator semantics same as nscreate.
-            # Throws if target resource does not exist.
-            @nsopen = (rl_, data_) =>
-                try
-                    @namespace { operation: 'open', rl: rl_, data: data_ }
-                catch exception_
-                    throw new Error "onm.Store.openNamespace failed: #{exception_.message}"
-
-            #
-            # ============================================================================
-            # New in v0.3.
-            # Resource locator semantics same as nscreate
-            # 'access' is an alias for open or create if not exist. Note that the resource
-            # locator is not constrained to component boundaries but will fault in new
-            # components as required to fullfill the request.
-            @nsaccess = (rl_, data_) =>
-                try
-                    @namespace { operation: 'access', rl: rl_, data: data_ }
-                catch exception_
-                    throw new Error "onm.Store.accessNamespace failed: #{exception_.message}"
-
-
+                    throw new Error "onm.Store.nsc namespace create failed: #{exception_.message}"
 
             #### \\\\ DEPRECATED \\\\ ####
             #
             # ============================================================================
             @createComponent = (rl_, data_) =>
-                console.log "onm v0.3: Store.createComponent is deprecated. Use v0.3 Store.nscreate, or Store.namespace API's."
-                @nscreate rl_, data_
+                console.log "onm v0.3: Store.createComponent is deprecated. Use v0.3 Store.nsc, or Store.namespace API's."
+                @nsc rl_, data_
 
             #
             # ============================================================================
             @openNamespace = (rl_, data_) =>
-                console.log "onm v0.3: Store.openNamespace is deprecated. Use v0.3 Store.nsopen, or Store.namespace API's."
-                @nsopen rl_, data_
+                console.log "onm v0.3: Store.openNamespace is deprecated. Use v0.3 Store.nso, or Store.namespace API's."
+                @nso rl_, data_
 
             #### //// DEPRECATED //// ####
 
