@@ -28,7 +28,7 @@
     "mocha": "^2.0.1",
     "leche": "~1.0.1",
     "lodash": "^2.4.1",
-    "onm-data-model-tests": "git://github.com/Encapsule/onm-data-model-tests#test/rc/v0.1"
+    "onm-data-model-tests": "git://github.com/Encapsule/onm-data-model-tests#test/rc/v0.3"
   },
   "dependencies": {
     "node-uuid": "^1.4.1"

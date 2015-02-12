@@ -20,8 +20,8 @@ module.exports = describe("onm.Model.createAddressFromHashString tests", functio
     describe("Serialize/deserialize onm.Address 'addressBook' (root namespace)", function() {
         var addressString, address;
         before(function() {
-            addressString = model.createRootAddress().getHashString();
-            address = model.createAddressFromHashString(addressString);
+            addressString = model.createRootAddress().lri();
+            address = model.addressFromLRI(addressString);
         });
         it("the deserialized result should be an onm.Address object", function() {
             assert.isNotNull(address);
@@ -36,8 +36,8 @@ module.exports = describe("onm.Model.createAddressFromHashString tests", functio
         var addressA, addressB, addressString;
         before(function() {
             addressA = model.createPathAddress("addressBook.properties");
-            addressString = addressA.getHashString();
-            addressB = model.createAddressFromHashString(addressString);
+            addressString = addressA.lri();
+            addressB = model.addressFromLRI(addressString);
         });
         it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);
@@ -50,8 +50,8 @@ module.exports = describe("onm.Model.createAddressFromHashString tests", functio
         var addressA, addressB, addressString;
         before(function() {
             addressA = model.createPathAddress("addressBook.contacts");
-            addressString = addressA.getHashString();
-            addressB = model.createAddressFromHashString(addressString);
+            addressString = addressA.lri();
+            addressB = model.addressFromLRI(addressString);
         });
         it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);
@@ -64,8 +64,8 @@ module.exports = describe("onm.Model.createAddressFromHashString tests", functio
         var addressA, addressB, addressString;
         before(function() {
             addressA = model.createPathAddress("addressBook.contacts.contact");
-            addressString = addressA.getHashString();
-            addressB = model.createAddressFromHashString(addressString);
+            addressString = addressA.lri();
+            addressB = model.addressFromLRI(addressString);
         });
         it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);
@@ -80,9 +80,9 @@ module.exports = describe("onm.Model.createAddressFromHashString tests", functio
 
         before(function() {
             store = testData.createStore();
-            addressA = store.createComponent(model.createPathAddress("addressBook.contacts.contact")).getResolvedAddress();
-            addressString = addressA.getHashString();
-            addressB = model.createAddressFromHashString(addressString);
+            addressA = store.nsCreate(model.createPathAddress("addressBook.contacts.contact")).address();
+            addressString = addressA.lri();
+            addressB = model.addressFromLRI(addressString);
         });
         it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);
@@ -95,8 +95,8 @@ module.exports = describe("onm.Model.createAddressFromHashString tests", functio
         var addressA, addressB, addressString;
         before(function() {
             addressA = model.createPathAddress("addressBook.properties.subproperties.collection.someObject");
-            addressString = addressA.getHashString();
-            addressB = model.createAddressFromHashString(addressString);
+            addressString = addressA.lri();
+            addressB = model.addressFromLRI(addressString);
         });
         it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);
@@ -111,9 +111,9 @@ module.exports = describe("onm.Model.createAddressFromHashString tests", functio
 
         before(function() {
             store = testData.createStore();
-            addressA = store.createComponent(model.createPathAddress("addressBook.properties.subproperties.collection.someObject")).getResolvedAddress();
-            addressString = addressA.getHashString();
-            addressB = model.createAddressFromHashString(addressString);
+            addressA = store.nsCreate(model.createPathAddress("addressBook.properties.subproperties.collection.someObject")).address();
+            addressString = addressA.lri();
+            addressB = model.addressFromLRI(addressString);
         });
         it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);

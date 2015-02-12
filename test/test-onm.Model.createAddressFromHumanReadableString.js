@@ -1,4 +1,4 @@
-// test-onm.Model.createAddressFromHumanReadableString.js
+// test-onm.Model.addressFromURI.js
 //
 
 var assert = require('chai').assert;
@@ -10,7 +10,7 @@ var onm = require('../index');
 
 var testData = require('./fixture/address-book-data-model');
 
-module.exports = describe("onm.Model.createAddressFromHumanReadableString tests", function() {
+module.exports = describe("onm.Model.addressFromURI tests", function() {
 
     var model;
     before(function() {
@@ -20,8 +20,8 @@ module.exports = describe("onm.Model.createAddressFromHumanReadableString tests"
     describe("Serialize/deserialize onm.Address 'addressBook' (root namespace)", function() {
         var addressString, address;
         before(function() {
-            addressString = model.createRootAddress().getHumanReadableString();
-            address = model.createAddressFromHumanReadableString(addressString);
+            addressString = model.createRootAddress().uri();
+            address = model.addressFromURI(addressString);
         });
         it("the deserialized result should be an onm.Address object", function() {
             assert.isNotNull(address);
@@ -36,8 +36,8 @@ module.exports = describe("onm.Model.createAddressFromHumanReadableString tests"
         var addressA, addressB, addressString;
         before(function() {
             addressA = model.createPathAddress("addressBook.properties");
-            addressString = addressA.getHumanReadableString();
-            addressB = model.createAddressFromHumanReadableString(addressString);
+            addressString = addressA.uri();
+            addressB = model.addressFromURI(addressString);
         });
         it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);
@@ -50,8 +50,8 @@ module.exports = describe("onm.Model.createAddressFromHumanReadableString tests"
         var addressA, addressB, addressString;
         before(function() {
             addressA = model.createPathAddress("addressBook.contacts");
-            addressString = addressA.getHumanReadableString();
-            addressB = model.createAddressFromHumanReadableString(addressString);
+            addressString = addressA.uri();
+            addressB = model.addressFromURI(addressString);
         });
         it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);
@@ -64,8 +64,8 @@ module.exports = describe("onm.Model.createAddressFromHumanReadableString tests"
         var addressA, addressB, addressString;
         before(function() {
             addressA = model.createPathAddress("addressBook.contacts.contact");
-            addressString = addressA.getHumanReadableString();
-            addressB = model.createAddressFromHumanReadableString(addressString);
+            addressString = addressA.uri();
+            addressB = model.addressFromURI(addressString);
         });
         it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);
@@ -80,9 +80,9 @@ module.exports = describe("onm.Model.createAddressFromHumanReadableString tests"
 
         before(function() {
             store = testData.createStore();
-            addressA = store.createComponent(model.createPathAddress("addressBook.contacts.contact")).getResolvedAddress();
-            addressString = addressA.getHumanReadableString();
-            addressB = model.createAddressFromHumanReadableString(addressString);
+            addressA = store.nsCreate(model.createPathAddress("addressBook.contacts.contact")).address();
+            addressString = addressA.uri();
+            addressB = model.addressFromURI(addressString);
         });
         it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);
@@ -95,8 +95,8 @@ module.exports = describe("onm.Model.createAddressFromHumanReadableString tests"
         var addressA, addressB, addressString;
         before(function() {
             addressA = model.createPathAddress("addressBook.properties.subproperties.collection.someObject");
-            addressString = addressA.getHumanReadableString();
-            addressB = model.createAddressFromHumanReadableString(addressString);
+            addressString = addressA.uri();
+            addressB = model.addressFromURI(addressString);
         });
         it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);
@@ -111,9 +111,9 @@ module.exports = describe("onm.Model.createAddressFromHumanReadableString tests"
 
         before(function() {
             store = testData.createStore();
-            addressA = store.createComponent(model.createPathAddress("addressBook.properties.subproperties.collection.someObject")).getResolvedAddress();
-            addressString = addressA.getHumanReadableString();
-            addressB = model.createAddressFromHumanReadableString(addressString);
+            addressA = store.nsCreate(model.createPathAddress("addressBook.properties.subproperties.collection.someObject")).address();
+            addressString = addressA.uri();
+            addressB = model.addressFromURI(addressString);
         });
         it("the deserialized onm.Address should be the same as the source address", function() {
             assert.isNotNull(addressString);

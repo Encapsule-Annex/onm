@@ -1,4 +1,4 @@
-// test-onm.Store.createComponent.js
+// test-onm.Store.nsCreate.js
 //
 
 var assert = require('chai').assert;
@@ -8,7 +8,7 @@ var uuid = require('node-uuid');
 var onm = require('../index');
 var testData = require('./fixture/address-book-data-model');
 
-module.exports = describe("onm.Store.createComponent method tests", function() {
+module.exports = describe("onm.Store.nsCreate method tests", function() {
 
     var store = null;
     var addressRoot = null;
@@ -26,15 +26,15 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
         badAddress = badDataModel.createRootAddress();
     });
 
-    describe("Attempt to call onm.Store.createComponent with a null onm.Address parameter should throw.", function() {
+    describe("Attempt to call onm.Store.nsCreate with a null onm.Address parameter should throw.", function() {
 
         var namespace = null;
 
         var functionWrapper = function() {
             try {
-                store.createComponent();
+                store.nsCreate();
             } catch (exception_) {
-                console.log(exception_.message);
+                //console.log(exception_.message);
                 throw exception_
             }
         };
@@ -49,27 +49,27 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
 
     });
 
-    it("Attempt to call onm.Store.createComponent with an address of a non 'addressBook' data model should throw.", function() {
-        assert.throws(function () { store.createComponent(badAddress); }, Error);
+    it("Attempt to call onm.Store.nsCreate with an address of a non 'addressBook' data model should throw.", function() {
+        assert.throws(function () { store.nsCreate(badAddress); }, Error);
     });
 
-    it("Attempt to call onm.Store.createComponent with a qualified address should throw.", function() {
-        assert.throws(function() { store.createComponent(addressRoot); }, Error);
+    it("Attempt to call onm.Store.nsCreate with a qualified address should throw.", function() {
+        assert.throws(function() { store.nsCreate(addressRoot); }, Error);
     });
 
-    it("Attempt to call onm.Store.createComponent with a non-component address should throw.", function() {
+    it("Attempt to call onm.Store.nsCreate with a non-component address should throw.", function() {
         var address = addressRoot.createSubpathAddress('properties.subproperties');
-        assert.throws(function() { store.createComponent(address); }, Error);
+        assert.throws(function() { store.nsCreate(address); }, Error);
     });
 
-    describe("Call onm.Store.createComponent to create a new 'contact'.", function() {
+    describe("Call onm.Store.nsCreate to create a new 'contact'.", function() {
 
         var addressNewContact = null;
         var namespaceContact = null;
 
         before(function() {
             addressNewContact = addressRoot.createSubpathAddress("contacts.contact");
-            namespaceContact  = store.createComponent(addressNewContact);
+            namespaceContact  = store.nsCreate(addressNewContact);
         });
 
         it("We should be able to create a contact component.", function() {
@@ -90,14 +90,14 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
             expect(dataContact.phoneNumbers).to.be.an('object');
         });
 
-        describe("Call onm.Store.createComponent with a simple construction options object.", function() {
+        describe("Call onm.Store.nsCreate with a simple construction options object.", function() {
             var constructionOptions = {
                 firstName: "Joe",
                 lastName: "Smith"
             };
             var namespace = null;
             before(function() {
-                namespace = store.createComponent(addressNewContact, constructionOptions);
+                namespace = store.nsCreate(addressNewContact, constructionOptions);
             });
             it("A contact component should have been created.", function() {
                 assert.isDefined(namespace);
@@ -116,7 +116,7 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                 expect(dataContact.phoneNumbers).to.be.an('object');
             });
 
-            describe("Call onm.Store.createComponent with a hierarchical construction options object.", function() {
+            describe("Call onm.Store.nsCreate with a hierarchical construction options object.", function() {
                 var addressNewPhoneNumber, namespacePhoneNumber;
 
                 var constructionOptions = {
@@ -127,8 +127,8 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                     }
                 };
                 before(function() {
-                    addressNewPhoneNumber = namespace.getResolvedAddress().createSubpathAddress("phoneNumbers.phoneNumber");
-                    namespacePhoneNumber = store.createComponent(addressNewPhoneNumber, constructionOptions);
+                    addressNewPhoneNumber = namespace.address().createSubpathAddress("phoneNumbers.phoneNumber");
+                    namespacePhoneNumber = store.nsCreate(addressNewPhoneNumber, constructionOptions);
                 });
                 it("A contact component should have been created.", function() {
                     assert.isDefined(namespacePhoneNumber);
@@ -142,7 +142,7 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                 });
             });
 
-            describe("Call onm.Store.createComponent with a hierarchical construction options object that includes subcomponents.", function() {
+            describe("Call onm.Store.nsCreate with a hierarchical construction options object that includes subcomponents.", function() {
 
                 var contactConstructionData = {
                     firstName: 'Marsellus',
@@ -177,7 +177,7 @@ module.exports = describe("onm.Store.createComponent method tests", function() {
                 var namespaceContact = null;
 
                 before(function() {
-                    namespaceContact = store.createComponent(addressNewContact, contactConstructionData);
+                    namespaceContact = store.nsCreate(addressNewContact, contactConstructionData);
                 });
 
                 it("A new contact component should have been created.", function() {

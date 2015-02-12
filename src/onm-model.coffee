@@ -533,28 +533,41 @@ module.exports = class Model
                     newAddress = @implementation.createAddressFromPathId(pathId)
                     return newAddress
                 catch exception
-                    throw new Error("createPathAddress failure: #{exception.message}")
+                    throw new Error "onm.Model.createPathAddress failed: #{exception.message}"
 
 
-            # --------------------------------------------------------------------------
+            #
+            # ============================================================================
+            @addressFromURI = (uri_) =>
+                try
+                    if not (uri_? and uri_)
+                        throw new Error("Missing URI string input parameter.");
+                    newAddress = @implementation.parseAddressHumanReadableString uri_
+                    return newAddress
+                catch exception
+                    throw new Error "onm.Model.addressFromURI failed: #{exception.message}"
+
+            # DEPRECATED in v0.3
             @createAddressFromHumanReadableString = (humanReadableString_) =>
-                try
-                    if not (humanReadableString_? and humanReadableString_)
-                        throw new Error("Missing human-readbale string input parameter.");
-                    newAddress = @implementation.parseAddressHumanReadableString(humanReadableString_)
-                    return newAddress
-                catch exception
-                    throw new Error("createAddressFromHumanReadableString address space failure: #{exception.message}")
+                console.log "onm v0.3: onm.Model.createAddressFromHashString has been deprecated. Use v0.3 onm.Model.addressFromURI API."
+                @addressFromURI humanReadableString_
 
-            # --------------------------------------------------------------------------
-            @createAddressFromHashString = (hash_) =>
+
+            #
+            # ============================================================================
+            @addressFromLRI = (lri_) =>
                 try
-                    if not (hash_? and hash_)
-                        throw new Error("Missing hash string input parameter.");
-                    newAddress = @implementation.parseAddressHashString(hash_)
+                    if not (lri_? and lri_)
+                        throw new Error("Missing LRI string input parameter.");
+                    newAddress = @implementation.parseAddressHashString lri_
                     return newAddress
                 catch exception
-                    throw new Error("createAddressFromHashString address space failure: #{exception.message}")
+                    throw new Error "onm.Model.addressFromLRI failed: #{exception.message}"
+
+            # DEPRECATED in v0.3
+            @createAddressFromHashString = (hash_) =>
+                console.log "onm v0.3: onm.Model.createAddressFromHashString is deprecated. Use v0.3 onm.Model.addressFromLRI API."
+                @addressFromLRI hash_
 
             # --------------------------------------------------------------------------
             @getSemanticBindings = =>

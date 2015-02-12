@@ -20,7 +20,7 @@ module.exports = describe("onm.Address.visitSubaddressesAscending tests", functi
             store = testData.createStore();
             address = store.model.createRootAddress();
             address.visitSubaddressesAscending( function(subAddress_) {
-                subAddresses.push(subAddress_.getHumanReadableString());
+                subAddresses.push(subAddress_.uri());
             });
             actualResult = JSON.stringify(subAddresses);
         });
@@ -39,7 +39,7 @@ module.exports = describe("onm.Address.visitSubaddressesAscending tests", functi
             store = testData.createStore();
             address = store.model.createPathAddress("addressBook.properties");
             address.visitSubaddressesAscending( function(subAddress_) {
-                subAddresses.push(subAddress_.getHumanReadableString());
+                subAddresses.push(subAddress_.uri());
             });
             actualResult = JSON.stringify(subAddresses);
         });
@@ -58,7 +58,7 @@ module.exports = describe("onm.Address.visitSubaddressesAscending tests", functi
             store = testData.createStore();
             address = store.model.createPathAddress("addressBook.contacts");
             address.visitSubaddressesAscending( function(subAddress_) {
-                subAddresses.push(subAddress_.getHumanReadableString());
+                subAddresses.push(subAddress_.uri());
             });
             actualResult = JSON.stringify(subAddresses);
         });

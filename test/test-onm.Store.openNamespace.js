@@ -1,4 +1,4 @@
-// test-onm.Store.openNamespace.js
+// test-onm.Store.nsOpen.js
 //
 
 var assert = require('chai').assert;
@@ -10,7 +10,7 @@ var onm = require('../index');
 
 var testData = require('./fixture/address-book-data-model');
 
-module.exports = describe("onm.Store.openNamespace method tests", function() {
+module.exports = describe("onm.Store.nsOpen method tests", function() {
     var store, addressRoot, namespaceRoot, addressNewContact, addressContact, namespaceContact = null
 
     before(function() {
@@ -18,10 +18,10 @@ module.exports = describe("onm.Store.openNamespace method tests", function() {
         var testSetupWrapper = function() {
             store = testData.createStore();
             addressRoot = store.model.createRootAddress();
-            namespaceRoot = store.openNamespace(addressRoot);
+            namespaceRoot = store.nsOpen(addressRoot);
             addressNewContact = addressRoot.createSubpathAddress("contacts.contact");
-            namespaceContact = store.createComponent(addressNewContact);
-            addressContact = namespaceContact.getResolvedAddress();
+            namespaceContact = store.nsCreate(addressNewContact);
+            addressContact = namespaceContact.address();
         };
 
         assert.doesNotThrow(testSetupWrapper);
@@ -53,13 +53,13 @@ module.exports = describe("onm.Store.openNamespace method tests", function() {
     });
 
     it("We should not be able to open the unresolved contact address", function() {
-        assert.throws(function() { store.openNamespace(addressNewContact); }, Error);
+        assert.throws(function() { store.nsOpen(addressNewContact); }, Error);
     });
 
     it("We should be able to open the new contact descriptor's resolved address.", function() {
         var namespace = null;
         var functionWrapper = function() {
-            namespace = store.openNamespace(addressContact);
+            namespace = store.nsOpen(addressContact);
         };
         assert.doesNotThrow(functionWrapper);
         var expectedJSON = '{"firstName":"","lastName":"","phoneNumbers":{},"addresses":{},"emails":{}}';
@@ -78,19 +78,19 @@ module.exports = describe("onm.Store.openNamespace method tests", function() {
         });
         it("Attempt to open the address of the removed contact component should throw.", function() {
             var functionWrapper = function() {
-                store.openNamespace(addressContact);
+                store.nsOpen(addressContact);
             };
             assert.throws(functionWrapper);
         });
     });
 
-    describe("Exercise the data-over functionality of onm.Store.openNamespace.", function() {
+    describe("Exercise the data-over functionality of onm.Store.nsOpen.", function() {
 
         var addressContacts, namespaceContacts = null;
 
         before(function() {
             addressContacts = addressRoot.createSubpathAddress("contacts");
-            namespaceContacts = store.openNamespace(
+            namespaceContacts = store.nsOpen(
                 addressContacts,
                 {
                     "5e98bb28-b0cf-11e4-919b-080027d17300": {

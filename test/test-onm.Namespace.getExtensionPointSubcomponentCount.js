@@ -20,7 +20,7 @@ module.exports = describe("onm.Namespace.getExtensionPointSubcomponentCount meth
         var count;
         before(function() {
             address = store.model.createPathAddress("addressBook.contacts");
-            namespaceExtensionPoint = store.openNamespace(address);
+            namespaceExtensionPoint = store.nsOpen(address);
         });
         it("subcomponent count should be zero", function() {
             assert.equal(0, namespaceExtensionPoint.getExtensionPointSubcomponentCount());
@@ -32,8 +32,8 @@ module.exports = describe("onm.Namespace.getExtensionPointSubcomponentCount meth
 
             before(function() {
                 var addressNewContact = store.model.createPathAddress("addressBook.contacts.contact");
-                namespaceContact = store.createComponent(addressNewContact);
-                namespaceExtensionPoint2 = store.openNamespace(address);
+                namespaceContact = store.nsCreate(addressNewContact);
+                namespaceExtensionPoint2 = store.nsOpen(address);
             });
             it("subcomponent count obtained against the original onm.Namepace instance should be one.", function() {
                 // NOTE: This seemingly trivial test requires that a lot of onm functions flawlessly.

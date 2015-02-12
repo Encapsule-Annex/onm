@@ -244,22 +244,26 @@ module.exports = class Store
             # 'access' is an alias for open or create if not exist. Note that the resource
             # locator is not constrained to component boundaries but will fault in new
             # components as required to fullfill the request.
-            @nsa = (rl_, data_) =>
+            @nsAccess = (rl_, data_) =>
                 try
                     @namespace { operation: 'access', rl: rl_, data: data_ }
                 catch exception_
-                    throw new Error "onm.Store.nsa namespace access failed: #{exception_.message}"
+                    throw new Error "onm.Store.nsAccess failed: #{exception_.message}"
 
             #
             # ============================================================================
             # New in v0.3. Signature is backwards compatible with onm v0.2 openNamespace.
             # Resource locator semantics same as nscreate.
             # Throws if target resource does not exist.
-            @nso = (rl_, data_) =>
+            @nsOpen = (rl_, data_) =>
                 try
                     @namespace { operation: 'open', rl: rl_, data: data_ }
                 catch exception_
-                    throw new Error "onm.Store.nso namespace open failed: #{exception_.message}"
+                    throw new Error "onm.Store.nsOpen failed: #{exception_.message}"
+            # DEPRECATED IN v0.3
+            @openNamespace = (rl_, data_) =>
+                console.log "onm v0.3: Store.openNamespace is deprecated. Use v0.3 Store.nsOpen, or Store.namespace API's."
+                @nsOpen rl_, data_
 
             #
             # ============================================================================
@@ -274,27 +278,15 @@ module.exports = class Store
             # This same operation in previous versions of onm would have required 6-10 discrete
             # onm API calls to accomplish the same.
             # Throws if target resource previously exists.
-            @nsc = (rl_, data_) =>
+            @nsCreate = (rl_, data_) =>
                 try
                     @namespace { operation: 'create', rl: rl_, data: data_ }
                 catch exception_
-                    throw new Error "onm.Store.nsc namespace create failed: #{exception_.message}"
-
-            #### \\\\ DEPRECATED \\\\ ####
-            #
-            # ============================================================================
+                    throw new Error "onm.Store.nsCreate failed: #{exception_.message}"
+            # DEPRECATED IN v0.3
             @createComponent = (rl_, data_) =>
-                console.log "onm v0.3: Store.createComponent is deprecated. Use v0.3 Store.nsc, or Store.namespace API's."
-                @nsc rl_, data_
-
-            #
-            # ============================================================================
-            @openNamespace = (rl_, data_) =>
-                console.log "onm v0.3: Store.openNamespace is deprecated. Use v0.3 Store.nso, or Store.namespace API's."
-                @nso rl_, data_
-
-            #### //// DEPRECATED //// ####
-
+                console.log "onm v0.3: Store.createComponent is deprecated. Use v0.3 Store.nsCreate, or Store.namespace API's."
+                @nsCreate rl_, data_
 
             #
             # ============================================================================
@@ -315,9 +307,9 @@ module.exports = class Store
                     # undoFlag_ == true -> invert namespace traversal order and invoke remove callbacks
                     @implementation.reifier.reifyStoreExtensions(address_, undefined, true)
                     @implementation.reifier.unreifyStoreComponent(address_)
-                    componentNamespace = @openNamespace(address_)
+                    componentNamespace = @nsOpen address_
                     extensionPointAddress = address_.createParentAddress()
-                    extensionPointNamespace = @openNamespace(extensionPointAddress)
+                    extensionPointNamespace = @nsOpen(extensionPointAddress)
                     componentDictionary = extensionPointNamespace.data()
                     componentKey = address_.implementation.getLastToken().key
                     delete componentDictionary[componentKey]

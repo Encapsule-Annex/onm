@@ -210,35 +210,35 @@ module.exports = class Namespace
 
     #
     # ============================================================================
-    nsa: (rl_, data_) =>
+    nsAccess: (rl_, data_) =>
         try
             @namespace { operaton: 'access', rl: rl_, data: data_ }
         catch exception_
-            throw new Error "onm.Namespace.nsa namespace access failed: #{exception_.message}"
+            throw new Error "onm.Namespace.nsAccess failed: #{exception_.message}"
 
     #
     # ============================================================================
-    nsc: (rl_, data_) =>
+    nsCreate: (rl_, data_) =>
         try
             @namespace { operation: 'create', rl: rl_, data: data_ }
         catch exception_
-            throw new Error "onm.Namespace.nsc namespace create failed: #{exception_.message}"
+            throw new Error "onm.Namespace.nsCreate failed: #{exception_.message}"
 
     #
     # ============================================================================
-    nso: (rl_, data_) =>
+    nsOpen: (rl_, data_) =>
         try
             @namespace { operation: 'open', rl: rl_, data: data_ }
         catch
-            throw new Error "onm.Namespace.nso namespace open failed: #{exception_.message}"
+            throw new Error "onm.Namespace.nsOpen failed: #{exception_.message}"
 
     #
     # ============================================================================
-    cns: =>
+    nsComponent: (data_) =>
         try
-            @namespace { operation: 'open', rl: @caddress() }
+            @namespace { operation: 'open', rl: @caddress(), data: data_ }
         catch exception_
-            throw new Error "onm.Namespace.cns component namespace access failed: #{exception_.message}"
+            throw new Error "onm.Namespace.nsComponent failed: #{exception_.message}"
 
 
     #
@@ -251,7 +251,7 @@ module.exports = class Namespace
                 throw new Error "Namespace data is corrupt. Unable to serialize to JSON."
             return resultJSON
         catch exception_
-            throw new Error "onm.Namespace.toJSON serialization failed on address '#{@getResolvedAddress().getHumanReadableString()}' with detail: #{exception_.message}"
+            throw new Error "onm.Namespace.toJSON serialization failed on address '#{@address().uri()}' with detail: #{exception_.message}"
 
 
     #
@@ -265,7 +265,7 @@ module.exports = class Namespace
             # Note the search direction is fixed but the callback is defined in the
             # object model declaration (or not).
 
-            address = @getResolvedAddress()
+            address = @address()
             semanticBindings = @store.model.getSemanticBindings()
             updateAction = semanticBindings? and semanticBindings and semanticBindings.update? and semanticBindings.update or undefined
 
@@ -324,7 +324,7 @@ module.exports = class Namespace
                 throw new Error("You may only visit the subcomponents of an extension point namespace.")
 
             for key, object of @implementation.dataReference
-                address = @getResolvedAddress().clone()
+                address = @address().clone()
                 token = new AddressToken(@store.model, resolvedToken.idNamespace, key, resolvedToken.namespaceDescriptor.archetypePathId)
                 address.implementation.pushToken(token)
                 try

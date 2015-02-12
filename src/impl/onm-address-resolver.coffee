@@ -201,8 +201,8 @@ addressResolver.resolve = (options_) ->
         if not inputOptionsValid
             message = "addressResolver failed in function prologue: #{exception_.message}"
         else
-            targetAddressString = options_.address.getHumanReadableString()
-            resolvedAddressString = evaluatedTokenQueue.length and (new Address(options_.address.model, evaluatedTokenQueue).getHumanReadableString()) or ''
+            targetAddressString = options_.address.uri()
+            resolvedAddressString = evaluatedTokenQueue.length and (new Address(options_.address.model, evaluatedTokenQueue).uri()) or ''
             unresolvedAddressString = targetAddressString.substring(resolvedAddressString.length, targetAddressString.length)
             message = "addressResolver.resolve failed to resolve '#{resolvedAddressString}>>#{unresolvedAddressString}<<' via strategy '#{options_.strategy}':: #{exception_.message}"
         throw new Error message

@@ -23,7 +23,7 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
         before(function() {
             address = store.model.createRootAddress();
             address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
-                extensionPointAddresses.push(addressExtensionPoint_.getHumanReadableString());
+                extensionPointAddresses.push(addressExtensionPoint_.uri());
             });
             actualResult = JSON.stringify(extensionPointAddresses);
         });
@@ -40,7 +40,7 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
         before(function() {
             address = store.model.createPathAddress("addressBook.properties");
             address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
-                extensionPointAddresses.push(addressExtensionPoint_.getHumanReadableString());
+                extensionPointAddresses.push(addressExtensionPoint_.uri());
             });
             actualResult = JSON.stringify(extensionPointAddresses);
         });
@@ -58,7 +58,7 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
         before(function() {
             address = store.model.createPathAddress("addressBook.contacts");
             address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
-                extensionPointAddresses.push(addressExtensionPoint_.getHumanReadableString());
+                extensionPointAddresses.push(addressExtensionPoint_.uri());
             });
             actualResult = JSON.stringify(extensionPointAddresses);
         });
@@ -76,7 +76,7 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
             address = store.model.createPathAddress("addressBook.contacts.contact");
             address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
                 assert.isFalse(addressExtensionPoint_.isResolvable());
-                extensionPointAddresses.push(addressExtensionPoint_.getHumanReadableString());
+                extensionPointAddresses.push(addressExtensionPoint_.uri());
             });
             actualResult = JSON.stringify(extensionPointAddresses);
         });
@@ -95,7 +95,7 @@ module.exports = describe("onm.Address.visitExtensionPointAddresses tests", func
                 address = store.model.createPathAddress("addressBook.contacts.contact.addresses.address");
                 address.visitExtensionPointAddresses(function(addressExtensionPoint_) {
                     assert.isFalse(addressExtensionPoint_.isResolvable());
-                    extensionPointAddresses.push(addressExtensionPoint_.getHumanReadableString());
+                    extensionPointAddresses.push(addressExtensionPoint_.uri());
                 });
                 actualResult = JSON.stringify(extensionPointAddresses);
             });

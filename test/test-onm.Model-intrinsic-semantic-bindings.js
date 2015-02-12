@@ -58,7 +58,7 @@ module.exports = describe("onm.Model intrinsic semantic bindings white box tests
                     assert.instanceOf(address, onm.Address);
                 });
                 assert.doesNotThrow(function() {
-                    namespace = store.createComponent(address);
+                    namespace = store.nsCreate(address);
                     assert.isNotNull(namespace);
                     assert.instanceOf(namespace, onm.Namespace);
                 });

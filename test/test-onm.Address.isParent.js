@@ -45,7 +45,7 @@ module.exports = describe("onm.Address.isParent tests", function() {
         before(function() {
             address1 = store.model.createPathAddress("addressBook.properties");
             newContactAddress = store.model.createPathAddress("addressBook.contacts.contact");
-            address2 = store.createComponent(newContactAddress).getResolvedAddress();
+            address2 = store.nsCreate(newContactAddress).address();
         });
         it("address1.isParent(address2) === false", function() {
             assert.isFalse(address1.isParent(address2));
